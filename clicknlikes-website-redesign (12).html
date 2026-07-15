@@ -135,6 +135,10 @@ h2.sec-h2{font-size:clamp(1.8rem,3.4vw,2.7rem);font-weight:700;line-height:1.12;
 .btn:hover svg{transform:translateX(4px);}
 .btn.magnetic{will-change:transform;}
 
+/* ---------- secondary text-link CTA: demoted, never competes with the primary button ---------- */
+.cta-secondary-link{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:600;color:var(--grey);padding:14px 6px;transition:color .2s;}
+.cta-secondary-link:hover{color:var(--teal-dark);}
+
 /* ---------- pulse line divider (signature element) ---------- */
 .pulse-divider{width:100%;height:64px;position:relative;overflow:hidden;}
 .pulse-divider svg{width:200%;height:100%;animation:pulseScroll 8s linear infinite;}
@@ -148,6 +152,21 @@ h2.sec-h2{font-size:clamp(1.8rem,3.4vw,2.7rem);font-weight:700;line-height:1.12;
 .stat b{display:block;font-family:'Space Grotesk';font-size:2rem;color:var(--navy);}
 .stat span{font-size:12.5px;color:var(--grey);text-transform:uppercase;letter-spacing:.06em;}
 .hero-cta-row{display:flex;gap:16px;margin-top:34px;flex-wrap:wrap;}
+
+/* ---------- hero micro-interaction: live-updates the floating card, no click required ---------- */
+.hero-live-input{display:flex;align-items:center;gap:10px;margin-top:20px;flex-wrap:wrap;}
+.hero-live-input input{padding:11px 18px;border-radius:100px;border:1.5px solid var(--teal-30);background:var(--teal-05);font-family:'DM Sans';font-size:14px;color:var(--navy);min-width:250px;transition:border-color .2s,box-shadow .2s;}
+.hero-live-input input:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 4px var(--teal-05);}
+.hero-live-input input::placeholder{color:var(--grey);}
+.hero-live-hint{font-size:12px;color:var(--teal-dark);font-weight:600;}
+@media(max-width:600px){ .hero-live-hint{display:none;} }
+
+/* ---------- 3-steps strip: unmissable, above the fold, no reading required ---------- */
+.steps-strip{display:flex;align-items:center;gap:10px;margin-top:28px;flex-wrap:wrap;}
+.steps-strip .step{display:inline-flex;align-items:center;gap:9px;background:var(--teal-05);border:1px solid var(--teal-30);border-radius:100px;padding:8px 16px 8px 8px;font-size:13.5px;font-weight:600;color:var(--navy);}
+.steps-strip .step b{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--navy);color:var(--white);font-family:'Space Grotesk';font-size:12px;flex-shrink:0;}
+.steps-strip .step-arrow{color:var(--teal-dark);font-size:15px;font-weight:700;}
+@media(max-width:600px){ .steps-strip{gap:8px;} .steps-strip .step-arrow{display:none;} }
 
 /* ---------- signal chart svg card ---------- */
 .signal-card{position:absolute;inset:0;background:var(--white);border:1px solid var(--navy-08);border-radius:20px;box-shadow:var(--shadow-lift);padding:24px;overflow:hidden;}
@@ -367,21 +386,21 @@ footer{background:var(--navy);color:rgba(255,255,255,.8);padding:70px 0 24px;pos
   </a>
   <div class="nav-links">
     <a class="nav-item" onclick="go('home')">Home</a>
-    <a class="nav-item" onclick="go('tools')">Free Tools</a>
     <div class="nav-item has-drop">Services
       <div class="dropdown">
-        <a onclick="go('seo')"><b>SEO (Organic &amp; On-Page)</b><span>Rank where your customers search</span></a>
-        <a onclick="go('localseo')"><b>Local SEO &amp; Google Business</b><span>Win the Google Maps / local pack</span></a>
-        <a onclick="go('aiseo')"><b>AI SEO &amp; AI Overviews</b><span>Get cited by ChatGPT, Gemini, AI Overview</span></a>
-        <a onclick="go('social')"><b>Social Media Growth</b><span>Content that builds a real audience</span></a>
-        <a onclick="go('content')"><b>Content Marketing</b><span>Words that rank and convert</span></a>
-        <a onclick="go('webdev')"><b>Website Development</b><span>Fast, conversion-built websites</span></a>
-        <a onclick="go('paid')"><b>Paid Campaigns</b><span>Ads that support the organic engine</span></a>
+        <a onclick="go('seo')"><b>SEO (Organic &amp; On-Page)</b><span>Rank where your customers search · free check included</span></a>
+        <a onclick="go('localseo')"><b>Local SEO &amp; Google Business</b><span>Win the Google Maps / local pack · free check included</span></a>
+        <a onclick="go('aiseo')"><b>AI SEO &amp; AI Overviews</b><span>Get cited by ChatGPT, Gemini, AI Overview · free check included</span></a>
+        <a onclick="go('social')"><b>Social Media Growth</b><span>Content that builds a real audience · free check included</span></a>
+        <a onclick="go('content')"><b>Content Marketing</b><span>Words that rank and convert · free check included</span></a>
+        <a onclick="go('webdev')"><b>Website Development</b><span>Fast, conversion-built websites · free check included</span></a>
+        <a onclick="go('paid')"><b>Paid Campaigns</b><span>Ads that support the organic engine · free check included</span></a>
       </div>
     </div>
     <a class="nav-item" onclick="go('work')">Work</a>
     <a class="nav-item" onclick="go('about')">About</a>
     <a class="nav-item" onclick="go('blog')">Insights</a>
+    <a class="nav-item" onclick="go('tools')">More Free Checks</a>
     <a class="nav-item" onclick="go('faq')">FAQs</a>
   </div>
   <a class="nav-cta" onclick="go('contact')">Get a quote
@@ -393,8 +412,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.8);padding:70px 0 24px;pos
 <div class="scrim" id="scrim" onclick="closeMobileMenu()"></div>
 <div class="mobile-panel" id="mobilePanel">
   <a onclick="go('home');closeMobileMenu()">Home</a>
-  <a onclick="go('tools');closeMobileMenu()">Free Tools</a>
-  <a onclick="go('seo');closeMobileMenu()">Services</a>
+  <a onclick="go('seo');closeMobileMenu()">Services <span class="sub-item" style="display:inline;padding:0;">(each includes a free check)</span></a>
   <a class="sub-item" onclick="go('seo');closeMobileMenu()">SEO (Organic &amp; On-Page)</a>
   <a class="sub-item" onclick="go('localseo');closeMobileMenu()">Local SEO &amp; Google Business</a>
   <a class="sub-item" onclick="go('aiseo');closeMobileMenu()">AI SEO &amp; AI Overviews</a>
@@ -405,6 +423,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.8);padding:70px 0 24px;pos
   <a onclick="go('work');closeMobileMenu()">Work</a>
   <a onclick="go('about');closeMobileMenu()">About</a>
   <a onclick="go('blog');closeMobileMenu()">Insights</a>
+  <a onclick="go('tools');closeMobileMenu()">More Free Checks</a>
   <a onclick="go('faq');closeMobileMenu()">FAQs</a>
   <a onclick="go('contact');closeMobileMenu()">Get a quote</a>
 </div>
@@ -419,11 +438,22 @@ footer{background:var(--navy);color:rgba(255,255,255,.8);padding:70px 0 24px;pos
       <div class="eyebrow reveal in"><span class="dot"></span> Organic growth, engineered for revenue</div>
       <h1 class="hero-h1 reveal in" style="transition-delay:.05s">We build <span class="underline-teal text-teal">digital presence</span> that turns into paying customers.</h1>
       <p class="lead reveal in" style="transition-delay:.12s;margin-top:20px;">Click.n.likes is a full-stack organic growth agency: SEO, AI Search, Social, Content and Websites, backed by paid media when it helps. Built for businesses anywhere in the world who are done paying for impressions that don't book appointments.</p>
+      <div class="hero-live-input reveal in" style="transition-delay:.15s;">
+        <input type="text" id="heroIndustryInput" placeholder="Type your industry… (e.g. dental clinic)" oninput="updateHeroIndustry(this.value)" maxlength="40">
+        <span class="hero-live-hint">↳ watch the card on the right update</span>
+      </div>
       <div class="hero-cta-row reveal in" style="transition-delay:.18s;">
         <a class="btn btn-primary magnetic" onclick="go('contact')">Get your instant quote
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </a>
         <a class="btn btn-outline magnetic" onclick="go('work')">See real results</a>
+      </div>
+      <div class="steps-strip reveal in" style="transition-delay:.2s;">
+        <span class="step"><b>1</b>Pick a service</span>
+        <span class="step-arrow">→</span>
+        <span class="step"><b>2</b>See your real price</span>
+        <span class="step-arrow">→</span>
+        <span class="step"><b>3</b>We get to work</span>
       </div>
       <div class="hero-stats reveal in" style="transition-delay:.24s;">
         <div class="stat"><b>4-5</b><span>Avg. months to page 1</span></div>
@@ -451,7 +481,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.8);padding:70px 0 24px;pos
         <div class="chips"><span class="chip">Click-share when AI Overview appears</span><span class="chip">~2.9x more clicks when cited</span></div>
       </div>
       <div class="float-card" style="top:8px;left:-18px;animation-delay:.4s;">📉 Skipped = skipped clicks<br><span style="font-weight:400;color:var(--grey);font-size:11.5px;">Un-optimized pages lose the answer to a competitor</span></div>
-      <div class="float-card" style="bottom:14px;right:-14px;animation-delay:1.1s;">💬 Cited in AI Overview<br><span style="font-weight:400;color:var(--grey);font-size:11.5px;">AEO · D2C skincare brand</span></div>
+      <div class="float-card" style="bottom:14px;right:-14px;animation-delay:1.1s;">💬 Cited in AI Overview<br><span style="font-weight:400;color:var(--grey);font-size:11.5px;">AEO · <span id="heroIndustryTarget">D2C skincare brand</span></span></div>
     </div>
   </div>
 </section>
@@ -507,6 +537,38 @@ footer{background:var(--navy);color:rgba(255,255,255,.8);padding:70px 0 24px;pos
         <div class="icn"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l6-9 6 9-6 9z"/><path d="M15 12l3-4.5 3 4.5-3 4.5z"/></svg></div>
         <h3>Paid Campaigns</h3>
         <p>Meta and Google ads that support the organic engine, never replace it.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="background:var(--off);">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow"><span class="dot"></span> How we're different</div>
+      <h2 class="sec-h2">Not another agency with a "book a call" button.</h2>
+      <p class="lead" style="margin-top:12px;">No jabs at anyone else, just what's actually true about how we work.</p>
+    </div>
+    <div class="bento" style="grid-template-columns:repeat(4,1fr);">
+      <div class="bcard reveal stagger" style="--i:0" onclick="go('contact')">
+        <div class="icn"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg></div>
+        <h3>Pricing you can see</h3>
+        <p>Most agencies hide pricing behind a sales call. Ours is a live calculator, right here.</p>
+      </div>
+      <div class="bcard reveal stagger" style="--i:1" onclick="go('tools')">
+        <div class="icn"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L4 14h6l-1 8 9-12h-6z"/></svg></div>
+        <h3>Audits that actually run</h3>
+        <p>Most "free audits" are empty lead-gen forms. Ours run real scoring math the second you submit.</p>
+      </div>
+      <div class="bcard reveal stagger" style="--i:2" onclick="go('tools')">
+        <div class="icn"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg></div>
+        <h3>Revenue, not vanity metrics</h3>
+        <p>Most agencies report clicks and impressions. We show revenue and profit, not just traffic.</p>
+      </div>
+      <div class="bcard reveal stagger" style="--i:3" onclick="go('about')">
+        <div class="icn"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l9 5-9 5-9-5 9-5z"/><path d="M3 12l9 5 9-5"/><path d="M3 17l9 5 9-5"/></svg></div>
+        <h3>One team, seven channels</h3>
+        <p>Most agencies hand you between vendors for SEO, social, content and ads. We run all seven under one roof, so nothing falls through the cracks between them.</p>
       </div>
     </div>
   </div>
@@ -592,6 +654,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.8);padding:70px 0 24px;pos
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </button>
         <div class="success-msg" id="homeLeadForm-success">✓ Got it. We'll email your snapshot within 24 hours.</div>
+        <p class="form-note" id="homeLeadForm-mailto-wrap"></p>
         <p class="form-note">Prefer an instant number? <a class="text-teal" style="text-decoration:underline;cursor:pointer;" onclick="go('contact')">Use the live quote calculator →</a></p>
       </form>
     </div>
@@ -606,8 +669,8 @@ footer{background:var(--navy);color:rgba(255,255,255,.8);padding:70px 0 24px;pos
   <div class="wrap">
     <div class="section-head reveal in">
       <div class="eyebrow"><span class="dot"></span> Free, no signup to see your number</div>
-      <h1 class="hero-h1" style="font-size:clamp(2.1rem,4.4vw,3.4rem);">Three quick tools. Real math, real signals, zero guesswork.</h1>
-      <p class="lead" style="margin-top:16px;max-width:680px;">No paid crawl APIs, no black box. Every number below comes from a fixed, published formula or a direct check of your answers, so what you see on screen is exactly how it was calculated.</p>
+      <h1 class="hero-h1" style="font-size:clamp(2.1rem,4.4vw,3.4rem);">Three more free checks, beyond your service page.</h1>
+      <p class="lead" style="margin-top:16px;max-width:680px;">Every service page already runs its own free check. These three are extra, cross-channel signals: your funnel math, your competitor's threat level, your core site speed, no paid crawl APIs, no black box. Every number below comes from a fixed, published formula or a direct check of your answers, so what you see on screen is exactly how it was calculated.</p>
     </div>
     <div class="tool-nav reveal" style="margin-top:26px;">
       <a onclick="document.getElementById('speedToolCard').scrollIntoView({behavior:'smooth'})">⚡ Speed &amp; Core Vitals Checker</a>
@@ -653,6 +716,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.8);padding:70px 0 24px;pos
           <div class="score-label" id="speed-score-label">Performance Score out of 100. Direct point count from the checkboxes above, no live crawl involved.</div>
         </div>
         <ul class="result-bullets" id="speed-bullets"></ul>
+        <p class="form-note" id="speed-mailto-wrap" style="color:var(--teal-dark);"></p>
         <div class="locked-block">
           <h4>🔒 Line-by-line code fixes for your developer</h4>
           <p>The exact Alt Tag, lazy-load and viewport fixes to hand straight to whoever maintains your site.</p>
@@ -762,6 +826,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.8);padding:70px 0 24px;pos
       <div class="tool-result" id="competitor-result">
         <div id="competitor-badge"></div>
         <p class="lead" id="competitor-summary" style="max-width:100%;"></p>
+        <p class="form-note" id="competitor-mailto-wrap" style="color:var(--teal-dark);"></p>
         <div class="locked-block">
           <h4>🔒 90-Day Organic Hijacking Framework</h4>
           <p>The exact plan to out-publish and out-rank a competitor at this threat level, built for your industry.</p>
@@ -793,7 +858,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.8);padding:70px 0 24px;pos
       <div class="eyebrow"><span class="dot"></span> SEO (Organic &amp; On-Page)</div>
       <h1 class="hero-h1" style="font-size:clamp(2.1rem,4.4vw,3.4rem);">Rank on Google search where it actually drives revenue.</h1>
       <p class="lead" style="margin-top:16px;max-width:640px;">Keyword strategy, on-page optimization, technical fixes and supporting blog content, built around how your category actually gets searched on Google: separate from Google Maps/Local, which we treat as its own discipline.</p>
-      <div class="hero-cta-row"><a class="btn btn-primary magnetic" onclick="document.getElementById('seoToolCard').scrollIntoView({behavior:'smooth'})">Run a free readiness check</a><a class="btn btn-outline magnetic" onclick="document.getElementById('seoQuoteCard').scrollIntoView({behavior:'smooth'})">Get a quote</a></div>
+      <div class="hero-cta-row"><a class="btn btn-primary magnetic" onclick="document.getElementById('seoToolCard').scrollIntoView({behavior:'smooth'})">Run a free readiness check</a><a class="cta-secondary-link magnetic" onclick="document.getElementById('seoQuoteCard').scrollIntoView({behavior:'smooth'})">or skip straight to pricing →</a></div>
     </div>
   </div>
 </section>
@@ -880,7 +945,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.8);padding:70px 0 24px;pos
       <div class="eyebrow"><span class="dot"></span> Local SEO &amp; Google Business Profile</div>
       <h1 class="hero-h1" style="font-size:clamp(2.1rem,4.4vw,3.4rem);">Show up first when your city searches for what you sell.</h1>
       <p class="lead" style="margin-top:16px;max-width:640px;">Google Business Profile optimization, review strategy and local link building: the Google Maps / "local pack" discipline, run separately from organic SEO because it's won with a different set of signals.</p>
-      <div class="hero-cta-row"><a class="btn btn-primary magnetic" onclick="document.getElementById('localseoToolCard').scrollIntoView({behavior:'smooth'})">Run a free visibility check</a><a class="btn btn-outline magnetic" onclick="document.getElementById('localseoQuoteCard').scrollIntoView({behavior:'smooth'})">Get a quote</a></div>
+      <div class="hero-cta-row"><a class="btn btn-primary magnetic" onclick="document.getElementById('localseoToolCard').scrollIntoView({behavior:'smooth'})">Run a free visibility check</a><a class="cta-secondary-link magnetic" onclick="document.getElementById('localseoQuoteCard').scrollIntoView({behavior:'smooth'})">or skip straight to pricing →</a></div>
     </div>
   </div>
 </section>
@@ -975,7 +1040,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.8);padding:70px 0 24px;pos
       <div class="eyebrow"><span class="dot"></span> AI SEO · AEO · GEO · LLMO</div>
       <h1 class="hero-h1" style="font-size:clamp(2.1rem,4.4vw,3.4rem);">Be the answer when someone asks ChatGPT or Google's AI Overview.</h1>
       <p class="lead" style="margin-top:16px;max-width:640px;">Search is splitting into two tracks: blue links and AI answers. We structure your content, schema and entity signals so AI engines cite you, not your competitor.</p>
-      <div class="hero-cta-row"><a class="btn btn-primary magnetic" onclick="document.getElementById('aiseoToolCard').scrollIntoView({behavior:'smooth'})">Check AI readiness</a><a class="btn btn-outline magnetic" onclick="document.getElementById('aiseoQuoteCard').scrollIntoView({behavior:'smooth'})">Get a quote</a></div>
+      <div class="hero-cta-row"><a class="btn btn-primary magnetic" onclick="document.getElementById('aiseoToolCard').scrollIntoView({behavior:'smooth'})">Check AI readiness</a><a class="cta-secondary-link magnetic" onclick="document.getElementById('aiseoQuoteCard').scrollIntoView({behavior:'smooth'})">or skip straight to pricing →</a></div>
     </div>
   </div>
 </section>
@@ -1049,7 +1114,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.8);padding:70px 0 24px;pos
       <div class="eyebrow"><span class="dot"></span> Social Media Growth</div>
       <h1 class="hero-h1" style="font-size:clamp(2.1rem,4.4vw,3.4rem);">Content that builds an audience your competitors can't copy.</h1>
       <p class="lead" style="margin-top:16px;max-width:640px;">Strategy, calendars, captions and creative direction for Instagram and LinkedIn, aimed at DMs and bookings, not just likes.</p>
-      <div class="hero-cta-row"><a class="btn btn-primary magnetic" onclick="document.getElementById('socialToolCard').scrollIntoView({behavior:'smooth'})">Get my growth snapshot</a><a class="btn btn-outline magnetic" onclick="document.getElementById('socialQuoteCard').scrollIntoView({behavior:'smooth'})">Get a quote</a></div>
+      <div class="hero-cta-row"><a class="btn btn-primary magnetic" onclick="document.getElementById('socialToolCard').scrollIntoView({behavior:'smooth'})">Get my growth snapshot</a><a class="cta-secondary-link magnetic" onclick="document.getElementById('socialQuoteCard').scrollIntoView({behavior:'smooth'})">or skip straight to pricing →</a></div>
     </div>
   </div>
 </section>
@@ -1134,7 +1199,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.8);padding:70px 0 24px;pos
       <div class="eyebrow"><span class="dot"></span> Content Marketing</div>
       <h1 class="hero-h1" style="font-size:clamp(2.1rem,4.4vw,3.4rem);">Words that rank on Google and get quoted by AI.</h1>
       <p class="lead" style="margin-top:16px;max-width:640px;">Blogs, guides, landing page copy and case studies, written to a structure that both search engines and AI models can actually extract answers from.</p>
-      <div class="hero-cta-row"><a class="btn btn-primary magnetic" onclick="document.getElementById('contentToolCard').scrollIntoView({behavior:'smooth'})">Find my content gaps</a><a class="btn btn-outline magnetic" onclick="document.getElementById('contentQuoteCard').scrollIntoView({behavior:'smooth'})">Get a quote</a></div>
+      <div class="hero-cta-row"><a class="btn btn-primary magnetic" onclick="document.getElementById('contentToolCard').scrollIntoView({behavior:'smooth'})">Find my content gaps</a><a class="cta-secondary-link magnetic" onclick="document.getElementById('contentQuoteCard').scrollIntoView({behavior:'smooth'})">or skip straight to pricing →</a></div>
     </div>
   </div>
 </section>
@@ -1207,7 +1272,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.8);padding:70px 0 24px;pos
       <div class="eyebrow"><span class="dot"></span> Website Development</div>
       <h1 class="hero-h1" style="font-size:clamp(2.1rem,4.4vw,3.4rem);">A website that works while you sleep.</h1>
       <p class="lead" style="margin-top:16px;max-width:640px;">Fast, mobile-first websites built on top of the same SEO and content strategy that drives your traffic, so the site is never a separate project from your growth.</p>
-      <div class="hero-cta-row"><a class="btn btn-primary magnetic" onclick="document.getElementById('webdevToolCard').scrollIntoView({behavior:'smooth'})">Check my website health</a><a class="btn btn-outline magnetic" onclick="document.getElementById('webdevQuoteCard').scrollIntoView({behavior:'smooth'})">Get a quote</a></div>
+      <div class="hero-cta-row"><a class="btn btn-primary magnetic" onclick="document.getElementById('webdevToolCard').scrollIntoView({behavior:'smooth'})">Check my website health</a><a class="cta-secondary-link magnetic" onclick="document.getElementById('webdevQuoteCard').scrollIntoView({behavior:'smooth'})">or skip straight to pricing →</a></div>
     </div>
   </div>
 </section>
@@ -1294,7 +1359,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.8);padding:70px 0 24px;pos
       <div class="eyebrow"><span class="dot"></span> Paid Campaigns</div>
       <h1 class="hero-h1" style="font-size:clamp(2.1rem,4.4vw,3.4rem);">Ads that support the organic engine, never replace it.</h1>
       <p class="lead" style="margin-top:16px;max-width:640px;">Meta and Google campaigns layered on top of SEO and content that's already working, so every rupee of ad spend compounds instead of disappearing the day you stop paying.</p>
-      <div class="hero-cta-row"><a class="btn btn-primary magnetic" onclick="document.getElementById('paidToolCard').scrollIntoView({behavior:'smooth'})">Estimate my ad efficiency</a><a class="btn btn-outline magnetic" onclick="document.getElementById('paidQuoteCard').scrollIntoView({behavior:'smooth'})">Get a quote</a></div>
+      <div class="hero-cta-row"><a class="btn btn-primary magnetic" onclick="document.getElementById('paidToolCard').scrollIntoView({behavior:'smooth'})">Estimate my ad efficiency</a><a class="cta-secondary-link magnetic" onclick="document.getElementById('paidQuoteCard').scrollIntoView({behavior:'smooth'})">or skip straight to pricing →</a></div>
     </div>
   </div>
 </section>
@@ -1447,6 +1512,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.8);padding:70px 0 24px;pos
         </div>
         <button class="btn btn-primary magnetic" style="margin-top:20px;" type="submit">Show me realistic numbers</button>
         <div class="success-msg" id="workLeadForm-success">✓ Thanks. We'll send category benchmarks to your inbox shortly.</div>
+        <p class="form-note" id="workLeadForm-mailto-wrap"></p>
       </form>
     </div>
   </div>
@@ -1482,6 +1548,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.8);padding:70px 0 24px;pos
     <div class="section-head center reveal" style="margin-left:auto;margin-right:auto;">
       <div class="eyebrow"><span class="dot"></span> How we work</div>
       <h2 class="sec-h2">No sugarcoating. Just what's working and what isn't.</h2>
+      <p class="lead" style="margin-top:12px;">And one number we report that most agencies don't: not just revenue, but <b>profit</b>. A ₹50,000 month means nothing if it costs ₹60,000 to generate it, so every report breaks out what a result was actually worth after cost, not just the traffic or revenue headline.</p>
     </div>
     <div class="bento">
       <div class="bcard reveal stagger" style="--i:0"><div class="icn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 3"/></svg></div><h3>Research first</h3><p>We study your competitors before we write a word of strategy or copy.</p></div>
@@ -1506,6 +1573,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.8);padding:70px 0 24px;pos
         </div>
         <button class="btn btn-primary magnetic" style="margin-top:20px;" type="submit">Talk to us</button>
         <div class="success-msg" id="aboutLeadForm-success">✓ Got it. We'll reply within one business day.</div>
+        <p class="form-note" id="aboutLeadForm-mailto-wrap"></p>
       </form>
     </div>
   </div>
@@ -1571,6 +1639,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.8);padding:70px 0 24px;pos
           </div>
         </div>
         <div class="success-msg" id="blogNlForm-success">✓ Subscribed. First issue lands this week.</div>
+        <p class="form-note" id="blogNlForm-mailto-wrap"></p>
       </form>
     </div>
   </div>
@@ -1642,6 +1711,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.8);padding:70px 0 24px;pos
         </div>
         <button class="btn btn-primary magnetic" style="margin-top:20px;" type="submit">Ask us</button>
         <div class="success-msg" id="faqLeadForm-success">✓ Got your question. We'll answer within one business day.</div>
+        <p class="form-note" id="faqLeadForm-mailto-wrap"></p>
       </form>
     </div>
   </div>
@@ -1684,10 +1754,11 @@ footer{background:var(--navy);color:rgba(255,255,255,.8);padding:70px 0 24px;pos
         </div>
         <button class="btn btn-primary magnetic" style="margin-top:20px;" type="submit">Send message</button>
         <div class="success-msg" id="contactMsgForm-success">✓ Message sent. We reply within one business day.</div>
+        <p class="form-note" id="contactMsgForm-mailto-wrap"></p>
       </form>
     </div>
     <div class="grid4 reveal" style="margin-top:40px;">
-      <div class="bcard center"><h3 style="font-size:14px;">Email</h3><p style="font-size:13.5px;color:var(--grey);margin-top:6px;">hello@clicknlikes.in</p></div>
+      <div class="bcard center"><h3 style="font-size:14px;">Email</h3><p style="font-size:13.5px;color:var(--grey);margin-top:6px;">clicknlikes@gmail.com</p></div>
       <div class="bcard center"><h3 style="font-size:14px;">WhatsApp</h3><p style="font-size:13.5px;color:var(--grey);margin-top:6px;">+91 98XXX XXXXX</p></div>
       <div class="bcard center"><h3 style="font-size:14px;">Based in</h3><p style="font-size:13.5px;color:var(--grey);margin-top:6px;">Ahmedabad &amp; Mumbai · Serving clients worldwide</p></div>
       <div class="bcard center"><h3 style="font-size:14px;">Response time</h3><p style="font-size:13.5px;color:var(--grey);margin-top:6px;">Within 1 business day</p></div>
@@ -1730,7 +1801,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.8);padding:70px 0 24px;pos
     </div>
     <div>
       <h4>Contact</h4>
-      <a>hello@clicknlikes.in</a>
+      <a>clicknlikes@gmail.com</a>
       <a>+91 98XXX XXXXX</a>
       <a>Ahmedabad &amp; Mumbai · Worldwide</a>
     </div>
@@ -1788,10 +1859,22 @@ try{
 }catch(e){ emailjsReady = false; }
 
 /* The single sending address for every outbound email on this site.
-   Must match the Gmail inbox connected to EMAILJS_SERVICE_ID above. */
+   Must match the Gmail inbox connected to EMAILJS_SERVICE_ID above.
+   This is also the address printed in the footer and Contact page, so
+   what visitors see matches what actually sends and receives mail. */
 const FROM_EMAIL = "clicknlikes@gmail.com";
 const OWNER_EMAIL = "clicknlikes@gmail.com";
 const BUSINESS_NAME = "Click.n.likes";
+
+/* Escapes user-typed text before it's interpolated into innerHTML
+   (free-tool industry fields, custom quote task names, etc.). Anything
+   that only ever goes into .textContent or a mailto/email body doesn't
+   need this, since neither context executes HTML. */
+function escapeHtml(str){
+  return String(str==null ? '' : str).replace(/[&<>"']/g, c=>({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[c]));
+}
 
 /* ---- Google PageSpeed Insights API (real, live data) -----------
    This is the one Google API that's genuinely free with no billing
@@ -1869,14 +1952,18 @@ async function fetchPageSpeedData(rawUrl){
    mailto draft (From: clicknlikes@gmail.com won't be enforceable by
    mailto itself, but the draft opens in the visitor's own client
    addressed as being from Click.n.likes) if EmailJS isn't configured
-   yet, so no form is ever a dead end. */
-function sendFromClicknlikes({toEmail, toName, subject, bodyText}){
+   yet, so no form is ever a dead end.
+   `replyTo` lets a lead-notification email (sent to OWNER_EMAIL) reply
+   straight to the prospect instead of back to the business's own inbox;
+   it defaults to FROM_EMAIL for visitor-facing confirmations, where
+   replying back to the business is exactly what you want. */
+function sendFromClicknlikes({toEmail, toName, subject, bodyText, replyTo}){
   if(emailjsReady){
     emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
       to_email: toEmail,
       to_name: toName || '',
       from_email: FROM_EMAIL,
-      reply_to: FROM_EMAIL,
+      reply_to: replyTo || FROM_EMAIL,
       subject: subject,
       message_html: bodyText.replace(/\n/g,'<br>')
     }).catch(err=>console.warn('EmailJS send failed, relying on mailto fallback', err));
@@ -1884,12 +1971,24 @@ function sendFromClicknlikes({toEmail, toName, subject, bodyText}){
   return `mailto:${encodeURIComponent(toEmail)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyText)}`;
 }
 
+/* ---------------- hero micro-interaction ---------------- */
+/* Live-updates the floating "Cited in AI Overview" card the instant a
+   visitor types, before they've clicked anything: the "this responds to
+   me" moment the hero itself was missing. textContent only, so no HTML
+   escaping is needed for what a visitor types here. */
+function updateHeroIndustry(val){
+  const target = document.getElementById('heroIndustryTarget');
+  if(!target) return;
+  const v = val.trim();
+  target.textContent = v ? v : 'D2C skincare brand';
+}
+
 /* ---------------- page routing ---------------- */
 function go(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   const target = document.getElementById('page-'+id);
   if(target) target.classList.add('active');
-  window.scrollTo({top:0, behavior:'instant' in document.documentElement.style ? 'instant' : 'auto'});
+  window.scrollTo({top:0, behavior:'auto'});
   ensureCalculatorsFor(id);
   requestAnimationFrame(initReveal);
   requestAnimationFrame(initCounters);
@@ -1930,12 +2029,16 @@ window.addEventListener('mousemove',e=>{
   cRing.style.left=rx+'px'; cRing.style.top=ry+'px';
   requestAnimationFrame(ringLoop);
 })();
-document.addEventListener('click',e=>{
-  for(let i=0;i<6;i++){
+/* Shared click-spark particle burst: the same teal/coral motif as the
+   logo, reused both on every click and, deliberately, on the score-reveal
+   moment in the free tools so that "wow" pays off the brand's own mark
+   instead of a generic confetti effect. */
+function spawnSparkBurst(x, y, count){
+  for(let i=0;i<(count||6);i++){
     const s=document.createElement('div');
     s.className='spark';
     const ang=Math.random()*Math.PI*2, dist=18+Math.random()*26;
-    s.style.left=e.clientX+'px'; s.style.top=e.clientY+'px';
+    s.style.left=x+'px'; s.style.top=y+'px';
     s.style.background = i%2===0 ? 'var(--teal)':'var(--coral)';
     document.body.appendChild(s);
     s.animate([
@@ -1943,7 +2046,16 @@ document.addEventListener('click',e=>{
       {transform:`translate(-50%,-50%) translate(${Math.cos(ang)*dist}px, ${Math.sin(ang)*dist}px)`,opacity:0}
     ],{duration:520,easing:'cubic-bezier(.16,1,.3,1)'}).onfinish=()=>s.remove();
   }
-});
+}
+document.addEventListener('click',e=>{ spawnSparkBurst(e.clientX, e.clientY, 6); });
+
+/* Fires a bigger, on-brand spark burst centered on a just-revealed score
+   number, so the payoff of a tool finishing lands on the number itself. */
+function sparkBurstOnElement(el){
+  if(!el) return;
+  const r = el.getBoundingClientRect();
+  spawnSparkBurst(r.left + r.width/2, r.top + r.height/2, 14);
+}
 
 /* ---------------- magnetic buttons ---------------- */
 document.addEventListener('mousemove',e=>{
@@ -2025,8 +2137,9 @@ function handleSimpleForm(evt, formId, tag){
 
   // Notify the business inbox: sent from clicknlikes@gmail.com like every other form.
   const summary = Object.entries(obj).map(([k,v])=>`${k}: ${v}`).join('\n');
-  sendFromClicknlikes({
+  const mailLink = sendFromClicknlikes({
     toEmail: OWNER_EMAIL,
+    replyTo: obj.email || undefined,
     subject: `New ${tag} lead: ${obj.name || obj.email || 'website visitor'}`,
     bodyText: `New submission from the ${tag} form:\n\n${summary}`
   });
@@ -2043,6 +2156,8 @@ function handleSimpleForm(evt, formId, tag){
   console.log('['+tag+' lead]', obj);
   const successEl=document.getElementById(formId+'-success');
   if(successEl) successEl.classList.add('show');
+  const mailtoWrap=document.getElementById(formId+'-mailto-wrap');
+  if(mailtoWrap) mailtoWrap.innerHTML = `Didn't get it? <a href="${mailLink}" style="color:var(--teal-dark);text-decoration:underline;">Open it as an email draft</a>.`;
   form.reset();
   return false;
 }
@@ -2050,12 +2165,12 @@ function footerSubscribe(){
   const email=document.getElementById('footNlEmail');
   const msg=document.getElementById('footNlMsg');
   if(!email.value || !email.value.includes('@')){ msg.textContent='Enter a valid email.'; return; }
-  sendFromClicknlikes({
+  const mailLink = sendFromClicknlikes({
     toEmail: email.value,
     subject: 'Subscribed: Click.n.likes',
     bodyText: `Hi,\n\nYou're subscribed to Click.n.likes updates on SEO, AI search, social, content and paid media.\n\nBest,\nClick.n.likes\nclicknlikes@gmail.com`
   });
-  msg.textContent='✓ Subscribed with '+email.value;
+  msg.innerHTML = `✓ Subscribed with ${escapeHtml(email.value)}. <a href="${mailLink}" style="color:var(--teal);text-decoration:underline;">Didn't get it? Open as email draft</a>.`;
   email.value='';
 }
 
@@ -2064,6 +2179,13 @@ function footerSubscribe(){
 /* ============================================================
    GATED TOOLS ENGINE
    ============================================================ */
+/* Minimum time the scan animation stays visible: just enough for the
+   spinner to feel like real, purposeful work rather than an instant
+   flash (self-reported scoring is pure synchronous math) or a padded,
+   fake-feeling wait (the old 1800ms). A real live PageSpeed check that
+   takes longer than this simply runs past it, unpadded either way. */
+const TOOL_SCAN_MIN_MS = 900;
+
 function hashStr(s){
   let h=0;
   for(let i=0;i<s.length;i++){ h=(h<<5)-h+s.charCodeAt(i); h|=0; }
@@ -2094,7 +2216,7 @@ const TOOL_LOGIC = {
       score, indexLabel:'Organic Authority Index',
       statusLine: `Organic Authority Index: ${score}/100 (${status}). ${!hasPillars ? `Your site is trapped in an architectural silo, meaning Google is indexing your pages but withholding Page 1 visibility.` : `Your architecture is in reasonable shape, the gap is elsewhere.`}`,
       bullets:[
-        `Organic Authority Index for "${inp.seo_industry||'your industry'}": ${score}/100 (${status}), driven mainly by ${!hasPillars?'missing pillar-and-cluster architecture':'other on-page factors'}.`,
+        `Organic Authority Index for "${escapeHtml(inp.seo_industry||'your industry')}": ${score}/100 (${status}), driven mainly by ${!hasPillars?'missing pillar-and-cluster architecture':'other on-page factors'}.`,
         `Traffic Capture Efficiency: ${trafficStatus}${stuckPage23?', your target keywords are sitting on page 2/3 where under 1% of searchers ever click.':'.'}`,
         `Internal linking depth: ${hasLinking?'reasonable, this is not your bottleneck right now.':'thin, this is quietly capping how much authority flows to your money pages.'}`
       ],
@@ -2125,7 +2247,7 @@ const TOOL_LOGIC = {
       score, indexLabel:'Local Visibility Radius',
       statusLine: `Local Visibility Radius: Restricted to ${effectiveRadius}. ${proximityDecay ? 'You are completely invisible to high-intent local buyers outside your immediate neighborhood.' : 'There is still room to expand your practical reach.'}`,
       bullets:[
-        `Local Visibility Radius for "${inp.localseo_industry||'your category'}": restricted to roughly ${effectiveRadius}${proximityDecay?', vs. the '+radius+' you\'re actually targeting.':'.'}`,
+        `Local Visibility Radius for "${escapeHtml(inp.localseo_industry||'your category')}": restricted to roughly ${effectiveRadius}${proximityDecay?', vs. the '+radius+' you\'re actually targeting.':'.'}`,
         `Review gap vs. your top local competitor: you need approximately ${reviewsNeeded} more 5-star reviews to close the gap.`,
         `Profile freshness: ${weeklyUpdates?'weekly updates are keeping your profile active in local ranking signals.':'no weekly updates detected, Google deprioritizes stale profiles in the local pack.'}`
       ],
@@ -2157,7 +2279,7 @@ const TOOL_LOGIC = {
       score, indexLabel:'AI Readability Index',
       statusLine: `AI Readability Index: ${capability} (${score}/100). ${score<40 ? "Modern LLMs (like Gemini and ChatGPT) cannot reliably extract factual citations from this copy to feature you in AI Overviews." : "Your copy gives AI engines something to work with, though there's room to strengthen it further."}`,
       bullets:[
-        `AI Readability Index for "${inp.aiseo_industry||'your industry'}": ${capability} (${score}/100).`,
+        `AI Readability Index for "${escapeHtml(inp.aiseo_industry||'your industry')}": ${capability} (${score}/100).`,
         `Structural signals found: ${structureMarkers}/2 (headings, lists): ${structureMarkers===0?'AI engines have nothing to segment into an answer.':'a reasonable starting skeleton.'}`,
         `Factual density found: ${densityMarkers}/3 (entity-definition phrasing, numbers, percentages): ${densityMarkers<=1?'too thin for an LLM to confidently cite a fact from this copy.':'enough for partial extraction.'}`
       ],
@@ -2188,7 +2310,7 @@ const TOOL_LOGIC = {
       score, indexLabel:'Ad Spend Efficiency',
       statusLine: `Estimated Annual Ad Budget Leak: ₹${annualLeak.toLocaleString('en-IN')} lost to blind traffic routing and tracking dropouts.`,
       bullets:[
-        `Estimated Annual Ad Budget Leak for "${inp.paid_industry||'your industry'}": ₹${annualLeak.toLocaleString('en-IN')} (roughly ${leakagePct}% of spend across ${platforms.join(', ')||'your platforms'}).`,
+        `Estimated Annual Ad Budget Leak for "${escapeHtml(inp.paid_industry||'your industry')}": ₹${annualLeak.toLocaleString('en-IN')} (roughly ${leakagePct}% of spend across ${platforms.join(', ')||'your platforms'}).`,
         `Biggest leak source: ${homepageRouting?'ad traffic landing on your homepage instead of a dedicated page built to convert.':(noPixel?'unverified conversion tracking, meaning campaigns may be optimizing toward the wrong signal.':'relatively contained, the setup basics are in place.')}`,
         `Monthly leak in rupees at your current ₹${budget.toLocaleString('en-IN')}/month budget: roughly ₹${Math.round(budget*(leakagePct/100)).toLocaleString('en-IN')}/month.`
       ],
@@ -2219,7 +2341,7 @@ const TOOL_LOGIC = {
       score, indexLabel:'Reach Efficiency',
       statusLine: `Reach Efficiency Status: ${status}. ${suppressed ? `Your profiles are shadow-restricted by frequency penalties, reaching less than ${Math.max(reachPct,0.1).toFixed(1)}% of your total network.` : `You're reaching roughly ${reachPct.toFixed(1)}% of your network per post.`}`,
       bullets:[
-        `Reach Efficiency Status for "${inp.social_industry||'your industry'}" on ${platform}: ${status} (${score}/100).`,
+        `Reach Efficiency Status for "${escapeHtml(inp.social_industry||'your industry')}" on ${platform}: ${status} (${score}/100).`,
         `Algorithmic deficit: your posts are landing roughly ${deficit.toLocaleString('en-IN')} engagements below the expected 3% baseline for ${followers.toLocaleString('en-IN')} followers.`,
         `Posting cadence: ${freq}x/week ${suppressed?`(under the 3x/week threshold, which triggers a real algorithmic reach penalty on ${platform})`:'(at or above the threshold that avoids frequency-based suppression)'}`
       ],
@@ -2253,7 +2375,7 @@ const TOOL_LOGIC = {
     const dropoff = longForm ? Math.round(leads*0.26) : 0;
     const status = score<60 ? 'High Friction' : score<80 ? 'Moderate Friction' : 'Low Friction';
     const bullets = [
-      `Infrastructure Health for "${inp.webdev_industry||'your industry'}": ${score}/100 (${status})${isLive?': measured live via Google PageSpeed Insights.':'.'}`,
+      `Infrastructure Health for "${escapeHtml(inp.webdev_industry||'your industry')}": ${score}/100 (${status})${isLive?': measured live via Google PageSpeed Insights.':'.'}`,
       `Projected conversion drop-off from your long lead form: ${longForm ? `roughly ${dropoff.toLocaleString('en-IN')} enquiries/month lost, based on your ${leads.toLocaleString('en-IN')} current monthly leads.` : 'not a live issue: your form is a reasonable length.'}`
     ];
     if(isLive){
@@ -2280,7 +2402,7 @@ const TOOL_LOGIC = {
     const gap = 6 + (seed%18);
     const traffic = 400 + (seed%2600);
     return { score, bullets:[
-      `Published content volume around "${inp.content_topic||'your core service'}" vs. category leaders in ${inp.content_industry||'your industry'}: noticeably behind.`,
+      `Published content volume around "${escapeHtml(inp.content_topic||'your core service')}" vs. category leaders in ${escapeHtml(inp.content_industry||'your industry')}: noticeably behind.`,
       `Estimated content topics you have zero coverage on: around ${gap} high-intent topics.`,
       `Estimated monthly search traffic being left on the table: roughly ${traffic} visits/month.`
     ]};
@@ -2304,10 +2426,12 @@ async function runGatedTool(evt, key){
   });
   const seed = hashStr(Object.values(inputs).join('|') + key);
 
-  // Keep the scan animation's minimum visible duration, and: for the
-  // Infrastructure tool specifically, when a URL was given: actually run
-  // a real live PageSpeed check in parallel with that wait.
-  const minDelay = new Promise(r=>setTimeout(r, 1800));
+  // Keep the scan animation's minimum visible duration short and honest:
+  // just long enough for the spinner to read as real work, not a padded
+  // wait pretending to be a deep crawl. For the Infrastructure tool
+  // specifically, when a URL was given: actually run a real live
+  // PageSpeed check in parallel with that wait.
+  const minDelay = new Promise(r=>setTimeout(r, TOOL_SCAN_MIN_MS));
   const livePromise = (key==='webdev' && inputs.webdev_url) ? fetchPageSpeedData(inputs.webdev_url) : Promise.resolve(null);
   const [, live] = await Promise.all([minDelay, livePromise]);
   if(live) inputs._live = live;
@@ -2362,6 +2486,7 @@ async function runGatedTool(evt, key){
   }
   resultEl.classList.add('active');
   resultEl.scrollIntoView({behavior:'smooth', block:'center'});
+  sparkBurstOnElement(document.getElementById(key+'-score'));
 
   // Email the overview only (never the full audit): matches what's shown on screen.
   const toEmail = inputs[key+'_email'];
@@ -2375,11 +2500,11 @@ async function runGatedTool(evt, key){
     emailNote.style.color = 'var(--teal-dark)';
     resultEl.insertBefore(emailNote, resultEl.querySelector('.locked-block'));
   }
-  emailNote.textContent = toEmail ? `✓ This overview was also sent to ${toEmail}.` : '';
+  emailNote.innerHTML = '';
   if(toEmail){
     const bulletsText = bullets.map(b=>`• ${b}`).join('\n');
     const bodyText = `Hi,\n\nHere's your ${s.label} overview from Click.n.likes:\n\nScore: ${score}/100${result.isLive?' (includes real live PageSpeed data)':''}\n\n${bulletsText}\n\nThis is a directional overview based on what you shared, not a full audit. Want the complete breakdown, with exact fixes? Reply to this email or grab a quote at clicknlikes.in and we'll unlock the full report.\n\nBest,\nClick.n.likes\nclicknlikes@gmail.com`;
-    sendFromClicknlikes({
+    const mailLink = sendFromClicknlikes({
       toEmail,
       subject: `Your ${s.label} overview: score ${score}/100`,
       bodyText
@@ -2391,9 +2516,11 @@ async function runGatedTool(evt, key){
     const gapsText = (gaps && gaps.length) ? gaps.map(g=>`  - ${g}`).join('\n') : '  (none flagged)';
     sendFromClicknlikes({
       toEmail: OWNER_EMAIL,
+      replyTo: toEmail,
       subject: `🔔 New ${s.label} tool lead: ${toEmail}`,
       bodyText: `New "${s.label}" free-tool lead:\n\nProspect Industry: ${industryVal}\nCalculated Tool Score: ${score}/100\nData source: ${result.isLive?'includes LIVE PageSpeed data':'self-reported only'}\nSelected Gaps:\n${gapsText}\n\nEmail: ${toEmail}\n\nAll raw inputs:\n${Object.entries(inputs).filter(([k])=>k!=='_live').map(([k,v])=>`  ${k}: ${v}`).join('\n')}\n\nBullets shown to them:\n${bulletsText}`
     });
+    emailNote.innerHTML = `✓ This overview was also sent to ${escapeHtml(toEmail)}. <a href="${mailLink}" style="color:var(--teal-dark);text-decoration:underline;">Didn't get it? Open as email draft</a>.`;
   }
   console.log('[gated tool lead]', key, inputs, result);
   return false;
@@ -2422,7 +2549,12 @@ async function runSpeedChecker(evt){
     fast: document.getElementById('speed_fast').checked
   };
 
-  const live = await fetchPageSpeedData(url);
+  // Same honest minimum as the gated tools: a real live check that's
+  // slow just runs past this; a synchronous fallback (no key, or the
+  // live check declining instantly) doesn't get to flash the spinner
+  // for a few milliseconds and look broken.
+  const minDelay = new Promise(r=>setTimeout(r, TOOL_SCAN_MIN_MS));
+  const [live] = await Promise.all([fetchPageSpeedData(url), minDelay]);
   scanEl.classList.remove('active');
   btn.disabled = false; btn.style.opacity = 1;
 
@@ -2480,15 +2612,20 @@ async function runSpeedChecker(evt){
   document.getElementById('speed-bullets').innerHTML = bullets.map(b=>`<li><span class="ic">▸</span><span>${b}</span></li>`).join('');
   resultEl.classList.add('active');
   resultEl.scrollIntoView({behavior:'smooth', block:'center'});
+  sparkBurstOnElement(document.getElementById('speed-score'));
 
+  const mailtoWrap = document.getElementById('speed-mailto-wrap');
+  if(mailtoWrap) mailtoWrap.innerHTML = '';
   if(email){
     const bodyText = `Hi,\n\nHere is your Website Speed & Core Vitals check for ${url||'your site'}:\n\nPerformance Score: ${score}/100 ${isLive?'(live Google PageSpeed Insights data)':'(self-reported)'}\n\n${bullets.map(b=>'• '+b.replace(/^[✅⚠️]+\s*/,'')).join('\n')}\n\n${isLive ? 'This was measured live just now via Google PageSpeed Insights.' : 'This is based on what you told us about your own site, not a live crawl.'} Want the exact line-by-line code fixes for your developer? Reply to this email or grab a quote at clicknlikes.in.\n\nBest,\nClick.n.likes\nclicknlikes@gmail.com`;
-    sendFromClicknlikes({ toEmail: email, subject: `Your Website Speed check: score ${score}/100`, bodyText });
+    const mailLink = sendFromClicknlikes({ toEmail: email, subject: `Your Website Speed check: score ${score}/100`, bodyText });
     sendFromClicknlikes({
       toEmail: OWNER_EMAIL,
+      replyTo: email,
       subject: `🔔 New Speed Checker lead: ${email}`,
       bodyText: `New Website Speed & Core Vitals lead:\n\nEmail: ${email}\nURL: ${url}\nScore: ${score}/100\nData source: ${isLive?'LIVE PageSpeed Insights':'self-reported checkboxes'}\nChecks: ${JSON.stringify(checks)}${isLive?`\nLive data: ${JSON.stringify(live)}`:''}`
     });
+    if(mailtoWrap) mailtoWrap.innerHTML = `Didn't get it? <a href="${mailLink}" style="color:var(--teal-dark);text-decoration:underline;">Open it as an email draft</a>.`;
   }
   console.log('[speed tool lead]', {url, email, checks, score});
   return false;
@@ -2585,6 +2722,7 @@ function runROIGate(evt){
   const mailLink = sendFromClicknlikes({ toEmail: email, toName: business, subject: isSurplus ? 'Your Funnel Surplus & ROI snapshot + CRO checklist' : 'Your Funnel Leak & ROI snapshot + CRO checklist', bodyText });
   sendFromClicknlikes({
     toEmail: OWNER_EMAIL,
+    replyTo: email,
     subject: `🔔 New ROI Calculator lead: ${business||email}`,
     bodyText: `New Funnel Leak & ROI Calculator lead:\n\nBusiness: ${business}\nEmail: ${email}\nTraffic: ${traffic.toLocaleString('en-IN')}/mo\nConversion rate: ${convRate.toFixed(1)}%\nAOV: Rs.${aov.toLocaleString('en-IN')}\nMargin: ${marginPct}%\nStatus: ${isSurplus?'ABOVE benchmark (surplus)':'BELOW benchmark (leaking)'}\nGap amount: Rs.${gapAmount.toLocaleString('en-IN')}/mo\nGap in profit terms: Rs.${gapProfit.toLocaleString('en-IN')}/mo`
   });
@@ -2625,15 +2763,20 @@ function runCompetitorQuiz(evt){
   const resultEl = document.getElementById('competitor-result');
   resultEl.classList.add('active');
   resultEl.scrollIntoView({behavior:'smooth', block:'center'});
+  sparkBurstOnElement(document.getElementById('competitor-badge'));
 
+  const mailtoWrap = document.getElementById('competitor-mailto-wrap');
+  if(mailtoWrap) mailtoWrap.innerHTML = '';
   if(email){
     const bodyText = `Hi,\n\nHere is your Competitor Threat Estimate from Click.n.likes:\n\n${summary}\n\nScore: ${points}/100 (fixed weighted matrix from your answers)\n\nWant the exact 90-day organic hijacking framework built for your industry? Reply to this email or grab a quote at clicknlikes.in.\n\nBest,\nClick.n.likes\nclicknlikes@gmail.com`;
-    sendFromClicknlikes({ toEmail: email, subject: `Your Competitor Threat Estimate: ${status}`, bodyText });
+    const mailLink = sendFromClicknlikes({ toEmail: email, subject: `Your Competitor Threat Estimate: ${status}`, bodyText });
     sendFromClicknlikes({
       toEmail: OWNER_EMAIL,
+      replyTo: email,
       subject: `🔔 New Competitor Quiz lead: ${email}`,
       bodyText: `New Competitor Threat Estimator lead:\n\nEmail: ${email}\nScore: ${points}/100\nStatus: ${status}`
     });
+    if(mailtoWrap) mailtoWrap.innerHTML = `Didn't get it? <a href="${mailLink}" style="color:var(--teal-dark);text-decoration:underline;">Open it as an email draft</a>.`;
   }
   console.log('[competitor quiz lead]', {email, points, status});
   return false;
@@ -3038,7 +3181,7 @@ function qcUpdate(containerId){
       }
     });
   });
-  const linesHtml = lines.map(l=>`<div class="quote-line"><span>${l.icon||''} ${l.label} <span style="color:var(--grey);">(${l.unit})</span></span><b>₹${Math.round(l.amt).toLocaleString('en-IN')}</b></div>`).join('');
+  const linesHtml = lines.map(l=>`<div class="quote-line"><span>${l.icon||''} ${escapeHtml(l.label)} <span style="color:var(--grey);">(${l.unit})</span></span><b>₹${Math.round(l.amt).toLocaleString('en-IN')}</b></div>`).join('');
   document.getElementById(containerId+'-lines').innerHTML = linesHtml || '<p class="form-note">No services selected yet.</p>';
 
   const isEnterprise = scale===ENTERPRISE_SCALE;
@@ -3053,7 +3196,7 @@ function qcUpdate(containerId){
   const deliverablesEl = document.getElementById(containerId+'-deliverables');
   if(deliverablesEl){
     if(selected.length || customRows.length){
-      const customHtml = customRows.length ? `<div style="margin-bottom:10px;"><b style="font-size:13.5px;">🧩 Custom tasks you added</b><ul class="result-bullets" style="margin-top:4px;">${customRows.map(r=>`<li><span class="ic">▸</span><span>${r.task}: ₹${r.amt.toLocaleString('en-IN')} ${r.kind==='onetime'?'one-time':'/month'}</span></li>`).join('')}</ul></div>` : '';
+      const customHtml = customRows.length ? `<div style="margin-bottom:10px;"><b style="font-size:13.5px;">🧩 Custom tasks you added</b><ul class="result-bullets" style="margin-top:4px;">${customRows.map(r=>`<li><span class="ic">▸</span><span>${escapeHtml(r.task)}: ₹${r.amt.toLocaleString('en-IN')} ${r.kind==='onetime'?'one-time':'/month'}</span></li>`).join('')}</ul></div>` : '';
       deliverablesEl.innerHTML = `<p class="form-note" style="font-weight:600;color:var(--navy);margin-bottom:6px;">${isEnterprise?'A starting point for':'Exactly'} what you get for this budget:</p>` +
         selected.map(key=>{
           const s = SERVICES[key];
@@ -3098,6 +3241,7 @@ function qcSubmit(evt, containerId){
   // submissions never reached clicknlikes@gmail.com at all.
   sendFromClicknlikes({
     toEmail: OWNER_EMAIL,
+    replyTo: lead.email,
     subject: `${isEnterprise?'🏢 ENTERPRISE inquiry':'🔔 New quote request'}: ${lead.business||lead.name||'website visitor'} (${totalText || 'no total yet'}${isEnterprise?'+':''})`,
     bodyText: `${isEnterprise?'⚠️ ENTERPRISE-tier submission: route to founder/senior sales, do not auto-send a standard quote.\n\n':''}New quote calculator submission:\n\nName: ${lead.name||''}\nBusiness: ${lead.business||''}\nEmail: ${lead.email||''}\nWhatsApp: ${lead.phone||''}\n\n${quoteLinesText}\n\n${isEnterprise?'Starting anchor':'Estimated total'}: ${totalText || 'Rs.'+MIN_PROJECT.toLocaleString('en-IN')}\n\n${deliverablesText}`
   });
