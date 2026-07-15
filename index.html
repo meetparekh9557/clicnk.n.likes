@@ -1830,7 +1830,10 @@ footer{background:var(--navy);color:rgba(255,255,255,.8);padding:70px 0 24px;pos
       variables: {{to_email}} {{to_name}} {{business}} {{subject}}
       {{message_html}} {{reply_to}}: note the TEMPLATE_ID. Set the
       template's "From email" field to clicknlikes@gmail.com and
-      "Reply-To" to {{reply_to}}.
+      "Reply-To" to {{reply_to}}. In the same template settings, put
+      clicknlikes@gmail.com in the "Bcc" field: that sends the business
+      a silent copy of every email a visitor receives, on top of the
+      separate lead-notification email the site already sends.
    4. Get your PUBLIC_KEY from Account > General.
    5. Paste all three below.
 
@@ -1865,6 +1868,56 @@ try{
 const FROM_EMAIL = "clicknlikes@gmail.com";
 const OWNER_EMAIL = "clicknlikes@gmail.com";
 const BUSINESS_NAME = "Click.n.likes";
+
+/* ---- Google Sheet lead log (works even before EmailJS is set up) ----
+   Every form submission on the site is also appended as one row to a
+   Google Sheet, so leads are tracked in one place and nothing is lost
+   if an email ever fails. This needs a one-time, ~2 minute setup that
+   only the sheet's owner can do (it runs under their Google account):
+
+   1. Open the Google Sheet you want leads in (or create a new one).
+   2. Menu: Extensions → Apps Script. Delete any code in the editor and
+      paste EXACTLY this:
+
+        function doPost(e){
+          var ss = SpreadsheetApp.getActiveSpreadsheet();
+          var sh = ss.getSheetByName('Leads') || ss.insertSheet('Leads');
+          if(sh.getLastRow() === 0){
+            sh.appendRow(['Timestamp','Form / Subject','Details']);
+          }
+          var data = {};
+          try{ data = JSON.parse(e.postData.contents); }catch(err){}
+          sh.appendRow([new Date(), data.subject || '', data.details || '']);
+          return ContentService.createTextOutput('ok');
+        }
+
+   3. Click Deploy → New deployment → gear icon → Web app.
+      - Description: anything (e.g. "Lead log")
+      - Execute as: Me
+      - Who has access: Anyone   ← required, or the website can't post
+   4. Click Deploy, approve the permission prompt, and copy the
+      "Web app URL" it gives you (ends in /exec).
+   5. Paste that URL below in place of the placeholder.
+
+   Until a real URL is pasted here, logging is silently skipped and
+   nothing breaks. Note: "Anyone" only means anyone can APPEND a row
+   via the URL: nobody can read, edit or see the sheet itself. */
+const SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbxQdW9Wx0Vn2YOpMMWGsrkaKwq9FTYYCM0tmRwEHC1IrCe1h1ba7usmPhFBYl0-7vW_/exec";
+
+/* Appends one row to the lead sheet. Fire-and-forget: never throws,
+   never blocks the visitor's submission, and no-cors keeps the browser
+   from needing a CORS handshake Apps Script doesn't offer. */
+function logLeadToSheet(subject, details){
+  if(!SHEET_WEBHOOK_URL || SHEET_WEBHOOK_URL.indexOf('YOUR_') === 0) return;
+  try{
+    fetch(SHEET_WEBHOOK_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {'Content-Type': 'text/plain;charset=utf-8'},
+      body: JSON.stringify({subject: subject, details: details})
+    });
+  }catch(e){ /* logging must never break a form */ }
+}
 
 /* Escapes user-typed text before it's interpolated into innerHTML
    (free-tool industry fields, custom quote task names, etc.). Anything
@@ -1958,6 +2011,10 @@ async function fetchPageSpeedData(rawUrl){
    it defaults to FROM_EMAIL for visitor-facing confirmations, where
    replying back to the business is exactly what you want. */
 function sendFromClicknlikes({toEmail, toName, subject, bodyText, replyTo}){
+  // Every submission produces exactly one owner-notification email, so
+  // hooking the sheet log here logs each lead once, with full details,
+  // and works even while EmailJS is still unconfigured.
+  if(toEmail === OWNER_EMAIL) logLeadToSheet(subject, bodyText);
   if(emailjsReady){
     emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
       to_email: toEmail,
@@ -2165,6 +2222,9 @@ function footerSubscribe(){
   const email=document.getElementById('footNlEmail');
   const msg=document.getElementById('footNlMsg');
   if(!email.value || !email.value.includes('@')){ msg.textContent='Enter a valid email.'; return; }
+  // Subscribes don't trigger an owner-notification email (to save the
+  // monthly EmailJS quota for real leads), so log them to the sheet here.
+  logLeadToSheet('Newsletter subscribe', `Email: ${email.value}`);
   const mailLink = sendFromClicknlikes({
     toEmail: email.value,
     subject: 'Subscribed: Click.n.likes',
