@@ -1821,7 +1821,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.8);padding:70px 0 24px;pos
       </form>
     </div>
     <div class="grid4 reveal" style="margin-top:40px;">
-      <div class="bcard center"><h3 style="font-size:14px;">Email</h3><p style="font-size:13.5px;color:var(--grey);margin-top:6px;">clicknlikes@gmail.com</p></div>
+      <div class="bcard center"><h3 style="font-size:14px;">Email</h3><p style="font-size:13.5px;color:var(--grey);margin-top:6px;">business@clicknlikes.com</p></div>
       <div class="bcard center"><h3 style="font-size:14px;">WhatsApp</h3><p style="font-size:13.5px;color:var(--grey);margin-top:6px;">+91 98XXX XXXXX</p></div>
       <div class="bcard center"><h3 style="font-size:14px;">Based in</h3><p style="font-size:13.5px;color:var(--grey);margin-top:6px;">Ahmedabad &amp; Mumbai · Serving clients worldwide</p></div>
       <div class="bcard center"><h3 style="font-size:14px;">Response time</h3><p style="font-size:13.5px;color:var(--grey);margin-top:6px;">Within 1 business day</p></div>
@@ -1864,7 +1864,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.8);padding:70px 0 24px;pos
     </div>
     <div>
       <h4>Contact</h4>
-      <a>clicknlikes@gmail.com</a>
+      <a>business@clicknlikes.com</a>
       <a>+91 98XXX XXXXX</a>
       <a>Ahmedabad &amp; Mumbai · Worldwide</a>
     </div>
@@ -1883,7 +1883,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.8);padding:70px 0 24px;pos
    This is the Google account that owns the Apps Script below, and it's
    also the address printed in the footer and Contact page, so what
    visitors see matches what actually sends and receives mail. */
-const FROM_EMAIL = "clicknlikes@gmail.com";
+const FROM_EMAIL = "business@clicknlikes.com";
 const OWNER_EMAIL = "clicknlikes@gmail.com";
 const BUSINESS_NAME = "Click.n.likes";
 
@@ -1894,7 +1894,8 @@ const BUSINESS_NAME = "Click.n.likes";
         (subject + full details), so nothing is ever lost.
      2. SEND: the visitor's confirmation email and the owner's
         lead-notification email, sent by Google under the
-        clicknlikes@gmail.com account that deployed the script
+        clicknlikes@gmail.com Google account that deployed the script,
+        sending AS the business@clicknlikes.com alias
         (quota ~100 recipients/day, far above EmailJS's 200/month).
    Visitor-facing emails are auto-BCC'd to OWNER_EMAIL so the business
    keeps a silent copy of everything a lead receives.
@@ -1909,9 +1910,9 @@ const BUSINESS_NAME = "Click.n.likes";
        var data = {};
        try{ data = JSON.parse(e.postData.contents); }catch(err){}
        if(data.action === 'send' && data.to){
-         GmailApp.sendEmail(data.to, data.subject || '', data.body || '', {
+         var opts = {
            name: 'Click.n.likes',
-           replyTo: data.replyTo || 'clicknlikes@gmail.com',
+           replyTo: data.replyTo || 'business@clicknlikes.com',
            bcc: data.bcc || '',
            htmlBody: '<div style="font-family:Segoe UI,system-ui,sans-serif;'
              + 'font-size:14px;color:#1A2B4A;line-height:1.65;max-width:620px;">'
@@ -1924,7 +1925,14 @@ const BUSINESS_NAME = "Click.n.likes";
              + '<div style="margin-top:16px;padding-top:10px;border-top:1px dashed #ccc;'
              + 'font-size:12px;color:#777;">Click.n.likes · Organic growth, engineered'
              + ' · clicknlikes.com</div></div>'
-         });
+         };
+         // Send as the branded domain address once its Gmail "Send mail
+         // as" alias is verified; falls back to the Gmail address until
+         // then, so sending never breaks either way.
+         if(GmailApp.getAliases().indexOf('business@clicknlikes.com') !== -1){
+           opts.from = 'business@clicknlikes.com';
+         }
+         GmailApp.sendEmail(data.to, data.subject || '', data.body || '', opts);
        } else {
          var ss = SpreadsheetApp.openById('1fdqShmBkDnVPPdhtmEo4wdmkc5u9bJe2kKteJpmUsWo');
          var sh = ss.getSheetByName('Leads') || ss.insertSheet('Leads');
@@ -1938,12 +1946,14 @@ const BUSINESS_NAME = "Click.n.likes";
 
    Redeploying with GmailApp added triggers one extra Google permission
    prompt ("send email as you"): approve it once and it never asks again.
-   LATER (optional branding): create hello@clicknlikes.com in Hostinger,
-   add it in Gmail as a "Send mail as" alias (Gmail Settings → Accounts,
-   SMTP smtp.hostinger.com, port 465), then add
-     from: 'hello@clicknlikes.com'
-   to the options object above and redeploy: automated emails then come
-   from the branded domain address instead of @gmail.com. */
+   The business@clicknlikes.com identity requires a one-time Gmail
+   setup in the clicknlikes@gmail.com account: Gmail Settings →
+   Accounts and Import → "Send mail as" → Add → business@clicknlikes.com
+   with SMTP smtp.hostinger.com, port 465, username
+   business@clicknlikes.com and that mailbox's password, then confirm
+   the verification code Gmail sends to the mailbox. Until that alias
+   is verified, the script automatically sends from the Gmail address
+   instead: nothing breaks in the meantime. */
 const SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbxQdW9Wx0Vn2YOpMMWGsrkaKwq9FTYYCM0tmRwEHC1IrCe1h1ba7usmPhFBYl0-7vW_/exec";
 
 /* True once a real web-app URL is in place: gates both sending and the
@@ -2053,7 +2063,7 @@ async function fetchPageSpeedData(rawUrl){
 }
 
 /* Shared sender used by every form, routed through the Apps Script
-   mailer (Gmail under clicknlikes@gmail.com). Falls back to returning
+   mailer (Gmail under business@clicknlikes.com). Falls back to returning
    a pre-filled mailto draft link if the script URL isn't configured,
    so no form is ever a dead end.
    `replyTo` lets a lead-notification email (sent to OWNER_EMAIL) reply
@@ -2260,7 +2270,7 @@ function showSuccessPanel(form, tag, obj, mailLink){
       ]
     : [
         autoEmailReady
-          ? `A confirmation email has been sent to <b>${escapeHtml(obj.email||'your inbox')}</b> from clicknlikes@gmail.com. Not there in a minute? Check spam.`
+          ? `A confirmation email has been sent to <b>${escapeHtml(obj.email||'your inbox')}</b> from business@clicknlikes.com. Not there in a minute? Check spam.`
           : `Your details are logged with us. Want a copy in your own inbox right now? <a href="${mailLink}" style="color:var(--teal-dark);text-decoration:underline;">Open it as an email draft</a> and hit send.`,
         `A strategist reviews your details and replies within <b>1 business day</b>, usually much faster.`,
         `In the meantime, our <a style="color:var(--teal-dark);text-decoration:underline;cursor:pointer;" onclick="go('tools')">free tools</a> can show you where you stand, or grab an <a style="color:var(--teal-dark);text-decoration:underline;cursor:pointer;" onclick="go('contact')">instant quote</a>.`
@@ -2313,7 +2323,7 @@ function handleSimpleForm(evt, formId, tag){
   const data=new FormData(form);
   const obj={}; data.forEach((v,k)=>obj[k]=v);
 
-  // Notify the business inbox: sent from clicknlikes@gmail.com like every other form.
+  // Notify the business inbox: sent from business@clicknlikes.com like every other form.
   const summary = Object.entries(obj).map(([k,v])=>`${k}: ${v}`).join('\n');
   const mailLink = sendFromClicknlikes({
     toEmail: OWNER_EMAIL,
@@ -2327,7 +2337,7 @@ function handleSimpleForm(evt, formId, tag){
     sendFromClicknlikes({
       toEmail: obj.email, toName: obj.name,
       subject: 'We got your message: Click.n.likes',
-      bodyText: `Hi ${obj.name||''},\n\nThanks for reaching out to Click.n.likes. We've received your message and will get back to you within one business day.\n\nHere's a copy of what you sent us:\n${summary}\n\nBest,\nClick.n.likes\nclicknlikes@gmail.com`
+      bodyText: `Hi ${obj.name||''},\n\nThanks for reaching out to Click.n.likes. We've received your message and will get back to you within one business day.\n\nHere's a copy of what you sent us:\n${summary}\n\nBest,\nClick.n.likes\nbusiness@clicknlikes.com`
     });
   }
 
@@ -2349,7 +2359,7 @@ function footerSubscribe(){
   const mailLink = sendFromClicknlikes({
     toEmail: email.value,
     subject: 'Subscribed: Click.n.likes',
-    bodyText: `Hi,\n\nYou're subscribed to Click.n.likes updates on SEO, AI search, social, content and paid media.\n\nBest,\nClick.n.likes\nclicknlikes@gmail.com`
+    bodyText: `Hi,\n\nYou're subscribed to Click.n.likes updates on SEO, AI search, social, content and paid media.\n\nBest,\nClick.n.likes\nbusiness@clicknlikes.com`
   });
   msg.innerHTML = `✓ Subscribed with ${escapeHtml(email.value)}. <a href="${mailLink}" style="color:var(--teal);text-decoration:underline;">Didn't get it? Open as email draft</a>.`;
   email.value='';
@@ -2684,7 +2694,7 @@ async function runGatedTool(evt, key){
   emailNote.innerHTML = '';
   if(toEmail){
     const bulletsText = bullets.map(b=>`• ${b}`).join('\n');
-    const bodyText = `Hi,\n\nHere's your ${s.label} overview from Click.n.likes:\n\nScore: ${score}/100${result.isLive?' (includes real live PageSpeed data)':''}\n\n${bulletsText}\n\nThis is a directional overview based on what you shared, not a full audit. Want the complete breakdown, with exact fixes? Reply to this email or grab a quote at clicknlikes.in and we'll unlock the full report.\n\nBest,\nClick.n.likes\nclicknlikes@gmail.com`;
+    const bodyText = `Hi,\n\nHere's your ${s.label} overview from Click.n.likes:\n\nScore: ${score}/100${result.isLive?' (includes real live PageSpeed data)':''}\n\n${bulletsText}\n\nThis is a directional overview based on what you shared, not a full audit. Want the complete breakdown, with exact fixes? Reply to this email or grab a quote at clicknlikes.in and we'll unlock the full report.\n\nBest,\nClick.n.likes\nbusiness@clicknlikes.com`;
     const mailLink = sendFromClicknlikes({
       toEmail,
       subject: `Your ${s.label} overview: score ${score}/100`,
@@ -2798,7 +2808,7 @@ async function runSpeedChecker(evt){
   const mailtoWrap = document.getElementById('speed-mailto-wrap');
   if(mailtoWrap) mailtoWrap.innerHTML = '';
   if(email){
-    const bodyText = `Hi,\n\nHere is your Website Speed & Core Vitals check for ${url||'your site'}:\n\nPerformance Score: ${score}/100 ${isLive?'(live Google PageSpeed Insights data)':'(self-reported)'}\n\n${bullets.map(b=>'• '+b.replace(/^[✅⚠️]+\s*/,'')).join('\n')}\n\n${isLive ? 'This was measured live just now via Google PageSpeed Insights.' : 'This is based on what you told us about your own site, not a live crawl.'} Want the exact line-by-line code fixes for your developer? Reply to this email or grab a quote at clicknlikes.in.\n\nBest,\nClick.n.likes\nclicknlikes@gmail.com`;
+    const bodyText = `Hi,\n\nHere is your Website Speed & Core Vitals check for ${url||'your site'}:\n\nPerformance Score: ${score}/100 ${isLive?'(live Google PageSpeed Insights data)':'(self-reported)'}\n\n${bullets.map(b=>'• '+b.replace(/^[✅⚠️]+\s*/,'')).join('\n')}\n\n${isLive ? 'This was measured live just now via Google PageSpeed Insights.' : 'This is based on what you told us about your own site, not a live crawl.'} Want the exact line-by-line code fixes for your developer? Reply to this email or grab a quote at clicknlikes.in.\n\nBest,\nClick.n.likes\nbusiness@clicknlikes.com`;
     const mailLink = sendFromClicknlikes({ toEmail: email, subject: `Your Website Speed check: score ${score}/100`, bodyText });
     sendFromClicknlikes({
       toEmail: OWNER_EMAIL,
@@ -2899,7 +2909,7 @@ function runROIGate(evt){
         : `You're converting right at the 3% benchmark for your traffic and order value, no gap to close right now.`)
     : `Estimated leaked revenue: Rs.${gapAmount.toLocaleString('en-IN')}/month\nEstimated leaked PROFIT: Rs.${gapProfit.toLocaleString('en-IN')}/month, this is the number that actually matters, revenue alone overstates what you're really losing.`;
 
-  const bodyText = `Hi,\n\nHere is your Funnel Leak & ROI snapshot for ${business||'your business'}:\n\nMonthly traffic: ${traffic.toLocaleString('en-IN')}\nCurrent conversion rate: ${convRate.toFixed(1)}%\nAverage order value: Rs.${aov.toLocaleString('en-IN')}\nProfit margin per order: ${marginPct}% (Rs.${profitPerOrder.toLocaleString('en-IN')} profit per Rs.${aov.toLocaleString('en-IN')} order)\n\nCurrent estimated revenue: Rs.${currentRevenue.toLocaleString('en-IN')}/month (Rs.${currentProfit.toLocaleString('en-IN')}/month profit)\nBenchmark revenue at 3% conversion: Rs.${benchmarkRevenue.toLocaleString('en-IN')}/month\n${gapLines}\n\nYour 3-step CRO checklist:\n1. Fix your highest-traffic landing page's above-the-fold CTA clarity.\n2. Add trust signals (reviews, guarantees, real photos) near the point of decision.\n3. Cut your form/booking flow down to the fewest possible fields or steps.\n\nWant a plan built specifically for your funnel? Reply to this email or grab a quote at clicknlikes.in.\n\nBest,\nClick.n.likes\nclicknlikes@gmail.com`;
+  const bodyText = `Hi,\n\nHere is your Funnel Leak & ROI snapshot for ${business||'your business'}:\n\nMonthly traffic: ${traffic.toLocaleString('en-IN')}\nCurrent conversion rate: ${convRate.toFixed(1)}%\nAverage order value: Rs.${aov.toLocaleString('en-IN')}\nProfit margin per order: ${marginPct}% (Rs.${profitPerOrder.toLocaleString('en-IN')} profit per Rs.${aov.toLocaleString('en-IN')} order)\n\nCurrent estimated revenue: Rs.${currentRevenue.toLocaleString('en-IN')}/month (Rs.${currentProfit.toLocaleString('en-IN')}/month profit)\nBenchmark revenue at 3% conversion: Rs.${benchmarkRevenue.toLocaleString('en-IN')}/month\n${gapLines}\n\nYour 3-step CRO checklist:\n1. Fix your highest-traffic landing page's above-the-fold CTA clarity.\n2. Add trust signals (reviews, guarantees, real photos) near the point of decision.\n3. Cut your form/booking flow down to the fewest possible fields or steps.\n\nWant a plan built specifically for your funnel? Reply to this email or grab a quote at clicknlikes.in.\n\nBest,\nClick.n.likes\nbusiness@clicknlikes.com`;
   const mailLink = sendFromClicknlikes({ toEmail: email, toName: business, subject: isSurplus ? 'Your Funnel Surplus & ROI snapshot + CRO checklist' : 'Your Funnel Leak & ROI snapshot + CRO checklist', bodyText });
   sendFromClicknlikes({
     toEmail: OWNER_EMAIL,
@@ -2949,7 +2959,7 @@ function runCompetitorQuiz(evt){
   const mailtoWrap = document.getElementById('competitor-mailto-wrap');
   if(mailtoWrap) mailtoWrap.innerHTML = '';
   if(email){
-    const bodyText = `Hi,\n\nHere is your Competitor Threat Estimate from Click.n.likes:\n\n${summary}\n\nScore: ${points}/100 (fixed weighted matrix from your answers)\n\nWant the exact 90-day organic hijacking framework built for your industry? Reply to this email or grab a quote at clicknlikes.in.\n\nBest,\nClick.n.likes\nclicknlikes@gmail.com`;
+    const bodyText = `Hi,\n\nHere is your Competitor Threat Estimate from Click.n.likes:\n\n${summary}\n\nScore: ${points}/100 (fixed weighted matrix from your answers)\n\nWant the exact 90-day organic hijacking framework built for your industry? Reply to this email or grab a quote at clicknlikes.in.\n\nBest,\nClick.n.likes\nbusiness@clicknlikes.com`;
     const mailLink = sendFromClicknlikes({ toEmail: email, subject: `Your Competitor Threat Estimate: ${status}`, bodyText });
     sendFromClicknlikes({
       toEmail: OWNER_EMAIL,
@@ -3407,8 +3417,8 @@ function qcSubmit(evt, containerId){
   }).join('\n\n') + (customRows.length ? `\n\nCustom task(s) you added:\n${customRows.map(r=>`   • ${r.task}: Rs.${r.amt.toLocaleString('en-IN')} ${r.kind==='onetime'?'one-time':'/month'}`).join('\n')}` : '');
 
   const bodyText = isEnterprise
-    ? `Hi ${lead.name||''},\n\nThanks for your Enterprise inquiry for ${lead.business||'your business'}. Based on what you selected, here's a directional starting anchor: NOT a final quote:\n\n${quoteLinesText}\n\nStarting anchor: ${totalText || 'Rs.'+MIN_PROJECT.toLocaleString('en-IN')}+\n\n${notes.join('\n')}\n\nA sample of what an engagement at this level typically includes:\n\n${deliverablesText || 'Select a service to see what is included.'}\n\nOne of our account leads will reach out on WhatsApp/${lead.phone||''} within 2 business days to scope your actual requirements (locations, brands, SLAs, reporting cadence) and send a proper custom proposal.\n\nBest,\nClick.n.likes\nclicknlikes@gmail.com`
-    : `Hi ${lead.name||''},\n\nHere is your Click.n.likes quotation for ${lead.business||'your business'}:\n\n${quoteLinesText}\n\nEstimated total: ${totalText || 'Rs.'+MIN_PROJECT.toLocaleString('en-IN')}\n\n${notes.join('\n')}\n\nWhat you'll get:\n\n${deliverablesText || 'Select a service to see what is included.'}\n\nWe'll follow up on WhatsApp/${lead.phone||''} shortly.\n\nBest,\nClick.n.likes\nclicknlikes@gmail.com`;
+    ? `Hi ${lead.name||''},\n\nThanks for your Enterprise inquiry for ${lead.business||'your business'}. Based on what you selected, here's a directional starting anchor: NOT a final quote:\n\n${quoteLinesText}\n\nStarting anchor: ${totalText || 'Rs.'+MIN_PROJECT.toLocaleString('en-IN')}+\n\n${notes.join('\n')}\n\nA sample of what an engagement at this level typically includes:\n\n${deliverablesText || 'Select a service to see what is included.'}\n\nOne of our account leads will reach out on WhatsApp/${lead.phone||''} within 2 business days to scope your actual requirements (locations, brands, SLAs, reporting cadence) and send a proper custom proposal.\n\nBest,\nClick.n.likes\nbusiness@clicknlikes.com`
+    : `Hi ${lead.name||''},\n\nHere is your Click.n.likes quotation for ${lead.business||'your business'}:\n\n${quoteLinesText}\n\nEstimated total: ${totalText || 'Rs.'+MIN_PROJECT.toLocaleString('en-IN')}\n\n${notes.join('\n')}\n\nWhat you'll get:\n\n${deliverablesText || 'Select a service to see what is included.'}\n\nWe'll follow up on WhatsApp/${lead.phone||''} shortly.\n\nBest,\nClick.n.likes\nbusiness@clicknlikes.com`;
 
   const mailLink = sendFromClicknlikes({
     toEmail: lead.email, toName: lead.name,
@@ -3417,7 +3427,7 @@ function qcSubmit(evt, containerId){
   });
 
   // Notify the business inbox too: this was previously missing, so quote
-  // submissions never reached clicknlikes@gmail.com at all.
+  // submissions never reached business@clicknlikes.com at all.
   sendFromClicknlikes({
     toEmail: OWNER_EMAIL,
     replyTo: lead.email,
@@ -3441,7 +3451,7 @@ function qcSubmit(evt, containerId){
       </div>
       <ul class="sp-steps">
         <li><span class="n">1</span><span>${autoEmailReady
-          ? `The full quotation has been emailed to <b>${escapeHtml(lead.email||'your inbox')}</b> from clicknlikes@gmail.com. Not there in a minute? Check spam.`
+          ? `The full quotation has been emailed to <b>${escapeHtml(lead.email||'your inbox')}</b> from business@clicknlikes.com. Not there in a minute? Check spam.`
           : `Your quotation is logged with us. Want the copy in your inbox right now? <a href="${mailLink}" style="color:var(--teal-dark);text-decoration:underline;">Open it as an email draft</a> and hit send.`}</span></li>
         <li><span class="n">2</span><span>${isEnterprise
           ? `An account lead reaches out on WhatsApp within <b>2 business days</b> to scope locations, brands, SLAs and reporting, then sends a proper custom proposal.`
