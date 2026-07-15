@@ -1900,22 +1900,21 @@ footer{background:var(--navy);color:rgba(255,255,255,.8);padding:70px 0 24px;pos
    4. Get your PUBLIC_KEY from Account > General.
    5. Paste all three below.
 
-   IMPORTANT, this is currently NOT done. All three constants below
-   are still placeholders ("YOUR_..."), so emailjsReady stays false
-   and NO automatic email is being sent anywhere on the site right
-   now, not to customers, and not to clicknlikes@gmail.com. Every
-   form still "works" on screen (score/quote shows, success message
-   shows) because it falls back to preparing a mailto: draft, but that
-   draft only opens in the *visitor's* own email app and requires the
-   visitor to click send themselves, which is why no leads have been
-   arriving. Paste real values below (takes ~10 minutes, free tier is
-   200 emails/month) and every submission: quote calculator, all
-   free tools, and the contact form: will start emailing both the
-   customer AND clicknlikes@gmail.com automatically.
+   STATUS: LIVE since July 2026. The three constants below are real
+   keys for the account connected to clicknlikes@gmail.com, so every
+   submission (quote calculator, all free tools, contact forms) emails
+   the visitor AND notifies clicknlikes@gmail.com automatically; the
+   template's Bcc field also silently copies every visitor email to
+   the business inbox. Free tier is 200 emails/month and each lead
+   consumes 2 (visitor + owner): upgrade the EmailJS plan if volume
+   grows past ~100 leads/month. These keys are public by design
+   (EmailJS is a client-side service); abuse is prevented by the
+   domain allowlist in EmailJS's Account → Security settings, which
+   should list clicknlikes.com only.
 ----------------------------------------------------------------*/
-const EMAILJS_PUBLIC_KEY  = "YOUR_PUBLIC_KEY";
-const EMAILJS_SERVICE_ID  = "YOUR_SERVICE_ID";
-const EMAILJS_TEMPLATE_ID = "YOUR_TEMPLATE_ID";
+const EMAILJS_PUBLIC_KEY  = "u7TdNRwPMEpk_4bBT";
+const EMAILJS_SERVICE_ID  = "service_2i36ixq";
+const EMAILJS_TEMPLATE_ID = "template_hfp9nod";
 let emailjsReady = false;
 try{
   if(window.emailjs && EMAILJS_PUBLIC_KEY.indexOf('YOUR_') !== 0){
