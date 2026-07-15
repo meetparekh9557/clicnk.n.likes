@@ -1874,111 +1874,100 @@ footer{background:var(--navy);color:rgba(255,255,255,.8);padding:70px 0 24px;pos
     <span>Real growth. Real revenue. No vanity metrics.</span>
   </div>
 </footer>
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
 /* ============================================================
    CLICK.N.LIKES SITE ENGINE
    ============================================================ */
 
-/* ---- EmailJS config -----------------------------------------
-   Every form on this site (quote calculator, gated tools, contact/
-   lead forms) routes through this one EmailJS setup so every email
-   goes out consistently from clicknlikes@gmail.com. To make it live:
-   1. Create a free account at https://www.emailjs.com
-   2. Add an Email Service connected to the clicknlikes@gmail.com
-      Gmail inbox (this is what makes the "From" address correct,
-      since EmailJS sends using whichever inbox you connect here). Note
-      the SERVICE_ID.
-   3. Create ONE template used by every form on the site, with
-      variables: {{to_email}} {{to_name}} {{business}} {{subject}}
-      {{message_html}} {{reply_to}}: note the TEMPLATE_ID. Set the
-      template's "From email" field to clicknlikes@gmail.com and
-      "Reply-To" to {{reply_to}}. In the same template settings, put
-      clicknlikes@gmail.com in the "Bcc" field: that sends the business
-      a silent copy of every email a visitor receives, on top of the
-      separate lead-notification email the site already sends.
-   4. Get your PUBLIC_KEY from Account > General.
-   5. Paste all three below.
-
-   STATUS: LIVE since July 2026. The three constants below are real
-   keys for the account connected to clicknlikes@gmail.com, so every
-   submission (quote calculator, all free tools, contact forms) emails
-   the visitor AND notifies clicknlikes@gmail.com automatically; the
-   template's Bcc field also silently copies every visitor email to
-   the business inbox. Free tier is 200 emails/month and each lead
-   consumes 2 (visitor + owner): upgrade the EmailJS plan if volume
-   grows past ~100 leads/month. These keys are public by design
-   (EmailJS is a client-side service); abuse is prevented by the
-   domain allowlist in EmailJS's Account → Security settings, which
-   should list clicknlikes.com only.
-----------------------------------------------------------------*/
-const EMAILJS_PUBLIC_KEY  = "u7TdNRwPMEpk_4bBT";
-const EMAILJS_SERVICE_ID  = "service_2i36ixq";
-const EMAILJS_TEMPLATE_ID = "template_hfp9nod";
-let emailjsReady = false;
-try{
-  if(window.emailjs && EMAILJS_PUBLIC_KEY.indexOf('YOUR_') !== 0){
-    emailjs.init({publicKey: EMAILJS_PUBLIC_KEY});
-    emailjsReady = true;
-  }
-}catch(e){ emailjsReady = false; }
-
 /* The single sending address for every outbound email on this site.
-   Must match the Gmail inbox connected to EMAILJS_SERVICE_ID above.
-   This is also the address printed in the footer and Contact page, so
-   what visitors see matches what actually sends and receives mail. */
+   This is the Google account that owns the Apps Script below, and it's
+   also the address printed in the footer and Contact page, so what
+   visitors see matches what actually sends and receives mail. */
 const FROM_EMAIL = "clicknlikes@gmail.com";
 const OWNER_EMAIL = "clicknlikes@gmail.com";
 const BUSINESS_NAME = "Click.n.likes";
 
-/* ---- Google Sheet lead log (works even before EmailJS is set up) ----
-   Every form submission on the site is also appended as one row to a
-   Google Sheet, so leads are tracked in one place and nothing is lost
-   if an email ever fails. This needs a one-time, ~2 minute setup that
-   only the sheet's owner can do (it runs under their Google account):
+/* ---- Lead log + mailer: ONE Google Apps Script does both ----------
+   Every form submission on the site does two things through the same
+   web-app URL below, no third-party email service involved:
+     1. LOG: one row per lead appended to the Google Sheet
+        (subject + full details), so nothing is ever lost.
+     2. SEND: the visitor's confirmation email and the owner's
+        lead-notification email, sent by Google under the
+        clicknlikes@gmail.com account that deployed the script
+        (quota ~100 recipients/day, far above EmailJS's 200/month).
+   Visitor-facing emails are auto-BCC'd to OWNER_EMAIL so the business
+   keeps a silent copy of everything a lead receives.
 
-   1. Open the Google Sheet you want leads in (or create a new one).
-   2. Menu: Extensions → Apps Script. Delete any code in the editor and
-      paste EXACTLY this:
+   THE SCRIPT the deployment must run (paste into the Apps Script
+   editor at script.google.com, then Deploy → Manage deployments →
+   pencil icon → Version: New version → Deploy, which KEEPS this same
+   /exec URL; a brand-new deployment would mint a different URL and
+   this constant would need updating):
 
-        function doPost(e){
-          var ss = SpreadsheetApp.getActiveSpreadsheet();
-          var sh = ss.getSheetByName('Leads') || ss.insertSheet('Leads');
-          if(sh.getLastRow() === 0){
-            sh.appendRow(['Timestamp','Form / Subject','Details']);
-          }
-          var data = {};
-          try{ data = JSON.parse(e.postData.contents); }catch(err){}
-          sh.appendRow([new Date(), data.subject || '', data.details || '']);
-          return ContentService.createTextOutput('ok');
-        }
+     function doPost(e){
+       var data = {};
+       try{ data = JSON.parse(e.postData.contents); }catch(err){}
+       if(data.action === 'send' && data.to){
+         GmailApp.sendEmail(data.to, data.subject || '', data.body || '', {
+           name: 'Click.n.likes',
+           replyTo: data.replyTo || 'clicknlikes@gmail.com',
+           bcc: data.bcc || '',
+           htmlBody: '<div style="font-family:Segoe UI,system-ui,sans-serif;'
+             + 'font-size:14px;color:#1A2B4A;line-height:1.65;max-width:620px;">'
+             + '<div style="border-top:4px solid #4ECDC4;padding:16px 0 6px;">'
+             + '<strong style="font-size:17px;">Click.n.likes</strong></div>'
+             + '<div style="padding:8px 0;">'
+             + String(data.body || '').replace(/&/g,'&amp;').replace(/</g,'&lt;')
+                 .replace(/>/g,'&gt;').replace(/\n/g,'<br>')
+             + '</div>'
+             + '<div style="margin-top:16px;padding-top:10px;border-top:1px dashed #ccc;'
+             + 'font-size:12px;color:#777;">Click.n.likes · Organic growth, engineered'
+             + ' · clicknlikes.com</div></div>'
+         });
+       } else {
+         var ss = SpreadsheetApp.openById('1fdqShmBkDnVPPdhtmEo4wdmkc5u9bJe2kKteJpmUsWo');
+         var sh = ss.getSheetByName('Leads') || ss.insertSheet('Leads');
+         if(sh.getLastRow() === 0){
+           sh.appendRow(['Timestamp','Form / Subject','Details']);
+         }
+         sh.appendRow([new Date(), data.subject || '', data.details || '']);
+       }
+       return ContentService.createTextOutput('ok');
+     }
 
-   3. Click Deploy → New deployment → gear icon → Web app.
-      - Description: anything (e.g. "Lead log")
-      - Execute as: Me
-      - Who has access: Anyone   ← required, or the website can't post
-   4. Click Deploy, approve the permission prompt, and copy the
-      "Web app URL" it gives you (ends in /exec).
-   5. Paste that URL below in place of the placeholder.
-
-   Until a real URL is pasted here, logging is silently skipped and
-   nothing breaks. Note: "Anyone" only means anyone can APPEND a row
-   via the URL: nobody can read, edit or see the sheet itself. */
+   Redeploying with GmailApp added triggers one extra Google permission
+   prompt ("send email as you"): approve it once and it never asks again.
+   LATER (optional branding): create hello@clicknlikes.com in Hostinger,
+   add it in Gmail as a "Send mail as" alias (Gmail Settings → Accounts,
+   SMTP smtp.hostinger.com, port 465), then add
+     from: 'hello@clicknlikes.com'
+   to the options object above and redeploy: automated emails then come
+   from the branded domain address instead of @gmail.com. */
 const SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbxQdW9Wx0Vn2YOpMMWGsrkaKwq9FTYYCM0tmRwEHC1IrCe1h1ba7usmPhFBYl0-7vW_/exec";
 
-/* Appends one row to the lead sheet. Fire-and-forget: never throws,
-   never blocks the visitor's submission, and no-cors keeps the browser
-   from needing a CORS handshake Apps Script doesn't offer. */
-function logLeadToSheet(subject, details){
-  if(!SHEET_WEBHOOK_URL || SHEET_WEBHOOK_URL.indexOf('YOUR_') === 0) return;
+/* True once a real web-app URL is in place: gates both sending and the
+   confirmation-panel wording ("email sent" vs "open a draft"). */
+const autoEmailReady = !!SHEET_WEBHOOK_URL && SHEET_WEBHOOK_URL.indexOf('YOUR_') !== 0;
+
+/* Fire-and-forget POST to the Apps Script. Never throws, never blocks
+   the visitor's submission, and no-cors keeps the browser from needing
+   a CORS handshake Apps Script doesn't offer. */
+function postToScript(payload){
+  if(!autoEmailReady) return;
   try{
     fetch(SHEET_WEBHOOK_URL, {
       method: 'POST',
       mode: 'no-cors',
       headers: {'Content-Type': 'text/plain;charset=utf-8'},
-      body: JSON.stringify({subject: subject, details: details})
+      body: JSON.stringify(payload)
     });
-  }catch(e){ /* logging must never break a form */ }
+  }catch(e){ /* logging/sending must never break a form */ }
+}
+
+/* Appends one row to the lead sheet. */
+function logLeadToSheet(subject, details){
+  postToScript({subject: subject, details: details});
 }
 
 /* Escapes user-typed text before it's interpolated into innerHTML
@@ -2063,30 +2052,29 @@ async function fetchPageSpeedData(rawUrl){
   }
 }
 
-/* Shared sender used by every form. Falls back to a pre-filled
-   mailto draft (From: clicknlikes@gmail.com won't be enforceable by
-   mailto itself, but the draft opens in the visitor's own client
-   addressed as being from Click.n.likes) if EmailJS isn't configured
-   yet, so no form is ever a dead end.
+/* Shared sender used by every form, routed through the Apps Script
+   mailer (Gmail under clicknlikes@gmail.com). Falls back to returning
+   a pre-filled mailto draft link if the script URL isn't configured,
+   so no form is ever a dead end.
    `replyTo` lets a lead-notification email (sent to OWNER_EMAIL) reply
    straight to the prospect instead of back to the business's own inbox;
    it defaults to FROM_EMAIL for visitor-facing confirmations, where
-   replying back to the business is exactly what you want. */
+   replying back to the business is exactly what you want. Visitor
+   emails are BCC'd to OWNER_EMAIL so the business keeps a silent copy. */
 function sendFromClicknlikes({toEmail, toName, subject, bodyText, replyTo}){
   // Every submission produces exactly one owner-notification email, so
   // hooking the sheet log here logs each lead once, with full details,
-  // and works even while EmailJS is still unconfigured.
+  // and independently of whether the emails themselves succeed.
   if(toEmail === OWNER_EMAIL) logLeadToSheet(subject, bodyText);
-  if(emailjsReady){
-    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-      to_email: toEmail,
-      to_name: toName || '',
-      from_email: FROM_EMAIL,
-      reply_to: replyTo || FROM_EMAIL,
-      subject: subject,
-      message_html: bodyText.replace(/\n/g,'<br>')
-    }).catch(err=>console.warn('EmailJS send failed, relying on mailto fallback', err));
-  }
+  postToScript({
+    action: 'send',
+    to: toEmail,
+    toName: toName || '',
+    subject: subject,
+    body: bodyText,
+    replyTo: replyTo || FROM_EMAIL,
+    bcc: toEmail === OWNER_EMAIL ? '' : OWNER_EMAIL
+  });
   return `mailto:${encodeURIComponent(toEmail)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyText)}`;
 }
 
@@ -2267,11 +2255,11 @@ function showSuccessPanel(form, tag, obj, mailLink){
   const isNewsletter = tag === 'blog-newsletter';
   const steps = isNewsletter
     ? [
-        emailjsReady ? `A welcome email is on its way to <b>${escapeHtml(obj.email)}</b>: if it's not there in a minute, check spam and drag it to your inbox.` : `To confirm your subscription copy, <a href="${mailLink}" style="color:var(--teal-dark);text-decoration:underline;">open your welcome email as a draft</a> and hit send.`,
+        autoEmailReady ? `A welcome email is on its way to <b>${escapeHtml(obj.email)}</b>: if it's not there in a minute, check spam and drag it to your inbox.` : `To confirm your subscription copy, <a href="${mailLink}" style="color:var(--teal-dark);text-decoration:underline;">open your welcome email as a draft</a> and hit send.`,
         `First issue lands this week. Reply to any issue: a real person reads the replies.`
       ]
     : [
-        emailjsReady
+        autoEmailReady
           ? `A confirmation email has been sent to <b>${escapeHtml(obj.email||'your inbox')}</b> from clicknlikes@gmail.com. Not there in a minute? Check spam.`
           : `Your details are logged with us. Want a copy in your own inbox right now? <a href="${mailLink}" style="color:var(--teal-dark);text-decoration:underline;">Open it as an email draft</a> and hit send.`,
         `A strategist reviews your details and replies within <b>1 business day</b>, usually much faster.`,
@@ -3452,7 +3440,7 @@ function qcSubmit(evt, containerId){
         </div>
       </div>
       <ul class="sp-steps">
-        <li><span class="n">1</span><span>${emailjsReady
+        <li><span class="n">1</span><span>${autoEmailReady
           ? `The full quotation has been emailed to <b>${escapeHtml(lead.email||'your inbox')}</b> from clicknlikes@gmail.com. Not there in a minute? Check spam.`
           : `Your quotation is logged with us. Want the copy in your inbox right now? <a href="${mailLink}" style="color:var(--teal-dark);text-decoration:underline;">Open it as an email draft</a> and hit send.`}</span></li>
         <li><span class="n">2</span><span>${isEnterprise
