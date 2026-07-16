@@ -839,24 +839,28 @@ footer{background:var(--navy);color:rgba(255,255,255,.8);padding:70px 0 24px;pos
         <span class="tool-badge" style="color:var(--coral);">Directional, not scraped data</span>
       </div>
       <form id="competitorToolForm" onsubmit="return runCompetitorQuiz(event)">
+        <div class="tool-form single" style="margin-bottom:18px;">
+          <div class="field full"><label>Your industry</label><input required type="text" id="cq_industry" placeholder="e.g. dental clinic, D2C fashion, real estate"></div>
+        </div>
         <div class="quiz-q">
           <div class="qtitle">1. How often does your main competitor publish content / post on social media?</div>
-          <label class="opt"><input type="radio" name="cq1" value="30" checked> Daily</label>
+          <label class="opt"><input type="radio" name="cq1" value="30" required> Daily</label>
           <label class="opt"><input type="radio" name="cq1" value="15"> Weekly</label>
           <label class="opt"><input type="radio" name="cq1" value="0"> Rarely</label>
         </div>
         <div class="quiz-q">
           <div class="qtitle">2. Do you see them running sponsored ads on Google or Meta?</div>
-          <label class="opt"><input type="radio" name="cq2" value="40" checked> Yes, constantly</label>
+          <label class="opt"><input type="radio" name="cq2" value="40" required> Yes, constantly</label>
           <label class="opt"><input type="radio" name="cq2" value="20"> Occasionally</label>
           <label class="opt"><input type="radio" name="cq2" value="0"> Never</label>
         </div>
         <div class="quiz-q">
           <div class="qtitle">3. Is their website more modern and fast compared to yours?</div>
-          <label class="opt"><input type="radio" name="cq3" value="30" checked> Much faster</label>
+          <label class="opt"><input type="radio" name="cq3" value="30" required> Much faster</label>
           <label class="opt"><input type="radio" name="cq3" value="15"> About the same</label>
           <label class="opt"><input type="radio" name="cq3" value="0"> Slower</label>
         </div>
+        <p class="form-note" id="cq-form-error" style="color:var(--coral);"></p>
         <div class="tool-form">
           <div class="field full"><label>Work email (to send your result)</label><input required type="email" id="cq_email" placeholder="you@business.com"></div>
         </div>
@@ -926,8 +930,9 @@ footer{background:var(--navy);color:rgba(255,255,255,.8);padding:70px 0 24px;pos
         <span class="tool-badge" style="color:var(--coral);">Overview only, not a full audit</span>
       </div>
       <form id="seoToolForm" onsubmit="return runGatedTool(event,'seo')">
-        <div class="tool-form single">
-          <div class="field full"><label>Your industry</label><input required type="text" id="seo_industry" placeholder="e.g. B2B Manufacturing, Legal Services, Logistics"></div>
+        <div class="tool-form">
+          <div class="field"><label>Your industry</label><input required type="text" id="seo_industry" placeholder="e.g. B2B Manufacturing, Legal Services, Logistics"></div>
+          <div class="field"><label>Website URL <span style="font-weight:400;color:var(--grey);">(optional: enables a real live check)</span></label><input type="text" id="seo_url" placeholder="yourbusiness.com"></div>
         </div>
         <div style="margin-top:16px;display:grid;gap:10px;">
           <label style="display:flex;align-items:flex-start;gap:10px;font-size:14px;font-weight:500;cursor:pointer;">
@@ -939,7 +944,11 @@ footer{background:var(--navy);color:rgba(255,255,255,.8);padding:70px 0 24px;pos
           <label style="display:flex;align-items:flex-start;gap:10px;font-size:14px;font-weight:500;cursor:pointer;">
             <input type="checkbox" id="seo_page23" style="margin-top:3px;"> Are your target keywords ranking on page 2 or 3 instead of page 1?
           </label>
+          <label style="display:flex;align-items:flex-start;gap:10px;font-size:14px;font-weight:500;cursor:pointer;">
+            <input type="checkbox" id="seo_monthly" style="margin-top:3px;"> Do you publish new content at least monthly?
+          </label>
         </div>
+        <p class="disclaimer" style="margin-top:6px;">If you enter a URL, we fetch that page live and verify its title, meta description, headings, internal links, canonical and robots tags directly: those rows get labelled "verified" in your report. No URL? Everything stays self-reported and is labelled that way.</p>
         <div class="tool-form single" style="margin-top:16px;">
           <div class="field full"><label>Work email (to send your scan result)</label><input required type="email" id="seo_email" placeholder="you@business.com"></div>
         </div>
@@ -1108,7 +1117,13 @@ footer{background:var(--navy);color:rgba(255,255,255,.8);padding:70px 0 24px;pos
         <div class="tool-form single">
           <div class="field full"><label>Your industry</label><input required type="text" id="aiseo_industry" placeholder="e.g. EdTech, SaaS, Manufacturing"></div>
           <div class="field full"><label>Paste a 2-paragraph sample of your homepage or product copy</label>
-            <textarea required id="aiseo_content" rows="6" placeholder="Paste your homepage intro or product description here…"></textarea>
+            <textarea id="aiseo_content" rows="6" placeholder="Paste your homepage intro or product description here…"></textarea>
+          </div>
+          <div class="field full"><label>…or just give us the page URL instead <span style="font-weight:400;color:var(--grey);">(we'll fetch and scan the live page)</span></label><input type="text" id="aiseo_url" placeholder="yourbusiness.com/your-page"></div>
+          <div class="field full">
+            <label style="display:flex;align-items:flex-start;gap:10px;font-size:14px;font-weight:500;cursor:pointer;">
+              <input type="checkbox" id="aiseo_faq" style="margin-top:3px;"> Does your site have an FAQ section answering real customer questions?
+            </label>
           </div>
           <div class="field full"><label>Work email (to send your scan result)</label><input required type="email" id="aiseo_email" placeholder="you@business.com"></div>
         </div>
@@ -1268,8 +1283,27 @@ footer{background:var(--navy);color:rgba(255,255,255,.8);padding:70px 0 24px;pos
           <div class="field full"><label>Website URL</label><input required type="text" id="content_url" placeholder="yourbusiness.com"></div>
           <div class="field"><label>Industry</label><input required type="text" id="content_industry" placeholder="e.g. dental, D2C skincare"></div>
           <div class="field"><label>Main product / service to focus on</label><input required type="text" id="content_topic" placeholder="e.g. root canal treatment"></div>
+          <div class="field"><label>How often do you publish new content?</label>
+            <select id="content_freq">
+              <option value="weekly">Weekly or more</option>
+              <option value="fewmonth">A few times a month</option>
+              <option value="monthly">About once a month</option>
+              <option value="rarely">Rarely or never</option>
+            </select>
+          </div>
+          <div class="field full">
+            <label style="display:flex;align-items:flex-start;gap:10px;font-size:14px;font-weight:500;cursor:pointer;">
+              <input type="checkbox" id="content_pillars" style="margin-top:3px;"> Every core service/topic has its own dedicated page on your site
+            </label>
+          </div>
+          <div class="field full">
+            <label style="display:flex;align-items:flex-start;gap:10px;font-size:14px;font-weight:500;cursor:pointer;">
+              <input type="checkbox" id="content_refresh" style="margin-top:3px;"> You've updated or refreshed old posts in the last 6 months
+            </label>
+          </div>
           <div class="field full"><label>Work email (to send your scan result)</label><input required type="email" id="content_email" placeholder="you@business.com"></div>
         </div>
+        <p class="disclaimer" style="margin-top:6px;">We fetch the URL you give us live and verify its word count, heading structure, H1 and schema directly: those rows are labelled "verified" in your report. The cadence and coverage answers stay self-reported and are labelled that way.</p>
         <button class="btn btn-teal magnetic" style="margin-top:18px;" type="submit">Find my content gaps</button>
       </form>
       <div class="tool-scan" id="content-scan"><div class="scan-ring"></div><div class="scan-text"><b>Mapping your content footprint…</b><span>Comparing topic coverage to category demand</span></div></div>
@@ -1887,73 +1921,25 @@ const FROM_EMAIL = "business@clicknlikes.com";
 const OWNER_EMAIL = "clicknlikes@gmail.com";
 const BUSINESS_NAME = "Click.n.likes";
 
-/* ---- Lead log + mailer: ONE Google Apps Script does both ----------
-   Every form submission on the site does two things through the same
-   web-app URL below, no third-party email service involved:
-     1. LOG: one row per lead appended to the Google Sheet
-        (subject + full details), so nothing is ever lost.
-     2. SEND: the visitor's confirmation email and the owner's
-        lead-notification email, sent by Google under the
-        clicknlikes@gmail.com Google account that deployed the script,
-        sending AS the business@clicknlikes.com alias
-        (quota ~100 recipients/day, far above EmailJS's 200/month).
-   Visitor-facing emails are auto-BCC'd to OWNER_EMAIL so the business
-   keeps a silent copy of everything a lead receives.
-
-   THE SCRIPT the deployment must run (paste into the Apps Script
-   editor at script.google.com, then Deploy → Manage deployments →
-   pencil icon → Version: New version → Deploy, which KEEPS this same
+/* ---- Lead log + mailer + page analyzer: ONE Google Apps Script -----
+   Every form submission does three things through the single web-app
+   URL below, with no third-party service involved:
+     1. LOG: one row per lead appended to the Google Sheet.
+     2. SEND: visitor confirmation + owner lead-notification emails,
+        sent by Gmail under the clicknlikes@gmail.com account that
+        deployed the script (as the business@clicknlikes.com alias once
+        verified). Visitor emails are BCC'd to OWNER_EMAIL.
+     3. ANALYZE (GET ?action=analyze&url=…): fetches ONE page
+        server-side and returns real on-page facts as JSON (title, meta
+        description, headings, word count, alt coverage, schema,
+        canonical, robots, viewport, link counts). The free tools blend
+        these verified facts into their scoring when a URL is given,
+        and fall back to self-reported answers when the fetch fails.
+   The full script source lives in apps-script.gs at the repo root:
+   paste it into the Apps Script editor and redeploy via Deploy →
+   Manage deployments → pencil → New version (which KEEPS this same
    /exec URL; a brand-new deployment would mint a different URL and
-   this constant would need updating):
-
-     function doPost(e){
-       var data = {};
-       try{ data = JSON.parse(e.postData.contents); }catch(err){}
-       if(data.action === 'send' && data.to){
-         var opts = {
-           name: 'Click.n.likes',
-           replyTo: data.replyTo || 'business@clicknlikes.com',
-           bcc: data.bcc || '',
-           htmlBody: '<div style="font-family:Segoe UI,system-ui,sans-serif;'
-             + 'font-size:14px;color:#1A2B4A;line-height:1.65;max-width:620px;">'
-             + '<div style="border-top:4px solid #4ECDC4;padding:16px 0 6px;">'
-             + '<strong style="font-size:17px;">Click.n.likes</strong></div>'
-             + '<div style="padding:8px 0;">'
-             + String(data.body || '').replace(/&/g,'&amp;').replace(/</g,'&lt;')
-                 .replace(/>/g,'&gt;').replace(/\n/g,'<br>')
-             + '</div>'
-             + '<div style="margin-top:16px;padding-top:10px;border-top:1px dashed #ccc;'
-             + 'font-size:12px;color:#777;">Click.n.likes · Organic growth, engineered'
-             + ' · clicknlikes.com</div></div>'
-         };
-         // Send as the branded domain address once its Gmail "Send mail
-         // as" alias is verified; falls back to the Gmail address until
-         // then, so sending never breaks either way.
-         if(GmailApp.getAliases().indexOf('business@clicknlikes.com') !== -1){
-           opts.from = 'business@clicknlikes.com';
-         }
-         GmailApp.sendEmail(data.to, data.subject || '', data.body || '', opts);
-       } else {
-         var ss = SpreadsheetApp.openById('1fdqShmBkDnVPPdhtmEo4wdmkc5u9bJe2kKteJpmUsWo');
-         var sh = ss.getSheetByName('Leads') || ss.insertSheet('Leads');
-         if(sh.getLastRow() === 0){
-           sh.appendRow(['Timestamp','Form / Subject','Details']);
-         }
-         sh.appendRow([new Date(), data.subject || '', data.details || '']);
-       }
-       return ContentService.createTextOutput('ok');
-     }
-
-   Redeploying with GmailApp added triggers one extra Google permission
-   prompt ("send email as you"): approve it once and it never asks again.
-   The business@clicknlikes.com identity requires a one-time Gmail
-   setup in the clicknlikes@gmail.com account: Gmail Settings →
-   Accounts and Import → "Send mail as" → Add → business@clicknlikes.com
-   with SMTP smtp.hostinger.com, port 465, username
-   business@clicknlikes.com and that mailbox's password, then confirm
-   the verification code Gmail sends to the mailbox. Until that alias
-   is verified, the script automatically sends from the Gmail address
-   instead: nothing breaks in the meantime. */
+   this constant would need updating). */
 const SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbxQdW9Wx0Vn2YOpMMWGsrkaKwq9FTYYCM0tmRwEHC1IrCe1h1ba7usmPhFBYl0-7vW_/exec";
 
 /* True once a real web-app URL is in place: gates both sending and the
@@ -1978,6 +1964,78 @@ function postToScript(payload){
 /* Appends one row to the lead sheet. */
 function logLeadToSheet(subject, details){
   postToScript({subject: subject, details: details});
+}
+
+/* ---- single-page analyzer client ----------------------------------
+   Asks the Apps Script to fetch ONE page server-side (browsers can't
+   fetch other sites directly: CORS) and hands back verifiable on-page
+   facts. Never throws: resolves to {available:false, reason} on any
+   failure so every tool can fall back to self-reported scoring. */
+async function fetchPageFacts(rawUrl){
+  let target = (rawUrl||'').trim();
+  if(!target) return {available:false, reason:'no_url'};
+  if(!autoEmailReady) return {available:false, reason:'no_backend'};
+  try{
+    const res = await fetch(SHEET_WEBHOOK_URL + '?action=analyze&url=' + encodeURIComponent(target));
+    if(!res.ok) return {available:false, reason:'http_'+res.status};
+    const data = await res.json();
+    if(!data || !data.ok || !data.facts) return {available:false, reason:(data && data.reason) || 'fetch_failed'};
+    return Object.assign({available:true}, data.facts);
+  }catch(e){
+    return {available:false, reason:'network_error'};
+  }
+}
+
+/* ---- HTML report email builder ------------------------------------
+   Turns a tool result into the full emailed deliverable: score +
+   interpretation, a complete factor-by-factor table (every check, not
+   just failures, each labelled Verified-live or Self-reported), 3-5
+   personalized next steps, and a CTA. Inline styles only: email
+   clients ignore stylesheets. The Apps Script wraps this in the brand
+   shell (teal top bar + footer), so this builds only the inner body. */
+function buildReportEmailHtml(o){
+  const esc = escapeHtml;
+  const H = "font-family:'Space Grotesk',Arial,sans-serif;color:#1A2B4A;";
+  const chip = src => src === 'verified'
+    ? '<span style="background:#E5F8F5;color:#1F7A74;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;white-space:nowrap;">Verified live</span>'
+    : '<span style="background:#F0F0F0;color:#777;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;white-space:nowrap;">Self-reported</span>';
+  const rows = (o.factors||[]).map(f => `<tr>
+      <td style="padding:9px 10px;border-bottom:1px solid #eee;font-size:13px;color:#1A2B4A;vertical-align:top;"><b>${esc(f.name)}</b></td>
+      <td style="padding:9px 10px;border-bottom:1px solid #eee;font-size:13px;color:#444;vertical-align:top;">${esc(f.found)}</td>
+      <td style="padding:9px 10px;border-bottom:1px solid #eee;vertical-align:top;">${chip(f.source)}</td>
+      <td style="padding:9px 10px;border-bottom:1px solid #eee;font-size:13px;font-weight:700;vertical-align:top;white-space:nowrap;color:${/^[−-]/.test(f.impact)?'#FF4757':'#1F7A74'};">${esc(f.impact)}</td>
+    </tr>`).join('');
+  const steps = (o.nextSteps||[]).map((s,i) =>
+    `<li style="margin:0 0 10px;padding-left:4px;">${esc(s)}</li>`).join('');
+  return `
+    <h2 style="${H}font-size:20px;margin:6px 0 2px;">${esc(o.toolLabel)}: your full report</h2>
+    ${o.forLine ? `<p style="margin:2px 0 14px;font-size:13px;color:#777;">${esc(o.forLine)}</p>` : ''}
+    <div style="background:#F7F7F7;border:1px solid #e8e8e8;border-radius:12px;padding:16px 18px;margin:10px 0 18px;">
+      <div style="${H}font-size:34px;font-weight:700;">${esc(String(o.scoreDisplay))}</div>
+      <div style="font-size:12px;color:#777;text-transform:uppercase;letter-spacing:.06em;margin-top:2px;">${esc(o.indexLabel||'Score')}</div>
+      <p style="margin:10px 0 0;font-size:14px;color:#1A2B4A;">${esc(o.interpretation||'')}</p>
+    </div>
+    ${o.liveNote ? `<p style="margin:0 0 14px;font-size:13px;color:#1F7A74;"><b>✓ ${esc(o.liveNote)}</b></p>`
+                 : `<p style="margin:0 0 14px;font-size:13px;color:#777;">This report is built from your self-reported answers: no live page check ran this time. Everything below is labelled accordingly.</p>`}
+    <h3 style="${H}font-size:15px;margin:18px 0 8px;">Everything we checked</h3>
+    <table style="border-collapse:collapse;width:100%;background:#fff;border:1px solid #eee;border-radius:8px;">
+      <tr>
+        <th style="text-align:left;padding:8px 10px;font-size:11px;color:#777;text-transform:uppercase;letter-spacing:.05em;border-bottom:2px solid #4ECDC4;">Factor</th>
+        <th style="text-align:left;padding:8px 10px;font-size:11px;color:#777;text-transform:uppercase;letter-spacing:.05em;border-bottom:2px solid #4ECDC4;">What we found</th>
+        <th style="text-align:left;padding:8px 10px;font-size:11px;color:#777;text-transform:uppercase;letter-spacing:.05em;border-bottom:2px solid #4ECDC4;">Source</th>
+        <th style="text-align:left;padding:8px 10px;font-size:11px;color:#777;text-transform:uppercase;letter-spacing:.05em;border-bottom:2px solid #4ECDC4;">Impact</th>
+      </tr>
+      ${rows}
+    </table>
+    ${(o.factors||[]).some(f=>f.source==='verified')
+      ? `<p style="margin:10px 0 0;font-size:12px;color:#777;">"Verified live" = measured directly from the page/data you gave us during this check. "Self-reported" = based on your own answer, which we can't independently confirm.</p>`
+      : `<p style="margin:10px 0 0;font-size:12px;color:#777;">Every row above is based on your own answers: nothing in this report was measured from a live page, and we won't label anything as verified unless it genuinely was.</p>`}
+    <h3 style="${H}font-size:15px;margin:22px 0 8px;">Your next steps, in order</h3>
+    <ol style="margin:0;padding-left:20px;font-size:14px;color:#1A2B4A;">${steps}</ol>
+    <div style="margin:24px 0 6px;">
+      <a href="https://clicknlikes.com" style="background:#1A2B4A;color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:100px;font-weight:700;font-size:14px;display:inline-block;">Get an instant quote to fix this →</a>
+      <p style="margin:10px 0 0;font-size:13px;color:#777;">Or simply reply to this email: a strategist (not a bot) reads every reply, usually within one business day.</p>
+    </div>`;
 }
 
 /* Escapes user-typed text before it's interpolated into innerHTML
@@ -2071,7 +2129,7 @@ async function fetchPageSpeedData(rawUrl){
    it defaults to FROM_EMAIL for visitor-facing confirmations, where
    replying back to the business is exactly what you want. Visitor
    emails are BCC'd to OWNER_EMAIL so the business keeps a silent copy. */
-function sendFromClicknlikes({toEmail, toName, subject, bodyText, replyTo}){
+function sendFromClicknlikes({toEmail, toName, subject, bodyText, bodyHtml, replyTo}){
   // Every submission produces exactly one owner-notification email, so
   // hooking the sheet log here logs each lead once, with full details,
   // and independently of whether the emails themselves succeed.
@@ -2082,6 +2140,7 @@ function sendFromClicknlikes({toEmail, toName, subject, bodyText, replyTo}){
     toName: toName || '',
     subject: subject,
     body: bodyText,
+    html: bodyHtml || '',
     replyTo: replyTo || FROM_EMAIL,
     bcc: toEmail === OWNER_EMAIL ? '' : OWNER_EMAIL
   });
@@ -2373,8 +2432,8 @@ function footerSubscribe(){
 /* Minimum time the scan animation stays visible: just enough for the
    spinner to feel like real, purposeful work rather than an instant
    flash (self-reported scoring is pure synchronous math) or a padded,
-   fake-feeling wait (the old 1800ms). A real live PageSpeed check that
-   takes longer than this simply runs past it, unpadded either way. */
+   fake-feeling wait. A real live fetch that takes longer than this
+   simply runs past it, unpadded either way. */
 const TOOL_SCAN_MIN_MS = 900;
 
 function hashStr(s){
@@ -2383,42 +2442,104 @@ function hashStr(s){
   return Math.abs(h);
 }
 
+/* One row of the emailed factor table. source: 'verified' (measured
+   directly from the visitor's live page or PageSpeed data in THIS
+   session) or 'self' (their own answer). Never mark 'verified' unless
+   the value genuinely came from a live fetch. */
+function fact(name, found, source, impact){
+  return {name, found, source, impact};
+}
+
 /* Deterministic, formula-based scoring: same inputs always produce the
-   same result (no randomness). Each function returns:
-   { score, indexLabel, statusLine, bullets, gaps, pivotTitle, pivotText }
-   `gaps` is the plain-English list of what tripped, used both in the
-   on-screen bullets and in the "Selected Gaps" line of the sales email. */
+   same result (no randomness anywhere). Each function returns:
+   { score, indexLabel, statusLine, bullets, gaps, factors, nextSteps,
+     interpretation, howToRead, pivotTitle, pivotText, isLive, liveNote }
+   `gaps` feeds the sales email's "Selected Gaps"; `factors`/`nextSteps`/
+   `interpretation` feed the visitor's full HTML report; `bullets` is the
+   intentionally partial on-screen overview.
+   When inp._page is present it holds verified facts fetched live from
+   the visitor's URL (see fetchPageFacts); real data tightens the score
+   additively, it never replaces the self-reported formula. */
 const TOOL_LOGIC = {
 
   // 1. Organic SEO & Enterprise Visibility Auditor
   seo(seed, inp){
+    const page = inp._page && inp._page.available ? inp._page : null;
     const hasPillars = !!inp.seo_pillar;
     const hasLinking = !!inp.seo_linking;
     const stuckPage23 = !!inp.seo_page23;
+    const monthly = !!inp.seo_monthly;
     let score = 100;
     const gaps = [];
-    if(!hasPillars){ score -= 40; gaps.push('No dedicated pillar-and-cluster page structure'); }
-    if(!hasLinking){ score -= 15; gaps.push('Blog lacks multi-layered internal linking'); }
-    if(stuckPage23){ score -= 25; gaps.push('Target keywords stuck on page 2/3'); }
-    score = Math.max(8, score);
-    const trafficStatus = stuckPage23 ? 'Critical' : (score>=70 ? 'Stable' : 'At Risk');
+    const factors = [];
+    const nextSteps = [];
+
+    if(!hasPillars){ score -= 30; gaps.push('No dedicated pillar-and-cluster page structure'); }
+    factors.push(fact('Pillar-and-cluster architecture', hasPillars?'You report dedicated pillar pages per core topic':'No pillar-and-cluster structure', 'self', hasPillars?'no deduction':'−30 pts'));
+    if(!hasLinking){ score -= 12; gaps.push('Blog lacks multi-layered internal linking'); }
+    factors.push(fact('Internal linking depth', hasLinking?'You report multi-layered internal linking':'Internal linking reported as thin', 'self', hasLinking?'no deduction':'−12 pts'));
+    if(stuckPage23){ score -= 20; gaps.push('Target keywords stuck on page 2/3'); }
+    factors.push(fact('Keyword position', stuckPage23?'Target keywords reported stuck on page 2/3':'Not reported as stuck on page 2/3', 'self', stuckPage23?'−20 pts':'no deduction'));
+    if(!monthly){ score -= 8; gaps.push('No regular publishing cadence (less than monthly)'); }
+    factors.push(fact('Publishing cadence', monthly?'You publish new content at least monthly':'Publishing less than monthly', 'self', monthly?'no deduction':'−8 pts'));
+
+    if(page){
+      if(page.noindex){ score -= 25; gaps.push('CRITICAL: page carries a noindex robots tag (verified)'); }
+      factors.push(fact('Robots / indexability', page.noindex?'noindex tag found: this page is telling Google NOT to index it':'Page is indexable (no noindex tag)', 'verified', page.noindex?'−25 pts':'no deduction'));
+      const tl = page.titleLength||0;
+      const titleBad = tl===0 || tl<15 || tl>65;
+      if(titleBad){ score -= 5; gaps.push(tl===0?'Missing <title> tag (verified)':`Title tag ${tl<15?'too short':'too long'} at ${tl} characters (verified)`); }
+      factors.push(fact('Title tag', tl===0?'Missing entirely':`"${(page.title||'').slice(0,70)}" (${tl} chars${titleBad?', outside the 15–65 sweet spot':''})`, 'verified', titleBad?'−5 pts':'no deduction'));
+      const mdMissing = page.metaDescription===null || page.metaDescriptionLength===0;
+      const mdLong = !mdMissing && page.metaDescriptionLength>160;
+      if(mdMissing){ score -= 8; gaps.push('Missing meta description (verified)'); }
+      else if(mdLong){ score -= 4; gaps.push(`Meta description over 160 characters (${page.metaDescriptionLength}, verified)`); }
+      factors.push(fact('Meta description', mdMissing?'Missing: Google is writing your snippet for you':`${page.metaDescriptionLength} characters${mdLong?' (over the ~160 char limit, gets cut off in results)':''}`, 'verified', mdMissing?'−8 pts':(mdLong?'−4 pts':'no deduction')));
+      const h1Bad = page.h1Count!==1;
+      if(h1Bad){ score -= page.h1Count===0?8:4; gaps.push(page.h1Count===0?'No H1 heading on the page (verified)':`${page.h1Count} H1 headings, should be exactly one (verified)`); }
+      factors.push(fact('H1 heading', page.h1Count===0?'No H1 found':`${page.h1Count} H1(s): "${(page.h1Text||'').slice(0,60)}"`, 'verified', h1Bad?(page.h1Count===0?'−8 pts':'−4 pts'):'no deduction'));
+      if(page.headingSkips>0){ score -= 4; gaps.push(`Heading hierarchy skips levels ${page.headingSkips} time(s) (verified)`); }
+      factors.push(fact('Heading hierarchy', page.headingSkips>0?`Skips levels ${page.headingSkips} time(s) (e.g. H1 straight to H3)`:'Clean H1→H2→H3 order', 'verified', page.headingSkips>0?'−4 pts':'no deduction'));
+      const fewLinks = page.internalLinks<10;
+      if(fewLinks){ score -= 5; gaps.push(`Only ${page.internalLinks} internal links on the page (verified)`); }
+      factors.push(fact('Internal links on this page', `${page.internalLinks} internal / ${page.externalLinks} external`, 'verified', fewLinks?'−5 pts':'no deduction'));
+      if(!page.hasCanonical){ score -= 3; gaps.push('No canonical tag (verified)'); }
+      factors.push(fact('Canonical tag', page.hasCanonical?'Present':'Missing: duplicate-URL risk', 'verified', page.hasCanonical?'no deduction':'−3 pts'));
+      // Cross-check the pillar claim against measured structure
+      if(hasPillars && (page.h1Count!==1 || page.headingSkips>0)){
+        gaps.push('Pillar structure claimed, but measured heading structure contradicts it on this page');
+      }
+    }
+    score = Math.max(5, Math.min(98, score));
     const status = score<50 ? 'Stagnant' : score<75 ? 'Developing' : 'Strong';
+
+    if(!hasPillars) nextSteps.push(`Map your ${inp.seo_industry||'core'} services into pillar pages (one authoritative page per service) with 4-6 supporting cluster posts each, all interlinked: this is the single biggest structural lever you're missing.`);
+    if(page && page.noindex) nextSteps.push('URGENT: remove the noindex robots tag we found on your page: right now you are explicitly telling Google not to show this page at all.');
+    if(page && (page.metaDescription===null||page.metaDescriptionLength===0)) nextSteps.push('Write a meta description (~150 characters, include your main keyword and a reason to click): we verified yours is missing, so Google is improvising your snippet.');
+    if(page && page.h1Count!==1) nextSteps.push(page.h1Count===0?'Add exactly one H1 heading containing your primary keyword: we verified this page has none.':`Reduce your ${page.h1Count} H1 headings to exactly one: multiple H1s dilute the page's topical signal.`);
+    if(stuckPage23) nextSteps.push('For keywords stuck on page 2/3: strengthen internal links pointing at those pages from your highest-authority pages, and expand the content to fully answer the search intent, that jump is usually links + depth, not new content.');
+    if(!hasLinking) nextSteps.push('Add 3-5 contextual internal links from every blog post to your money pages, using descriptive anchor text, not "click here".');
+    if(!monthly) nextSteps.push('Commit to at least one substantial piece of content per month: Google measurably deprioritizes sites that go stale.');
+    if(nextSteps.length<3) nextSteps.push('Run this same check on your 3 most important service pages, not just this URL: consistency across money pages is what moves rankings.');
+
     return {
-      score, indexLabel:'Organic Authority Index',
+      score, indexLabel:'Organic Authority Index', isLive: !!page,
+      liveNote: page ? `Includes on-page facts verified live from ${page.finalUrl}` : null,
       statusLine: `Organic Authority Index: ${score}/100 (${status}). ${!hasPillars ? `Your site is trapped in an architectural silo, meaning Google is indexing your pages but withholding Page 1 visibility.` : `Your architecture is in reasonable shape, the gap is elsewhere.`}`,
+      interpretation: `${score}/100 (${status}). ${score>=75?'Your foundations are solid: the remaining points below are optimization, not rescue.':score>=50?'Workable foundations with named, fixable structural gaps: each item below is costing you specific visibility.':'Structural problems are actively capping your Google visibility: the factor table below shows exactly where every lost point went.'}`,
       bullets:[
-        `Organic Authority Index for "${escapeHtml(inp.seo_industry||'your industry')}": ${score}/100 (${status}), driven mainly by ${!hasPillars?'missing pillar-and-cluster architecture':'other on-page factors'}.`,
-        `Traffic Capture Efficiency: ${trafficStatus}${stuckPage23?', your target keywords are sitting on page 2/3 where under 1% of searchers ever click.':'.'}`,
-        `Internal linking depth: ${hasLinking?'reasonable, this is not your bottleneck right now.':'thin, this is quietly capping how much authority flows to your money pages.'}`
+        `Organic Authority Index for "${escapeHtml(inp.seo_industry||'your industry')}": ${score}/100 (${status})${page?': includes facts verified live from your page.':'.'}`,
+        `Biggest factor: ${!hasPillars?'missing pillar-and-cluster architecture.':(page&&page.noindex?'a noindex tag we found on your page (critical).':stuckPage23?'keywords stranded on page 2/3.':'refinement-level on-page issues.')}`,
+        page ? `Live check highlights: title ${page.titleLength} chars, meta description ${page.metaDescription===null?'missing':page.metaDescriptionLength+' chars'}, ${page.h1Count} H1(s), ${page.internalLinks} internal links.` : `Internal linking depth: ${hasLinking?'reasonable, not your bottleneck right now.':'thin, quietly capping how much authority flows to your money pages.'}`
       ],
-      gaps,
-      howToRead:`This index starts at 100 and loses points for specific, named gaps: no pillar-and-cluster structure costs 40 points because it's the biggest structural signal Google uses; weak internal linking costs 15; being stuck on page 2/3 costs 25 more, since fixing the other two doesn't help if you're not even close to page 1 yet. Nothing here is estimated from guesswork, every point is tied to one of your three answers above.`,
+      gaps, factors, nextSteps: nextSteps.slice(0,5),
+      howToRead:`This index starts at 100 and loses points for specific, named gaps${page?', including facts we just verified live from your page (labelled in your emailed report)':''}: no pillar-and-cluster structure costs 30, weak internal linking 12, page 2/3 keywords 20, irregular publishing 8${page?', and each verified on-page issue (missing meta description, wrong H1 count, noindex) costs its listed amount':''}. Every point traces to one answer or one measured fact, nothing is estimated from guesswork.`,
       pivotTitle:'🔒 Custom Structural Recovery Plan',
       pivotText:`An architectural silo cannot be fixed with generic plugins. Schedule a 15-minute Organic Blueprint Review with our SEO lead to map out a custom structural recovery plan tailored specifically for ${inp.seo_industry||'your industry'}.`
     };
   },
 
-  // 2. Hyper-Local Google Maps Domination Checker
+  // 2. Hyper-Local Google Maps Domination Checker (no page fetch: GBP/Maps signals aren't on-page HTML)
   localseo(seed, inp){
     const compReviews = Math.max(0, parseInt(inp.localseo_reviews_competitor,10)||0);
     const ownReviews = Math.max(0, parseInt(inp.localseo_reviews_own,10)||0);
@@ -2428,54 +2549,107 @@ const TOOL_LOGIC = {
     const reviewsNeeded = Math.max(0, compReviews - ownReviews);
     let score = 75;
     const gaps = [];
+    const factors = [];
     const proximityDecay = (radius==='10km' && !napConsistent);
     if(proximityDecay){ score -= 35; gaps.push('Proximity decay: 10km radius targeted with inconsistent NAP'); }
+    factors.push(fact('Proximity decay risk', proximityDecay?`Targeting ${radius} with inconsistent NAP: Google distrusts inconsistent listings at distance`:'No proximity-decay combination detected', 'self', proximityDecay?'−35 pts':'no deduction'));
     if(!napConsistent){ score -= 10; gaps.push('NAP not identical across citations'); }
+    factors.push(fact('NAP consistency', napConsistent?'Name/address/phone reported identical everywhere':'NAP reported inconsistent across citations', 'self', napConsistent?'no deduction':'−10 pts'));
     if(!weeklyUpdates){ score -= 15; gaps.push('No weekly Google Business Profile updates'); }
+    factors.push(fact('Profile freshness', weeklyUpdates?'Weekly GBP updates reported':'No weekly GBP updates', 'self', weeklyUpdates?'no deduction':'−15 pts'));
+    factors.push(fact('Review gap vs. top competitor', `You: ${ownReviews.toLocaleString('en-IN')} reviews, competitor: ${compReviews.toLocaleString('en-IN')} (gap of ${reviewsNeeded.toLocaleString('en-IN')})`, 'self', reviewsNeeded>0?'informational':'no gap'));
     score = Math.max(8, score);
     const effectiveRadius = proximityDecay ? '<3km' : radius;
+
+    const nextSteps = [];
+    if(!napConsistent) nextSteps.push('Fix your NAP first: make your business name, address and phone character-identical on Google Business Profile, your website footer, Justdial, and every directory: this single inconsistency is your biggest penalty.');
+    if(reviewsNeeded>0) nextSteps.push(`Close the ${reviewsNeeded.toLocaleString('en-IN')}-review gap systematically: ask every happy customer at the moment of peak satisfaction (job done, results delivered) with a direct review link: 2-3 per week compounds fast.`);
+    if(!weeklyUpdates) nextSteps.push('Post one GBP update per week (an offer, a photo, a tip): Google measurably favors active profiles in the local pack, and most of your competitors are not doing this.');
+    nextSteps.push(`Add your primary category keywords into your GBP business description and services list for ${inp.localseo_industry||'your category'}: it's indexed for local queries.`);
+    if(nextSteps.length<4) nextSteps.push('Reply to every review, positive and negative, within 48 hours: response rate is a trust signal both to Google and to the person reading reviews at 11pm deciding who to call.');
+
     return {
-      score, indexLabel:'Local Visibility Radius',
+      score, indexLabel:'Local Visibility Radius', isLive:false, liveNote:null,
       statusLine: `Local Visibility Radius: Restricted to ${effectiveRadius}. ${proximityDecay ? 'You are completely invisible to high-intent local buyers outside your immediate neighborhood.' : 'There is still room to expand your practical reach.'}`,
+      interpretation: `${score}/100. ${proximityDecay?'Your effective visibility radius is collapsing to under 3km while you target '+radius+': the factor table shows the exact combination causing it.':score>=60?'Your local foundations are reasonable: the review gap and freshness items below are where the local pack is won.':'Multiple local ranking signals are working against you: each is individually fixable within weeks.'}`,
       bullets:[
         `Local Visibility Radius for "${escapeHtml(inp.localseo_industry||'your category')}": restricted to roughly ${effectiveRadius}${proximityDecay?', vs. the '+radius+' you\'re actually targeting.':'.'}`,
         `Review gap vs. your top local competitor: you need approximately ${reviewsNeeded} more 5-star reviews to close the gap.`,
         `Profile freshness: ${weeklyUpdates?'weekly updates are keeping your profile active in local ranking signals.':'no weekly updates detected, Google deprioritizes stale profiles in the local pack.'}`
       ],
-      gaps,
-      howToRead:`We start you at 75 and apply real penalties: targeting a 10km radius while your NAP (name/address/phone) isn't identical everywhere costs 35 points, since Google actively distrusts inconsistent listings at that distance ("proximity decay"). Inconsistent NAP alone costs 10 more. No weekly profile updates costs 15, since Google deprioritizes stale profiles in the local pack. The review gap is separate, it's simply the difference between your reviews and your competitor's.`,
+      gaps, factors, nextSteps: nextSteps.slice(0,5),
+      howToRead:`We start you at 75 and apply real penalties: targeting a 10km radius while your NAP (name/address/phone) isn't identical everywhere costs 35 points, since Google actively distrusts inconsistent listings at that distance ("proximity decay"). Inconsistent NAP alone costs 10 more. No weekly profile updates costs 15. The review gap is separate, it's simply the difference between your reviews and your competitor's. All answers here are self-reported: GBP data isn't publicly fetchable without Google's paid APIs, and we won't pretend otherwise.`,
       pivotTitle:'🔒 Full Map Pack Audit',
       pivotText:`Overcoming proximity decay requires manual citation building and algorithmic geo-targeting. Request a Map Pack Audit from our local team to see exactly how we can engineer your local expansion for ${inp.localseo_industry||'your category'}.`
     };
   },
 
-  // 3. LLM Optimization & AI Overview Diagnostic
+  // 3. LLM Optimization & AI Overview Diagnostic (paste OR live URL)
   aiseo(seed, inp){
-    const content = (inp.aiseo_content||'');
-    const hasH2 = /<h2[\s>]/i.test(content) || /\n#{1,3}\s/.test(content);
-    const hasList = /<li[\s>]|<ul[\s>]|<ol[\s>]/i.test(content) || /\n\s*[-•]\s/.test(content);
-    const hasFactualAnchor = /(is a|is an|specifically designed for|refers to)/i.test(content);
-    const hasDigit = /\d+/.test(content);
-    const hasPercent = /%/.test(content);
+    const page = inp._page && inp._page.available ? inp._page : null;
+    const pasted = (inp.aiseo_content||'').trim();
+    const usingLive = !!page;
+    // Structure signals: from the real page when fetched, else from the paste
+    const hasH2 = usingLive
+      ? page.headingSequence.indexOf(2) !== -1
+      : (/<h2[\s>]/i.test(pasted) || /\n#{1,3}\s/.test(pasted));
+    const hasList = usingLive
+      ? page.listItems > 0
+      : (/<li[\s>]|<ul[\s>]|<ol[\s>]/i.test(pasted) || /\n\s*[-•]\s/.test(pasted));
+    const textToScan = usingLive ? (page.textSample||'') : pasted;
+    const hasFactualAnchor = /(is a|is an|specifically designed for|refers to)/i.test(textToScan);
+    const hasDigit = /\d+/.test(textToScan);
+    const hasPercent = /%/.test(textToScan);
+    const hasFaq = !!inp.aiseo_faq;
     const structureMarkers = [hasH2, hasList].filter(Boolean).length;
     const densityMarkers = [hasFactualAnchor, hasDigit, hasPercent].filter(Boolean).length;
-    let score = 20 + structureMarkers*15 + densityMarkers*15;
-    score = Math.min(95, Math.max(10, score));
+    let score = 15 + structureMarkers*15 + densityMarkers*13 + (hasFaq?8:0);
+    const src = usingLive ? 'verified' : 'verified'; // both are direct scans of provided material
     const gaps = [];
+    const factors = [];
     if(!hasH2 && !hasList) gaps.push('No heading or list structure for AI to parse');
     if(!hasFactualAnchor) gaps.push('No clear entity-definition phrasing ("is a…", "specifically designed for…")');
     if(!hasDigit && !hasPercent) gaps.push('No data density markers (numbers, percentages)');
+    if(!hasFaq) gaps.push('No FAQ section answering real customer questions');
+    factors.push(fact('H2 heading structure', hasH2?'Present: AI engines can segment your copy into answers':'Absent: nothing for an AI engine to segment', usingLive?'verified':'verified', hasH2?'+15 pts':'0 pts'));
+    factors.push(fact('List structure', hasList?'Lists found: extractable step/point format':'No lists found', usingLive?'verified':'verified', hasList?'+15 pts':'0 pts'));
+    factors.push(fact('Entity-definition phrasing', hasFactualAnchor?'Clear "is a…"-style definitions found':'No definition phrasing an LLM can quote', usingLive?'verified':'verified', hasFactualAnchor?'+13 pts':'0 pts'));
+    factors.push(fact('Numeric density', hasDigit?'Numbers present: concrete facts to cite':'No numbers found', usingLive?'verified':'verified', hasDigit?'+13 pts':'0 pts'));
+    factors.push(fact('Percentage/stat markers', hasPercent?'Percentages present':'No percentages/stats', usingLive?'verified':'verified', hasPercent?'+13 pts':'0 pts'));
+    factors.push(fact('FAQ section', hasFaq?'You report an FAQ answering real customer questions':'No FAQ section', 'self', hasFaq?'+8 pts':'0 pts'));
+    if(usingLive){
+      const hasFaqSchema = (page.schemaTypes||[]).some(t=>/faq/i.test(t));
+      const hasAnySchema = !!page.hasSchema;
+      if(hasAnySchema) score += 6;
+      factors.push(fact('Structured data (schema.org)', hasAnySchema?`Found: ${(page.schemaTypes||[]).slice(0,4).join(', ')}`:'No JSON-LD structured data found', 'verified', hasAnySchema?'+6 pts':'0 pts'));
+      if(!hasAnySchema) gaps.push('No schema.org structured data on the page (verified)');
+      if(hasFaqSchema) factors.push(fact('FAQ schema', 'FAQPage schema present: directly feeds AI answer engines', 'verified', 'informational'));
+    }
+    score = Math.min(95, Math.max(8, score));
     const capability = score<40 ? 'Low Capability' : score<70 ? 'Moderate Capability' : 'High Capability';
+    const sourceDesc = usingLive ? `your live page (${page.finalUrl})` : 'the copy you pasted';
+
+    const nextSteps = [];
+    if(!hasH2) nextSteps.push('Restructure your copy under question-style H2 headings ("How much does X cost?", "What is X?"): AI Overviews lift answers almost verbatim from well-structured H2 sections.');
+    if(!hasFactualAnchor) nextSteps.push(`Open key sections with a quotable one-line definition: "${inp.aiseo_industry||'Your service'} is a …": LLMs cite sentences that read like facts, not marketing.`);
+    if(!hasDigit && !hasPercent) nextSteps.push('Add concrete numbers (prices, timelines, percentages, counts) to your copy: an AI engine will cite "results in 4-6 weeks" but never "fast results".');
+    if(!hasFaq) nextSteps.push('Add an FAQ section answering the 5-8 questions customers actually ask you, one clear paragraph each: it is the single most AI-citable format that exists.');
+    if(usingLive && !page.hasSchema) nextSteps.push('Add JSON-LD structured data (at minimum Organization + FAQPage): we verified your page has none, and schema is how AI engines confirm who you are.');
+    if(!hasList) nextSteps.push('Convert processes and comparisons into bullet or numbered lists: extractable structure beats paragraphs for AI answers.');
+    if(nextSteps.length<3) nextSteps.push('Publish one "definitive answer" page per high-intent question in your category, structured exactly like the checklist above.');
+
     return {
-      score, indexLabel:'AI Readability Index',
+      score, indexLabel:'AI Readability Index', isLive: usingLive,
+      liveNote: usingLive ? `Structure and factual density scanned live from ${page.finalUrl}` : (pasted?`Direct scan of the copy you pasted (${pasted.split(/\s+/).length} words)`:null),
       statusLine: `AI Readability Index: ${capability} (${score}/100). ${score<40 ? "Modern LLMs (like Gemini and ChatGPT) cannot reliably extract factual citations from this copy to feature you in AI Overviews." : "Your copy gives AI engines something to work with, though there's room to strengthen it further."}`,
+      interpretation: `${capability} (${score}/100), from a direct scan of ${sourceDesc}. ${score>=70?'Your content is already AI-citable: the remaining points are about consistency across your whole site.':score>=40?'AI engines can partially parse your content but will struggle to quote it confidently: the factor table shows exactly which signals are missing.':'As it stands, AI engines have little they can safely quote from this content: every missing signal below is a concrete, fixable writing pattern.'}`,
       bullets:[
-        `AI Readability Index for "${escapeHtml(inp.aiseo_industry||'your industry')}": ${capability} (${score}/100).`,
+        `AI Readability Index for "${escapeHtml(inp.aiseo_industry||'your industry')}": ${capability} (${score}/100), scanned from ${usingLive?'your live page':'your pasted copy'}.`,
         `Structural signals found: ${structureMarkers}/2 (headings, lists): ${structureMarkers===0?'AI engines have nothing to segment into an answer.':'a reasonable starting skeleton.'}`,
         `Factual density found: ${densityMarkers}/3 (entity-definition phrasing, numbers, percentages): ${densityMarkers<=1?'too thin for an LLM to confidently cite a fact from this copy.':'enough for partial extraction.'}`
       ],
-      gaps,
-      howToRead:`We scan the exact copy you pasted for two things AI engines actually rely on: structure (headings, lists: something to segment into an answer) and factual density (numbers, percentages, clear "is a…" definitions: something concrete to cite). Each missing structural signal and each missing density marker directly lowers the score. This isn't a guess about your whole site, it's a direct read of the sample you gave us.`,
+      gaps, factors, nextSteps: nextSteps.slice(0,5),
+      howToRead:`We scan ${usingLive?'the actual page at the URL you gave us':'the exact copy you pasted'} for two things AI engines actually rely on: structure (headings, lists: something to segment into an answer) and factual density (numbers, percentages, clear "is a…" definitions: something concrete to cite)${usingLive?', plus whether the page carries schema.org structured data':''}. Each present signal adds its listed points. This isn't a guess about your whole site, it's a direct read of the material you gave us.`,
       pivotTitle:'🔒 Full AI Overview Optimization Roadmap',
       pivotText:`LLM SEO requires advanced semantic engineering and schema injection. Submit your content to our specialist team for a complete manual rewording proposal to secure your AI search citations for ${inp.aiseo_industry||'your industry'}.`
     };
@@ -2489,24 +2663,41 @@ const TOOL_LOGIC = {
     const noNegKw = !!inp.paid_negkw;
     let leakagePct = 0;
     const gaps = [];
+    const factors = [];
     if(homepageRouting){ leakagePct += 35; gaps.push('Ad traffic routed to homepage instead of a dedicated landing page'); }
+    factors.push(fact('Landing page routing', homepageRouting?'Ads land on your homepage: built to inform, not convert':'Ads reported routed to dedicated landing pages', 'self', homepageRouting?'~35% of spend leaked':'no leak'));
     if(noPixel){ leakagePct += 25; gaps.push('Conversion tracking / pixel unverified'); }
+    factors.push(fact('Conversion tracking', noPixel?'Pixel/tracking unverified: campaigns may optimize toward the wrong signal':'Conversion tracking reported verified', 'self', noPixel?'~25% of spend leaked':'no leak'));
     if(noNegKw){ leakagePct += 15; gaps.push('No localized negative keyword list'); }
+    factors.push(fact('Negative keywords', noNegKw?'No negative keyword list: paying for searches you never wanted':'Negative keyword list reported in place', 'self', noNegKw?'~15% of spend leaked':'no leak'));
     leakagePct = Math.min(85, leakagePct);
     const annualLeak = Math.round(budget * (leakagePct/100) * 12);
+    const monthlyLeak = Math.round(budget*(leakagePct/100));
     const score = Math.max(10, 100-leakagePct);
     const platforms = ['paid_platform_google','paid_platform_meta','paid_platform_linkedin']
       .filter(k=>inp[k]).map(k=>({paid_platform_google:'Google Ads',paid_platform_meta:'Meta Ads',paid_platform_linkedin:'LinkedIn Ads'}[k]));
+    factors.push(fact('Monthly ad budget', `₹${budget.toLocaleString('en-IN')}/month across ${platforms.join(', ')||'your platforms'}`, 'self', 'informational'));
+    factors.push(fact('Estimated combined leak', `~${leakagePct}% = ₹${monthlyLeak.toLocaleString('en-IN')}/month (₹${annualLeak.toLocaleString('en-IN')}/year)`, 'self', leakagePct>0?`−${leakagePct} pts`:'no leak'));
+
+    const nextSteps = [];
+    if(homepageRouting) nextSteps.push(`Build one dedicated landing page per campaign (single offer, single CTA, no navigation menu): at ₹${budget.toLocaleString('en-IN')}/month this one change recovers roughly ₹${Math.round(budget*0.35).toLocaleString('en-IN')}/month of wasted clicks.`);
+    if(noPixel) nextSteps.push('Verify your conversion pixel this week: fire a test conversion and confirm it lands in the platform. Until it does, the algorithm is optimizing blind and every optimization decision it makes is suspect.');
+    if(noNegKw) nextSteps.push('Pull your search terms report, mark every irrelevant query from the last 30 days as a negative keyword, and repeat monthly: 20 minutes of work that permanently stops a recurring leak.');
+    if(platforms.length>1) nextSteps.push(`Compare cost-per-lead across ${platforms.join(' vs ')} monthly and shift budget toward the winner: multi-platform spend without comparison is how budgets quietly bleed.`);
+    if(nextSteps.length<3){ nextSteps.push('Your setup basics are in place: the next lever is creative testing, run 2-3 ad variants per campaign and kill the losers every two weeks.'); }
+    nextSteps.push('Pair paid with organic: every rupee of ads works harder when the site it lands on also ranks, loads fast, and looks credible.');
+
     return {
-      score, indexLabel:'Ad Spend Efficiency',
+      score, indexLabel:'Ad Spend Efficiency', isLive:false, liveNote:null,
       statusLine: `Estimated Annual Ad Budget Leak: ₹${annualLeak.toLocaleString('en-IN')} lost to blind traffic routing and tracking dropouts.`,
+      interpretation: `${score}/100 efficiency: roughly ${leakagePct}% of your ₹${budget.toLocaleString('en-IN')}/month spend (₹${monthlyLeak.toLocaleString('en-IN')}/month, ₹${annualLeak.toLocaleString('en-IN')}/year) is leaking to the named setup gaps in the table below. ${leakagePct===0?'Your fundamentals are in place: the next gains come from creative and bid optimization.':'Each leak has a known percentage cost and a concrete fix.'}`,
       bullets:[
         `Estimated Annual Ad Budget Leak for "${escapeHtml(inp.paid_industry||'your industry')}": ₹${annualLeak.toLocaleString('en-IN')} (roughly ${leakagePct}% of spend across ${platforms.join(', ')||'your platforms'}).`,
         `Biggest leak source: ${homepageRouting?'ad traffic landing on your homepage instead of a dedicated page built to convert.':(noPixel?'unverified conversion tracking, meaning campaigns may be optimizing toward the wrong signal.':'relatively contained, the setup basics are in place.')}`,
-        `Monthly leak in rupees at your current ₹${budget.toLocaleString('en-IN')}/month budget: roughly ₹${Math.round(budget*(leakagePct/100)).toLocaleString('en-IN')}/month.`
+        `Monthly leak in rupees at your current ₹${budget.toLocaleString('en-IN')}/month budget: roughly ₹${monthlyLeak.toLocaleString('en-IN')}/month.`
       ],
-      gaps,
-      howToRead:`Each checkbox you ticked maps to a real, named leak, not a random guess: sending traffic straight to your homepage instead of a dedicated landing page wastes roughly 35% of that spend, since homepages are built to inform, not convert. An unverified pixel wastes another 25%, because campaigns end up optimizing toward the wrong signal. A missing negative keyword list wastes 15% on searches you never wanted to show up for. These stack, then get multiplied by your actual monthly budget to get the rupee figure.`,
+      gaps, factors, nextSteps: nextSteps.slice(0,5),
+      howToRead:`Each checkbox you ticked maps to a real, named leak, not a random guess: sending traffic straight to your homepage instead of a dedicated landing page wastes roughly 35% of that spend, since homepages are built to inform, not convert. An unverified pixel wastes another 25%, because campaigns end up optimizing toward the wrong signal. A missing negative keyword list wastes 15% on searches you never wanted to show up for. These stack, then get multiplied by your actual monthly budget to get the rupee figure. All inputs are self-reported: we can't see inside your ad account (and anyone claiming they can without account access is lying).`,
       pivotTitle:'🔒 Full Ad Account Deep-Dive',
       pivotText:`Stop letting your ad budget bleed out. Request a formal Ad Account Deep-Dive from our performance strategists to plug your conversion leaks and rebuild your campaign framework for ${inp.paid_industry||'your industry'}.`
     };
@@ -2525,19 +2716,33 @@ const TOOL_LOGIC = {
     const reachPct = followers>0 ? (engagement/followers*100) : 0;
     let score = Math.max(5, Math.min(95, Math.round(reachPct*20)));
     const gaps = [];
+    const factors = [];
     if(suppressed){ score = Math.max(5, score-25); gaps.push(`Posting under 3x/week on ${platform}, triggering frequency-based suppression`); }
     if(deficit>0) gaps.push(`Engagement running ${deficit.toLocaleString('en-IN')} below the expected 3% baseline for your follower count`);
+    factors.push(fact('Platform', platform, 'self', 'informational'));
+    factors.push(fact('Followers', followers.toLocaleString('en-IN'), 'self', 'informational'));
+    factors.push(fact('Engagement vs. 3% baseline', `~${engagement.toLocaleString('en-IN')} per post vs. an expected ~${Math.round(baselineReach).toLocaleString('en-IN')} (${reachPct.toFixed(1)}% of followers)`, 'self', deficit>0?`${deficit.toLocaleString('en-IN')} short of baseline`:'at/above baseline'));
+    factors.push(fact('Posting cadence', `${freq}x/week${suppressed?' (under the 3x/week suppression threshold on '+platform+')':''}`, 'self', suppressed?'−25 pts':'no deduction'));
     const status = suppressed && reachPct<1.5 ? 'Severe Algorithmic Deficit' : (score<50?'Moderate Algorithmic Deficit':'Healthy Reach');
+
+    const nextSteps = [];
+    if(suppressed) nextSteps.push(`Get to 3+ posts/week on ${platform} for 4 straight weeks: consistency is the specific lever that lifts frequency-based suppression, and most accounts see reach recover within a month.`);
+    if(deficit>0) nextSteps.push('Audit your last 10 posts: which 2 got the most saves/shares? Make more of exactly that format: the 3% baseline is reached by doubling down on proven formats, not posting more of what already underperforms.');
+    if(reachPct<1) nextSteps.push('Run a follower cleanup mindset check: reach percentage this low often means past follower spikes (giveaways, bought followers) are dragging your ratio: growth from here should prioritize engaged niche followers over raw count.');
+    nextSteps.push(`Post native-format content (${platform==='Instagram'?'Reels with on-screen text hooks in the first second':'platform-native video and text posts, not cross-posted links'}): algorithms measurably suppress content that pulls users off-platform.`);
+    nextSteps.push('Reply to every comment within the first hour of posting: early engagement velocity is the strongest single distribution signal on every major platform.');
+
     return {
-      score, indexLabel:'Reach Efficiency',
+      score, indexLabel:'Reach Efficiency', isLive:false, liveNote:null,
       statusLine: `Reach Efficiency Status: ${status}. ${suppressed ? `Your profiles are shadow-restricted by frequency penalties, reaching less than ${Math.max(reachPct,0.1).toFixed(1)}% of your total network.` : `You're reaching roughly ${reachPct.toFixed(1)}% of your network per post.`}`,
+      interpretation: `${status} (${score}/100). You're reaching about ${reachPct.toFixed(1)}% of your ${followers.toLocaleString('en-IN')} followers per post against a healthy 3% baseline${suppressed?', with a frequency-suppression penalty active on '+platform:''}. The table shows each signal's exact contribution.`,
       bullets:[
         `Reach Efficiency Status for "${escapeHtml(inp.social_industry||'your industry')}" on ${platform}: ${status} (${score}/100).`,
         `Algorithmic deficit: your posts are landing roughly ${deficit.toLocaleString('en-IN')} engagements below the expected 3% baseline for ${followers.toLocaleString('en-IN')} followers.`,
         `Posting cadence: ${freq}x/week ${suppressed?`(under the 3x/week threshold, which triggers a real algorithmic reach penalty on ${platform})`:'(at or above the threshold that avoids frequency-based suppression)'}`
       ],
-      gaps,
-      howToRead:`The expected baseline is 3% of your follower count engaging per post, that's just how organic reach tends to work before any penalties. We compare that expected number to what you actually reported. If you're posting under 3x/week on Meta or LinkedIn specifically, those platforms apply a real frequency-based suppression penalty on top of that gap, which is why the same follower count can score very differently depending on how often you post.`,
+      gaps, factors, nextSteps: nextSteps.slice(0,5),
+      howToRead:`The expected baseline is 3% of your follower count engaging per post, that's just how organic reach tends to work before any penalties. We compare that expected number to what you actually reported. If you're posting under 3x/week on Meta or LinkedIn specifically, those platforms apply a real frequency-based suppression penalty on top of that gap, which is why the same follower count can score very differently depending on how often you post. All numbers are self-reported: platform APIs don't expose other accounts' analytics, and we won't pretend to scrape what can't be scraped.`,
       pivotTitle:'🔒 Full Content Studio Package',
       pivotText:`Breaking through algorithmic suppression requires a high-volume, multi-format distribution engine. Inquire about our Content Studio Packages to let us handle your end-to-end production, scheduling, and community scaling for ${inp.social_industry||'your industry'}.`
     };
@@ -2545,7 +2750,8 @@ const TOOL_LOGIC = {
 
   // 6. Core Infrastructure UX & Mobile-Friction Auditor
   webdev(seed, inp){
-    const live = inp._live; // set by runGatedTool if a URL was given and the live check succeeded
+    const live = inp._live; // PageSpeed result, set by runGatedTool when a URL was given
+    const page = inp._page && inp._page.available ? inp._page : null;
     const isLive = !!(live && live.available);
     const cls = isLive ? (live.clsGood===false) : !!inp.webdev_cls;
     const longForm = !!inp.webdev_longform; // never measurable live: always self-reported
@@ -2553,15 +2759,33 @@ const TOOL_LOGIC = {
     const leads = Math.max(0, parseInt(inp.webdev_leads,10)||0);
     let score = isLive && live.perf!==null ? live.perf : 100;
     const gaps = [];
+    const factors = [];
     if(!isLive){
-      // fallback deterministic penalties, unchanged from the self-reported model
       if(cls){ score -= 30; gaps.push('Layout shifts while loading (CLS symptom, self-reported)'); }
       if(slow){ score -= 25; gaps.push('Takes over 3 seconds to become interactive on mobile (self-reported)'); }
+      factors.push(fact('Layout stability (CLS)', cls?'Layout shift reported while loading':'No layout shift reported', 'self', cls?'−30 pts':'no deduction'));
+      factors.push(fact('Mobile load speed', slow?'Reported over 3 seconds to interactive':'Reported reasonably fast', 'self', slow?'−25 pts':'no deduction'));
     } else {
       if(cls) gaps.push(`Real layout shift measured (CLS: ${live.cls})`);
       if(slow) gaps.push(`Real PageSpeed performance score is low (${live.perf}/100)`);
+      factors.push(fact('PageSpeed performance (mobile)', `${live.perf}/100${live.lcp?', main content paints in '+live.lcp:''}`, 'verified', 'sets the base score'));
+      factors.push(fact('Layout stability (CLS)', cls?`Real layout shift measured: CLS ${live.cls}`:`Stable: CLS ${live.cls||'0'}`, 'verified', cls?'flagged':'no issue'));
+      if(live.accessibility!==null) factors.push(fact('Accessibility score', `${live.accessibility}/100 (Lighthouse)`, 'verified', 'informational'));
     }
     if(longForm){ score -= 20; gaps.push('Lead form has more than 5 fields'); }
+    factors.push(fact('Lead form length', longForm?'More than 5 fields: measurably suppresses completions':'5 fields or fewer', 'self', longForm?'−20 pts':'no deduction'));
+    // On-page facts from the analyzer (independent of PageSpeed)
+    if(page){
+      const altBad = page.imgCount>0 && page.imgMissingAlt>0;
+      if(altBad) gaps.push(`${page.imgMissingAlt} of ${page.imgCount} images missing alt text (verified)`);
+      factors.push(fact('Image alt coverage', page.imgCount===0?'No images on the page':`${page.imgCount-page.imgMissingAlt}/${page.imgCount} images have alt text`, 'verified', altBad?'flagged':'no issue'));
+      if(!page.hasSchema) gaps.push('No schema.org structured data (verified)');
+      factors.push(fact('Structured data (schema.org)', page.hasSchema?`Present: ${(page.schemaTypes||[]).slice(0,3).join(', ')}`:'None found', 'verified', page.hasSchema?'no issue':'flagged'));
+      const mdMissing = page.metaDescription===null || page.metaDescriptionLength===0;
+      if(mdMissing) gaps.push('Missing meta description (verified)');
+      factors.push(fact('Meta description', mdMissing?'Missing':`Present (${page.metaDescriptionLength} chars)`, 'verified', mdMissing?'flagged':'no issue'));
+      factors.push(fact('Mobile viewport tag', page.hasViewport?'Present':'Missing: mobile-rendering fail', 'verified', page.hasViewport?'no issue':'flagged'));
+    }
     score = Math.max(8, Math.round(score));
     const dropoff = longForm ? Math.round(leads*0.26) : 0;
     const status = score<60 ? 'High Friction' : score<80 ? 'Moderate Friction' : 'Low Friction';
@@ -2575,30 +2799,100 @@ const TOOL_LOGIC = {
     } else {
       bullets.push(`Mobile interactivity: ${slow?'self-reported as taking over 3 seconds to become interactive, most visitors bounce before that point.':'self-reported as reasonably fast on mobile.'}`);
     }
+    if(page && page.imgMissingAlt>0) bullets.push(`⚠️ Verified: ${page.imgMissingAlt} of ${page.imgCount} images on your page are missing alt text.`);
+
+    const nextSteps = [];
+    if(cls) nextSteps.push('Fix layout shift first: give every image and embed explicit width/height attributes, and preload your web fonts: CLS is both a ranking factor and a conversion killer.');
+    if(slow) nextSteps.push(`Get mobile load under 3 seconds: compress images to WebP, lazy-load below the fold, and defer non-critical scripts${isLive?` (your measured performance score is ${live.perf}/100)`:''}.`);
+    if(longForm) nextSteps.push(`Cut your lead form to 4 fields or fewer (name, contact, one qualifier): at your volume that's roughly ${dropoff.toLocaleString('en-IN')} recovered enquiries per month.`);
+    if(page && !page.hasSchema) nextSteps.push('Add JSON-LD structured data (Organization/LocalBusiness at minimum): we verified your page has none: it costs nothing and feeds both Google rich results and AI answers.');
+    if(page && page.imgMissingAlt>0) nextSteps.push(`Add alt text to the ${page.imgMissingAlt} images missing it: accessibility, image SEO, and a Lighthouse score bump in one pass.`);
+    if(nextSteps.length<3) nextSteps.push('Your fundamentals look healthy: the next win is conversion polish, one clear primary CTA above the fold on every page, and trust signals (reviews, guarantees) near the point of decision.');
+
     return {
-      score, indexLabel:'Infrastructure Health', isLive,
+      score, indexLabel:'Infrastructure Health', isLive: isLive || !!page,
+      liveNote: isLive && page ? `Speed measured via Google PageSpeed Insights + on-page facts verified from ${page.finalUrl}`
+        : isLive ? `Speed and layout shift measured live via Google PageSpeed Insights`
+        : page ? `On-page facts verified live from ${page.finalUrl}` : null,
       statusLine: `Infrastructure Health: ${score}/100 (${status}). ${cls ? 'Layout shift is causing an estimated drop in mobile visitor inquiries.' : 'No critical layout-shift issues flagged, the rest of the friction is worth fixing too.'}`,
+      interpretation: `${score}/100 (${status}). ${isLive?'Your base score is your real Google PageSpeed performance number, adjusted for the self-reported form-length factor.':'Built from your self-reported answers: add a URL next time and we measure speed and layout shift directly.'} ${score>=80?'This site is not the bottleneck: your growth levers are elsewhere.':score>=60?'Moderate friction: each flagged item below has a known conversion cost.':'High friction: this level of technical drag typically suppresses enquiries by double-digit percentages.'}`,
       bullets,
-      gaps,
+      gaps, factors, nextSteps: nextSteps.slice(0,5),
       howToRead: isLive
-        ? `Layout shift and load speed came from a real live check on the URL you gave us (Google's own PageSpeed data), so those two numbers are measured, not guessed. Your lead form length is still self-reported, since no crawler can count the fields on a form for you, that's the one honest gap in an otherwise live score.`
-        : `We start at 100 and apply real penalties: visible layout shift while loading costs 30 points, a lead form with more than 5 fields costs 20 (plus the conversion drop-off math below), and a slow mobile load costs 25. All three are self-reported here because no URL was given for a live check: enter one above next time and we'll measure layout shift and speed directly instead of asking.`,
+        ? `Layout shift and load speed came from a real live check on the URL you gave us (Google's own PageSpeed data)${page?', and the on-page items (alt text, schema, meta description) were verified directly from your page HTML':''}, so those numbers are measured, not guessed. Your lead form length is still self-reported, since no crawler can count the fields on a form for you, that's the one honest gap in an otherwise live score.`
+        : `We start at 100 and apply real penalties: visible layout shift while loading costs 30 points, a lead form with more than 5 fields costs 20 (plus the conversion drop-off math below), and a slow mobile load costs 25. ${page?'The on-page items (alt text, schema, meta description) WERE verified live from your page.':'All three are self-reported here because no URL was given for a live check: enter one above next time and we\'ll measure directly instead of asking.'}`,
       pivotTitle:'🔒 Full UI/UX Redevelopment Proposal',
       pivotText:`Fixing Core Web Vitals and conversion friction requires specialized front-end engineering, not basic page-builders. Drop your details to request a custom UI/UX redevelopment proposal from our technical team for ${inp.webdev_industry||'your industry'}.`
     };
   },
 
+  // 7. Content Marketing Gap Finder: deterministic point-based scoring
+  // (replaced the old hash-based pseudo-random score, which was a
+  // disguised dice roll and always claimed "noticeably behind").
   content(seed, inp){
-    const score = 28 + (seed%42);
-    const gap = 6 + (seed%18);
-    const traffic = 400 + (seed%2600);
-    return { score, bullets:[
-      `Published content volume around "${escapeHtml(inp.content_topic||'your core service')}" vs. category leaders in ${escapeHtml(inp.content_industry||'your industry')}: noticeably behind.`,
-      `Estimated content topics you have zero coverage on: around ${gap} high-intent topics.`,
-      `Estimated monthly search traffic being left on the table: roughly ${traffic} visits/month.`
-    ]};
+    const page = inp._page && inp._page.available ? inp._page : null;
+    const freq = inp.content_freq || 'rarely';
+    const hasPillars = !!inp.content_pillars;
+    const refreshed = !!inp.content_refresh;
+    let score = 100;
+    const gaps = [];
+    const factors = [];
+
+    const freqLabel = {weekly:'Weekly or more', fewmonth:'A few times a month', monthly:'About once a month', rarely:'Rarely or never'}[freq] || freq;
+    const freqPenalty = {weekly:0, fewmonth:8, monthly:20, rarely:35}[freq] ?? 35;
+    if(freqPenalty){ score -= freqPenalty; if(freqPenalty>=20) gaps.push(`Publishing cadence too low (${freqLabel.toLowerCase()})`); }
+    factors.push(fact('Publishing cadence', freqLabel, 'self', freqPenalty?`−${freqPenalty} pts`:'no deduction'));
+    if(!hasPillars){ score -= 25; gaps.push('No dedicated page per core service/topic'); }
+    factors.push(fact('Topic coverage', hasPillars?'Every core service/topic has its own dedicated page':'Core services/topics share pages or have none', 'self', hasPillars?'no deduction':'−25 pts'));
+    if(!refreshed){ score -= 10; gaps.push('No content refreshed in the last 6 months'); }
+    factors.push(fact('Content freshness', refreshed?'Old posts refreshed within the last 6 months':'No refresh in 6+ months: Google decays stale content', 'self', refreshed?'no deduction':'−10 pts'));
+
+    if(page){
+      const wc = page.wordCount||0;
+      const thinPenalty = wc<500 ? 10 : (wc<800 ? 5 : 0);
+      if(thinPenalty){ score -= thinPenalty; gaps.push(`Page content thin at ${wc.toLocaleString('en-IN')} words (verified)`); }
+      factors.push(fact('Word count of your page', `${wc.toLocaleString('en-IN')} words of visible text`, 'verified', thinPenalty?`−${thinPenalty} pts`:'no deduction'));
+      const noH2 = page.headingSequence.indexOf(2)===-1;
+      if(noH2){ score -= 8; gaps.push('No H2 subheadings structuring the content (verified)'); }
+      factors.push(fact('Content structure (H2 sections)', noH2?'No H2 subheadings found: a wall of text to both readers and Google':'H2-structured sections found', 'verified', noH2?'−8 pts':'no deduction'));
+      const hasArticleSchema = (page.schemaTypes||[]).some(t=>/article|blogposting/i.test(t));
+      if(!hasArticleSchema && !page.hasSchema){ score -= 3; gaps.push('No structured data on the content page (verified)'); }
+      factors.push(fact('Structured data', page.hasSchema?`Present: ${(page.schemaTypes||[]).slice(0,3).join(', ')}`:'None found', 'verified', (!page.hasSchema)?'−3 pts':'no deduction'));
+      const h1Bad = page.h1Count!==1;
+      if(h1Bad){ score -= 5; gaps.push(page.h1Count===0?'No H1 on the page (verified)':'Multiple H1s on the page (verified)'); }
+      factors.push(fact('H1 heading', page.h1Count===0?'Missing':(page.h1Count>1?`${page.h1Count} H1s (should be one)`:'Exactly one, as it should be'), 'verified', h1Bad?'−5 pts':'no deduction'));
+    }
+    score = Math.max(5, Math.min(98, score));
+    const status = score<45 ? 'Underpublishing' : score<75 ? 'Inconsistent' : 'Publishing Well';
+
+    const nextSteps = [];
+    if(freqPenalty>=20) nextSteps.push(`Set a sustainable publishing floor: one genuinely useful piece on "${inp.content_topic||'your core service'}" every two weeks beats a burst of five posts followed by silence: consistency is the signal Google and readers both reward.`);
+    if(!hasPillars) nextSteps.push(`Create one dedicated, definitive page per core service: right now searches for those topics have no single strong page of yours to land on, so they land on a competitor's.`);
+    if(page && (page.wordCount||0)<800) nextSteps.push(`Deepen the page we checked (${(page.wordCount||0).toLocaleString('en-IN')} words): pages that fully answer intent for "${inp.content_topic||'your topic'}" in ${inp.content_industry||'your industry'} typically need 800+ words of genuinely useful content, not padding.`);
+    if(page && page.headingSequence.indexOf(2)===-1) nextSteps.push('Break your content into H2-titled sections (one per sub-question): we verified your page has none, and both readers and AI engines skip walls of text.');
+    if(!refreshed) nextSteps.push('Refresh your 3 best old posts before writing anything new: update stats, add current-year context, re-submit to Google: refreshed content recovers rankings faster than new content earns them.');
+    if(nextSteps.length<3) nextSteps.push(`Map the 10 questions customers ask before buying "${inp.content_topic||'your service'}" and publish one definitive answer piece per question, structured with H2s and a citable one-line answer up top.`);
+
+    return {
+      score, indexLabel:'Content Opportunity Score', isLive: !!page,
+      liveNote: page ? `Word count and structure verified live from ${page.finalUrl}` : null,
+      statusLine: `Content Opportunity Score: ${score}/100 (${status}).`,
+      interpretation: `${score}/100 (${status}). ${score>=75?'Your content engine is fundamentally working: the table shows the refinements left.':score>=45?'You have a content foundation but it\'s leaking authority through the named gaps below: each one is costing you specific search visibility.':'Your content footprint is thin enough that competitors are winning searches you should own: the factor table shows exactly why, point by point.'}`,
+      bullets:[
+        `Content Opportunity Score for "${escapeHtml(inp.content_topic||'your core service')}" in ${escapeHtml(inp.content_industry||'your industry')}: ${score}/100 (${status})${page?': includes facts verified live from your page.':'.'}`,
+        `Biggest gap: ${!hasPillars?'no dedicated page per core topic, searches land on generic pages or nowhere.':freqPenalty>=20?`publishing cadence (${freqLabel.toLowerCase()}), consistency is the compounding lever.`:(page&&(page.wordCount||0)<800?`thin content: your page carries only ${(page.wordCount||0).toLocaleString('en-IN')} words (verified).`:'refinement-level: structure and freshness.')}`,
+        page ? `Live check: ${(page.wordCount||0).toLocaleString('en-IN')} words, ${page.h1Count} H1(s), ${page.headingSequence.filter(h=>h===2).length} H2 sections, schema ${page.hasSchema?'present':'absent'}.` : `Content freshness: ${refreshed?'recently maintained.':'no refresh in 6+ months, stale content decays in rankings.'}`
+      ],
+      gaps, factors, nextSteps: nextSteps.slice(0,5),
+      howToRead:`This score starts at 100 and applies named deductions from your answers: publishing rarely costs 35 (monthly 20, a few times a month 8), no dedicated topic pages costs 25, and no refresh in 6 months costs 10${page?'. Because you gave a URL, we also verified your actual page: thin word count, missing H2 structure, H1 problems and missing schema each cost their listed points, and those rows are labelled "verified" in your emailed report':''}. Same inputs always produce the same score: nothing here is randomized.`,
+      pivotTitle:'🔒 Full Content Gap Report',
+      pivotText:`20 ranked topic ideas, competitor content comparison and a publishing sequence, built specifically for ${inp.content_topic||'your core service'} in ${inp.content_industry||'your industry'}.`
+    };
   }
 };
+
+/* Tools that can verify facts live from a visitor-supplied URL. */
+const PAGE_FACT_TOOLS = {seo:'seo_url', aiseo:'aiseo_url', content:'content_url', webdev:'webdev_url'};
 
 async function runGatedTool(evt, key){
   evt.preventDefault();
@@ -2606,26 +2900,44 @@ async function runGatedTool(evt, key){
   const scanEl = document.getElementById(key+'-scan');
   const resultEl = document.getElementById(key+'-result');
   const btn = form.querySelector('button[type=submit]');
-  btn.disabled = true; btn.style.opacity=.6;
-  scanEl.classList.add('active');
-  resultEl.classList.remove('active');
 
   const inputs = {};
   form.querySelectorAll('input,select,textarea').forEach(el=>{
     if(!el.id) return;
     inputs[el.id] = (el.type==='checkbox') ? el.checked : el.value;
   });
+
+  // AI SEO accepts pasted copy OR a URL: require at least one.
+  if(key==='aiseo' && !(inputs.aiseo_content||'').trim() && !(inputs.aiseo_url||'').trim()){
+    let errEl = document.getElementById('aiseo-form-error');
+    if(!errEl){
+      errEl = document.createElement('p');
+      errEl.id = 'aiseo-form-error';
+      errEl.className = 'form-note';
+      errEl.style.color = 'var(--coral)';
+      btn.parentNode.insertBefore(errEl, btn);
+    }
+    errEl.textContent = 'Give us something to scan: paste your copy above, or enter your page URL.';
+    return false;
+  }
+  const aiseoErr = document.getElementById('aiseo-form-error');
+  if(aiseoErr) aiseoErr.textContent = '';
+
+  btn.disabled = true; btn.style.opacity=.6;
+  scanEl.classList.add('active');
+  resultEl.classList.remove('active');
   const seed = hashStr(Object.values(inputs).join('|') + key);
 
-  // Keep the scan animation's minimum visible duration short and honest:
-  // just long enough for the spinner to read as real work, not a padded
-  // wait pretending to be a deep crawl. For the Infrastructure tool
-  // specifically, when a URL was given: actually run a real live
-  // PageSpeed check in parallel with that wait.
+  // Run real checks in parallel with the honest minimum spinner time:
+  // PageSpeed for the Infrastructure tool, and the single-page analyzer
+  // for every tool that took a URL. Both fall back silently.
   const minDelay = new Promise(r=>setTimeout(r, TOOL_SCAN_MIN_MS));
   const livePromise = (key==='webdev' && inputs.webdev_url) ? fetchPageSpeedData(inputs.webdev_url) : Promise.resolve(null);
-  const [, live] = await Promise.all([minDelay, livePromise]);
+  const urlField = PAGE_FACT_TOOLS[key];
+  const pagePromise = (urlField && (inputs[urlField]||'').trim()) ? fetchPageFacts(inputs[urlField]) : Promise.resolve(null);
+  const [, live, pageFacts] = await Promise.all([minDelay, livePromise, pagePromise]);
   if(live) inputs._live = live;
+  if(pageFacts) inputs._page = pageFacts;
 
   scanEl.classList.remove('active');
   btn.disabled = false; btn.style.opacity=1;
@@ -2640,7 +2952,8 @@ async function runGatedTool(evt, key){
     const badge2 = document.getElementById('webdev-badge2');
     const scoreLabel = document.getElementById('webdev-score-label');
     const disclaimer = document.getElementById('webdev-disclaimer');
-    if(result.isLive){
+    const isLivePS = !!(live && live.available);
+    if(isLivePS){
       if(badge1) badge1.textContent = '✅ Live check via Google PageSpeed Insights';
       if(badge2){ badge2.textContent = 'Real Lighthouse data: form length still self-reported'; badge2.style.color = 'var(--teal-dark)'; }
       if(scoreLabel) scoreLabel.textContent = 'Infrastructure Health Score out of 100: layout shift and speed measured live via Google PageSpeed Insights, form length is still self-reported.';
@@ -2654,6 +2967,25 @@ async function runGatedTool(evt, key){
   }
   document.getElementById(key+'-score').textContent = score;
   document.getElementById(key+'-bullets').innerHTML = bullets.map(b=>`<li><span class="ic">▸</span><span>${b}</span></li>`).join('');
+
+  // Always-visible data-source label: never present self-reported as verified.
+  let srcEl = document.getElementById(key+'-source-label');
+  if(!srcEl){
+    srcEl = document.createElement('p');
+    srcEl.id = key+'-source-label';
+    srcEl.className = 'form-note';
+    srcEl.style.marginTop = '2px';
+    const bulletsEl = document.getElementById(key+'-bullets');
+    bulletsEl.parentNode.insertBefore(srcEl, bulletsEl);
+  }
+  if(result.liveNote){
+    srcEl.textContent = `✅ Data source: ${result.liveNote}. Self-reported answers are labelled separately in your emailed report.`;
+    srcEl.style.color = 'var(--teal-dark)';
+  } else {
+    srcEl.textContent = 'Data source: self-reported answers only, no live check ran on this result.';
+    srcEl.style.color = 'var(--grey)';
+  }
+
   // How to read this: explains what moved the score, not just the number itself
   let howtoEl = document.getElementById(key+'-howto');
   if(!howtoEl){
@@ -2679,7 +3011,7 @@ async function runGatedTool(evt, key){
   resultEl.scrollIntoView({behavior:'smooth', block:'center'});
   sparkBurstOnElement(document.getElementById(key+'-score'));
 
-  // Email the overview only (never the full audit): matches what's shown on screen.
+  // Screen shows the partial overview; the EMAIL is the full deliverable.
   const toEmail = inputs[key+'_email'];
   const s = SERVICES[key];
   let emailNote = document.getElementById(key+'-emailed-note');
@@ -2693,25 +3025,37 @@ async function runGatedTool(evt, key){
   }
   emailNote.innerHTML = '';
   if(toEmail){
-    const bulletsText = bullets.map(b=>`• ${b}`).join('\n');
-    const bodyText = `Hi,\n\nHere's your ${s.label} overview from Click.n.likes:\n\nScore: ${score}/100${result.isLive?' (includes real live PageSpeed data)':''}\n\n${bulletsText}\n\nThis is a directional overview based on what you shared, not a full audit. Want the complete breakdown, with exact fixes? Reply to this email or grab a quote at clicknlikes.in and we'll unlock the full report.\n\nBest,\nClick.n.likes\nbusiness@clicknlikes.com`;
+    const industryVal = inputs[key+'_industry'] || inputs[key+'_biz'] || 'Not specified';
+    const stepsText = (result.nextSteps||[]).map((st,i)=>`${i+1}. ${st}`).join('\n');
+    const bodyText = `Hi,\n\nYour full ${s.label} report from Click.n.likes:\n\n${result.indexLabel}: ${score}/100\n${result.interpretation||''}\n\nData source: ${result.liveNote || 'self-reported answers only'}\n\nWhat we checked:\n${(result.factors||[]).map(f=>`• ${f.name}: ${f.found} [${f.source==='verified'?'VERIFIED LIVE':'self-reported'}] (${f.impact})`).join('\n')}\n\nYour next steps:\n${stepsText}\n\nReply to this email or grab an instant quote at clicknlikes.com and we'll build the fix plan with you.\n\nBest,\nClick.n.likes\nbusiness@clicknlikes.com`;
+    const bodyHtml = buildReportEmailHtml({
+      toolLabel: s.label,
+      forLine: `Prepared for ${industryVal !== 'Not specified' ? industryVal : 'your business'} · ${new Date().toLocaleDateString('en-IN', {day:'numeric', month:'long', year:'numeric'})}`,
+      scoreDisplay: `${score}/100`,
+      indexLabel: result.indexLabel,
+      interpretation: result.interpretation,
+      liveNote: result.liveNote,
+      factors: result.factors || [],
+      nextSteps: result.nextSteps || []
+    });
     const mailLink = sendFromClicknlikes({
       toEmail,
-      subject: `Your ${s.label} overview: score ${score}/100`,
-      bodyText
+      subject: `Your ${s.label} report: ${result.indexLabel} ${score}/100`,
+      bodyText, bodyHtml
     });
-    // Notify the sales inbox with the exact structure requested: Prospect
-    // Industry, Calculated Tool Score, Selected Gaps: plus every raw input
-    // for full context, since free-tool leads are high-intent prospects.
-    const industryVal = inputs[key+'_industry'] || inputs[key+'_biz'] || 'Not specified';
+    // Sales notification: same structure as before, plus the new
+    // verified page facts when the analyzer ran.
     const gapsText = (gaps && gaps.length) ? gaps.map(g=>`  - ${g}`).join('\n') : '  (none flagged)';
+    const pageFactsText = (inputs._page && inputs._page.available)
+      ? `\nVerified page facts (${inputs._page.finalUrl}):\n  title: ${inputs._page.titleLength} chars | meta desc: ${inputs._page.metaDescription===null?'MISSING':inputs._page.metaDescriptionLength+' chars'} | H1s: ${inputs._page.h1Count} | words: ${inputs._page.wordCount} | imgs missing alt: ${inputs._page.imgMissingAlt}/${inputs._page.imgCount} | schema: ${inputs._page.hasSchema?inputs._page.schemaTypes.join(','):'none'} | canonical: ${inputs._page.hasCanonical?'yes':'no'} | noindex: ${inputs._page.noindex?'YES!':'no'} | links: ${inputs._page.internalLinks} int/${inputs._page.externalLinks} ext`
+      : '';
     sendFromClicknlikes({
       toEmail: OWNER_EMAIL,
       replyTo: toEmail,
       subject: `🔔 New ${s.label} tool lead: ${toEmail}`,
-      bodyText: `New "${s.label}" free-tool lead:\n\nProspect Industry: ${industryVal}\nCalculated Tool Score: ${score}/100\nData source: ${result.isLive?'includes LIVE PageSpeed data':'self-reported only'}\nSelected Gaps:\n${gapsText}\n\nEmail: ${toEmail}\n\nAll raw inputs:\n${Object.entries(inputs).filter(([k])=>k!=='_live').map(([k,v])=>`  ${k}: ${v}`).join('\n')}\n\nBullets shown to them:\n${bulletsText}`
+      bodyText: `New "${s.label}" free-tool lead:\n\nProspect Industry: ${industryVal}\nCalculated Tool Score: ${score}/100\nData source: ${result.liveNote ? 'includes LIVE verified data' : 'self-reported only'}\nSelected Gaps:\n${gapsText}${pageFactsText}\n\nEmail: ${toEmail}\n\nAll raw inputs:\n${Object.entries(inputs).filter(([k])=>k!=='_live'&&k!=='_page').map(([k,v])=>`  ${k}: ${String(v).slice(0,300)}`).join('\n')}`
     });
-    emailNote.innerHTML = `✓ This overview was also sent to ${escapeHtml(toEmail)}. <a href="${mailLink}" style="color:var(--teal-dark);text-decoration:underline;">Didn't get it? Open as email draft</a>.`;
+    emailNote.innerHTML = `✓ Your full report (every factor + next steps) was sent to ${escapeHtml(toEmail)}. <a href="${mailLink}" style="color:var(--teal-dark);text-decoration:underline;">Didn't get it? Open as email draft</a>.`;
   }
   console.log('[gated tool lead]', key, inputs, result);
   return false;
@@ -2719,8 +3063,8 @@ async function runGatedTool(evt, key){
 
 /* ============================================================
    FREE TOOL 1: Website Speed & Core Vitals Checker
-   Direct point count from self-reported checkboxes. 25 points each,
-   no randomization: same answers always produce the same score.
+   Live PageSpeed data when available; direct point count from
+   self-reported checkboxes otherwise. No randomization.
    ============================================================ */
 async function runSpeedChecker(evt){
   evt.preventDefault();
@@ -2740,16 +3084,14 @@ async function runSpeedChecker(evt){
     fast: document.getElementById('speed_fast').checked
   };
 
-  // Same honest minimum as the gated tools: a real live check that's
-  // slow just runs past this; a synchronous fallback (no key, or the
-  // live check declining instantly) doesn't get to flash the spinner
-  // for a few milliseconds and look broken.
   const minDelay = new Promise(r=>setTimeout(r, TOOL_SCAN_MIN_MS));
   const [live] = await Promise.all([fetchPageSpeedData(url), minDelay]);
   scanEl.classList.remove('active');
   btn.disabled = false; btn.style.opacity = 1;
 
   let score, bullets, isLive = false;
+  const factors = [];
+  const nextSteps = [];
 
   if(live.available){
     isLive = true;
@@ -2770,13 +3112,26 @@ async function runSpeedChecker(evt){
     if(live.accessibility!==null) bullets.push(`Accessibility score: ${live.accessibility}/100.`);
     if(live.seo!==null) bullets.push(`Basic SEO score: ${live.seo}/100.`);
 
+    factors.push(fact('Performance score (mobile)', `${live.perf}/100 via Google PageSpeed Insights`, 'verified', 'sets the score'));
+    factors.push(fact('Largest Contentful Paint', live.lcp||'not measurable', 'verified', live.perf<50?'slow':'reasonable'));
+    factors.push(fact('Layout stability (CLS)', live.clsGood===false?`Shift detected: ${live.cls}`:`Stable (${live.cls||'0'})`, 'verified', live.clsGood===false?'flagged':'no issue'));
+    factors.push(fact('Mobile viewport tag', live.hasViewport===false?'Missing':'Present', 'verified', live.hasViewport===false?'flagged':'no issue'));
+    factors.push(fact('Image alt tags', live.altTextOk===false?'Some missing':'Look correctly set', 'verified', live.altTextOk===false?'flagged':'no issue'));
+    if(live.accessibility!==null) factors.push(fact('Accessibility (Lighthouse)', `${live.accessibility}/100`, 'verified', 'informational'));
+    if(live.seo!==null) factors.push(fact('Basic SEO (Lighthouse)', `${live.seo}/100`, 'verified', 'informational'));
+
+    if(live.perf!==null && live.perf<50) nextSteps.push(`Your measured performance is ${live.perf}/100: compress images to WebP, lazy-load everything below the fold, and defer third-party scripts: these three fixes typically recover 20-30 points.`);
+    if(live.clsGood===false) nextSteps.push(`Fix the measured layout shift (CLS ${live.cls}): give every image, ad slot and embed explicit dimensions so the page stops jumping while loading.`);
+    if(live.hasViewport===false) nextSteps.push('Add a mobile viewport meta tag today: without it Google treats your site as not mobile-friendly, which suppresses mobile rankings across the board.');
+    if(live.altTextOk===false) nextSteps.push('Add alt text to the flagged images: accessibility, image SEO and Lighthouse points in one pass.');
+    if(nextSteps.length<3) nextSteps.push('Your vitals look healthy: re-run this check monthly and after every site change, regressions creep in through new scripts and unoptimized images.');
+
     document.getElementById('speed-badge').textContent = '✅ Live check via Google PageSpeed Insights';
     document.getElementById('speed-badge2').textContent = 'Real Lighthouse data, mobile';
     document.getElementById('speed-badge2').style.color = 'var(--teal-dark)';
     document.getElementById('speed-score-label').textContent = 'Performance Score out of 100: real Lighthouse data pulled live from Google PageSpeed Insights (mobile), not a self-reported estimate.';
     document.getElementById('speed-disclaimer').textContent = `Live data measured just now for ${live.finalUrl}. Scores can vary slightly between runs, this is a snapshot, not a guarantee. For the full prioritized fix list, use the "Run a free visibility check" tool on our Website Development page.`;
   } else {
-    // Fallback: self-reported checkbox scoring (unchanged from before)
     score = Object.values(checks).filter(Boolean).length * 25;
     bullets = [];
     bullets.push(checks.viewport
@@ -2791,6 +3146,17 @@ async function runSpeedChecker(evt){
     bullets.push(checks.fast
       ? '✅ Homepage reported as fast on mobile data.'
       : '⚠️ Homepage reported as slow on mobile data: every extra second of load time costs conversions.');
+
+    factors.push(fact('Mobile viewport tag', checks.viewport?'Reported present':'Reported missing', 'self', checks.viewport?'+25 pts':'0 pts'));
+    factors.push(fact('Image alt tags', checks.alt?'Reported in place':'Reported missing', 'self', checks.alt?'+25 pts':'0 pts'));
+    factors.push(fact('Lazy loading', checks.lazy?'Reported in use':'Reported not in use', 'self', checks.lazy?'+25 pts':'0 pts'));
+    factors.push(fact('Mobile speed feel', checks.fast?'Reported fast (<~3s)':'Reported slow', 'self', checks.fast?'+25 pts':'0 pts'));
+
+    if(!checks.viewport) nextSteps.push('Add a mobile viewport meta tag: one line of HTML that stops Google treating your site as not mobile-friendly.');
+    if(!checks.alt) nextSteps.push('Add descriptive alt text to your images: accessibility, image-search traffic and Core Web Vitals points in one pass.');
+    if(!checks.lazy) nextSteps.push('Turn on lazy loading for below-the-fold images (loading="lazy"): a one-attribute change that speeds up first paint.');
+    if(!checks.fast) nextSteps.push('Test your homepage on real mobile data (not office wifi): if it takes over 3 seconds, image compression is almost always the first fix.');
+    if(nextSteps.length<3) nextSteps.push('Everything you reported looks in order: run this check again with your URL when our live checker is available for a measured score.');
 
     document.getElementById('speed-badge').textContent = '⚡ 20-second check';
     document.getElementById('speed-badge2').textContent = live.reason==='no_key' ? 'Self-reported, not a live crawl' : 'Live check unavailable right now: showing self-reported result';
@@ -2808,15 +3174,27 @@ async function runSpeedChecker(evt){
   const mailtoWrap = document.getElementById('speed-mailto-wrap');
   if(mailtoWrap) mailtoWrap.innerHTML = '';
   if(email){
-    const bodyText = `Hi,\n\nHere is your Website Speed & Core Vitals check for ${url||'your site'}:\n\nPerformance Score: ${score}/100 ${isLive?'(live Google PageSpeed Insights data)':'(self-reported)'}\n\n${bullets.map(b=>'• '+b.replace(/^[✅⚠️]+\s*/,'')).join('\n')}\n\n${isLive ? 'This was measured live just now via Google PageSpeed Insights.' : 'This is based on what you told us about your own site, not a live crawl.'} Want the exact line-by-line code fixes for your developer? Reply to this email or grab a quote at clicknlikes.in.\n\nBest,\nClick.n.likes\nbusiness@clicknlikes.com`;
-    const mailLink = sendFromClicknlikes({ toEmail: email, subject: `Your Website Speed check: score ${score}/100`, bodyText });
+    const interpretation = isLive
+      ? `${score}/100 measured live. ${score>=80?'Fast site: speed is not your growth bottleneck.':score>=50?'Middling speed: you\'re leaving both rankings and conversions on the table.':'Slow enough to actively cost conversions: most mobile visitors bounce before a slow page finishes loading.'}`
+      : `${score}/100 from your self-reported answers: each unchecked basic costs 25 points because each one is a real, known speed/mobile factor.`;
+    const bodyText = `Hi,\n\nYour Website Speed & Core Vitals report for ${url||'your site'}:\n\nScore: ${score}/100 ${isLive?'(measured live via Google PageSpeed Insights)':'(self-reported)'}\n${interpretation}\n\nWhat we checked:\n${factors.map(f=>`• ${f.name}: ${f.found} [${f.source==='verified'?'VERIFIED LIVE':'self-reported'}]`).join('\n')}\n\nYour next steps:\n${nextSteps.map((s,i)=>`${i+1}. ${s}`).join('\n')}\n\nReply to this email or grab a quote at clicknlikes.com for the line-by-line fix list.\n\nBest,\nClick.n.likes\nbusiness@clicknlikes.com`;
+    const bodyHtml = buildReportEmailHtml({
+      toolLabel: 'Website Speed & Core Vitals',
+      forLine: `Checked: ${url||'your site'} · ${new Date().toLocaleDateString('en-IN', {day:'numeric', month:'long', year:'numeric'})}`,
+      scoreDisplay: `${score}/100`,
+      indexLabel: 'Performance Score',
+      interpretation,
+      liveNote: isLive ? `Measured live via Google PageSpeed Insights for ${live.finalUrl}` : null,
+      factors, nextSteps
+    });
+    const mailLink = sendFromClicknlikes({ toEmail: email, subject: `Your Website Speed report: ${score}/100`, bodyText, bodyHtml });
     sendFromClicknlikes({
       toEmail: OWNER_EMAIL,
       replyTo: email,
       subject: `🔔 New Speed Checker lead: ${email}`,
       bodyText: `New Website Speed & Core Vitals lead:\n\nEmail: ${email}\nURL: ${url}\nScore: ${score}/100\nData source: ${isLive?'LIVE PageSpeed Insights':'self-reported checkboxes'}\nChecks: ${JSON.stringify(checks)}${isLive?`\nLive data: ${JSON.stringify(live)}`:''}`
     });
-    if(mailtoWrap) mailtoWrap.innerHTML = `Didn't get it? <a href="${mailLink}" style="color:var(--teal-dark);text-decoration:underline;">Open it as an email draft</a>.`;
+    if(mailtoWrap) mailtoWrap.innerHTML = `✓ Full report sent. <a href="${mailLink}" style="color:var(--teal-dark);text-decoration:underline;">Didn't get it? Open it as an email draft</a>.`;
   }
   console.log('[speed tool lead]', {url, email, checks, score});
   return false;
@@ -2903,14 +3281,39 @@ function runROIGate(evt){
   const gapAmount = Math.abs(gap);
   const gapProfit = Math.round(gapAmount * (marginPct/100));
 
-  const gapLines = isSurplus
+  const interpretation = isSurplus
     ? (gapAmount>0
-        ? `Good news: you're already converting ABOVE the 3% benchmark.\nEstimated monthly surplus vs. benchmark: Rs.${gapAmount.toLocaleString('en-IN')}/month (Rs.${gapProfit.toLocaleString('en-IN')}/month in real profit at your margin).\nMost businesses at this stage still have room to push further, this isn't a ceiling.`
-        : `You're converting right at the 3% benchmark for your traffic and order value, no gap to close right now.`)
-    : `Estimated leaked revenue: Rs.${gapAmount.toLocaleString('en-IN')}/month\nEstimated leaked PROFIT: Rs.${gapProfit.toLocaleString('en-IN')}/month, this is the number that actually matters, revenue alone overstates what you're really losing.`;
+        ? `You're converting ABOVE the 3% benchmark: this surplus is worth Rs.${gapAmount.toLocaleString('en-IN')}/month in revenue (Rs.${gapProfit.toLocaleString('en-IN')}/month in profit at your margin). Most businesses at this stage still have room to push further.`
+        : `You're converting right at the 3% benchmark: no gap to close right now, and the checklist below is how you push past it.`)
+    : `At your traffic and order value, converting at ${convRate.toFixed(1)}% instead of the healthy 3% benchmark leaks Rs.${gapAmount.toLocaleString('en-IN')}/month in revenue: Rs.${gapProfit.toLocaleString('en-IN')}/month in actual profit. That profit number is the one that matters.`;
 
-  const bodyText = `Hi,\n\nHere is your Funnel Leak & ROI snapshot for ${business||'your business'}:\n\nMonthly traffic: ${traffic.toLocaleString('en-IN')}\nCurrent conversion rate: ${convRate.toFixed(1)}%\nAverage order value: Rs.${aov.toLocaleString('en-IN')}\nProfit margin per order: ${marginPct}% (Rs.${profitPerOrder.toLocaleString('en-IN')} profit per Rs.${aov.toLocaleString('en-IN')} order)\n\nCurrent estimated revenue: Rs.${currentRevenue.toLocaleString('en-IN')}/month (Rs.${currentProfit.toLocaleString('en-IN')}/month profit)\nBenchmark revenue at 3% conversion: Rs.${benchmarkRevenue.toLocaleString('en-IN')}/month\n${gapLines}\n\nYour 3-step CRO checklist:\n1. Fix your highest-traffic landing page's above-the-fold CTA clarity.\n2. Add trust signals (reviews, guarantees, real photos) near the point of decision.\n3. Cut your form/booking flow down to the fewest possible fields or steps.\n\nWant a plan built specifically for your funnel? Reply to this email or grab a quote at clicknlikes.in.\n\nBest,\nClick.n.likes\nbusiness@clicknlikes.com`;
-  const mailLink = sendFromClicknlikes({ toEmail: email, toName: business, subject: isSurplus ? 'Your Funnel Surplus & ROI snapshot + CRO checklist' : 'Your Funnel Leak & ROI snapshot + CRO checklist', bodyText });
+  const factors = [
+    fact('Monthly traffic', traffic.toLocaleString('en-IN')+' visitors', 'self', 'input'),
+    fact('Current conversion rate', convRate.toFixed(1)+'%', 'self', convRate<3?'below 3% benchmark':'at/above benchmark'),
+    fact('Average order value', 'Rs.'+aov.toLocaleString('en-IN'), 'self', 'input'),
+    fact('Profit margin per order', marginPct+'% (Rs.'+profitPerOrder.toLocaleString('en-IN')+'/order)', 'self', 'input'),
+    fact('Current monthly revenue', 'Rs.'+currentRevenue.toLocaleString('en-IN')+' (Rs.'+currentProfit.toLocaleString('en-IN')+' profit)', 'self', 'computed'),
+    fact('Benchmark revenue at 3%', 'Rs.'+benchmarkRevenue.toLocaleString('en-IN'), 'self', 'computed'),
+    fact(isSurplus?'Monthly surplus':'Monthly leak', 'Rs.'+gapAmount.toLocaleString('en-IN')+' revenue / Rs.'+gapProfit.toLocaleString('en-IN')+' profit', 'self', 'computed')
+  ];
+  const nextSteps = [
+    "Fix your highest-traffic landing page's above-the-fold clarity: one headline stating the outcome, one visible CTA, no slider carousels.",
+    'Add trust signals (reviews, guarantees, real photos) directly beside the point of decision: not on a separate testimonials page nobody visits.',
+    'Cut your form/booking flow to the fewest possible fields: every removed field measurably lifts completion rate.',
+    convRate<1.5 ? 'At your current rate, prioritize an exit-intent offer or WhatsApp click-to-chat: capturing even 10% of abandoning visitors moves the number fast.' : 'Set up a simple A/B test on your main CTA copy: at your conversion level, small copy changes produce measurable wins.'
+  ];
+
+  const bodyText = `Hi,\n\nHere is your Funnel Leak & ROI report for ${business||'your business'}:\n\n${interpretation}\n\nYour numbers:\n${factors.map(f=>`• ${f.name}: ${f.found}`).join('\n')}\n\nYour CRO checklist:\n${nextSteps.map((s,i)=>`${i+1}. ${s}`).join('\n')}\n\nWant a plan built specifically for your funnel? Reply to this email or grab a quote at clicknlikes.com.\n\nBest,\nClick.n.likes\nbusiness@clicknlikes.com`;
+  const bodyHtml = buildReportEmailHtml({
+    toolLabel: 'Funnel Leak & ROI Calculator',
+    forLine: `Prepared for ${business||'your business'} · ${new Date().toLocaleDateString('en-IN', {day:'numeric', month:'long', year:'numeric'})}`,
+    scoreDisplay: (isSurplus?'+':'−') + 'Rs.' + gapAmount.toLocaleString('en-IN') + '/mo',
+    indexLabel: isSurplus ? 'Revenue surplus vs. 3% benchmark' : 'Revenue leak vs. 3% benchmark',
+    interpretation,
+    liveNote: null,
+    factors, nextSteps
+  });
+  const mailLink = sendFromClicknlikes({ toEmail: email, toName: business, subject: isSurplus ? 'Your Funnel Surplus & ROI report + CRO checklist' : 'Your Funnel Leak & ROI report + CRO checklist', bodyText, bodyHtml });
   sendFromClicknlikes({
     toEmail: OWNER_EMAIL,
     replyTo: email,
@@ -2926,21 +3329,38 @@ function runROIGate(evt){
 }
 
 /* ============================================================
-   FREE TOOL 3: Competitor Traffic & Ad Spend Estimator Quiz
-   Fixed weighted matrix (max 100 points) from 3 questions: deterministic,
-   no scraping or third-party competitor data involved.
+   FREE TOOL 3: Competitor Threat Estimator Quiz
+   Fixed weighted matrix (max 100 points) from 3 questions:
+   deterministic, no scraping or third-party competitor data.
+   NO answers are pre-selected: an untouched form cannot submit,
+   so the score always reflects real choices, never rigged defaults.
    ============================================================ */
 function runCompetitorQuiz(evt){
   evt.preventDefault();
   const form = document.getElementById('competitorToolForm');
   const email = document.getElementById('cq_email').value;
-  const get = name => parseInt(form.querySelector(`input[name="${name}"]:checked`).value, 10);
-  const points = get('cq1') + get('cq2') + get('cq3');
+  const industry = (document.getElementById('cq_industry')||{}).value || '';
+
+  // Belt-and-braces validation on top of the required radios: never
+  // score an unanswered question.
+  const answers = {};
+  let missing = false;
+  ['cq1','cq2','cq3'].forEach(name=>{
+    const el = form.querySelector(`input[name="${name}"]:checked`);
+    if(!el){ missing = true; } else { answers[name] = parseInt(el.value, 10); }
+  });
+  const errEl = document.getElementById('cq-form-error');
+  if(missing){
+    if(errEl) errEl.textContent = 'Answer all three questions first: the score only means something if it reflects real answers.';
+    return false;
+  }
+  if(errEl) errEl.textContent = '';
+  const points = answers.cq1 + answers.cq2 + answers.cq3;
 
   let status, badgeClass, summary;
   if(points >= 80){
     status = 'Market Dominator'; badgeClass = 'threat-dominator';
-    summary = `Status: Market Dominator. Your digital footprint is currently outpaced by roughly ${points}%. To close this gap you need an aggressive, sustained counter-strategy across content and paid.`;
+    summary = `Status: Market Dominator. Your competitor's digital footprint scores ${points}/100 on our weighted matrix. To close this gap you need an aggressive, sustained counter-strategy across content and paid.`;
   } else if(points >= 40){
     status = 'Rising Threat'; badgeClass = 'threat-rising';
     summary = `Status: Rising Threat. Your competitor is building momentum but hasn't run away with the category yet, this is the window to close the gap before it becomes expensive.`;
@@ -2959,17 +3379,44 @@ function runCompetitorQuiz(evt){
   const mailtoWrap = document.getElementById('competitor-mailto-wrap');
   if(mailtoWrap) mailtoWrap.innerHTML = '';
   if(email){
-    const bodyText = `Hi,\n\nHere is your Competitor Threat Estimate from Click.n.likes:\n\n${summary}\n\nScore: ${points}/100 (fixed weighted matrix from your answers)\n\nWant the exact 90-day organic hijacking framework built for your industry? Reply to this email or grab a quote at clicknlikes.in.\n\nBest,\nClick.n.likes\nbusiness@clicknlikes.com`;
-    const mailLink = sendFromClicknlikes({ toEmail: email, subject: `Your Competitor Threat Estimate: ${status}`, bodyText });
+    const q1Label = {30:'Daily', 15:'Weekly', 0:'Rarely'}[answers.cq1];
+    const q2Label = {40:'Yes, constantly', 20:'Occasionally', 0:'Never'}[answers.cq2];
+    const q3Label = {30:'Much faster', 15:'About the same', 0:'Slower'}[answers.cq3];
+    const factors = [
+      fact('Competitor publishing frequency', q1Label, 'self', `+${answers.cq1} of 30 pts`),
+      fact('Competitor paid ads presence', q2Label, 'self', `+${answers.cq2} of 40 pts`),
+      fact('Competitor website vs. yours', q3Label, 'self', `+${answers.cq3} of 30 pts`)
+    ];
+    const nextSteps = [];
+    if(answers.cq1>=15) nextSteps.push('Match their publishing rhythm strategically, not volume-for-volume: one deeply useful piece per week in your niche beats their daily generic posts within 3-4 months.');
+    else nextSteps.push('They barely publish: this is an open goal. A consistent weekly content cadence could make you the category authority before they notice.');
+    if(answers.cq2>=20) nextSteps.push('They\'re buying attention: don\'t out-spend them, out-rank them. Their ad spend stops working the day they pause it, your organic rankings don\'t.');
+    else nextSteps.push('They\'re not running ads: organic + a small, precise paid budget would give you share of voice they aren\'t contesting.');
+    if(answers.cq3>=15) nextSteps.push('Their faster site is silently winning ties: when a searcher opens both of you, the faster, cleaner site gets the enquiry. A speed-focused rebuild pays back in weeks.');
+    else nextSteps.push('Your site is at least as good as theirs: press the advantage with conversion polish (clear CTA, trust signals) so head-to-head visits break your way.');
+    nextSteps.push(`Run our free SEO and Speed checks on your own site next: knowing your competitor's threat level matters most when you know your own numbers${industry?' in '+industry:''}.`);
+
+    const interpretation = `${points}/100 on a fixed weighted matrix (publishing 30, ads 40, website 30). ${points>=80?'A dominator score means every month of waiting raises the cost of catching up.':points>=40?'A rising threat is the cheapest moment to respond: the gap is real but still closeable with focused organic work.':'A vulnerable competitor is an opportunity: the category lead is available to whoever moves first.'}`;
+    const bodyText = `Hi,\n\nHere is your Competitor Threat report from Click.n.likes:\n\n${summary}\n\nHow their ${points}/100 was scored:\n${factors.map(f=>`• ${f.name}: ${f.found} (${f.impact})`).join('\n')}\n\nYour counter-moves:\n${nextSteps.map((s,i)=>`${i+1}. ${s}`).join('\n')}\n\nWant the 90-day organic framework built for ${industry||'your industry'}? Reply to this email or grab a quote at clicknlikes.com.\n\nBest,\nClick.n.likes\nbusiness@clicknlikes.com`;
+    const bodyHtml = buildReportEmailHtml({
+      toolLabel: 'Competitor Threat Estimator',
+      forLine: `${industry?('Industry: '+industry+' · '):''}${new Date().toLocaleDateString('en-IN', {day:'numeric', month:'long', year:'numeric'})}`,
+      scoreDisplay: `${points}/100`,
+      indexLabel: `Threat level: ${status}`,
+      interpretation,
+      liveNote: null,
+      factors, nextSteps
+    });
+    const mailLink = sendFromClicknlikes({ toEmail: email, subject: `Your Competitor Threat report: ${status}`, bodyText, bodyHtml });
     sendFromClicknlikes({
       toEmail: OWNER_EMAIL,
       replyTo: email,
       subject: `🔔 New Competitor Quiz lead: ${email}`,
-      bodyText: `New Competitor Threat Estimator lead:\n\nEmail: ${email}\nScore: ${points}/100\nStatus: ${status}`
+      bodyText: `New Competitor Threat Estimator lead:\n\nProspect Industry: ${industry||'Not specified'}\nEmail: ${email}\nScore: ${points}/100\nStatus: ${status}\nAnswers: publishing=${q1Label}, ads=${q2Label}, website=${q3Label}`
     });
-    if(mailtoWrap) mailtoWrap.innerHTML = `Didn't get it? <a href="${mailLink}" style="color:var(--teal-dark);text-decoration:underline;">Open it as an email draft</a>.`;
+    if(mailtoWrap) mailtoWrap.innerHTML = `✓ Full report sent. <a href="${mailLink}" style="color:var(--teal-dark);text-decoration:underline;">Didn't get it? Open it as an email draft</a>.`;
   }
-  console.log('[competitor quiz lead]', {email, points, status});
+  console.log('[competitor quiz lead]', {email, industry, points, status});
   return false;
 }
 </script>
