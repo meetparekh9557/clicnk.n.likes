@@ -22,6 +22,23 @@
 var SHEET_ID = '1fdqShmBkDnVPPdhtmEo4wdmkc5u9bJe2kKteJpmUsWo';
 var BRAND_ALIAS = 'business@clicknlikes.com';
 
+/**
+ * ONE-TIME SETUP HELPER — run this manually from the editor (select
+ * "testAnalyze" in the function dropdown, press Run) after pasting a
+ * new version of this script. Its only job is to make Google show the
+ * permission prompts this script needs (visit external websites, send
+ * Gmail, edit the Sheet). Approve them once and the deployed web app
+ * works from then on. The execution log will print a live analysis of
+ * the clicknlikes.com homepage as proof everything is authorized.
+ */
+function testAnalyze(){
+  var result = analyzePage('https://clicknlikes.com');
+  Logger.log(JSON.stringify(result, null, 2));
+  Logger.log('Aliases Gmail can send as: ' + JSON.stringify(GmailApp.getAliases()));
+  var ss = SpreadsheetApp.openById(SHEET_ID);
+  Logger.log('Sheet reachable: ' + ss.getName());
+}
+
 function doGet(e){
   var p = (e && e.parameter) || {};
   var out = (p.action === 'analyze' && p.url) ? analyzePage(p.url) : {ok:false, reason:'bad_request'};
@@ -77,10 +94,14 @@ function analyzePage(url){
   try{
     resp = UrlFetchApp.fetch(url, {
       muteHttpExceptions: true,
-      followRedirects: true,
-      headers: {'User-Agent': 'Mozilla/5.0 (compatible; ClicknlikesAudit/1.0; +https://clicknlikes.com)'}
+      followRedirects: true
     });
-  }catch(err){ return {ok:false, reason:'fetch_error'}; }
+  }catch(err){
+    // Surface the real cause: a permissions error here means the
+    // "Connect to an external service" scope was never authorized:
+    // run testAnalyze() once from the editor to trigger the prompt.
+    return {ok:false, reason:'fetch_error', detail:String(err).slice(0,300)};
+  }
   var code = resp.getResponseCode();
   if(code >= 400) return {ok:false, reason:'http_' + code};
   var html = resp.getContentText() || '';

@@ -604,8 +604,8 @@ footer{background:var(--navy);color:rgba(255,255,255,.8);padding:70px 0 24px;pos
       <div class="bcard reveal stagger" style="--i:0" onclick="go('tools')">
         <div class="arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M17 7H8M17 7v9"/></svg></div>
         <div class="icn"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L4 14h6l-1 8 9-12h-6z"/></svg></div>
-        <h3>Speed &amp; Core Vitals Checker</h3>
-        <p>Alt tags, lazy loading, viewport, load feel: a direct point count of your site's basics.</p>
+        <h3>Live Website Health Scan</h3>
+        <p>We fetch your page live and score 11 real signals: title, meta, headings, alt tags, schema, indexability.</p>
       </div>
       <div class="bcard reveal stagger" style="--i:1" onclick="go('tools')">
         <div class="arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M17 7H8M17 7v9"/></svg></div>
@@ -709,10 +709,10 @@ footer{background:var(--navy);color:rgba(255,255,255,.8);padding:70px 0 24px;pos
     <div class="section-head reveal in">
       <div class="eyebrow"><span class="dot"></span> Free, no signup to see your number</div>
       <h1 class="hero-h1" style="font-size:clamp(2.1rem,4.4vw,3.4rem);">Three more free checks, beyond your service page.</h1>
-      <p class="lead" style="margin-top:16px;max-width:680px;">Every service page already runs its own free check. These three are extra, cross-channel signals: your funnel math, your competitor's threat level, your core site speed, no paid crawl APIs, no black box. Every number below comes from a fixed, published formula or a direct check of your answers, so what you see on screen is exactly how it was calculated.</p>
+      <p class="lead" style="margin-top:16px;max-width:680px;">Every service page already runs its own free check. These three are extra, cross-channel signals: a live scan of your actual site, your funnel math, your competitor's threat level, no black box. Every number below comes from a fixed, published formula or a direct check of your answers, so what you see on screen is exactly how it was calculated.</p>
     </div>
     <div class="tool-nav reveal" style="margin-top:26px;">
-      <a onclick="document.getElementById('speedToolCard').scrollIntoView({behavior:'smooth'})">⚡ Speed &amp; Core Vitals Checker</a>
+      <a onclick="document.getElementById('speedToolCard').scrollIntoView({behavior:'smooth'})">⚡ Live Website Health Scan</a>
       <a onclick="document.getElementById('roiToolCard').scrollIntoView({behavior:'smooth'})">💸 Funnel Leak &amp; ROI Calculator</a>
       <a onclick="document.getElementById('competitorToolCard').scrollIntoView({behavior:'smooth'})">🎯 Competitor Threat Estimator</a>
     </div>
@@ -724,44 +724,47 @@ footer{background:var(--navy);color:rgba(255,255,255,.8);padding:70px 0 24px;pos
   <div class="wrap">
     <div class="section-head reveal">
       <div class="eyebrow"><span class="dot"></span> Free tool 1</div>
-      <h2 class="sec-h2">Website Speed &amp; Core Vitals Checker</h2>
-      <p class="lead" style="margin-top:10px;">Answer 4 direct questions about your own site. The score is a straight point count against those answers, not a random guess.</p>
+      <h2 class="sec-h2">Live Website Health Scan</h2>
+      <p class="lead" style="margin-top:10px;">Enter your URL: we fetch your actual page live and score 11 real, verifiable on-page signals. No questionnaire, no guesswork: what our scanner finds is what you get.</p>
     </div>
     <div class="tool-card reveal" id="speedToolCard">
       <div class="tool-head">
-        <span class="tool-badge" id="speed-badge">⚡ 20-second check</span>
-        <span class="tool-badge" id="speed-badge2" style="color:var(--coral);">Self-reported unless a live check succeeds</span>
+        <span class="tool-badge" id="speed-badge">🔎 Live page fetch</span>
+        <span class="tool-badge" id="speed-badge2" style="color:var(--teal-dark);">11 verified on-page signals</span>
       </div>
       <form id="speedToolForm" onsubmit="return runSpeedChecker(event)">
         <div class="tool-form single">
           <div class="field"><label>Website URL</label><input required type="text" id="speed_url" placeholder="yourbusiness.com"></div>
         </div>
-        <div class="tool-form" style="margin-top:16px;">
-          <label class="check-row"><input type="checkbox" id="speed_alt"> All your images have Alt Tags</label>
-          <label class="check-row"><input type="checkbox" id="speed_lazy"> Images below the fold use lazy loading</label>
-          <label class="check-row"><input type="checkbox" id="speed_viewport"> Your page &lt;head&gt; has a mobile viewport meta tag</label>
-          <label class="check-row"><input type="checkbox" id="speed_fast"> Your homepage feels fast on mobile data (under ~3 seconds)</label>
+        <div id="speed-fallback-box" style="display:none;margin-top:16px;">
+          <p class="form-note" style="color:var(--coral);margin-bottom:10px;">We couldn't reach that page (some sites block automated visits). Answer these instead and we'll score from your answers, clearly labelled self-reported:</p>
+          <div class="tool-form">
+            <label class="check-row"><input type="checkbox" id="speed_alt"> All your images have Alt Tags</label>
+            <label class="check-row"><input type="checkbox" id="speed_lazy"> Images below the fold use lazy loading</label>
+            <label class="check-row"><input type="checkbox" id="speed_viewport"> Your page &lt;head&gt; has a mobile viewport meta tag</label>
+            <label class="check-row"><input type="checkbox" id="speed_fast"> Your homepage feels fast on mobile data (under ~3 seconds)</label>
+          </div>
         </div>
-        <p class="disclaimer" style="margin-top:6px;">We'll try a real live check on your URL first (via Google PageSpeed Insights). The checkboxes above are only used as a fallback if that live check can't run.</p>
+        <p class="disclaimer" style="margin-top:6px;">We fetch your page live and verify its title, meta description, headings, image alt coverage, structured data, canonical, indexability, viewport and link structure directly: every row in your report is labelled verified vs. self-reported, and nothing is ever presented as verified unless it was.</p>
         <div class="tool-form" style="margin-top:16px;">
-          <div class="field full"><label>Work email (to send your result)</label><input required type="email" id="speed_email" placeholder="you@business.com"></div>
+          <div class="field full"><label>Work email (to send your full report)</label><input required type="email" id="speed_email" placeholder="you@business.com"></div>
         </div>
-        <button class="btn btn-teal magnetic" style="margin-top:18px;" type="submit">Check my score</button>
+        <button class="btn btn-teal magnetic" style="margin-top:18px;" type="submit">Scan my website</button>
       </form>
-      <div class="tool-scan" id="speed-scan"><div class="scan-ring"></div><div class="scan-text"><b>Trying a live check on your URL…</b><span>Falls back to your checkbox answers automatically if this doesn't complete</span></div></div>
+      <div class="tool-scan" id="speed-scan"><div class="scan-ring"></div><div class="scan-text"><b>Fetching your page live…</b><span>Checking 11 on-page signals: title, meta, headings, alt tags, schema, indexability, links</span></div></div>
       <div class="tool-result" id="speed-result">
         <div class="score-ring-wrap">
           <div class="score-num" id="speed-score">72</div>
-          <div class="score-label" id="speed-score-label">Performance Score out of 100. Direct point count from the checkboxes above, no live crawl involved.</div>
+          <div class="score-label" id="speed-score-label">Website Health Score out of 100, from a live fetch of your page.</div>
         </div>
         <ul class="result-bullets" id="speed-bullets"></ul>
         <p class="form-note" id="speed-mailto-wrap" style="color:var(--teal-dark);"></p>
         <div class="locked-block">
           <h4>🔒 Line-by-line code fixes for your developer</h4>
-          <p>The exact Alt Tag, lazy-load and viewport fixes to hand straight to whoever maintains your site.</p>
+          <p>The exact title, meta, heading, alt-tag and schema fixes to hand straight to whoever maintains your site.</p>
           <a class="btn btn-teal magnetic" onclick="go('contact')">Unlock the fix list</a>
         </div>
-        <p class="disclaimer" id="speed-disclaimer">This is a directional overview based on what you told us about your own site, not a live technical crawl. For a real crawl-based audit, use the "Run a free visibility check" tool on our Website Development page.</p>
+        <p class="disclaimer" id="speed-disclaimer">Scanned live from your page just now. This checks one page's on-page health: your full report (emailed) lists every factor with its exact impact.</p>
       </div>
     </div>
   </div>
@@ -3062,10 +3065,67 @@ async function runGatedTool(evt, key){
 }
 
 /* ============================================================
-   FREE TOOL 1: Website Speed & Core Vitals Checker
-   Live PageSpeed data when available; direct point count from
-   self-reported checkboxes otherwise. No randomization.
+   FREE TOOL 1: Live Website Health Scan
+   Fetches the visitor's actual page via the shared analyzer and
+   scores 11 verified on-page signals: title, meta description, H1,
+   heading hierarchy, alt coverage, schema, canonical, indexability,
+   viewport, content depth and internal links. Google PageSpeed data
+   blends in when available. If the page can't be fetched, falls back
+   to self-reported checkboxes, clearly labelled: never an error state.
    ============================================================ */
+function scoreOnPageHealth(page){
+  let score = 100;
+  const gaps = [];
+  const factors = [];
+  const nextSteps = [];
+  const ded = (pts, gapText) => { score -= pts; if(gapText) gaps.push(gapText); return `−${pts} pts`; };
+
+  if(page.noindex){ factors.push(fact('Indexability (robots)', 'noindex tag found: this page tells Google NOT to list it', 'verified', ded(30, 'CRITICAL: noindex tag blocks Google entirely'))); nextSteps.push('URGENT: remove the noindex robots tag: right now this page is explicitly asking Google not to show it at all.'); }
+  else factors.push(fact('Indexability (robots)', 'Page is indexable', 'verified', 'no deduction'));
+
+  if(!page.hasViewport){ factors.push(fact('Mobile viewport tag', 'Missing: Google treats this as a mobile-friendliness fail', 'verified', ded(10, 'No mobile viewport meta tag'))); nextSteps.push('Add a mobile viewport meta tag: one line of HTML that stops Google treating your site as not mobile-friendly.'); }
+  else factors.push(fact('Mobile viewport tag', 'Present', 'verified', 'no deduction'));
+
+  const tl = page.titleLength||0;
+  if(tl===0){ factors.push(fact('Title tag', 'Missing entirely', 'verified', ded(10, 'Missing <title> tag'))); nextSteps.push('Write a title tag (~50-60 characters with your main keyword): it is literally the headline of your Google listing.'); }
+  else if(tl<15 || tl>65){ factors.push(fact('Title tag', `"${(page.title||'').slice(0,60)}" (${tl} chars, outside the 15-65 sweet spot)`, 'verified', ded(5, `Title tag ${tl<15?'too short':'too long'} (${tl} chars)`))); }
+  else factors.push(fact('Title tag', `"${(page.title||'').slice(0,60)}" (${tl} chars)`, 'verified', 'no deduction'));
+
+  const mdMissing = page.metaDescription===null || page.metaDescriptionLength===0;
+  if(mdMissing){ factors.push(fact('Meta description', 'Missing: Google is improvising your search snippet', 'verified', ded(8, 'Missing meta description'))); nextSteps.push('Write a meta description (~150 characters, include a reason to click): yours is missing, so Google writes your snippet for you.'); }
+  else if(page.metaDescriptionLength>160){ factors.push(fact('Meta description', `${page.metaDescriptionLength} chars: gets cut off in results (~160 max)`, 'verified', ded(4, `Meta description too long (${page.metaDescriptionLength} chars)`))); }
+  else factors.push(fact('Meta description', `Present (${page.metaDescriptionLength} chars)`, 'verified', 'no deduction'));
+
+  if(page.h1Count===0){ factors.push(fact('H1 heading', 'No H1 found', 'verified', ded(8, 'No H1 heading'))); nextSteps.push('Add exactly one H1 heading containing your primary keyword: your page currently has none.'); }
+  else if(page.h1Count>1){ factors.push(fact('H1 heading', `${page.h1Count} H1s (should be exactly one)`, 'verified', ded(4, `${page.h1Count} H1 headings instead of one`))); }
+  else factors.push(fact('H1 heading', `Exactly one: "${(page.h1Text||'').slice(0,50)}"`, 'verified', 'no deduction'));
+
+  if(page.headingSkips>0){ factors.push(fact('Heading hierarchy', `Skips levels ${page.headingSkips} time(s) (e.g. H1 straight to H3)`, 'verified', ded(4, 'Heading hierarchy skips levels'))); }
+  else factors.push(fact('Heading hierarchy', 'Clean H1→H2→H3 order', 'verified', 'no deduction'));
+
+  if(page.imgCount>0 && page.imgMissingAlt>0){
+    const altPts = Math.min(10, Math.max(2, Math.round(page.imgMissingAlt/page.imgCount*10)));
+    factors.push(fact('Image alt coverage', `${page.imgMissingAlt} of ${page.imgCount} images missing alt text`, 'verified', ded(altPts, `${page.imgMissingAlt}/${page.imgCount} images missing alt text`)));
+    nextSteps.push(`Add alt text to the ${page.imgMissingAlt} images missing it: accessibility, image SEO and Core Web Vitals points in one pass.`);
+  } else factors.push(fact('Image alt coverage', page.imgCount===0?'No images on the page':'All images have alt text', 'verified', 'no deduction'));
+
+  if(!page.hasSchema){ factors.push(fact('Structured data (schema.org)', 'None found', 'verified', ded(6, 'No schema.org structured data'))); nextSteps.push('Add JSON-LD structured data (Organization/LocalBusiness at minimum): it feeds Google rich results and AI answers, and costs nothing.'); }
+  else factors.push(fact('Structured data (schema.org)', `Present: ${(page.schemaTypes||[]).slice(0,4).join(', ')}`, 'verified', 'no deduction'));
+
+  if(!page.hasCanonical){ factors.push(fact('Canonical tag', 'Missing: duplicate-URL risk', 'verified', ded(3, 'No canonical tag'))); }
+  else factors.push(fact('Canonical tag', 'Present', 'verified', 'no deduction'));
+
+  const wc = page.wordCount||0;
+  if(wc<300){ factors.push(fact('Content depth', `${wc.toLocaleString('en-IN')} words of visible text: very thin`, 'verified', ded(8, `Very thin content (${wc} words)`))); nextSteps.push('Deepen this page\'s content: under 300 words rarely answers anyone\'s search fully, and Google notices.'); }
+  else if(wc<600){ factors.push(fact('Content depth', `${wc.toLocaleString('en-IN')} words of visible text: on the thin side`, 'verified', ded(4, `Thin content (${wc} words)`))); }
+  else factors.push(fact('Content depth', `${wc.toLocaleString('en-IN')} words of visible text`, 'verified', 'no deduction'));
+
+  factors.push(fact('Link structure', `${page.internalLinks} internal / ${page.externalLinks} external links`, 'verified', page.internalLinks<5 ? ded(3, `Only ${page.internalLinks} internal links`) : 'no deduction'));
+
+  score = Math.max(5, Math.min(100, score));
+  return {score, gaps, factors, nextSteps};
+}
+
 async function runSpeedChecker(evt){
   evt.preventDefault();
   const url = document.getElementById('speed_url').value;
@@ -3084,85 +3144,86 @@ async function runSpeedChecker(evt){
     fast: document.getElementById('speed_fast').checked
   };
 
+  // Real work: fetch the visitor's page via the analyzer, and try
+  // PageSpeed in parallel (extra signal when its API key is set up).
   const minDelay = new Promise(r=>setTimeout(r, TOOL_SCAN_MIN_MS));
-  const [live] = await Promise.all([fetchPageSpeedData(url), minDelay]);
+  const [page, live] = await Promise.all([fetchPageFacts(url), fetchPageSpeedData(url), minDelay]);
   scanEl.classList.remove('active');
   btn.disabled = false; btn.style.opacity = 1;
 
-  let score, bullets, isLive = false;
-  const factors = [];
-  const nextSteps = [];
+  let score, bullets = [], factors = [], nextSteps = [], gaps = [], liveNote = null, isLive = false;
+  const fallbackBox = document.getElementById('speed-fallback-box');
 
-  if(live.available){
+  if(page.available){
     isLive = true;
-    score = live.perf!==null ? live.perf : 50;
-    bullets = [];
-    bullets.push(live.lcp
-      ? `Largest Contentful Paint (main content load time) on mobile: ${live.lcp}. ${live.perf<50?'This is slow enough to be actively costing you conversions.':'This is in a reasonable range.'}`
-      : 'Largest Contentful Paint could not be measured for this page.');
-    bullets.push(live.clsGood===false
-      ? `⚠️ Layout shift detected (CLS: ${live.cls}): content is visibly jumping around as the page loads, which frustrates visitors and hurts your Core Web Vitals ranking signal.`
-      : `✅ No significant layout shift detected (CLS: ${live.cls||'0'}).`);
-    bullets.push(live.hasViewport===false
-      ? '⚠️ No mobile viewport tag detected. Google treats this as a mobile-friendliness fail.'
-      : '✅ Mobile viewport tag detected: your site should render correctly on phones.');
-    bullets.push(live.altTextOk===false
-      ? '⚠️ Some images are missing Alt Tags. This hurts accessibility and image SEO.'
-      : '✅ Image Alt Tags look correctly set on this page.');
-    if(live.accessibility!==null) bullets.push(`Accessibility score: ${live.accessibility}/100.`);
-    if(live.seo!==null) bullets.push(`Basic SEO score: ${live.seo}/100.`);
+    if(fallbackBox) fallbackBox.style.display = 'none';
+    const r = scoreOnPageHealth(page);
+    ({gaps, factors, nextSteps} = r);
+    score = r.score;
+    // Blend PageSpeed performance in when available: half on-page, half speed.
+    if(live.available && live.perf!==null){
+      score = Math.round((score + live.perf)/2);
+      factors.push(fact('PageSpeed performance (mobile)', `${live.perf}/100${live.lcp?', main content paints in '+live.lcp:''}`, 'verified', 'blended 50/50 into score'));
+      if(live.perf<50) nextSteps.push(`Your measured speed is ${live.perf}/100: compress images to WebP, lazy-load below the fold, defer third-party scripts.`);
+      liveNote = `Fetched and analyzed ${page.finalUrl} live + Google PageSpeed Insights data`;
+    } else {
+      liveNote = `Fetched and analyzed ${page.finalUrl} live: 11 on-page signals verified directly`;
+    }
+    const worst = gaps.length ? gaps[0] : null;
+    bullets.push(`Website Health Score for ${page.finalUrl}: ${score}/100, from a live fetch of your actual page just now.`);
+    bullets.push(worst ? `Biggest verified issue: ${worst}.` : '✅ No significant on-page issues found: your fundamentals are genuinely solid.');
+    if(gaps.length>1) bullets.push(`${gaps.length-1} more verified issue${gaps.length>2?'s':''} found: the full factor-by-factor breakdown is in your emailed report.`);
+    bullets.push(`Quick facts: ${page.wordCount.toLocaleString('en-IN')} words, ${page.h1Count} H1(s), ${page.imgCount-page.imgMissingAlt}/${page.imgCount} images with alt text, schema ${page.hasSchema?'present':'absent'}.`);
 
+    document.getElementById('speed-badge').textContent = '✅ Scanned live just now';
+    document.getElementById('speed-badge2').textContent = '11 verified on-page signals';
+    document.getElementById('speed-badge2').style.color = 'var(--teal-dark)';
+    document.getElementById('speed-score-label').textContent = 'Website Health Score out of 100: every signal verified from a live fetch of your page, nothing self-reported.';
+    document.getElementById('speed-disclaimer').textContent = `Scanned live just now: ${page.finalUrl}. This checks one page's on-page health: your emailed report lists every factor with its exact point impact.`;
+  } else if(live.available){
+    // Analyzer unreachable but PageSpeed worked: real data, speed-only.
+    isLive = true;
+    if(fallbackBox) fallbackBox.style.display = 'none';
+    score = live.perf!==null ? live.perf : 50;
+    liveNote = `Measured live via Google PageSpeed Insights for ${live.finalUrl}`;
     factors.push(fact('Performance score (mobile)', `${live.perf}/100 via Google PageSpeed Insights`, 'verified', 'sets the score'));
     factors.push(fact('Largest Contentful Paint', live.lcp||'not measurable', 'verified', live.perf<50?'slow':'reasonable'));
     factors.push(fact('Layout stability (CLS)', live.clsGood===false?`Shift detected: ${live.cls}`:`Stable (${live.cls||'0'})`, 'verified', live.clsGood===false?'flagged':'no issue'));
     factors.push(fact('Mobile viewport tag', live.hasViewport===false?'Missing':'Present', 'verified', live.hasViewport===false?'flagged':'no issue'));
     factors.push(fact('Image alt tags', live.altTextOk===false?'Some missing':'Look correctly set', 'verified', live.altTextOk===false?'flagged':'no issue'));
-    if(live.accessibility!==null) factors.push(fact('Accessibility (Lighthouse)', `${live.accessibility}/100`, 'verified', 'informational'));
-    if(live.seo!==null) factors.push(fact('Basic SEO (Lighthouse)', `${live.seo}/100`, 'verified', 'informational'));
-
-    if(live.perf!==null && live.perf<50) nextSteps.push(`Your measured performance is ${live.perf}/100: compress images to WebP, lazy-load everything below the fold, and defer third-party scripts: these three fixes typically recover 20-30 points.`);
-    if(live.clsGood===false) nextSteps.push(`Fix the measured layout shift (CLS ${live.cls}): give every image, ad slot and embed explicit dimensions so the page stops jumping while loading.`);
-    if(live.hasViewport===false) nextSteps.push('Add a mobile viewport meta tag today: without it Google treats your site as not mobile-friendly, which suppresses mobile rankings across the board.');
-    if(live.altTextOk===false) nextSteps.push('Add alt text to the flagged images: accessibility, image SEO and Lighthouse points in one pass.');
-    if(nextSteps.length<3) nextSteps.push('Your vitals look healthy: re-run this check monthly and after every site change, regressions creep in through new scripts and unoptimized images.');
-
+    if(live.perf<50) nextSteps.push('Compress images to WebP, lazy-load below the fold, and defer non-critical scripts: the three fixes that typically recover the most points.');
+    if(live.clsGood===false){ nextSteps.push(`Fix the measured layout shift (CLS ${live.cls}): give images and embeds explicit dimensions.`); gaps.push(`Layout shift measured (CLS ${live.cls})`); }
+    if(nextSteps.length<3) nextSteps.push('Re-run this scan monthly: speed regressions creep in through new scripts and unoptimized images.');
+    bullets.push(`Performance score for ${live.finalUrl}: ${score}/100 via Google PageSpeed Insights (live).`);
+    bullets.push(live.lcp?`Main content paints in ${live.lcp} on mobile.`:'Load time not measurable for this page.');
+    bullets.push(live.clsGood===false?`⚠️ Layout shift detected (CLS: ${live.cls}).`:`✅ No significant layout shift (CLS: ${live.cls||'0'}).`);
     document.getElementById('speed-badge').textContent = '✅ Live check via Google PageSpeed Insights';
     document.getElementById('speed-badge2').textContent = 'Real Lighthouse data, mobile';
     document.getElementById('speed-badge2').style.color = 'var(--teal-dark)';
-    document.getElementById('speed-score-label').textContent = 'Performance Score out of 100: real Lighthouse data pulled live from Google PageSpeed Insights (mobile), not a self-reported estimate.';
-    document.getElementById('speed-disclaimer').textContent = `Live data measured just now for ${live.finalUrl}. Scores can vary slightly between runs, this is a snapshot, not a guarantee. For the full prioritized fix list, use the "Run a free visibility check" tool on our Website Development page.`;
+    document.getElementById('speed-score-label').textContent = 'Performance Score out of 100: real Lighthouse data pulled live from Google PageSpeed Insights (mobile).';
+    document.getElementById('speed-disclaimer').textContent = `Live data measured just now for ${live.finalUrl}. Scores can vary slightly between runs.`;
   } else {
+    // Neither live source reachable: honest self-report fallback.
+    if(fallbackBox && fallbackBox.style.display === 'none' || fallbackBox && !fallbackBox.style.display){ }
+    if(fallbackBox) fallbackBox.style.display = 'block';
     score = Object.values(checks).filter(Boolean).length * 25;
-    bullets = [];
-    bullets.push(checks.viewport
-      ? '✅ Mobile viewport tag found: your site should render correctly on phones.'
-      : '⚠️ No mobile viewport tag reported. Google treats this as a mobile-friendliness fail.');
-    bullets.push(checks.alt
-      ? '✅ Images reported to have Alt Tags: good for accessibility and image search.'
-      : '⚠️ Images without Alt Tags reported. This hurts accessibility and image SEO.');
-    bullets.push(checks.lazy
-      ? '✅ Lazy loading in use below the fold: helps initial load speed.'
-      : '⚠️ No lazy loading reported. Below-the-fold images are likely slowing your first paint.');
-    bullets.push(checks.fast
-      ? '✅ Homepage reported as fast on mobile data.'
-      : '⚠️ Homepage reported as slow on mobile data: every extra second of load time costs conversions.');
-
     factors.push(fact('Mobile viewport tag', checks.viewport?'Reported present':'Reported missing', 'self', checks.viewport?'+25 pts':'0 pts'));
     factors.push(fact('Image alt tags', checks.alt?'Reported in place':'Reported missing', 'self', checks.alt?'+25 pts':'0 pts'));
     factors.push(fact('Lazy loading', checks.lazy?'Reported in use':'Reported not in use', 'self', checks.lazy?'+25 pts':'0 pts'));
     factors.push(fact('Mobile speed feel', checks.fast?'Reported fast (<~3s)':'Reported slow', 'self', checks.fast?'+25 pts':'0 pts'));
-
-    if(!checks.viewport) nextSteps.push('Add a mobile viewport meta tag: one line of HTML that stops Google treating your site as not mobile-friendly.');
-    if(!checks.alt) nextSteps.push('Add descriptive alt text to your images: accessibility, image-search traffic and Core Web Vitals points in one pass.');
-    if(!checks.lazy) nextSteps.push('Turn on lazy loading for below-the-fold images (loading="lazy"): a one-attribute change that speeds up first paint.');
-    if(!checks.fast) nextSteps.push('Test your homepage on real mobile data (not office wifi): if it takes over 3 seconds, image compression is almost always the first fix.');
-    if(nextSteps.length<3) nextSteps.push('Everything you reported looks in order: run this check again with your URL when our live checker is available for a measured score.');
-
-    document.getElementById('speed-badge').textContent = '⚡ 20-second check';
-    document.getElementById('speed-badge2').textContent = live.reason==='no_key' ? 'Self-reported, not a live crawl' : 'Live check unavailable right now: showing self-reported result';
+    if(!checks.viewport){ nextSteps.push('Add a mobile viewport meta tag: one line of HTML that stops Google treating your site as not mobile-friendly.'); gaps.push('No viewport tag (self-reported)'); }
+    if(!checks.alt){ nextSteps.push('Add descriptive alt text to your images.'); gaps.push('Images missing alt text (self-reported)'); }
+    if(!checks.lazy){ nextSteps.push('Turn on lazy loading for below-the-fold images (loading="lazy").'); gaps.push('No lazy loading (self-reported)'); }
+    if(!checks.fast){ nextSteps.push('Test your homepage on real mobile data: over 3 seconds means image compression is almost always fix #1.'); gaps.push('Slow on mobile (self-reported)'); }
+    if(nextSteps.length<3) nextSteps.push('Everything you reported looks in order: try the scan again later for a verified score.');
+    bullets.push(`We couldn't reach ${url||'your site'} for a live scan (some sites block automated visits), so this score is a direct count of your own answers: 25 points per basic in place.`);
+    bullets.push(checks.viewport?'✅ Mobile viewport tag reported present.':'⚠️ No mobile viewport tag reported: Google treats this as a mobile-friendliness fail.');
+    bullets.push(checks.fast?'✅ Homepage reported fast on mobile data.':'⚠️ Homepage reported slow on mobile data: every extra second costs conversions.');
+    document.getElementById('speed-badge').textContent = '⚡ Self-reported check';
+    document.getElementById('speed-badge2').textContent = 'Live scan unreachable: showing self-reported result';
     document.getElementById('speed-badge2').style.color = 'var(--coral)';
-    document.getElementById('speed-score-label').textContent = 'Performance Score out of 100. Direct point count from the checkboxes above, no live crawl involved.';
-    document.getElementById('speed-disclaimer').textContent = 'This is a directional overview based on what you told us about your own site, not a live technical crawl. For a real crawl-based audit, use the "Run a free visibility check" tool on our Website Development page.';
+    document.getElementById('speed-score-label').textContent = 'Score out of 100 from your own answers: the live scan could not reach this page, and we never label self-reported answers as verified.';
+    document.getElementById('speed-disclaimer').textContent = 'This is a directional overview based on what you told us, not a live scan: we could not fetch this URL. Check the address, or try again later.';
   }
 
   document.getElementById('speed-score').textContent = score;
@@ -3175,28 +3236,28 @@ async function runSpeedChecker(evt){
   if(mailtoWrap) mailtoWrap.innerHTML = '';
   if(email){
     const interpretation = isLive
-      ? `${score}/100 measured live. ${score>=80?'Fast site: speed is not your growth bottleneck.':score>=50?'Middling speed: you\'re leaving both rankings and conversions on the table.':'Slow enough to actively cost conversions: most mobile visitors bounce before a slow page finishes loading.'}`
-      : `${score}/100 from your self-reported answers: each unchecked basic costs 25 points because each one is a real, known speed/mobile factor.`;
-    const bodyText = `Hi,\n\nYour Website Speed & Core Vitals report for ${url||'your site'}:\n\nScore: ${score}/100 ${isLive?'(measured live via Google PageSpeed Insights)':'(self-reported)'}\n${interpretation}\n\nWhat we checked:\n${factors.map(f=>`• ${f.name}: ${f.found} [${f.source==='verified'?'VERIFIED LIVE':'self-reported'}]`).join('\n')}\n\nYour next steps:\n${nextSteps.map((s,i)=>`${i+1}. ${s}`).join('\n')}\n\nReply to this email or grab a quote at clicknlikes.com for the line-by-line fix list.\n\nBest,\nClick.n.likes\nbusiness@clicknlikes.com`;
+      ? `${score}/100 from a live check. ${score>=80?'Your on-page fundamentals are genuinely solid: growth levers are likely elsewhere (content, authority, conversion).':score>=55?'Workable but leaking: each flagged factor below is a named, fixable issue costing you specific visibility.':'This page has structural problems actively suppressing its Google visibility: the factor table shows exactly where every point went.'}`
+      : `${score}/100 from your self-reported answers (the live scan could not reach this page). Each basic is worth 25 points because each is a real, known ranking/mobile factor.`;
+    const bodyText = `Hi,\n\nYour Website Health report for ${url||'your site'}:\n\nScore: ${score}/100 ${isLive?'(live scan)':'(self-reported)'}\n${interpretation}\n\nWhat we checked:\n${factors.map(f=>`• ${f.name}: ${f.found} [${f.source==='verified'?'VERIFIED LIVE':'self-reported'}] (${f.impact})`).join('\n')}\n\nYour next steps:\n${nextSteps.map((s,i)=>`${i+1}. ${s}`).join('\n')}\n\nReply to this email or grab a quote at clicknlikes.com for the line-by-line fix list.\n\nBest,\nClick.n.likes\nbusiness@clicknlikes.com`;
     const bodyHtml = buildReportEmailHtml({
-      toolLabel: 'Website Speed & Core Vitals',
-      forLine: `Checked: ${url||'your site'} · ${new Date().toLocaleDateString('en-IN', {day:'numeric', month:'long', year:'numeric'})}`,
+      toolLabel: 'Live Website Health Scan',
+      forLine: `Scanned: ${url||'your site'} · ${new Date().toLocaleDateString('en-IN', {day:'numeric', month:'long', year:'numeric'})}`,
       scoreDisplay: `${score}/100`,
-      indexLabel: 'Performance Score',
+      indexLabel: 'Website Health Score',
       interpretation,
-      liveNote: isLive ? `Measured live via Google PageSpeed Insights for ${live.finalUrl}` : null,
+      liveNote,
       factors, nextSteps
     });
-    const mailLink = sendFromClicknlikes({ toEmail: email, subject: `Your Website Speed report: ${score}/100`, bodyText, bodyHtml });
+    const mailLink = sendFromClicknlikes({ toEmail: email, subject: `Your Website Health report: ${score}/100`, bodyText, bodyHtml });
     sendFromClicknlikes({
       toEmail: OWNER_EMAIL,
       replyTo: email,
-      subject: `🔔 New Speed Checker lead: ${email}`,
-      bodyText: `New Website Speed & Core Vitals lead:\n\nEmail: ${email}\nURL: ${url}\nScore: ${score}/100\nData source: ${isLive?'LIVE PageSpeed Insights':'self-reported checkboxes'}\nChecks: ${JSON.stringify(checks)}${isLive?`\nLive data: ${JSON.stringify(live)}`:''}`
+      subject: `🔔 New Website Health Scan lead: ${email}`,
+      bodyText: `New Live Website Health Scan lead:\n\nEmail: ${email}\nURL: ${url}\nScore: ${score}/100\nData source: ${isLive?(page.available?'LIVE page fetch'+(live.available?' + PageSpeed':''):'PageSpeed only'):'self-reported checkboxes'}\nGaps:\n${gaps.length?gaps.map(g=>'  - '+g).join('\n'):'  (none)'}${page.available?`\nPage facts: title ${page.titleLength}ch | meta ${page.metaDescription===null?'MISSING':page.metaDescriptionLength+'ch'} | H1s ${page.h1Count} | ${page.wordCount}w | alt ${page.imgMissingAlt}/${page.imgCount} missing | schema ${page.hasSchema?'yes':'no'} | noindex ${page.noindex?'YES!':'no'}`:''}`
     });
-    if(mailtoWrap) mailtoWrap.innerHTML = `✓ Full report sent. <a href="${mailLink}" style="color:var(--teal-dark);text-decoration:underline;">Didn't get it? Open it as an email draft</a>.`;
+    if(mailtoWrap) mailtoWrap.innerHTML = `✓ Full report sent to ${escapeHtml(email)}. <a href="${mailLink}" style="color:var(--teal-dark);text-decoration:underline;">Didn't get it? Open it as an email draft</a>.`;
   }
-  console.log('[speed tool lead]', {url, email, checks, score});
+  console.log('[health scan lead]', {url, email, score, isLive});
   return false;
 }
 
