@@ -365,8 +365,10 @@ footer{background:var(--navy);color:rgba(255,255,255,.8);padding:70px 0 24px;pos
 .section-head{max-width:640px;margin-bottom:50px;}
 .section-head.center{max-width:640px;text-align:center;}
 
+.bento-4{grid-template-columns:repeat(4,1fr);}
 @media(max-width:960px){
   .hero-grid,.split{grid-template-columns:1fr;}
+  .bento-4{grid-template-columns:1fr 1fr;}
   .hero-visual{height:320px;margin-top:20px;}
   .bento{grid-template-columns:1fr 1fr;}
   .foot-grid{grid-template-columns:1fr 1fr;}
@@ -378,7 +380,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.8);padding:70px 0 24px;pos
   .service-pick{grid-template-columns:repeat(3,1fr);}
 }
 @media(max-width:600px){
-  .bento{grid-template-columns:1fr;}
+  .bento,.bento-4{grid-template-columns:1fr;}
   .foot-grid{grid-template-columns:1fr 1fr;}
   .blog-grid{grid-template-columns:1fr;}
   .grid4{grid-template-columns:1fr 1fr;}
@@ -386,6 +388,9 @@ footer{background:var(--navy);color:rgba(255,255,255,.8);padding:70px 0 24px;pos
   .service-pick{grid-template-columns:1fr 1fr;}
   section{padding:60px 0;}
   .hero{padding-top:120px;}
+  .logo-wrap img{height:24px;}
+  .nav-cta{padding:9px 14px;font-size:13px;}
+  .nav-cta svg{display:none;}
 }
 @media (prefers-reduced-motion: reduce){
   *{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; scroll-behavior:auto !important;}
@@ -568,7 +573,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.8);padding:70px 0 24px;pos
       <h2 class="sec-h2">Not another agency with a "book a call" button.</h2>
       <p class="lead" style="margin-top:12px;">No jabs at anyone else, just what's actually true about how we work.</p>
     </div>
-    <div class="bento" style="grid-template-columns:repeat(4,1fr);">
+    <div class="bento bento-4">
       <div class="bcard reveal stagger" style="--i:0" onclick="go('contact')">
         <div class="icn"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg></div>
         <h3>Pricing you can see</h3>
@@ -911,7 +916,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.8);padding:70px 0 24px;pos
 
 <section style="padding-top:10px;">
   <div class="wrap">
-    <div class="bento" style="grid-template-columns:repeat(4,1fr);">
+    <div class="bento bento-4">
       <div class="bcard reveal stagger" style="--i:0"><div class="icn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M8 9h8M8 13h5"/></svg></div><h3>On-page SEO</h3><p>Titles, structure and copy built around real search intent.</p></div>
       <div class="bcard reveal stagger" style="--i:1"><div class="icn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></div><h3>Keyword strategy</h3><p>Tracking and targeting the exact terms your buyers search.</p></div>
       <div class="bcard reveal stagger" style="--i:2"><div class="icn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L4 14h6l-1 8 9-12h-6z"/></svg></div><h3>Technical SEO</h3><p>Speed, crawlability and indexing fixed at the root.</p></div>
@@ -1003,7 +1008,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.8);padding:70px 0 24px;pos
 
 <section style="padding-top:10px;">
   <div class="wrap">
-    <div class="bento" style="grid-template-columns:repeat(4,1fr);">
+    <div class="bento bento-4">
       <div class="bcard reveal stagger" style="--i:0"><div class="icn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 12-9 12S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div><h3>Google Business Profile</h3><p>Optimized listing, posts and photos kept current every month.</p></div>
       <div class="bcard reveal stagger" style="--i:1"><div class="icn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="4"/><circle cx="16" cy="16" r="4"/><path d="M11 11l2 2"/></svg></div><h3>Local link building</h3><p>Citations and backlinks from real, relevant local sources.</p></div>
       <div class="bcard reveal stagger" style="--i:2"><div class="icn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l9 4-9 4-9-4z"/><path d="M3 10l9 4 9-4M3 15l9 4 9-4"/></svg></div><h3>Review strategy</h3><p>Systems to earn and respond to reviews consistently.</p></div>
@@ -1098,7 +1103,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.8);padding:70px 0 24px;pos
 
 <section style="padding-top:10px;">
   <div class="wrap">
-    <div class="bento" style="grid-template-columns:repeat(4,1fr);">
+    <div class="bento bento-4">
       <div class="bcard reveal stagger" style="--i:0"><div class="icn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4z"/></svg></div><h3>Answer-first content</h3><p>Content structured the way LLMs actually extract answers.</p></div>
       <div class="bcard reveal stagger" style="--i:1"><div class="icn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M9 9h6v6H9z"/></svg></div><h3>Schema &amp; structured data</h3><p>Markup that makes your entity unmistakable to crawlers.</p></div>
       <div class="bcard reveal stagger" style="--i:2"><div class="icn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 3"/></svg></div><h3>Entity building</h3><p>Consistent brand signals across the web so AI trusts your facts.</p></div>
@@ -1178,7 +1183,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.8);padding:70px 0 24px;pos
 
 <section style="padding-top:10px;">
   <div class="wrap">
-    <div class="bento" style="grid-template-columns:repeat(4,1fr);">
+    <div class="bento bento-4">
       <div class="bcard reveal stagger" style="--i:0"><div class="icn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M8 9h8M8 13h8M8 17h5"/></svg></div><h3>Content calendars</h3><p>Monthly plans mapped to pillars: education, authority, relatability, engagement, conversion.</p></div>
       <div class="bcard reveal stagger" style="--i:1"><div class="icn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10M18 20V4M6 20v-6"/></svg></div><h3>Caption &amp; copy</h3><p>Hooks and captions written to stop the scroll and start conversations.</p></div>
       <div class="bcard reveal stagger" style="--i:2"><div class="icn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="3.2"/></svg></div><h3>Creative direction</h3><p>Reels concepts, carousel design direction, on-brand visual system.</p></div>
@@ -1263,7 +1268,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.8);padding:70px 0 24px;pos
 
 <section style="padding-top:10px;">
   <div class="wrap">
-    <div class="bento" style="grid-template-columns:repeat(4,1fr);">
+    <div class="bento bento-4">
       <div class="bcard reveal stagger" style="--i:0"><div class="icn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M8 9h8M8 13h8M8 17h5"/></svg></div><h3>SEO blogs &amp; guides</h3><p>Long-form content built around real search demand, not keyword stuffing.</p></div>
       <div class="bcard reveal stagger" style="--i:1"><div class="icn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L4 14h6l-1 8 9-12h-6z"/></svg></div><h3>Landing page copy</h3><p>Persuasive copy that pairs with our website builds and your existing site.</p></div>
       <div class="bcard reveal stagger" style="--i:2"><div class="icn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10M18 20V4M6 20v-6"/></svg></div><h3>Case studies</h3><p>Proof-driven stories that convert warm leads into signed clients.</p></div>
@@ -1355,7 +1360,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.8);padding:70px 0 24px;pos
 
 <section style="padding-top:10px;">
   <div class="wrap">
-    <div class="bento" style="grid-template-columns:repeat(4,1fr);">
+    <div class="bento bento-4">
       <div class="bcard reveal stagger" style="--i:0"><div class="icn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L4 14h6l-1 8 9-12h-6z"/></svg></div><h3>Built for speed</h3><p>Sub-2-second loads on mobile, not a bloated template.</p></div>
       <div class="bcard reveal stagger" style="--i:1"><div class="icn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 9h18M8 21h8"/></svg></div><h3>Conversion-first UX</h3><p>Every page engineered around one clear action: call, book, buy.</p></div>
       <div class="bcard reveal stagger" style="--i:2"><div class="icn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 3"/></svg></div><h3>SEO-ready from day one</h3><p>Schema, sitemaps and structure baked in, not bolted on later.</p></div>
@@ -1442,7 +1447,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.8);padding:70px 0 24px;pos
 
 <section style="padding-top:10px;">
   <div class="wrap">
-    <div class="bento" style="grid-template-columns:repeat(4,1fr);">
+    <div class="bento bento-4">
       <div class="bcard reveal stagger" style="--i:0"><div class="icn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="3.2"/></svg></div><h3>Meta lead generation</h3><p>Instagram and Facebook campaigns built for DMs and form fills.</p></div>
       <div class="bcard reveal stagger" style="--i:1"><div class="icn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></div><h3>Google Search &amp; Local</h3><p>Capture high-intent search demand your SEO hasn't won yet.</p></div>
       <div class="bcard reveal stagger" style="--i:2"><div class="icn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg></div><h3>Retargeting</h3><p>Bring back the visitors your content already warmed up.</p></div>
