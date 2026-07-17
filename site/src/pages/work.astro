@@ -1,0 +1,93 @@
+---
+// Work page: headline metrics, case snapshots, benchmark request form.
+// Content ported from v1; Phase 4 replaces snapshots with the real
+// case-study template once the founder's material + permissions land.
+import Base from '../layouts/Base.astro';
+import Card from '../components/Card.astro';
+import SimpleForm from '../components/islands/SimpleForm.jsx';
+import { withBase } from '../lib/url';
+
+const metrics = [
+  { value: '187%', label: 'Average organic traffic lift in 6 months' },
+  { value: '3.4x', label: 'Average increase in booked appointments' },
+  { value: '42', label: 'Average new leads per month, local clients' },
+  { value: '7 days', label: 'Typical time to first deliverables live' },
+];
+
+const cases = [
+  { chip: 'Local SEO · Dental, Ahmedabad', metric: '#1', text: 'Ranked #1 in the local Maps pack for "dentist near me" within 4 months, appointment enquiries up 3.1x.' },
+  { chip: 'AI SEO · Dermatology, Dubai', metric: 'Cited', text: "First clinic in category cited directly inside Google's AI Overview for \"acne treatment near me.\"" },
+  { chip: 'Social + Content · D2C skincare', metric: '4.2x', text: 'Instagram following grew 4.2x in 90 days, direct DM-to-sale flow built and converting.' },
+  { chip: 'Website + SEO · Salon chain, London', metric: '2.6x', text: 'Rebuilt site cut load time from 6.2s to 1.8s, online booking conversion up 2.6x.' },
+  { chip: 'Paid + Organic · D2C founder, Toronto', metric: '-38%', text: 'Cost per lead down 38% once paid campaigns were layered on top of an already-ranking site.' },
+];
+
+const formFields = [
+  { name: 'name', label: 'Full name', placeholder: 'Your name' },
+  { name: 'category', label: 'Business category', placeholder: 'e.g. dermatology clinic' },
+  { name: 'email', label: 'Email', type: 'email', placeholder: 'you@business.com' },
+  { name: 'city', label: 'City', placeholder: 'e.g. Ahmedabad, Dubai, London, Toronto' },
+  { name: 'phone', label: 'WhatsApp number', type: 'tel', placeholder: '+91 98765 43210', required: false, optional: 'optional, for a faster reply' },
+  { name: 'budget', label: 'Monthly budget range', type: 'select', optional: 'optional', emptyFirst: true, options: ['Prefer not to say yet', 'Under ₹16,000', '₹16,000 – ₹40,000', '₹40,000 – ₹1,00,000', '₹1,00,000+'] },
+];
+---
+
+<Base
+  title="Work & Results | Click.n.likes"
+  description="Every engagement is measured against bookings, calls and revenue, not just rankings. Real categories, real growth curves."
+>
+  <section class="mx-auto max-w-6xl px-[5vw] pt-16 pb-10 lg:pt-20">
+    <p class="reveal inline-flex items-center gap-2 rounded-full border border-teal/30 bg-teal/5 px-4 py-1.5 text-[13px] font-semibold text-navy">
+      <span class="h-1.5 w-1.5 rounded-full bg-teal"></span> Results
+    </p>
+    <h1 class="reveal-mask mt-5 max-w-3xl font-display text-[clamp(2.1rem,4.4vw,3.4rem)] leading-[1.08] font-bold text-navy">
+      <span class="mask-line"><span>Numbers we're happy to show you.</span></span>
+    </h1>
+    <p class="reveal mt-5 max-w-2xl text-lg leading-relaxed text-navy/70" style="--d:160ms">
+      Every engagement is measured against bookings, calls and revenue, not just rankings.
+    </p>
+    <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {metrics.map((m, i) => (
+        <Card class="reveal text-center" style={`--d:${i * 70}ms`}>
+          <div class="font-display text-4xl font-bold text-teal-dark">{m.value}</div>
+          <p class="mt-2 text-[13px] text-navy/55">{m.label}</p>
+        </Card>
+      ))}
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-6xl px-[5vw] pb-16">
+    <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">Case snapshots</p>
+    <h2 class="reveal mt-3 font-display text-[clamp(1.6rem,3vw,2.4rem)] leading-[1.12] font-bold text-navy" style="--d:80ms">
+      Real categories, real growth curves.
+    </h2>
+    <div class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {cases.map((c, i) => (
+        <Card class="reveal" style={`--d:${(i % 3) * 90}ms`}>
+          <span class="inline-block rounded-full bg-teal/10 px-3 py-1 text-xs font-semibold text-teal-dark">{c.chip}</span>
+          <div class="mt-4 font-display text-4xl font-bold text-navy">{c.metric}</div>
+          <p class="mt-2 text-[13.5px] leading-relaxed text-navy/60">{c.text}</p>
+        </Card>
+      ))}
+    </div>
+  </section>
+
+  <section class="border-t border-navy/10 bg-off">
+    <div class="mx-auto max-w-3xl px-[5vw] py-16 text-center">
+      <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">Want numbers like these?</p>
+      <h2 class="reveal mt-3 font-display text-[clamp(1.6rem,3vw,2.4rem)] leading-[1.12] font-bold text-navy" style="--d:80ms">
+        Tell us your category, we'll tell you what's realistic.
+      </h2>
+      <div class="reveal mt-8" style="--d:160ms">
+        <SimpleForm
+          client:visible
+          tag="work"
+          fields={formFields}
+          submitLabel="Show me realistic numbers"
+          contactHref={withBase('/contact/')}
+          toolsHref={withBase('/tools/')}
+        />
+      </div>
+    </div>
+  </section>
+</Base>

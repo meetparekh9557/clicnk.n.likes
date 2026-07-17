@@ -54,13 +54,17 @@ Hard gates: Lighthouse ≥95/page, <2s mobile, zero horizontal overflow at
       branch pushes build + artifact; merges to main publish to /preview/
       (noindex, base-aware links via `site/src/lib/url.ts`) so the founder
       can watch pages land at clicknlikes.com/preview/ while v1 serves /.
-- [ ] 7 service pages (template + per-service content ported from v1, founder
-      voice pass).
+- [x] 7 service pages (template + per-service content ported from v1, founder
+      voice pass). Data-driven template `site/src/pages/services/[slug].astro`
+      + `site/src/data/services.ts`; tool/calculator sections marked for the
+      tools milestone to embed islands into.
 - [ ] Tools migration: port all 9 tools + quote calculator as React islands;
       shared engine (scoring logic copied verbatim from v1); re-run the full
       Playwright suite against the new build. HIGHEST RISK — do not rush.
-- [ ] Insights index + 4 article pages (content exists in v1, already in
-      founder voice).
+- [x] Insights index + 4 article pages (content exists in v1, already in
+      founder voice). Bodies ported verbatim into `site/src/data/articles.ts`
+      (internal links rebased via withBase); newsletter island reuses v1's
+      blog-newsletter email/log behavior.
 - [ ] Work, About, FAQ, Contact, Privacy, Terms pages.
 - [ ] Phase 3 polish pass: view transitions, animated calculator totals,
       self-drawing charts component, before/after slider component (for
