@@ -48,3 +48,9 @@ Rules:
   for horizontal overflow on every page touched.
 - The premium rebuild scope (4 phases) is the roadmap of record; Phase 2 is an
   Astro + Tailwind + React-islands rebuild with real per-page URLs.
+
+## Continuing the rebuild
+
+The premium rebuild's live plan, state, design decisions and protocols are in
+`docs/REBUILD-PLAN.md`. Read it before any rebuild work; continue from the
+first unchecked milestone; update its checkboxes in every PR.
