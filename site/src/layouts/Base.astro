@@ -1,0 +1,26 @@
+---
+// Base layout: every page gets real per-page SEO. Phase 2 of the
+// premium rebuild scope; brand voice rules live in /CLAUDE.md.
+interface Props { title: string; description: string; canonical?: string; }
+const { title, description, canonical } = Astro.props;
+const canonicalURL = canonical ?? new URL(Astro.url.pathname, Astro.site).href;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet" />
+  </head>
+  <body class="bg-white text-navy font-body antialiased">
+    <slot />
+  </body>
+</html>

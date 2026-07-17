@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+/* Brand tokens: ported from the v1 site, single source of truth. */
+@theme {
+  --color-teal: #4ECDC4;
+  --color-teal-dark: #33A79F;
+  --color-coral: #FF4757;
+  --color-navy: #1A2B4A;
+  --color-off: #F7F7F7;
+  --font-display: "Space Grotesk", Arial, sans-serif;
+  --font-body: "DM Sans", system-ui, sans-serif;
+}
