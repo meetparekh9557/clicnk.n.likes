@@ -1,45 +1,234 @@
 ---
-// Interim homepage: exercises every piece of the shared shell (Nav,
-// Footer, Button, Card, masked-line hero, reveal-on-scroll) so the shell
-// can be tested end-to-end. Replaced wholesale by the real audit-weapon
-// homepage in the next milestone.
+// Homepage: audit-weapon hero (live scan island), steps strip, services
+// bento, differentiators, tools teaser, credibility split, lead form.
+// Copy ported from v1 with the hero refocused on the live audit.
 import Base from '../layouts/Base.astro';
 import Button from '../components/Button.astro';
 import Card from '../components/Card.astro';
+import HeroScan from '../components/islands/HeroScan.jsx';
+import LeadForm from '../components/islands/LeadForm.jsx';
 import { services } from '../data/site';
+import { withBase } from '../lib/url';
+import Search from '@lucide/astro/icons/search';
+import MapPin from '@lucide/astro/icons/map-pin';
+import Sparkles from '@lucide/astro/icons/sparkles';
+import Share2 from '@lucide/astro/icons/share-2';
+import FileText from '@lucide/astro/icons/file-text';
+import Monitor from '@lucide/astro/icons/monitor';
+import Megaphone from '@lucide/astro/icons/megaphone';
+import Eye from '@lucide/astro/icons/eye';
+import Zap from '@lucide/astro/icons/zap';
+import TrendingUp from '@lucide/astro/icons/trending-up';
+import Layers from '@lucide/astro/icons/layers';
+import BarChart3 from '@lucide/astro/icons/chart-column-increasing';
+import Target from '@lucide/astro/icons/target';
+import ArrowUpRight from '@lucide/astro/icons/arrow-up-right';
+
+const serviceIcons = [Search, MapPin, Sparkles, Share2, FileText, Monitor, Megaphone];
+const serviceBlurbs = [
+  'Rank on Google search where your next customer is actually searching.',
+  'Win the Google Maps / local pack: a different discipline, run and reported on its own.',
+  "Get your brand cited by ChatGPT, Gemini and Google's AI Overview. AEO, GEO, LLMO, done right.",
+  'Content strategy, calendars and captions built to grow followers who actually buy.',
+  'Blogs, guides and website copy that rank on Google and get picked up by AI answers.',
+  'Fast, mobile-first websites engineered to convert visitors, not just look pretty.',
+  'Meta and Google ads that support the organic engine, never replace it.',
+];
+
+const marqueeItems = [
+  'SEO', 'AI Search', 'Local SEO', 'Social Growth', 'Content', 'Websites', 'Paid Media',
+  'Real growth, real revenue', 'No vanity metrics',
+];
+
+const iconWrap = 'mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 text-teal-dark';
 ---
+
 <Base
   title="Click.n.likes | Organic Growth, Engineered"
-  description="Full-stack organic growth agency: SEO, AI Search, Social, Content, Websites and Paid Media."
+  description="Full-stack organic growth agency: SEO, AI Search, Social, Content, Websites and Paid Media. Scan your website live and see where you stand before you ever book a call."
 >
-  <section class="mx-auto max-w-6xl px-[5vw] pt-20 pb-16">
-    <h1 class="reveal-mask font-display text-[clamp(2.4rem,5.4vw,4.4rem)] leading-[1.06] font-bold">
-      <span class="mask-line"><span>We build digital presence</span></span>
-      <span class="mask-line" style="--d:120ms"><span>that turns into <span class="text-teal-dark">paying customers</span>.</span></span>
-    </h1>
-    <p class="reveal mt-6 max-w-xl text-lg text-navy/70" style="--d:280ms">
-      Click.n.likes is a full-stack organic growth agency: SEO, AI Search, Social, Content and Websites, backed by
-      paid media when it helps. Built for businesses anywhere in the world who are done paying for impressions that
-      do not book appointments.
-    </p>
-    <div class="reveal mt-8 flex flex-wrap gap-4" style="--d:380ms">
-      <Button href="/contact/" arrow magnetic>Get your instant quote</Button>
-      <Button href="/work/" variant="outline">See real results</Button>
+  <!-- ============ HERO: the audit weapon ============ -->
+  <section class="relative overflow-hidden">
+    <div class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(60%_50%_at_70%_10%,rgba(78,205,196,0.14),transparent_70%),radial-gradient(45%_40%_at_15%_85%,rgba(255,71,87,0.06),transparent_70%)]"></div>
+    <div class="mx-auto max-w-6xl px-[5vw] pt-16 pb-14 lg:pt-24">
+      <p class="reveal inline-flex items-center gap-2 rounded-full border border-teal/30 bg-teal/5 px-4 py-1.5 text-[13px] font-semibold text-navy">
+        <span class="h-1.5 w-1.5 rounded-full bg-teal"></span> Organic growth, engineered for revenue
+      </p>
+      <h1 class="reveal-mask mt-5 max-w-4xl font-display text-[clamp(2.4rem,5.4vw,4.4rem)] leading-[1.06] font-bold text-navy">
+        <span class="mask-line"><span>We build digital presence that</span></span>
+        <span class="mask-line" style="--d:120ms"><span>turns into <span class="text-teal-dark underline decoration-teal/50 decoration-4 underline-offset-8">paying customers</span>.</span></span>
+      </h1>
+      <p class="reveal mt-6 max-w-2xl text-lg leading-relaxed text-navy/70" style="--d:260ms">
+        Click.n.likes is a full-stack organic growth agency: SEO, AI Search, Social, Content and Websites, backed by
+        paid media when it helps. Enter your website below and we will fetch it live, score eleven verified on-page
+        signals, and email you the complete factor-by-factor report, before you ever book a call.
+      </p>
+      <div class="reveal max-w-3xl" style="--d:360ms">
+        <HeroScan client:load toolsHref={withBase('/tools/')} />
+      </div>
+      <div class="reveal mt-8 flex flex-wrap items-center gap-3" style="--d:440ms">
+        <Button href="/contact/" arrow magnetic>Get your instant quote</Button>
+        <Button href="/work/" variant="outline">See real results</Button>
+      </div>
+      <div class="reveal mt-8 flex flex-wrap items-center gap-2.5 text-[13.5px] font-semibold text-navy" style="--d:500ms">
+        <span class="inline-flex items-center gap-2 rounded-full border border-teal/30 bg-teal/5 py-1.5 pr-4 pl-1.5"><b class="grid h-[22px] w-[22px] place-items-center rounded-full bg-navy font-display text-xs text-white">1</b>Pick a service</span>
+        <span class="text-navy/40">→</span>
+        <span class="inline-flex items-center gap-2 rounded-full border border-teal/30 bg-teal/5 py-1.5 pr-4 pl-1.5"><b class="grid h-[22px] w-[22px] place-items-center rounded-full bg-navy font-display text-xs text-white">2</b>See your real price</span>
+        <span class="text-navy/40">→</span>
+        <span class="inline-flex items-center gap-2 rounded-full border border-teal/30 bg-teal/5 py-1.5 pr-4 pl-1.5"><b class="grid h-[22px] w-[22px] place-items-center rounded-full bg-navy font-display text-xs text-white">3</b>We get to work</span>
+      </div>
+      <div class="reveal mt-10 flex flex-wrap gap-10" style="--d:560ms">
+        <div><b class="block font-display text-3xl font-bold text-navy">4-5</b><span class="text-sm text-navy/55">Avg. months to page 1</span></div>
+        <div><b class="block font-display text-3xl font-bold text-navy">187%</b><span class="text-sm text-navy/55">Avg. organic traffic lift</span></div>
+        <div><b class="block font-display text-3xl font-bold text-navy">₹16K</b><span class="text-sm text-navy/55">Projects start from</span></div>
+      </div>
     </div>
   </section>
 
-  <section class="border-t border-navy/10 bg-off">
-    <div class="mx-auto max-w-6xl px-[5vw] py-16">
-      <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">01 — Services</p>
-      <h2 class="reveal mt-3 font-display text-3xl font-bold" style="--d:80ms">What we build for you</h2>
-      <div class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {services.map((s, i) => (
-          <Card href={s.href} class="reveal" style={`--d:${i * 70}ms`}>
-            <b class="font-display text-lg font-semibold text-navy">{s.title}</b>
-            <p class="mt-2 text-sm text-navy/60">{s.blurb}</p>
+  <!-- ============ MARQUEE ============ -->
+  <div class="marquee border-y border-navy/10 bg-white py-4" aria-hidden="true">
+    <div class="marquee-track">
+      {[0, 1].map(() => (
+        <span class="flex items-center">
+          {marqueeItems.map((item) => (
+            <span class="mx-6 flex items-center gap-6 font-display text-sm font-semibold tracking-wide text-navy/45 uppercase">
+              {item} <span class="text-teal">✦</span>
+            </span>
+          ))}
+        </span>
+      ))}
+    </div>
+  </div>
+
+  <!-- ============ SERVICES BENTO ============ -->
+  <section class="mx-auto max-w-6xl px-[5vw] py-20">
+    <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">01 — What we do</p>
+    <h2 class="reveal mt-3 max-w-xl font-display text-[clamp(1.8rem,3.4vw,2.7rem)] leading-[1.12] font-bold text-navy" style="--d:80ms">
+      Seven channels. One growth engine.
+    </h2>
+    <p class="reveal mt-3 max-w-xl text-lg text-navy/70" style="--d:140ms">
+      Pick one, or let us run the whole stack. Every service is built to feed the others.
+    </p>
+    <div class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {services.map((s, i) => {
+        const Icon = serviceIcons[i];
+        return (
+          <Card href={s.href} class="reveal group" style={`--d:${(i % 3) * 90}ms`}>
+            <span class="absolute top-6 right-6 text-navy/20 transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-teal-dark">
+              <ArrowUpRight size={17} stroke-width={2.5} aria-hidden="true" />
+            </span>
+            <div class={iconWrap}><Icon size={22} stroke-width={2} aria-hidden="true" /></div>
+            <h3 class="font-display text-lg font-semibold text-navy">{s.title}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-navy/60">{serviceBlurbs[i]}</p>
           </Card>
-        ))}
+        );
+      })}
+    </div>
+  </section>
+
+  <!-- ============ HOW WE'RE DIFFERENT ============ -->
+  <section class="border-y border-navy/10 bg-off">
+    <div class="mx-auto max-w-6xl px-[5vw] py-20">
+      <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">02 — How we're different</p>
+      <h2 class="reveal mt-3 max-w-2xl font-display text-[clamp(1.8rem,3.4vw,2.7rem)] leading-[1.12] font-bold text-navy" style="--d:80ms">
+        Not another agency with a "book a call" button.
+      </h2>
+      <p class="reveal mt-3 max-w-xl text-lg text-navy/70" style="--d:140ms">
+        No jabs at anyone else, just what's actually true about how we work.
+      </p>
+      <div class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <Card href="/contact/" class="reveal" style="--d:0ms">
+          <div class={iconWrap}><Eye size={22} stroke-width={2} aria-hidden="true" /></div>
+          <h3 class="font-display text-lg font-semibold text-navy">Pricing you can see</h3>
+          <p class="mt-2 text-sm leading-relaxed text-navy/60">Most agencies hide pricing behind a sales call. Ours is a live calculator, right here.</p>
+        </Card>
+        <Card href="/tools/" class="reveal" style="--d:90ms">
+          <div class={iconWrap}><Zap size={22} stroke-width={2} aria-hidden="true" /></div>
+          <h3 class="font-display text-lg font-semibold text-navy">Audits that actually run</h3>
+          <p class="mt-2 text-sm leading-relaxed text-navy/60">Most "free audits" are empty lead-gen forms. Ours run real scoring math the second you submit.</p>
+        </Card>
+        <Card href="/tools/" class="reveal" style="--d:180ms">
+          <div class={iconWrap}><TrendingUp size={22} stroke-width={2} aria-hidden="true" /></div>
+          <h3 class="font-display text-lg font-semibold text-navy">Revenue, not vanity metrics</h3>
+          <p class="mt-2 text-sm leading-relaxed text-navy/60">Most agencies report clicks and impressions. We show revenue and profit, not just traffic.</p>
+        </Card>
+        <Card href="/about/" class="reveal" style="--d:270ms">
+          <div class={iconWrap}><Layers size={22} stroke-width={2} aria-hidden="true" /></div>
+          <h3 class="font-display text-lg font-semibold text-navy">One team, seven channels</h3>
+          <p class="mt-2 text-sm leading-relaxed text-navy/60">Most agencies hand you between vendors for SEO, social, content and ads. We run all seven under one roof, so nothing falls through the cracks between them.</p>
+        </Card>
       </div>
+    </div>
+  </section>
+
+  <!-- ============ TOOLS TEASER ============ -->
+  <section class="mx-auto max-w-6xl px-[5vw] py-20">
+    <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">03 — Try before you talk to us</p>
+    <h2 class="reveal mt-3 max-w-xl font-display text-[clamp(1.8rem,3.4vw,2.7rem)] leading-[1.12] font-bold text-navy" style="--d:80ms">
+      Three free tools. Real math, real signals.
+    </h2>
+    <p class="reveal mt-3 max-w-xl text-lg text-navy/70" style="--d:140ms">
+      No paid crawl APIs, no black box: every score comes from a published formula or a direct check of your own answers.
+    </p>
+    <div class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <Card href="/tools/" class="reveal group" style="--d:0ms">
+        <span class="absolute top-6 right-6 text-navy/20 transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-teal-dark"><ArrowUpRight size={17} stroke-width={2.5} aria-hidden="true" /></span>
+        <div class={iconWrap}><Zap size={22} stroke-width={2} aria-hidden="true" /></div>
+        <h3 class="font-display text-lg font-semibold text-navy">Live Website Health Scan</h3>
+        <p class="mt-2 text-sm leading-relaxed text-navy/60">We fetch your page live and score 11 real signals: title, meta, headings, alt tags, schema, indexability.</p>
+      </Card>
+      <Card href="/tools/" class="reveal group" style="--d:90ms">
+        <span class="absolute top-6 right-6 text-navy/20 transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-teal-dark"><ArrowUpRight size={17} stroke-width={2.5} aria-hidden="true" /></span>
+        <div class={iconWrap}><BarChart3 size={22} stroke-width={2} aria-hidden="true" /></div>
+        <h3 class="font-display text-lg font-semibold text-navy">Funnel Leak &amp; ROI Calculator</h3>
+        <p class="mt-2 text-sm leading-relaxed text-navy/60">See the exact rupee amount you're leaving behind versus a healthy 3% conversion rate.</p>
+      </Card>
+      <Card href="/tools/" class="reveal group" style="--d:180ms">
+        <span class="absolute top-6 right-6 text-navy/20 transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-teal-dark"><ArrowUpRight size={17} stroke-width={2.5} aria-hidden="true" /></span>
+        <div class={iconWrap}><Target size={22} stroke-width={2} aria-hidden="true" /></div>
+        <h3 class="font-display text-lg font-semibold text-navy">Competitor Threat Estimator</h3>
+        <p class="mt-2 text-sm leading-relaxed text-navy/60">A weighted quiz that scores how much of a threat your main competitor really is.</p>
+      </Card>
+    </div>
+  </section>
+
+  <!-- ============ WHY CLICK.N.LIKES ============ -->
+  <section class="border-y border-navy/10 bg-off">
+    <div class="mx-auto grid max-w-6xl gap-12 px-[5vw] py-20 lg:grid-cols-2 lg:items-center">
+      <div class="reveal">
+        <p class="text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">04 — Why Click.n.likes</p>
+        <h2 class="mt-3 font-display text-[clamp(1.8rem,3.4vw,2.7rem)] leading-[1.12] font-bold text-navy">
+          Built for people burned by agencies before.
+        </h2>
+        <p class="mt-4 text-lg text-navy/70">
+          Most agencies sell you vanity metrics or jargon you can't verify. We connect every deliverable to something
+          you can check: bookings, calls, DMs, revenue.
+        </p>
+        <ul class="mt-8 space-y-5">
+          <li class="flex gap-3.5"><span class="mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full bg-teal"></span><span class="text-[15px] text-navy/80"><b class="text-navy">No jargon reports.</b> You get plain-English updates that tie to actual leads, not "impressions served."</span></li>
+          <li class="flex gap-3.5"><span class="mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full bg-teal"></span><span class="text-[15px] text-navy/80"><b class="text-navy">Niche-first strategy.</b> A dermatologist and a D2C skincare brand need completely different growth plans. We never copy-paste.</span></li>
+          <li class="flex gap-3.5"><span class="mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full bg-teal"></span><span class="text-[15px] text-navy/80"><b class="text-navy">Transparent pricing.</b> Every quote is generated in front of you, starting at ₹16,000. No mystery retainers.</span></li>
+        </ul>
+      </div>
+      <div class="reveal grid gap-4 sm:grid-cols-2" style="--d:120ms">
+        <Card><div class={iconWrap}><Layers size={20} stroke-width={2} aria-hidden="true" /></div><h3 class="font-display text-base font-semibold text-navy">Full-stack</h3><p class="mt-1.5 text-sm text-navy/60">SEO to websites, one strategist owns the whole picture.</p></Card>
+        <Card><div class={iconWrap}><Zap size={20} stroke-width={2} aria-hidden="true" /></div><h3 class="font-display text-base font-semibold text-navy">Fast to launch</h3><p class="mt-1.5 text-sm text-navy/60">Most engagements go live inside 7 working days.</p></Card>
+        <Card><div class={iconWrap}><BarChart3 size={20} stroke-width={2} aria-hidden="true" /></div><h3 class="font-display text-base font-semibold text-navy">Revenue-tied</h3><p class="mt-1.5 text-sm text-navy/60">We report against bookings and leads, not just rankings.</p></Card>
+        <Card><div class={iconWrap}><MapPin size={20} stroke-width={2} aria-hidden="true" /></div><h3 class="font-display text-base font-semibold text-navy">Locally fluent, globally built</h3><p class="mt-1.5 text-sm text-navy/60">Built around how your specific market actually searches and buys: wherever that is.</p></Card>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ LEAD FORM ============ -->
+  <section class="mx-auto max-w-6xl px-[5vw] py-20">
+    <div class="mx-auto max-w-2xl text-center">
+      <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">05 — Quick check</p>
+      <h2 class="reveal mt-3 font-display text-[clamp(1.8rem,3.4vw,2.7rem)] leading-[1.12] font-bold text-navy" style="--d:80ms">
+        Tell us about your business, get a growth snapshot back.
+      </h2>
+    </div>
+    <div class="reveal mx-auto mt-10 max-w-3xl" style="--d:160ms">
+      <LeadForm client:visible contactHref={withBase('/contact/')} toolsHref={withBase('/tools/')} />
     </div>
   </section>
 </Base>

@@ -41,10 +41,19 @@ Hard gates: Lighthouse ≥95/page, <2s mobile, zero horizontal overflow at
       deferred to the forms/Apps Script wiring milestone (nothing ships dead).
       Note: Lucide has no brand icons — Instagram/LinkedIn glyphs are v1's
       inline SVGs.
-- [ ] Homepage: audit-weapon hero (URL input → live scan moment), 3-steps
+- [x] Homepage: audit-weapon hero (URL input → live scan moment), 3-steps
       strip, services bento, "How we're different", tools teaser, lead form.
-- [ ] GitHub Actions deploy to a preview (build `site/` on push; do NOT touch
-      Pages source yet — v1 keeps serving).
+      Hero = compact Live Website Health Scan (URL + email up front, same
+      email-before-results gating as every v1 tool; scoring via the shared
+      engine below; honest no-score fallback pointing to /tools/).
+      v1 engine ported verbatim to `site/src/lib/engine.js` (webhook client,
+      analyzer client, report email builder, scoreOnPageHealth) — the tools
+      migration must import from there, never re-derive.
+- [x] GitHub Actions deploy to a preview (build `site/` on push; do NOT touch
+      Pages source yet — v1 keeps serving). `.github/workflows/preview.yml`:
+      branch pushes build + artifact; merges to main publish to /preview/
+      (noindex, base-aware links via `site/src/lib/url.ts`) so the founder
+      can watch pages land at clicknlikes.com/preview/ while v1 serves /.
 - [ ] 7 service pages (template + per-service content ported from v1, founder
       voice pass).
 - [ ] Tools migration: port all 9 tools + quote calculator as React islands;
