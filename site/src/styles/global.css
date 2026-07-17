@@ -69,6 +69,58 @@
   will-change: transform;
 }
 
+/* ---------- Article typography (Insights posts) -------------------
+   Article bodies are first-party HTML ported from v1 and rendered via
+   set:html, so they can't carry Tailwind utility classes. ---------- */
+
+.article-body {
+  font-size: 1.05rem;
+  line-height: 1.75;
+  color: color-mix(in srgb, var(--color-navy) 82%, white);
+}
+.article-body p { margin: 0 0 1.25em; }
+.article-body h2 {
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: var(--color-navy);
+  line-height: 1.25;
+  margin: 2em 0 0.7em;
+}
+.article-body ul { margin: 0 0 1.25em; padding-left: 1.35em; }
+.article-body li { margin-bottom: 0.7em; }
+.article-body strong { color: var(--color-navy); }
+.article-body a { color: var(--color-teal-dark); text-decoration: underline; text-underline-offset: 3px; }
+.article-cta {
+  margin-top: 2.5em;
+  border: 1px solid color-mix(in srgb, var(--color-teal) 40%, transparent);
+  background: color-mix(in srgb, var(--color-teal) 7%, white);
+  border-radius: 16px;
+  padding: 26px 28px;
+}
+.article-cta h4 {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-navy);
+  margin: 0 0 8px;
+}
+.article-cta p { font-size: 0.95rem; margin-bottom: 1.1em; }
+.article-cta a.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--color-navy);
+  color: #fff;
+  text-decoration: none;
+  padding: 12px 24px;
+  border-radius: 100px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: background 0.3s var(--ease-out-quart), transform 0.3s var(--ease-out-quart);
+}
+.article-cta a.btn:hover { background: var(--color-coral); transform: translateY(-2px); }
+
 @media (prefers-reduced-motion: reduce) {
   .reveal,
   .reveal-mask .mask-line > span {
