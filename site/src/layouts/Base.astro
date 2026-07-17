@@ -7,7 +7,14 @@ import '../styles/global.css';
 
 interface Props { title: string; description: string; canonical?: string; }
 const { title, description, canonical } = Astro.props;
-const canonicalURL = canonical ?? new URL(Astro.url.pathname, Astro.site).href;
+// Preview builds (clicknlikes.com/preview/) must never be indexed, and
+// their canonicals point at the real future URL (base stripped).
+const isPreview = import.meta.env.PUBLIC_PREVIEW === '1';
+const basePrefix = import.meta.env.BASE_URL.replace(/\/+$/, '');
+const cleanPath = basePrefix && Astro.url.pathname.startsWith(basePrefix)
+  ? Astro.url.pathname.slice(basePrefix.length) || '/'
+  : Astro.url.pathname;
+const canonicalURL = canonical ?? new URL(cleanPath, Astro.site).href;
 ---
 <!doctype html>
 <html lang="en">
@@ -16,6 +23,7 @@ const canonicalURL = canonical ?? new URL(Astro.url.pathname, Astro.site).href;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    {isPreview && <meta name="robots" content="noindex,nofollow" />}
     <link rel="canonical" href={canonicalURL} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />

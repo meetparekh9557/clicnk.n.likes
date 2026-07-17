@@ -1,0 +1,72 @@
+# Builds the Astro rebuild (site/) on every push that touches it.
+# - On feature branches: build check + downloadable dist artifact.
+# - On main: additionally publishes the build to /preview/ on the main
+#   branch, which GitHub Pages serves at clicknlikes.com/preview/.
+#   v1 (index.html at the root) keeps serving the real domain untouched;
+#   cutover stays a separate, founder-approved step.
+# The publish commit only touches preview/**, which this workflow's
+# paths filter ignores, so it cannot retrigger itself.
+
+name: Build site + publish preview
+
+on:
+  push:
+    branches: ['main', 'claude/**']
+    paths: ['site/**', '.github/workflows/preview.yml']
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+      - run: npm ci
+        working-directory: site
+      - name: Build (production paths)
+        run: npm run build
+        working-directory: site
+      - uses: actions/upload-artifact@v4
+        with:
+          name: site-dist
+          path: site/dist
+
+  publish-preview:
+    if: github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+      - run: npm ci
+        working-directory: site
+      - name: Build with /preview/ base + noindex
+        run: npm run build
+        working-directory: site
+        env:
+          PREVIEW_BASE: /preview/
+          PUBLIC_PREVIEW: '1'
+      - name: Commit preview build to main
+        run: |
+          rm -rf preview
+          mkdir preview
+          cp -r site/dist/. preview/
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A preview
+          if git diff --cached --quiet; then
+            echo "Preview unchanged, nothing to publish."
+          else
+            git commit -m "Publish preview build to /preview/ [skip ci]"
+            git push
+          fi

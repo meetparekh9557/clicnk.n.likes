@@ -4,6 +4,8 @@
 // Lucide arrow; `magnetic` opts into the cursor-follow hover (motion.js).
 import ArrowRight from '@lucide/astro/icons/arrow-right';
 
+import { withBase } from '../lib/url';
+
 interface Props {
   href?: string;
   variant?: 'primary' | 'outline';
@@ -25,7 +27,7 @@ const cls = `${base} ${variants[variant]} ${extra}`.trim();
 const Tag = href ? 'a' : 'button';
 ---
 
-<Tag class={cls} href={href} data-magnetic={magnetic ? '' : undefined} {...rest}>
+<Tag class={cls} href={href ? withBase(href) : undefined} data-magnetic={magnetic ? '' : undefined} {...rest}>
   <slot />
   {arrow && <ArrowRight size={16} stroke-width={2.4} aria-hidden="true" />}
 </Tag>

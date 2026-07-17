@@ -5,6 +5,7 @@
 // Brand glyphs (Instagram/LinkedIn) are inline SVGs from v1 — Lucide
 // carries no brand icons.
 import { services, primaryNav, contact } from '../data/site';
+import { withBase } from '../lib/url';
 
 const year = new Date().getFullYear();
 const linkCls = 'block py-1 text-sm text-white/65 transition-colors hover:text-teal';
@@ -15,7 +16,7 @@ const socialCls =
 <footer class="bg-navy text-white/80">
   <div class="mx-auto grid max-w-6xl gap-10 px-[5vw] py-16 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
     <div class="sm:col-span-2 lg:col-span-1">
-      <img src="/logo.png" alt="Click.n.likes" width="112" height="26" class="h-[26px] w-auto brightness-0 invert" />
+      <img src={withBase('/logo.png')} alt="Click.n.likes" width="112" height="26" class="h-[26px] w-auto brightness-0 invert" />
       <p class="mt-4 max-w-[280px] text-[13.5px] leading-relaxed text-white/60">
         Full-stack organic growth for businesses and D2C founders anywhere in the world. SEO, AI Search, Social,
         Content, Websites, Paid.
@@ -32,13 +33,13 @@ const socialCls =
 
     <div>
       <h4 class="mb-4 text-[13px] font-semibold tracking-[0.08em] text-white uppercase">Services</h4>
-      {services.map((s) => <a href={s.href} class={linkCls}>{s.title}</a>)}
+      {services.map((s) => <a href={withBase(s.href)} class={linkCls}>{s.title}</a>)}
     </div>
 
     <div>
       <h4 class="mb-4 text-[13px] font-semibold tracking-[0.08em] text-white uppercase">Company</h4>
-      {primaryNav.map((item) => <a href={item.href} class={linkCls}>{item.title}</a>)}
-      <a href="/contact/" class={linkCls}>Get a quote</a>
+      {primaryNav.map((item) => <a href={withBase(item.href)} class={linkCls}>{item.title}</a>)}
+      <a href={withBase('/contact/')} class={linkCls}>Get a quote</a>
     </div>
 
     <div>
@@ -56,9 +57,9 @@ const socialCls =
   <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 border-t border-white/10 px-[5vw] py-6 text-[12.5px] text-white/50">
     <span>© {year} Click.n.likes. All rights reserved.</span>
     <span>
-      <a href="/privacy/" class="transition-colors hover:text-teal">Privacy</a>
+      <a href={withBase('/privacy/')} class="transition-colors hover:text-teal">Privacy</a>
       <span class="mx-1">·</span>
-      <a href="/terms/" class="transition-colors hover:text-teal">Terms</a>
+      <a href={withBase('/terms/')} class="transition-colors hover:text-teal">Terms</a>
     </span>
     <span>Real growth. Real revenue. No vanity metrics.</span>
   </div>

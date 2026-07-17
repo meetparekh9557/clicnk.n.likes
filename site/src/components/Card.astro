@@ -1,6 +1,8 @@
 ---
 // Bordered card with the v1 .bcard hover lift. Becomes a block-level
 // link when href is given.
+import { withBase } from '../lib/url';
+
 interface Props {
   href?: string;
   class?: string;
@@ -14,6 +16,6 @@ const cls =
 const Tag = href ? 'a' : 'div';
 ---
 
-<Tag class={href ? `block ${cls}` : cls} href={href} {...rest}>
+<Tag class={href ? `block ${cls}` : cls} href={href ? withBase(href) : undefined} {...rest}>
   <slot />
 </Tag>
