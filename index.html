@@ -350,7 +350,7 @@ footer{background:var(--navy);color:rgba(255,255,255,.8);padding:70px 0 24px;pos
 .foot-bottom{border-top:1px solid rgba(255,255,255,.12);margin-top:50px;padding-top:22px;display:flex;justify-content:space-between;font-size:12.5px;color:rgba(255,255,255,.5);flex-wrap:wrap;gap:10px;}
 .foot-logo img{height:26px;filter:brightness(0) invert(1);}
 .nl-row{display:flex;gap:10px;margin-top:16px;}
-.nl-row input{flex:1;padding:12px 14px;border-radius:10px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:var(--white);font-size:13.5px;}
+.nl-row input{flex:1;min-width:0;padding:12px 14px;border-radius:10px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:var(--white);font-size:13.5px;}
 .nl-row input::placeholder{color:rgba(255,255,255,.4);}
 .nl-row button{background:var(--teal);color:var(--white);padding:0 18px;border-radius:10px;font-weight:600;font-size:13.5px;}
 
@@ -418,7 +418,8 @@ footer{background:var(--navy);color:rgba(255,255,255,.8);padding:70px 0 24px;pos
 }
 @media(max-width:600px){
   .bento,.bento-4{grid-template-columns:1fr;}
-  .foot-grid{grid-template-columns:1fr 1fr;}
+  .foot-grid{grid-template-columns:1fr 1fr;gap:28px;}
+  .foot-grid > div:first-child{grid-column:1/-1;}
   .blog-grid{grid-template-columns:1fr;}
   .grid4{grid-template-columns:1fr 1fr;}
   .form-grid{grid-template-columns:1fr;}
