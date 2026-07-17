@@ -1,0 +1,21 @@
+---
+// Bordered card with the v1 .bcard hover lift. Becomes a block-level
+// link when href is given.
+import { withBase } from '../lib/url';
+
+interface Props {
+  href?: string;
+  class?: string;
+  [key: string]: unknown;
+}
+
+const { href, class: extra = '', ...rest } = Astro.props;
+
+const cls =
+  `relative rounded-2xl border border-navy/10 bg-white p-7 transition-all duration-500 ease-out-quart hover:-translate-y-1 hover:border-teal/40 hover:shadow-[0_18px_44px_rgba(26,43,74,0.10)] ${extra}`.trim();
+const Tag = href ? 'a' : 'div';
+---
+
+<Tag class={href ? `block ${cls}` : cls} href={href ? withBase(href) : undefined} {...rest}>
+  <slot />
+</Tag>

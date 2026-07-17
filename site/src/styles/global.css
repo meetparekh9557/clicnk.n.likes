@@ -9,4 +9,74 @@
   --color-off: #F7F7F7;
   --font-display: "Space Grotesk", Arial, sans-serif;
   --font-body: "DM Sans", system-ui, sans-serif;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* ---------- Motion utilities (design direction: expo/quart, 600–900ms) ---
+   .reveal        fade + rise once scrolled into view (motion.js adds .in)
+   .reveal-mask   container for staged masked-line entrances: each
+                  .mask-line clips a child span that slides up when the
+                  container gets .in; per-line stagger via style="--d:120ms"
+   .marquee       infinite horizontal strip; duplicate track content once
+   [data-magnetic] subtle cursor-follow hover, handled in motion.js       */
+
+:root {
+  --dur-reveal: 700ms;
+  --dur-line: 900ms;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(26px);
+  transition:
+    opacity var(--dur-reveal) var(--ease-out-quart) var(--d, 0ms),
+    transform var(--dur-reveal) var(--ease-out-quart) var(--d, 0ms);
+}
+.reveal.in {
+  opacity: 1;
+  transform: none;
+}
+
+.mask-line {
+  display: block;
+  overflow: hidden;
+}
+.reveal-mask .mask-line > span {
+  display: block;
+  transform: translateY(112%);
+  transition: transform var(--dur-line) var(--ease-out-expo) var(--d, 0ms);
+}
+.reveal-mask.in .mask-line > span {
+  transform: none;
+}
+
+.marquee {
+  overflow: hidden;
+  white-space: nowrap;
+}
+.marquee-track {
+  display: inline-flex;
+  width: max-content;
+  animation: marquee-scroll 30s linear infinite;
+}
+@keyframes marquee-scroll {
+  to { transform: translateX(-50%); }
+}
+
+[data-magnetic] {
+  transition: transform 0.3s var(--ease-out-quart);
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .reveal-mask .mask-line > span {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .marquee-track {
+    animation: none;
+  }
 }
