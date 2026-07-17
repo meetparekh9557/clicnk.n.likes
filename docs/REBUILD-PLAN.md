@@ -32,9 +32,15 @@ Hard gates: Lighthouse ≥95/page, <2s mobile, zero horizontal overflow at
 
 - [x] Scaffold `site/` (Astro 5 + Tailwind 4 + React islands), brand tokens,
       Base layout with per-page SEO. Build passing.
-- [ ] Shared shell: Nav (real links), Footer (contact/socials/legal), button +
+- [x] Shared shell: Nav (real links), Footer (contact/socials/legal), button +
       card components, motion utilities (easing tokens, reveal-on-scroll,
-      staged hero entrance), Lucide icons.
+      staged hero entrance), Lucide icons. URL scheme locked in
+      `site/src/data/site.ts`: services live at `/services/<slug>/`; other
+      pages at `/work/`, `/about/`, `/insights/`, `/tools/`, `/faq/`,
+      `/contact/`, `/privacy/`, `/terms/`. Footer newsletter form deliberately
+      deferred to the forms/Apps Script wiring milestone (nothing ships dead).
+      Note: Lucide has no brand icons — Instagram/LinkedIn glyphs are v1's
+      inline SVGs.
 - [ ] Homepage: audit-weapon hero (URL input → live scan moment), 3-steps
       strip, services bento, "How we're different", tools teaser, lead form.
 - [ ] GitHub Actions deploy to a preview (build `site/` on push; do NOT touch

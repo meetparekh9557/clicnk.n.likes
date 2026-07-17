@@ -1,0 +1,31 @@
+---
+// Pill button, ported from v1's .btn-primary / .btn-outline. Renders an
+// <a> when href is given, a <button> otherwise. `arrow` appends the
+// Lucide arrow; `magnetic` opts into the cursor-follow hover (motion.js).
+import ArrowRight from '@lucide/astro/icons/arrow-right';
+
+interface Props {
+  href?: string;
+  variant?: 'primary' | 'outline';
+  arrow?: boolean;
+  magnetic?: boolean;
+  class?: string;
+  [key: string]: unknown;
+}
+
+const { href, variant = 'primary', arrow = false, magnetic = false, class: extra = '', ...rest } = Astro.props;
+
+const base =
+  'inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 text-sm font-semibold transition-all duration-300 ease-out-quart focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-dark';
+const variants = {
+  primary: 'bg-navy text-white hover:bg-coral hover:-translate-y-0.5',
+  outline: 'border-[1.5px] border-navy/15 text-navy hover:border-teal hover:text-teal-dark hover:-translate-y-0.5',
+};
+const cls = `${base} ${variants[variant]} ${extra}`.trim();
+const Tag = href ? 'a' : 'button';
+---
+
+<Tag class={cls} href={href} data-magnetic={magnetic ? '' : undefined} {...rest}>
+  <slot />
+  {arrow && <ArrowRight size={16} stroke-width={2.4} aria-hidden="true" />}
+</Tag>

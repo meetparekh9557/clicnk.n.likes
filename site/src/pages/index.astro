@@ -1,12 +1,45 @@
 ---
+// Interim homepage: exercises every piece of the shared shell (Nav,
+// Footer, Button, Card, masked-line hero, reveal-on-scroll) so the shell
+// can be tested end-to-end. Replaced wholesale by the real audit-weapon
+// homepage in the next milestone.
 import Base from '../layouts/Base.astro';
-import '../styles/global.css';
+import Button from '../components/Button.astro';
+import Card from '../components/Card.astro';
+import { services } from '../data/site';
 ---
-<Base title="Click.n.likes | Organic Growth, Engineered" description="Full-stack organic growth agency: SEO, AI Search, Social, Content, Websites and Paid Media.">
-  <main class="min-h-screen grid place-items-center p-8">
-    <div class="max-w-xl text-center">
-      <h1 class="font-display text-4xl font-bold">Phase 2 shell: standing.</h1>
-      <p class="mt-4 text-gray-500">Astro + Tailwind + React islands. Real pages, real URLs. The v1 site keeps serving until this one passes every test.</p>
+<Base
+  title="Click.n.likes | Organic Growth, Engineered"
+  description="Full-stack organic growth agency: SEO, AI Search, Social, Content, Websites and Paid Media."
+>
+  <section class="mx-auto max-w-6xl px-[5vw] pt-20 pb-16">
+    <h1 class="reveal-mask font-display text-[clamp(2.4rem,5.4vw,4.4rem)] leading-[1.06] font-bold">
+      <span class="mask-line"><span>We build digital presence</span></span>
+      <span class="mask-line" style="--d:120ms"><span>that turns into <span class="text-teal-dark">paying customers</span>.</span></span>
+    </h1>
+    <p class="reveal mt-6 max-w-xl text-lg text-navy/70" style="--d:280ms">
+      Click.n.likes is a full-stack organic growth agency: SEO, AI Search, Social, Content and Websites, backed by
+      paid media when it helps. Built for businesses anywhere in the world who are done paying for impressions that
+      do not book appointments.
+    </p>
+    <div class="reveal mt-8 flex flex-wrap gap-4" style="--d:380ms">
+      <Button href="/contact/" arrow magnetic>Get your instant quote</Button>
+      <Button href="/work/" variant="outline">See real results</Button>
     </div>
-  </main>
+  </section>
+
+  <section class="border-t border-navy/10 bg-off">
+    <div class="mx-auto max-w-6xl px-[5vw] py-16">
+      <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">01 — Services</p>
+      <h2 class="reveal mt-3 font-display text-3xl font-bold" style="--d:80ms">What we build for you</h2>
+      <div class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {services.map((s, i) => (
+          <Card href={s.href} class="reveal" style={`--d:${i * 70}ms`}>
+            <b class="font-display text-lg font-semibold text-navy">{s.title}</b>
+            <p class="mt-2 text-sm text-navy/60">{s.blurb}</p>
+          </Card>
+        ))}
+      </div>
+    </div>
+  </section>
 </Base>

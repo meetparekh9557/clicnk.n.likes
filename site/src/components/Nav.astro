@@ -1,0 +1,141 @@
+---
+// Fixed top navigation with real per-page URLs. Desktop: hover/focus
+// dropdown for the seven services. Mobile: hamburger panel + scrim.
+// Links come from src/data/site.ts so Nav and Footer never drift apart.
+import ArrowRight from '@lucide/astro/icons/arrow-right';
+import ChevronDown from '@lucide/astro/icons/chevron-down';
+import { services, primaryNav } from '../data/site';
+
+const path = Astro.url.pathname;
+const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+const onServices = path.startsWith('/services/');
+
+const itemCls = (active: boolean) =>
+  `rounded-lg px-3.5 py-2.5 text-[14.5px] font-medium transition-colors hover:text-teal-dark ${
+    active ? 'text-teal-dark' : 'text-navy'
+  }`;
+---
+
+<header
+  id="topnav"
+  class="fixed inset-x-0 top-0 z-50 flex items-center justify-between border-b border-navy/10 bg-white/75 px-[5vw] py-4 backdrop-blur-xl transition-all duration-300 ease-out-quart"
+>
+  <a href="/" class="flex shrink-0 items-center" aria-label="Click.n.likes — home">
+    <img src="/logo.png" alt="Click.n.likes" width="129" height="30" class="h-[30px] w-auto" />
+  </a>
+
+  <nav class="hidden items-center gap-1 lg:flex" aria-label="Primary">
+    <a href="/" class={itemCls(isActive('/'))} aria-current={isActive('/') ? 'page' : undefined}>Home</a>
+
+    <div class="group relative">
+      <button
+        type="button"
+        class={`${itemCls(onServices)} inline-flex items-center gap-1`}
+        aria-haspopup="true"
+        aria-expanded="false"
+      >
+        Services
+        <ChevronDown size={14} stroke-width={2.4} aria-hidden="true" class="transition-transform duration-300 group-hover:rotate-180" />
+      </button>
+      <div
+        class="invisible absolute top-full left-0 min-w-[300px] translate-y-2 rounded-2xl border border-navy/10 bg-white p-2 opacity-0 shadow-[0_18px_44px_rgba(26,43,74,0.12)] transition-all duration-300 ease-out-quart group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100"
+      >
+        {services.map((s) => (
+          <a href={s.href} class="block rounded-xl px-4 py-3 transition-colors hover:bg-teal/10">
+            <b class="block text-sm font-semibold text-navy">{s.title}</b>
+            <span class="mt-0.5 block text-xs text-navy/55">{s.blurb}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+
+    {primaryNav.map((item) => (
+      <a href={item.href} class={itemCls(isActive(item.href))} aria-current={isActive(item.href) ? 'page' : undefined}>
+        {item.title}
+      </a>
+    ))}
+  </nav>
+
+  <div class="flex items-center gap-3">
+    <a
+      href="/contact/"
+      class="hidden items-center gap-2 rounded-full bg-navy px-5 py-2.5 text-sm font-semibold text-white transition-all duration-300 ease-out-quart hover:bg-coral lg:inline-flex"
+      data-magnetic
+    >
+      Get a quote
+      <ArrowRight size={14} stroke-width={2.4} aria-hidden="true" />
+    </a>
+    <button
+      type="button"
+      id="navToggle"
+      class="flex h-10 w-10 flex-col items-center justify-center gap-[5px] rounded-lg lg:hidden"
+      aria-label="Open menu"
+      aria-expanded="false"
+      aria-controls="mobilePanel"
+    >
+      <span class="h-[2px] w-6 rounded bg-navy transition-all duration-300"></span>
+      <span class="h-[2px] w-6 rounded bg-navy transition-all duration-300"></span>
+      <span class="h-[2px] w-6 rounded bg-navy transition-all duration-300"></span>
+    </button>
+  </div>
+</header>
+
+<div id="navScrim" class="invisible fixed inset-0 z-40 bg-navy/40 opacity-0 transition-all duration-300 lg:hidden" aria-hidden="true"></div>
+
+<nav
+  id="mobilePanel"
+  class="invisible fixed inset-y-0 right-0 z-50 w-[min(320px,85vw)] translate-x-full overflow-y-auto bg-white px-6 pt-20 pb-10 shadow-[0_0_60px_rgba(26,43,74,0.18)] transition-all duration-500 ease-out-expo lg:hidden"
+  aria-label="Mobile"
+>
+  <a href="/" class="block border-b border-navy/10 py-3.5 font-medium text-navy">Home</a>
+  <p class="pt-4 pb-1 text-xs font-semibold tracking-[0.08em] text-navy/50 uppercase">
+    Services <span class="normal-case">(each includes a free check)</span>
+  </p>
+  {services.map((s) => (
+    <a href={s.href} class="block border-b border-navy/10 py-3 pl-3 text-[14.5px] text-navy/80">{s.title}</a>
+  ))}
+  {primaryNav.map((item) => (
+    <a href={item.href} class="block border-b border-navy/10 py-3.5 font-medium text-navy">{item.title}</a>
+  ))}
+  <a href="/contact/" class="mt-6 inline-flex items-center gap-2 rounded-full bg-navy px-6 py-3.5 text-sm font-semibold text-white">
+    Get a quote
+    <ArrowRight size={14} stroke-width={2.4} aria-hidden="true" />
+  </a>
+</nav>
+
+<script>
+  function initNav() {
+    const topnav = document.getElementById('topnav');
+    const toggle = document.getElementById('navToggle');
+    const panel = document.getElementById('mobilePanel');
+    const scrim = document.getElementById('navScrim');
+    if (!topnav || !toggle || !panel || !scrim) return;
+
+    const onScroll = () => {
+      topnav.classList.toggle('shadow-[0_10px_30px_rgba(26,43,74,0.08)]', window.scrollY > 8);
+      topnav.classList.toggle('py-2.5', window.scrollY > 8);
+      topnav.classList.toggle('py-4', window.scrollY <= 8);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    const setOpen = (open: boolean) => {
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      panel.classList.toggle('invisible', !open);
+      panel.classList.toggle('translate-x-full', !open);
+      scrim.classList.toggle('invisible', !open);
+      scrim.classList.toggle('opacity-0', !open);
+      document.body.style.overflow = open ? 'hidden' : '';
+    };
+    toggle.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
+    scrim.addEventListener('click', () => setOpen(false));
+    panel.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') setOpen(false);
+    });
+  }
+
+  initNav();
+  document.addEventListener('astro:page-load', initNav);
+</script>

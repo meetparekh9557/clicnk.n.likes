@@ -1,6 +1,10 @@
 ---
-// Base layout: every page gets real per-page SEO. Phase 2 of the
-// premium rebuild scope; brand voice rules live in /CLAUDE.md.
+// Base layout: every page gets real per-page SEO plus the shared shell
+// (Nav, Footer, motion utilities). Brand voice rules live in /CLAUDE.md.
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+
 interface Props { title: string; description: string; canonical?: string; }
 const { title, description, canonical } = Astro.props;
 const canonicalURL = canonical ?? new URL(Astro.url.pathname, Astro.site).href;
@@ -16,11 +20,24 @@ const canonicalURL = canonical ?? new URL(Astro.url.pathname, Astro.site).href;
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalURL} />
+    <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#1A2B4A" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet" />
   </head>
-  <body class="bg-white text-navy font-body antialiased">
-    <slot />
+  <body class="bg-white font-body text-navy antialiased">
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[60] focus:rounded-lg focus:bg-navy focus:px-4 focus:py-2 focus:text-white"
+    >
+      Skip to content
+    </a>
+    <Nav />
+    <main id="main" class="pt-[72px]">
+      <slot />
+    </main>
+    <Footer />
+    <script src="../scripts/motion.js"></script>
   </body>
 </html>

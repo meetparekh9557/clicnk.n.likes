@@ -1,0 +1,65 @@
+---
+// Site footer: brand + socials, service links, company links, contact,
+// legal strip. Content matches v1's footer; the newsletter form returns
+// with the forms/Apps Script wiring milestone so nothing ships dead.
+// Brand glyphs (Instagram/LinkedIn) are inline SVGs from v1 — Lucide
+// carries no brand icons.
+import { services, primaryNav, contact } from '../data/site';
+
+const year = new Date().getFullYear();
+const linkCls = 'block py-1 text-sm text-white/65 transition-colors hover:text-teal';
+const socialCls =
+  'inline-flex h-9 w-9 items-center justify-center rounded-[10px] border border-white/20 text-white/75 transition-colors hover:border-teal hover:text-teal';
+---
+
+<footer class="bg-navy text-white/80">
+  <div class="mx-auto grid max-w-6xl gap-10 px-[5vw] py-16 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
+    <div class="sm:col-span-2 lg:col-span-1">
+      <img src="/logo.png" alt="Click.n.likes" width="112" height="26" class="h-[26px] w-auto brightness-0 invert" />
+      <p class="mt-4 max-w-[280px] text-[13.5px] leading-relaxed text-white/60">
+        Full-stack organic growth for businesses and D2C founders anywhere in the world. SEO, AI Search, Social,
+        Content, Websites, Paid.
+      </p>
+      <div class="mt-5 flex gap-3.5">
+        <a href={contact.instagram} target="_blank" rel="noopener" aria-label="Instagram" class={socialCls}>
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="3.5"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg>
+        </a>
+        <a href={contact.linkedin} target="_blank" rel="noopener" aria-label="LinkedIn" class={socialCls}>
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S.02 4.88.02 3.5C.02 2.12 1.13 1 2.5 1s2.48 1.12 2.48 2.5zM.5 8h4V23h-4V8zm7.5 0h3.8v2.05h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1V23h-4v-7.9c0-1.88-.03-4.3-2.62-4.3-2.62 0-3.02 2.05-3.02 4.17V23H8V8z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div>
+      <h4 class="mb-4 text-[13px] font-semibold tracking-[0.08em] text-white uppercase">Services</h4>
+      {services.map((s) => <a href={s.href} class={linkCls}>{s.title}</a>)}
+    </div>
+
+    <div>
+      <h4 class="mb-4 text-[13px] font-semibold tracking-[0.08em] text-white uppercase">Company</h4>
+      {primaryNav.map((item) => <a href={item.href} class={linkCls}>{item.title}</a>)}
+      <a href="/contact/" class={linkCls}>Get a quote</a>
+    </div>
+
+    <div>
+      <h4 class="mb-4 text-[13px] font-semibold tracking-[0.08em] text-white uppercase">Contact</h4>
+      <a href={`mailto:${contact.email}`} class={linkCls}>{contact.email}</a>
+      <a href={contact.whatsappHref} target="_blank" rel="noopener" class={linkCls}>
+        {contact.whatsappDisplay} (WhatsApp)
+      </a>
+      <a href={contact.instagram} target="_blank" rel="noopener" class={linkCls}>Instagram</a>
+      <a href={contact.linkedin} target="_blank" rel="noopener" class={linkCls}>LinkedIn</a>
+      <p class="py-1 text-sm text-white/65">{contact.location}</p>
+    </div>
+  </div>
+
+  <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 border-t border-white/10 px-[5vw] py-6 text-[12.5px] text-white/50">
+    <span>© {year} Click.n.likes. All rights reserved.</span>
+    <span>
+      <a href="/privacy/" class="transition-colors hover:text-teal">Privacy</a>
+      <span class="mx-1">·</span>
+      <a href="/terms/" class="transition-colors hover:text-teal">Terms</a>
+    </span>
+    <span>Real growth. Real revenue. No vanity metrics.</span>
+  </div>
+</footer>
