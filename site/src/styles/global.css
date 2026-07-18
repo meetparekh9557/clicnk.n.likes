@@ -1,5 +1,18 @@
 @import "tailwindcss";
 
+/* Self-hosted fonts (no Google CDN request): keeps the page free of
+   third-party calls, honouring the Privacy Policy's "no third-party
+   trackers" promise and the Lighthouse/<2s gate. Weights match what the
+   design uses: Space Grotesk 400–700, DM Sans 400/500/700 + italic. */
+@import "@fontsource/space-grotesk/400.css";
+@import "@fontsource/space-grotesk/500.css";
+@import "@fontsource/space-grotesk/600.css";
+@import "@fontsource/space-grotesk/700.css";
+@import "@fontsource/dm-sans/400.css";
+@import "@fontsource/dm-sans/400-italic.css";
+@import "@fontsource/dm-sans/500.css";
+@import "@fontsource/dm-sans/700.css";
+
 /* Brand tokens: ported from the v1 site, single source of truth. */
 @theme {
   --color-teal: #4ECDC4;
@@ -67,6 +80,31 @@
 [data-magnetic] {
   transition: transform 0.3s var(--ease-out-quart);
   will-change: transform;
+}
+
+/* ---------- Self-drawing bar chart (CtrChart) --------------------------
+   Bars carry the accent/gray by role; they grow from the baseline (left)
+   when the figure scrolls into view. Without JS the bars render at full
+   width (the `.js` flag, set in Base's <head>, opts into the animation),
+   so the chart is never blank. --------------------------------------- */
+.ctr-bar {
+  width: var(--target);
+  background: color-mix(in srgb, var(--color-navy) 22%, white);
+}
+.ctr-bar[data-hl] {
+  background: var(--color-teal-dark);
+}
+.js .ctr-chart .ctr-bar {
+  width: 0;
+  transition: width 1000ms var(--ease-out-expo) calc(var(--i) * 70ms);
+}
+.js .ctr-chart.in .ctr-bar {
+  width: var(--target);
+}
+@media (prefers-reduced-motion: reduce) {
+  .js .ctr-chart .ctr-bar {
+    transition: none;
+  }
 }
 
 /* ---------- Article typography (Insights posts) -------------------

@@ -3,6 +3,7 @@
 // (Nav, Footer, motion utilities). Brand voice rules live in /CLAUDE.md.
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
+import { withBase } from '../lib/url';
 import '../styles/global.css';
 
 interface Props { title: string; description: string; canonical?: string; }
@@ -21,18 +22,22 @@ const canonicalURL = canonical ?? new URL(cleanPath, Astro.site).href;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Progressive-enhancement flag: lets scroll-triggered animations
+         (e.g. the self-drawing charts) start from zero only when JS can
+         finish them; without JS the content renders at full state. -->
+    <script is:inline>document.documentElement.classList.add('js');</script>
     <title>{title}</title>
     <meta name="description" content={description} />
     {isPreview && <meta name="robots" content="noindex,nofollow" />}
     <link rel="canonical" href={canonicalURL} />
+    <link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:type" content="website" />
     <meta name="theme-color" content="#1A2B4A" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet" />
+    <!-- Fonts are self-hosted via @fontsource (imported in global.css);
+         no external font request is made. -->
   </head>
   <body class="bg-white font-body text-navy antialiased">
     <a
