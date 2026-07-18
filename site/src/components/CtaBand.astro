@@ -1,0 +1,38 @@
+---
+// Reusable pre-footer CTA band. Rendered globally from Base (opt out per
+// page with `hideCta`) so every content page and article ends on a clear
+// call to action. Buttons are styled for the navy background directly
+// (Button's outline variant is navy-on-navy, so inline styles here).
+import { withBase } from '../lib/url';
+interface Props {
+  title?: string;
+  text?: string;
+}
+const {
+  title = 'Ready to be found, and chosen?',
+  text = "Enter your site for a free live scan, or build your instant quote. No sales call needed to start.",
+} = Astro.props;
+---
+<section class="border-t border-white/10 bg-navy">
+  <div class="mx-auto max-w-4xl px-[5vw] py-16 text-center">
+    <div class="pointer-events-none absolute"></div>
+    <h2 class="reveal font-display text-[clamp(1.7rem,3.4vw,2.6rem)] leading-[1.12] font-bold text-white">{title}</h2>
+    <p class="reveal mx-auto mt-4 max-w-xl text-lg text-white/70" style="--d:100ms">{text}</p>
+    <div class="reveal mt-8 flex flex-wrap items-center justify-center gap-3.5" style="--d:180ms">
+      <a
+        href={withBase('/contact/')}
+        data-magnetic
+        class="inline-flex items-center gap-2 rounded-full bg-teal px-6 py-3.5 text-sm font-semibold text-navy transition-all duration-300 ease-out-quart hover:-translate-y-0.5 hover:bg-white"
+      >
+        Get your instant quote
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+      <a
+        href={withBase('/tools/')}
+        class="inline-flex items-center gap-2 rounded-full border-[1.5px] border-white/35 px-6 py-3.5 text-sm font-semibold text-white transition-all duration-300 ease-out-quart hover:border-teal hover:text-teal"
+      >
+        Scan my site free
+      </a>
+    </div>
+  </div>
+</section>

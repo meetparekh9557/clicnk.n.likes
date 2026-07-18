@@ -7,7 +7,6 @@ import Button from '../components/Button.astro';
 import Card from '../components/Card.astro';
 import HeroScan from '../components/islands/HeroScan.jsx';
 import LeadForm from '../components/islands/LeadForm.jsx';
-import Aurora from '../components/Aurora.astro';
 import AuditDemo from '../components/islands/AuditDemo.jsx';
 import FirstPageCliff from '../components/islands/FirstPageCliff.jsx';
 import StatTile from '../components/StatTile.astro';
@@ -51,10 +50,11 @@ const iconWrap = 'mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 t
 <Base
   title="Click.n.likes | Organic Growth, Engineered"
   description="Full-stack organic growth agency: SEO, AI Search, Social, Content, Websites and Paid Media. Scan your website live and see where you stand before you ever book a call."
+  hideCta
 >
   <!-- ============ HERO: the audit weapon ============ -->
   <section class="relative overflow-hidden">
-    <Aurora />
+    <div class="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-teal/[0.07] via-transparent to-transparent"></div>
     <div class="mx-auto max-w-6xl px-[5vw] pt-14 pb-14 lg:pt-20">
       <div class="grid items-center gap-x-10 gap-y-12 lg:grid-cols-[1.12fr_0.88fr]">
         <!-- Left: message + real scan form -->

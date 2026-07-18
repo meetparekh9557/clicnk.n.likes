@@ -7,7 +7,6 @@
 import Base from '../../layouts/Base.astro';
 import Button from '../../components/Button.astro';
 import Card from '../../components/Card.astro';
-import Aurora from '../../components/Aurora.astro';
 import StatTile from '../../components/StatTile.astro';
 import FirstPageCliff from '../../components/islands/FirstPageCliff.jsx';
 import { serviceDetails, serviceProof } from '../../data/services';
@@ -66,7 +65,7 @@ const HeroIcon = icons[service.cards[0].icon];
 >
   <!-- Hero -->
   <section class="relative overflow-hidden">
-    <Aurora />
+    <div class="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-teal/[0.07] via-transparent to-transparent"></div>
     <div class="mx-auto max-w-6xl px-[5vw] pt-16 pb-12 lg:pt-20">
       <p class="reveal inline-flex items-center gap-2 rounded-full border border-teal/30 bg-teal/5 px-4 py-1.5 text-[13px] font-semibold text-navy">
         <span class="h-1.5 w-1.5 rounded-full bg-teal"></span> {service.eyebrow}

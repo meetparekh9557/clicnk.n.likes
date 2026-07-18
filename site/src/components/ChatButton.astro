@@ -1,0 +1,18 @@
+---
+// Persistent WhatsApp chat button, fixed on every page (rendered from
+// Base). Sits below the mobile nav panel/scrim (z-30) so an open menu
+// covers it. Links to the real WhatsApp line from src/data/site.ts.
+import { contact } from '../data/site';
+---
+<a
+  href={contact.whatsappHref}
+  target="_blank"
+  rel="noopener"
+  aria-label="Chat with us on WhatsApp"
+  class="group fixed right-4 bottom-4 z-30 inline-flex items-center gap-2 rounded-full bg-[#25D366] py-3 pr-5 pl-4 font-semibold text-white shadow-[0_12px_30px_rgba(37,211,102,0.45)] transition-transform duration-300 ease-out-quart hover:-translate-y-0.5 sm:right-6 sm:bottom-6"
+>
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d="M12.04 2c-5.5 0-9.96 4.46-9.96 9.96 0 1.76.46 3.45 1.34 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.004c5.5 0 9.96-4.46 9.96-9.96 0-2.66-1.04-5.16-2.92-7.04A9.9 9.9 0 0 0 12.04 2zm0 18.13h-.003a8.23 8.23 0 0 1-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.25-8.24 2.2 0 4.27.86 5.83 2.42a8.19 8.19 0 0 1 2.41 5.83c0 4.55-3.7 8.24-8.24 8.24zm4.52-6.16c-.25-.12-1.47-.72-1.7-.81-.23-.08-.39-.12-.56.13-.16.24-.64.8-.78.97-.15.16-.29.18-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.02-.38.11-.5.11-.11.25-.29.37-.43.12-.15.16-.25.25-.42.08-.16.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.42-.56-.43l-.48-.01c-.16 0-.43.06-.66.31-.22.24-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.16 1.75 2.67 4.24 3.75.59.25 1.05.4 1.41.52.59.19 1.13.16 1.56.1.47-.07 1.47-.6 1.68-1.18.2-.58.2-1.08.14-1.18-.06-.11-.22-.17-.47-.29z"/>
+  </svg>
+  <span class="hidden text-sm sm:inline">Chat with us</span>
+</a>
