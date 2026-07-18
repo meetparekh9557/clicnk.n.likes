@@ -25,7 +25,7 @@ const SERVICE_OPTIONS = [
   'The full growth stack',
 ];
 
-const BUDGETS = ['Prefer not to say yet', 'Under ₹16,000', '₹16,000 – ₹40,000', '₹40,000 – ₹1,00,000', '₹1,00,000+'];
+const BUDGETS = ['Prefer not to say yet', 'Under ₹16,000', '₹16,000 - ₹40,000', '₹40,000 - ₹1,00,000', '₹1,00,000+'];
 
 const fieldCls =
   'w-full rounded-[10px] border-[1.5px] border-navy/10 bg-white px-4 py-3.5 text-sm text-navy transition-colors outline-none focus:border-teal';

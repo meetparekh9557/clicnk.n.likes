@@ -1,7 +1,7 @@
 ---
 // Stat tile: a single cited market figure. Value + label + source.
 // The value is the loud element; the source keeps every claim honest
-// and checkable (never a client result — see src/data/market.ts).
+// and checkable (never a client result - see src/data/market.ts).
 interface Props { value: string; label: string; source: string; class?: string; }
 const { value, label, source, class: extra = '' } = Astro.props;
 ---

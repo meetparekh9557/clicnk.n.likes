@@ -7,7 +7,8 @@ import Button from '../components/Button.astro';
 import Card from '../components/Card.astro';
 import HeroScan from '../components/islands/HeroScan.jsx';
 import LeadForm from '../components/islands/LeadForm.jsx';
-import CtrChart from '../components/CtrChart.astro';
+import Aurora from '../components/Aurora.astro';
+import FirstPageCliff from '../components/islands/FirstPageCliff.jsx';
 import StatTile from '../components/StatTile.astro';
 import { services } from '../data/site';
 import { marketStats } from '../data/market';
@@ -52,7 +53,7 @@ const iconWrap = 'mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 t
 >
   <!-- ============ HERO: the audit weapon ============ -->
   <section class="relative overflow-hidden">
-    <div class="aurora" aria-hidden="true"></div>
+    <Aurora />
     <div class="mx-auto max-w-6xl px-[5vw] pt-16 pb-14 lg:pt-24">
       <p class="reveal inline-flex items-center gap-2 rounded-full border border-teal/30 bg-teal/5 px-4 py-1.5 text-[13px] font-semibold text-navy">
         <span class="h-1.5 w-1.5 rounded-full bg-teal"></span> Organic growth, engineered for revenue
@@ -111,11 +112,11 @@ const iconWrap = 'mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 t
         Organic isn't a nice-to-have. It's where your buyers already are.
       </h2>
       <p class="reveal mt-3 max-w-2xl text-lg text-navy/70" style="--d:140ms">
-        These are industry figures, not our own clients' numbers — every one is sourced below. The pattern they
+        These are industry figures, not our own clients' numbers - every one is sourced below. The pattern they
         describe is the reason we build the way we do.
       </p>
       <div class="mt-10 grid gap-6 lg:grid-cols-2 lg:items-start">
-        <CtrChart />
+        <FirstPageCliff client:visible />
         <div class="grid gap-5 sm:grid-cols-2">
           {marketStats.map((s, i) => (
             <StatTile value={s.value} label={s.label} source={s.source} class={`reveal`} />
@@ -127,7 +128,7 @@ const iconWrap = 'mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 t
 
   <!-- ============ SERVICES BENTO ============ -->
   <section class="mx-auto max-w-6xl px-[5vw] py-20">
-    <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">01 — What we do</p>
+    <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">01 - What we do</p>
     <h2 class="reveal mt-3 max-w-xl font-display text-[clamp(1.8rem,3.4vw,2.7rem)] leading-[1.12] font-bold text-navy" style="--d:80ms">
       Seven channels. One growth engine.
     </h2>
@@ -154,7 +155,7 @@ const iconWrap = 'mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 t
   <!-- ============ HOW WE'RE DIFFERENT ============ -->
   <section class="border-y border-navy/10 bg-off">
     <div class="mx-auto max-w-6xl px-[5vw] py-20">
-      <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">02 — How we're different</p>
+      <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">02 - How we're different</p>
       <h2 class="reveal mt-3 max-w-2xl font-display text-[clamp(1.8rem,3.4vw,2.7rem)] leading-[1.12] font-bold text-navy" style="--d:80ms">
         Not another agency with a "book a call" button.
       </h2>
@@ -188,7 +189,7 @@ const iconWrap = 'mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 t
 
   <!-- ============ TOOLS TEASER ============ -->
   <section class="mx-auto max-w-6xl px-[5vw] py-20">
-    <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">03 — Try before you talk to us</p>
+    <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">03 - Try before you talk to us</p>
     <h2 class="reveal mt-3 max-w-xl font-display text-[clamp(1.8rem,3.4vw,2.7rem)] leading-[1.12] font-bold text-navy" style="--d:80ms">
       Three free tools. Real math, real signals.
     </h2>
@@ -221,7 +222,7 @@ const iconWrap = 'mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 t
   <section class="border-y border-navy/10 bg-off">
     <div class="mx-auto grid max-w-6xl gap-12 px-[5vw] py-20 lg:grid-cols-2 lg:items-center">
       <div class="reveal">
-        <p class="text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">04 — Why Click.n.likes</p>
+        <p class="text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">04 - Why Click.n.likes</p>
         <h2 class="mt-3 font-display text-[clamp(1.8rem,3.4vw,2.7rem)] leading-[1.12] font-bold text-navy">
           Built for people burned by agencies before.
         </h2>
@@ -247,7 +248,7 @@ const iconWrap = 'mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 t
   <!-- ============ LEAD FORM ============ -->
   <section class="mx-auto max-w-6xl px-[5vw] py-20">
     <div class="mx-auto max-w-2xl text-center">
-      <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">05 — Quick check</p>
+      <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">05 - Quick check</p>
       <h2 class="reveal mt-3 font-display text-[clamp(1.8rem,3.4vw,2.7rem)] leading-[1.12] font-bold text-navy" style="--d:80ms">
         Tell us about your business, get a growth snapshot back.
       </h2>
