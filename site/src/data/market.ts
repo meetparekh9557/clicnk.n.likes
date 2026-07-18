@@ -1,4 +1,4 @@
-// Real, cited market statistics — NOT client results. Every number here
+// Real, cited market statistics - NOT client results. Every number here
 // is an industry figure with a named, checkable source, shown on-page.
 // Client-specific outcomes belong in case studies (Phase 4) with their
 // own numbers and permissions. Re-verify against live sources when
@@ -31,13 +31,13 @@ export const ctrByPosition: CtrPoint[] = [
   { position: 10, ctr: 2.1 },
 ];
 
-export const ctrSource = 'Backlinko — analysis of 4 million Google search results';
+export const ctrSource = 'Backlinko - analysis of 4 million Google search results';
 
 // Headline market figures (stat tiles).
 export const marketStats: MarketStat[] = [
   {
     value: '53%',
-    label: 'of all trackable website traffic starts with organic search — more than every other channel combined',
+    label: 'of all trackable website traffic starts with organic search - more than every other channel combined',
     source: 'BrightEdge Research',
   },
   {
@@ -46,8 +46,8 @@ export const marketStats: MarketStat[] = [
     source: 'Google / Think with Google',
   },
   {
-    value: '4–6 months',
-    label: 'the honest timeline for SEO to compound into results — Google itself says four months to a year',
+    value: '4-6 months',
+    label: 'the honest timeline for SEO to compound into results - Google itself says four months to a year',
     source: 'Google Search Central',
   },
   {

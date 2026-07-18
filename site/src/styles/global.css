@@ -3,7 +3,7 @@
 /* Self-hosted fonts (no Google CDN request): keeps the page free of
    third-party calls, honouring the Privacy Policy's "no third-party
    trackers" promise and the Lighthouse/<2s gate. Weights match what the
-   design uses: Space Grotesk 400–700, DM Sans 400/500/700 + italic. */
+   design uses: Space Grotesk 400-700, DM Sans 400/500/700 + italic. */
 @import "@fontsource/space-grotesk/400.css";
 @import "@fontsource/space-grotesk/500.css";
 @import "@fontsource/space-grotesk/600.css";
@@ -26,7 +26,7 @@
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-/* ---------- Motion utilities (design direction: expo/quart, 600–900ms) ---
+/* ---------- Motion utilities (design direction: expo/quart, 600-900ms) ---
    .reveal        fade + rise once scrolled into view (motion.js adds .in)
    .reveal-mask   container for staged masked-line entrances: each
                   .mask-line clips a child span that slides up when the
@@ -80,6 +80,66 @@
 [data-magnetic] {
   transition: transform 0.3s var(--ease-out-quart);
   will-change: transform;
+}
+
+/* ---------- Aurora hero background (continuous, CSS-only) --------------
+   Three soft, blurred colour fields that sweep across the whole hero and
+   breathe forever - the ambient motion the design direction calls for,
+   present across the full section, not just the corners. Faster loops
+   (14-20s) and larger travel so the movement actually reads. Contained
+   by its own overflow:hidden so the blobs never cause page overflow, and
+   frozen under prefers-reduced-motion. Reusable via components/Aurora.astro. */
+.aurora {
+  position: absolute;
+  inset: 0;
+  z-index: -10;
+  overflow: hidden;
+  pointer-events: none;
+}
+.aurora-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(72px);
+  will-change: transform;
+}
+.aurora-1 {
+  width: 62vw;
+  height: 62vw;
+  left: -12%;
+  top: -28%;
+  background: radial-gradient(circle, rgba(78, 205, 196, 0.5), transparent 66%);
+  animation: aurora-a 14s var(--ease-out-quart) infinite alternate;
+}
+.aurora-2 {
+  width: 54vw;
+  height: 54vw;
+  right: -14%;
+  top: -16%;
+  background: radial-gradient(circle, rgba(255, 71, 87, 0.22), transparent 66%);
+  animation: aurora-b 17s var(--ease-out-quart) infinite alternate;
+}
+.aurora-3 {
+  width: 50vw;
+  height: 50vw;
+  left: 30%;
+  bottom: -34%;
+  background: radial-gradient(circle, rgba(51, 167, 159, 0.3), transparent 66%);
+  animation: aurora-c 20s var(--ease-out-quart) infinite alternate;
+}
+@keyframes aurora-a {
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(32%, 26%) scale(1.28); }
+}
+@keyframes aurora-b {
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(-30%, 32%) scale(1.22); }
+}
+@keyframes aurora-c {
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(-24%, -28%) scale(1.32); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .aurora-blob { animation: none; }
 }
 
 /* ---------- Self-drawing bar chart (CtrChart) --------------------------

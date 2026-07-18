@@ -1,5 +1,5 @@
 /* ============================================================
-   SHARED SITE ENGINE — ported verbatim from v1 (index.html).
+   SHARED SITE ENGINE - ported verbatim from v1 (index.html).
    Single source of truth for the Apps Script backend client, the
    report-email builder and the deterministic scoring math. Used by
    the hero scan island and every migrated free tool. Scoring must
