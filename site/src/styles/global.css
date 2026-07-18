@@ -82,13 +82,12 @@
   will-change: transform;
 }
 
-/* ---------- Aurora hero background (continuous, CSS-only) --------------
-   Three soft, blurred colour fields that sweep across the whole hero and
-   breathe forever - the ambient motion the design direction calls for,
-   present across the full section, not just the corners. Faster loops
-   (14-20s) and larger travel so the movement actually reads. Contained
-   by its own overflow:hidden so the blobs never cause page overflow, and
-   frozen under prefers-reduced-motion. Reusable via components/Aurora.astro. */
+/* ---------- Hero backdrop: mesh + rotating sheen + cursor parallax -----
+   A more alive hero: vivid colour fields on faster loops (9-13s), a slow
+   rotating conic "sheen" for a premium moving light, and cursor parallax
+   (the whole field drifts opposite the pointer via --px/--py set in
+   motion.js - desktop only). Contained by overflow:hidden; fully frozen
+   under prefers-reduced-motion. Reusable via components/Aurora.astro. */
 .aurora {
   position: absolute;
   inset: 0;
@@ -96,50 +95,134 @@
   overflow: hidden;
   pointer-events: none;
 }
+.aurora-field {
+  position: absolute;
+  inset: -10%;
+  transform: translate3d(calc(var(--px, 0) * -18px), calc(var(--py, 0) * -18px), 0);
+  transition: transform 0.4s var(--ease-out-quart);
+}
 .aurora-blob {
   position: absolute;
   border-radius: 50%;
-  filter: blur(72px);
+  filter: blur(64px);
   will-change: transform;
 }
 .aurora-1 {
-  width: 62vw;
-  height: 62vw;
-  left: -12%;
-  top: -28%;
-  background: radial-gradient(circle, rgba(78, 205, 196, 0.5), transparent 66%);
-  animation: aurora-a 14s var(--ease-out-quart) infinite alternate;
+  width: 58vw;
+  height: 58vw;
+  left: -10%;
+  top: -26%;
+  background: radial-gradient(circle, rgba(78, 205, 196, 0.62), transparent 64%);
+  animation: aurora-a 9s var(--ease-out-quart) infinite alternate;
 }
 .aurora-2 {
-  width: 54vw;
-  height: 54vw;
-  right: -14%;
-  top: -16%;
-  background: radial-gradient(circle, rgba(255, 71, 87, 0.22), transparent 66%);
-  animation: aurora-b 17s var(--ease-out-quart) infinite alternate;
-}
-.aurora-3 {
   width: 50vw;
   height: 50vw;
-  left: 30%;
-  bottom: -34%;
-  background: radial-gradient(circle, rgba(51, 167, 159, 0.3), transparent 66%);
-  animation: aurora-c 20s var(--ease-out-quart) infinite alternate;
+  right: -12%;
+  top: -14%;
+  background: radial-gradient(circle, rgba(255, 71, 87, 0.3), transparent 64%);
+  animation: aurora-b 11s var(--ease-out-quart) infinite alternate;
+}
+.aurora-3 {
+  width: 46vw;
+  height: 46vw;
+  left: 32%;
+  bottom: -32%;
+  background: radial-gradient(circle, rgba(51, 167, 159, 0.42), transparent 64%);
+  animation: aurora-c 13s var(--ease-out-quart) infinite alternate;
+}
+.aurora-sheen {
+  position: absolute;
+  inset: -25%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    rgba(78, 205, 196, 0.16) 60deg,
+    transparent 140deg,
+    rgba(255, 71, 87, 0.08) 220deg,
+    transparent 320deg
+  );
+  filter: blur(30px);
+  animation: aurora-spin 16s linear infinite;
+  will-change: transform;
 }
 @keyframes aurora-a {
   from { transform: translate(0, 0) scale(1); }
-  to   { transform: translate(32%, 26%) scale(1.28); }
+  to   { transform: translate(34%, 28%) scale(1.3); }
 }
 @keyframes aurora-b {
   from { transform: translate(0, 0) scale(1); }
-  to   { transform: translate(-30%, 32%) scale(1.22); }
+  to   { transform: translate(-32%, 34%) scale(1.24); }
 }
 @keyframes aurora-c {
   from { transform: translate(0, 0) scale(1); }
-  to   { transform: translate(-24%, -28%) scale(1.32); }
+  to   { transform: translate(-26%, -30%) scale(1.34); }
+}
+@keyframes aurora-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ---------- Animated live-audit card (AuditDemo) ----------------------
+   A beam sweeps the card each cycle; signal rows check in on a stagger.
+   Keyed remount in the island restarts these once-through animations. */
+.audit-beam {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 44%;
+  background: linear-gradient(to bottom, rgba(78, 205, 196, 0) 0%, rgba(78, 205, 196, 0.18) 70%, rgba(78, 205, 196, 0.5) 100%);
+  border-bottom: 2px solid rgba(78, 205, 196, 0.7);
+  transform: translateY(-110%);
+  animation: audit-sweep 2.8s var(--ease-out-quart) forwards;
+  pointer-events: none;
+}
+@keyframes audit-sweep {
+  to { transform: translateY(240%); }
+}
+.audit-row {
+  opacity: 0;
+  transform: translateX(8px);
+  animation: audit-rowin 0.4s var(--ease-out-quart) forwards;
+}
+.audit-row .audit-check {
+  transform: scale(0.4);
+  animation: audit-pop 0.4s var(--ease-out-expo) forwards;
+  animation-delay: inherit;
+}
+@keyframes audit-rowin {
+  to { opacity: 1; transform: none; }
+}
+@keyframes audit-pop {
+  to { transform: scale(1); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .aurora-blob { animation: none; }
+  .audit-row { opacity: 1; transform: none; animation: none; }
+  .audit-row .audit-check { transform: none; animation: none; }
+}
+
+/* Continuous gradient shimmer through a key phrase (headline accent). */
+.cnl-shimmer {
+  background: linear-gradient(100deg, #2f9a92 0%, #4ecdc4 28%, #7ff0e8 42%, #4ecdc4 58%, #2f9a92 100%);
+  background-size: 250% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: cnl-shimmer 4.5s linear infinite;
+}
+@keyframes cnl-shimmer {
+  to { background-position: -250% center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aurora-blob,
+  .aurora-sheen { animation: none; }
+  .aurora-field { transform: none; }
+  .cnl-shimmer {
+    animation: none;
+    color: var(--color-teal-dark);
+    -webkit-text-fill-color: var(--color-teal-dark);
+  }
 }
 
 /* ---------- Self-drawing bar chart (CtrChart) --------------------------

@@ -1,10 +1,15 @@
 ---
-// Reusable ambient aurora for hero sections across the site. Continuous,
-// CSS-only, covers the whole section, frozen under prefers-reduced-motion.
-// Drop inside a `position: relative; overflow: hidden` hero wrapper.
+// Reusable hero backdrop across the site: vivid colour mesh + rotating
+// sheen + cursor parallax (motion.js drives --px/--py on the [data-parallax]
+// wrapper). Continuous, CSS-only, covers the whole section, frozen under
+// prefers-reduced-motion. Drop inside a `position: relative; overflow:
+// hidden` hero wrapper.
 ---
 <div class="aurora" aria-hidden="true">
-  <span class="aurora-blob aurora-1"></span>
-  <span class="aurora-blob aurora-2"></span>
-  <span class="aurora-blob aurora-3"></span>
+  <div class="aurora-field" data-parallax>
+    <span class="aurora-blob aurora-1"></span>
+    <span class="aurora-blob aurora-2"></span>
+    <span class="aurora-blob aurora-3"></span>
+    <span class="aurora-sheen"></span>
+  </div>
 </div>
