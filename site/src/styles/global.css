@@ -82,6 +82,31 @@
   will-change: transform;
 }
 
+/* ---------- Self-drawing bar chart (CtrChart) --------------------------
+   Bars carry the accent/gray by role; they grow from the baseline (left)
+   when the figure scrolls into view. Without JS the bars render at full
+   width (the `.js` flag, set in Base's <head>, opts into the animation),
+   so the chart is never blank. --------------------------------------- */
+.ctr-bar {
+  width: var(--target);
+  background: color-mix(in srgb, var(--color-navy) 22%, white);
+}
+.ctr-bar[data-hl] {
+  background: var(--color-teal-dark);
+}
+.js .ctr-chart .ctr-bar {
+  width: 0;
+  transition: width 1000ms var(--ease-out-expo) calc(var(--i) * 70ms);
+}
+.js .ctr-chart.in .ctr-bar {
+  width: var(--target);
+}
+@media (prefers-reduced-motion: reduce) {
+  .js .ctr-chart .ctr-bar {
+    transition: none;
+  }
+}
+
 /* ---------- Article typography (Insights posts) -------------------
    Article bodies are first-party HTML ported from v1 and rendered via
    set:html, so they can't carry Tailwind utility classes. ---------- */

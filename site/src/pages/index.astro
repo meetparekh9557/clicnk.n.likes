@@ -7,7 +7,10 @@ import Button from '../components/Button.astro';
 import Card from '../components/Card.astro';
 import HeroScan from '../components/islands/HeroScan.jsx';
 import LeadForm from '../components/islands/LeadForm.jsx';
+import CtrChart from '../components/CtrChart.astro';
+import StatTile from '../components/StatTile.astro';
 import { services } from '../data/site';
+import { marketStats } from '../data/market';
 import { withBase } from '../lib/url';
 import Search from '@lucide/astro/icons/search';
 import MapPin from '@lucide/astro/icons/map-pin';
@@ -77,10 +80,10 @@ const iconWrap = 'mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 t
         <span class="text-navy/40">→</span>
         <span class="inline-flex items-center gap-2 rounded-full border border-teal/30 bg-teal/5 py-1.5 pr-4 pl-1.5"><b class="grid h-[22px] w-[22px] place-items-center rounded-full bg-navy font-display text-xs text-white">3</b>We get to work</span>
       </div>
-      <div class="reveal mt-10 flex flex-wrap gap-10" style="--d:560ms">
-        <div><b class="block font-display text-3xl font-bold text-navy">4-5</b><span class="text-sm text-navy/55">Avg. months to page 1</span></div>
-        <div><b class="block font-display text-3xl font-bold text-navy">187%</b><span class="text-sm text-navy/55">Avg. organic traffic lift</span></div>
-        <div><b class="block font-display text-3xl font-bold text-navy">₹16K</b><span class="text-sm text-navy/55">Projects start from</span></div>
+      <div class="reveal mt-10 flex flex-wrap gap-x-10 gap-y-6" style="--d:560ms">
+        <div><b class="block font-display text-3xl font-bold text-navy">53%</b><span class="text-sm text-navy/55">of web traffic is organic search</span></div>
+        <div><b class="block font-display text-3xl font-bold text-navy">76%</b><span class="text-sm text-navy/55">of "near me" searches visit within a day</span></div>
+        <div><b class="block font-display text-3xl font-bold text-navy">₹16K</b><span class="text-sm text-navy/55">projects start from</span></div>
       </div>
     </div>
   </section>
@@ -99,6 +102,28 @@ const iconWrap = 'mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 t
       ))}
     </div>
   </div>
+
+  <!-- ============ THE DATA / OPPORTUNITY (real cited market numbers) ==== -->
+  <section class="border-b border-navy/10 bg-off">
+    <div class="mx-auto max-w-6xl px-[5vw] py-20">
+      <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">The opportunity</p>
+      <h2 class="reveal mt-3 max-w-2xl font-display text-[clamp(1.8rem,3.4vw,2.7rem)] leading-[1.12] font-bold text-navy" style="--d:80ms">
+        Organic isn't a nice-to-have. It's where your buyers already are.
+      </h2>
+      <p class="reveal mt-3 max-w-2xl text-lg text-navy/70" style="--d:140ms">
+        These are industry figures, not our own clients' numbers — every one is sourced below. The pattern they
+        describe is the reason we build the way we do.
+      </p>
+      <div class="mt-10 grid gap-6 lg:grid-cols-2 lg:items-start">
+        <CtrChart />
+        <div class="grid gap-5 sm:grid-cols-2">
+          {marketStats.map((s, i) => (
+            <StatTile value={s.value} label={s.label} source={s.source} class={`reveal`} />
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- ============ SERVICES BENTO ============ -->
   <section class="mx-auto max-w-6xl px-[5vw] py-20">
