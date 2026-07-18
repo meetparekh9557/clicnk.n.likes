@@ -22,6 +22,23 @@ const canonicalURL = canonical ?? new URL(cleanPath, Astro.site).href;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Google Search Console domain verification. Harmless on preview
+         (noindex), needed on production so the property stays verified. -->
+    <meta name="google-site-verification" content="CbG8y7rYgHT9oBtl6n8ptMmvLdN_G0rkvGfyp5SlrnQ" />
+    <!-- Google Analytics (gtag). Loaded only on the production build, not
+         the noindex /preview/ build, so preview/test traffic never lands
+         in the analytics. Activates automatically at cutover. -->
+    {!isPreview && (
+      <>
+        <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-LB423REFGS"></script>
+        <script is:inline>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-LB423REFGS');
+        </script>
+      </>
+    )}
     <!-- Progressive-enhancement flag: lets scroll-triggered animations
          (e.g. the self-drawing charts) start from zero only when JS can
          finish them; without JS the content renders at full state. -->
