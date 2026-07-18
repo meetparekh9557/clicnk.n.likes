@@ -16,6 +16,71 @@ export interface ServiceDetail {
   crossLink?: { text: string; label: string; href: string };
 }
 
+// "Why it matters" band per service. Cited hard numbers appear ONLY
+// where they are genuinely defensible (local-seo, website-development);
+// every other service uses honest qualitative framing rather than an
+// invented statistic. The SEO page reuses the interactive ranking graph.
+export interface ServiceProof {
+  title: string;
+  intro: string;
+  showCliff?: boolean;
+  stat?: { value: string; label: string; source: string };
+  note?: string;
+}
+
+export const serviceProof: Record<string, ServiceProof> = {
+  seo: {
+    title: 'Why does ranking, not just showing up, decide the outcome?',
+    intro:
+      'Because attention on Google collapses toward the top. The first organic result earns more clicks than the next three positions combined, so the distance between page one and the top of page one is the distance between being found and being chosen. Tap through the positions to see what each rank is actually worth.',
+    showCliff: true,
+  },
+  'local-seo': {
+    title: 'Why is the local pack worth winning on its own?',
+    intro:
+      'Because local intent converts fast, and it converts nearby. When someone searches for a business close to them on a phone, the visit is frequently same-day, which makes your Maps position less a vanity ranking and more next week\'s revenue.',
+    stat: {
+      value: '76%',
+      label: 'of people who search for something nearby on a phone visit a business within a day',
+      source: 'Google / Think with Google',
+    },
+  },
+  'ai-seo': {
+    title: 'Why does being cited by AI now matter as much as ranking?',
+    intro:
+      'Because search is splitting into two tracks: the familiar list of blue links, and a short AI answer that names only two or three businesses. There is no page two of an AI answer. Either the model trusts your content enough to quote you, or that buyer never learns you exist.',
+    note: 'We structure your content, schema and entity signals so AI engines can extract and cite you, then track where you actually appear across ChatGPT, Gemini and AI Overviews.',
+  },
+  'social-media-growth': {
+    title: 'What actually makes social growth worth paying for?',
+    intro:
+      'Not the follower count. A following only earns its keep when it produces conversations, DMs and bookings, so we build every calendar and caption around the audience that buys, never the number that merely watches.',
+    note: 'Content pillars mapped to education, authority, relatability, engagement and conversion, with an engagement playbook that turns comments and DMs into leads.',
+  },
+  'content-marketing': {
+    title: 'Why does structure decide whether content earns anything?',
+    intro:
+      'Because both Google and AI models reward content they can extract answers from. A page written to a clear, question-led structure can rank in search and be quoted in an AI answer at the same time, while a wall of adjectives does neither.',
+    note: 'Every piece is built to a structure search engines index cleanly and language models can lift and cite verbatim.',
+  },
+  'website-development': {
+    title: 'Why is speed a revenue decision, not a technical one?',
+    intro:
+      'Because visitors leave before they ever reach your offer. The moment a page slows from one second to three, the chance a visitor abandons it climbs sharply, so every hundred milliseconds you shave back is a booking you would otherwise have lost.',
+    stat: {
+      value: '+32%',
+      label: 'higher chance a visitor bounces when a page slows from one second to three',
+      source: 'Google / SOASTA mobile speed study',
+    },
+  },
+  'paid-campaigns': {
+    title: 'Where do paid campaigns actually belong?',
+    intro:
+      'On top of an organic engine that already works, never in place of it. Ads rent attention for exactly as long as you keep paying; SEO and content own it. We run paid to capture the high-intent demand your organic has not reached yet, so spend compounds instead of vanishing the day you stop.',
+    note: 'Meta and Google campaigns reported on cost per lead and cost per booking, every week.',
+  },
+};
+
 export const serviceDetails: ServiceDetail[] = [
   {
     slug: 'seo',

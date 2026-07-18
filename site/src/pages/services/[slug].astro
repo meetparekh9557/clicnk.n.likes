@@ -7,7 +7,10 @@
 import Base from '../../layouts/Base.astro';
 import Button from '../../components/Button.astro';
 import Card from '../../components/Card.astro';
-import { serviceDetails } from '../../data/services';
+import Aurora from '../../components/Aurora.astro';
+import StatTile from '../../components/StatTile.astro';
+import FirstPageCliff from '../../components/islands/FirstPageCliff.jsx';
+import { serviceDetails, serviceProof } from '../../data/services';
 import { withBase } from '../../lib/url';
 import LayoutTemplate from '@lucide/astro/icons/layout-template';
 import Search from '@lucide/astro/icons/search';
@@ -52,7 +55,9 @@ const icons: Record<string, any> = {
 };
 
 const { service } = Astro.props;
+const proof = serviceProof[service.slug];
 const iconWrap = 'mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 text-teal-dark';
+const HeroIcon = icons[service.cards[0].icon];
 ---
 
 <Base
@@ -61,7 +66,7 @@ const iconWrap = 'mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 t
 >
   <!-- Hero -->
   <section class="relative overflow-hidden">
-    <div class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(60%_50%_at_75%_0%,rgba(78,205,196,0.12),transparent_70%)]"></div>
+    <Aurora />
     <div class="mx-auto max-w-6xl px-[5vw] pt-16 pb-12 lg:pt-20">
       <p class="reveal inline-flex items-center gap-2 rounded-full border border-teal/30 bg-teal/5 px-4 py-1.5 text-[13px] font-semibold text-navy">
         <span class="h-1.5 w-1.5 rounded-full bg-teal"></span> {service.eyebrow}
@@ -92,6 +97,36 @@ const iconWrap = 'mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 t
       })}
     </div>
   </section>
+
+  <!-- Why it matters: real cited proof or honest framing per service -->
+  {proof && (
+    <section class="border-t border-navy/10">
+      <div class="mx-auto max-w-6xl px-[5vw] py-16">
+        <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">Why it matters</p>
+        <div class="mt-8 grid gap-10 lg:grid-cols-2 lg:items-center">
+          <div>
+            <h2 class="reveal font-display text-[clamp(1.6rem,3vw,2.3rem)] leading-[1.15] font-bold text-navy" style="--d:60ms">
+              {proof.title}
+            </h2>
+            <p class="reveal mt-4 text-lg leading-relaxed text-navy/70" style="--d:140ms">{proof.intro}</p>
+          </div>
+          <div class="reveal" style="--d:220ms">
+            {proof.showCliff && <FirstPageCliff client:visible />}
+            {proof.stat && <StatTile value={proof.stat.value} label={proof.stat.label} source={proof.stat.source} class="p-8" />}
+            {!proof.showCliff && !proof.stat && proof.note && (
+              <Card class="bg-gradient-to-br from-white to-off p-8">
+                <div class={iconWrap}><HeroIcon size={22} stroke-width={2} aria-hidden="true" /></div>
+                <p class="text-lg leading-relaxed font-medium text-navy">{proof.note}</p>
+              </Card>
+            )}
+          </div>
+        </div>
+        {(proof.showCliff || proof.stat) && proof.note && (
+          <p class="reveal mt-6 max-w-2xl text-sm text-navy/55" style="--d:280ms">{proof.note}</p>
+        )}
+      </div>
+    </section>
+  )}
 
   <!-- Free tool (tool island embeds here in the tools milestone) -->
   <section class="border-y border-navy/10 bg-off">
