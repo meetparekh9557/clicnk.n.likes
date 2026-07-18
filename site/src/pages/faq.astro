@@ -1,0 +1,112 @@
+---
+// FAQ page: the eight questions we get before anyone signs, ported from
+// v1. Native <details> accordion (accessible, no JS needed) plus a
+// FAQPage JSON-LD block so the answers are eligible for rich results and
+// AI Overviews - which is literally a service we sell.
+import Base from '../layouts/Base.astro';
+import { withBase } from '../lib/url';
+import Plus from '@lucide/astro/icons/plus';
+
+const faqs = [
+  {
+    q: 'How much does a project cost?',
+    a: 'Projects start from ₹16,000. The exact number depends on the service, your market, and how much you need each month. Use the instant quote calculator on the Contact page, or on any service page, to get a real number in under a minute.',
+  },
+  {
+    q: 'Do you guarantee page 1 rankings?',
+    a: 'No one honest can guarantee a specific Google ranking. We guarantee the work: the audits, the fixes, the content, the reporting. Most local clients see meaningful movement in 3 to 5 months.',
+  },
+  {
+    q: 'If I run paid ads, who pays for the ad spend?',
+    a: 'Our quote for Paid Campaigns covers strategy, setup, creative and management only. Ad spend itself is billed directly from your own card on the ad platform (Meta or Google), never routed through us.',
+  },
+  {
+    q: 'Does the Social Media package include photo or video shoots?',
+    a: "The base Social Media Growth package covers strategy, calendars, captions and creative direction using assets you already have. Photo and video shoot production is arranged through our shoot partner agency and billed separately based on your exact requirements (location, deliverables, turnaround), it is never bundled into any package rate.",
+  },
+  {
+    q: "What's the difference between SEO and AI SEO?",
+    a: 'SEO gets you ranked in traditional Google search results. AI SEO (also called AEO, GEO or LLMO) gets your business cited inside AI Overviews, ChatGPT and other AI answers. We increasingly recommend running both together.',
+  },
+  {
+    q: 'How fast will I see results?',
+    a: 'Websites and campaigns go live inside days. Organic SEO, AI SEO, content and social growth are compounding channels, so expect early signals in 4 to 8 weeks and meaningful results in 3 to 6 months.',
+  },
+  {
+    q: 'Do the free tools on your service pages give a full audit?',
+    a: 'No. Each tool gives you a directional overview score and a few headline findings so you can gauge where you stand. The full, detailed audit is part of what you get once you start working with us.',
+  },
+  {
+    q: 'Can I just hire you for one service?',
+    a: 'Yes. Every service on this site can be bought standalone. Most clients start with one channel and add more once they see it working.',
+  },
+];
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+---
+
+<Base
+  title="FAQs | Click.n.likes"
+  description="Straight answers on pricing, timelines, ranking guarantees, paid ad spend and how our services work, the questions every business asks before they sign."
+>
+  <section class="mx-auto max-w-3xl px-[5vw] pt-16 pb-8 lg:pt-20">
+    <p class="reveal inline-flex items-center gap-2 rounded-full border border-teal/30 bg-teal/5 px-4 py-1.5 text-[13px] font-semibold text-navy">
+      <span class="h-1.5 w-1.5 rounded-full bg-teal"></span> FAQs
+    </p>
+    <h1 class="reveal-mask mt-5 font-display text-[clamp(2.1rem,4.4vw,3.4rem)] leading-[1.08] font-bold text-navy">
+      <span class="mask-line"><span>Questions we get</span></span>
+      <span class="mask-line" style="--d:120ms"><span>before anyone signs.</span></span>
+    </h1>
+    <p class="reveal mt-5 max-w-2xl text-lg leading-relaxed text-navy/70" style="--d:240ms">
+      No fine print, no dodging. If your question is not here, ask us directly and a real strategist answers.
+    </p>
+  </section>
+
+  <section class="mx-auto max-w-3xl px-[5vw] pb-16">
+    <div class="reveal divide-y divide-navy/10 border-y border-navy/10">
+      {faqs.map((f) => (
+        <details class="faq group">
+          <summary class="flex cursor-pointer list-none items-center justify-between gap-4 py-5 text-left font-display text-[16px] font-semibold text-navy transition-colors hover:text-teal-dark [&::-webkit-details-marker]:hidden">
+            {f.q}
+            <span class="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-teal/10 text-teal-dark transition-transform duration-300 group-open:rotate-45">
+              <Plus size={15} stroke-width={2.4} aria-hidden="true" />
+            </span>
+          </summary>
+          <p class="-mt-1 pr-10 pb-5 text-[15px] leading-relaxed text-navy/70">{f.a}</p>
+        </details>
+      ))}
+    </div>
+
+    <div class="reveal mt-12 rounded-2xl border border-navy/10 bg-off p-8 text-center" style="--d:120ms">
+      <h2 class="font-display text-xl font-semibold text-navy">Still have a question?</h2>
+      <p class="mx-auto mt-2 max-w-md text-[15px] text-navy/65">
+        Send it over. We would rather answer honestly now than have you guess, whatever your industry.
+      </p>
+      <div class="mt-6 flex flex-wrap items-center justify-center gap-3">
+        <a
+          href={withBase('/contact/')}
+          class="inline-flex items-center gap-2 rounded-full bg-navy px-6 py-3.5 text-sm font-semibold text-white transition-all duration-300 ease-out-quart hover:-translate-y-0.5 hover:bg-coral"
+        >
+          Ask us directly
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a
+          href={withBase('/tools/')}
+          class="inline-flex items-center gap-2 rounded-full border-[1.5px] border-navy/15 px-6 py-3.5 text-sm font-semibold text-navy transition-all duration-300 ease-out-quart hover:border-teal hover:text-teal-dark"
+        >
+          Run a free check first
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+</Base>

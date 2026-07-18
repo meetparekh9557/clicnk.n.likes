@@ -1,0 +1,131 @@
+---
+// Free tools hub. The flagship Live Website Health Scan runs for real
+// here (HeroScan island: live fetch, 11 verified signals, emailed report,
+// email gated before results - exactly like v1). Below it, every channel
+// check has an anchored card whose id matches the service page's toolKey,
+// so "Run a free readiness check" on a service page lands on the right
+// card. The deep interactive per-channel scoring migrates in the tools
+// milestone; until then each card routes to its service and a real check.
+import Base from '../../layouts/Base.astro';
+import Card from '../../components/Card.astro';
+import InlineCta from '../../components/InlineCta.astro';
+import HeroScan from '../../components/islands/HeroScan.jsx';
+import { withBase } from '../../lib/url';
+import Gauge from '@lucide/astro/icons/gauge';
+import Search from '@lucide/astro/icons/search';
+import MapPin from '@lucide/astro/icons/map-pin';
+import Sparkles from '@lucide/astro/icons/sparkles';
+import Radar from '@lucide/astro/icons/radar';
+import FileText from '@lucide/astro/icons/file-text';
+import CodeXml from '@lucide/astro/icons/code-xml';
+import Megaphone from '@lucide/astro/icons/megaphone';
+import Wallet from '@lucide/astro/icons/wallet';
+import Swords from '@lucide/astro/icons/swords';
+
+// id = the service toolKey so /tools/#<toolKey> anchors resolve.
+const checks = [
+  { id: 'seo', name: 'Organic Authority Index', icon: Search, service: '/services/seo/', desc: 'A directional read on how strongly your site is positioned to rank organically, scored across on-page structure, keyword focus and technical fundamentals.' },
+  { id: 'localseo', name: 'Local Visibility Radius Checker', icon: MapPin, service: '/services/local-seo/', desc: 'How far your local presence actually reaches, and where you are losing the map pack to competitors in your own city.' },
+  { id: 'aiseo', name: 'AI Readability Index', icon: Sparkles, service: '/services/ai-seo/', desc: 'Whether ChatGPT, Gemini and Google AI Overviews can cleanly read, trust and cite your content when someone asks about your category.' },
+  { id: 'social', name: 'Reach Efficiency Checker', icon: Radar, service: '/services/social-media-growth/', desc: 'How hard your social content is working: reach against following, and where engagement is leaking before it becomes a lead.' },
+  { id: 'content', name: 'Content Gap Snapshot', icon: FileText, service: '/services/content-marketing/', desc: 'The topics your buyers are searching that your content does not yet answer, mapped against the pages driving your competitors traffic.' },
+  { id: 'webdev', name: 'Infrastructure Health Check', icon: CodeXml, service: '/services/website-development/', desc: 'Speed, crawlability, mobile experience and conversion structure, the four things quietly costing your site bookings before anyone calls.' },
+  { id: 'paid', name: 'Ad Budget Waste Simulator', icon: Megaphone, service: '/services/paid-campaigns/', desc: 'An estimate of how much of a monthly ad budget is likely leaking to poor targeting and weak landing pages, and what tightening it would return.' },
+];
+
+const calculators = [
+  { name: 'Funnel Leak & ROI Calculator', icon: Wallet, desc: 'Enter your traffic, conversion rate and order value to see, in rupees, where your funnel is leaking revenue against category benchmarks.' },
+  { name: 'Competitor Threat Estimator', icon: Swords, desc: 'A quick read on how exposed you are to the competitors already outranking you, and which channel is your fastest way to close the gap.' },
+];
+---
+
+<Base
+  title="Free Growth Tools & Website Checks | Click.n.likes"
+  description="Run a live Website Health Scan and a suite of free directional checks across SEO, local, AI search, social, content, websites and paid, honest scores, real signals, no sales call required."
+>
+  <!-- Hero + live scan -->
+  <section class="mx-auto max-w-4xl px-[5vw] pt-16 pb-12 text-center lg:pt-20">
+    <p class="reveal mx-auto inline-flex items-center gap-2 rounded-full border border-teal/30 bg-teal/5 px-4 py-1.5 text-[13px] font-semibold text-navy">
+      <span class="h-1.5 w-1.5 rounded-full bg-teal"></span> Free tools
+    </p>
+    <h1 class="reveal-mask mt-5 font-display text-[clamp(2.1rem,4.4vw,3.4rem)] leading-[1.08] font-bold text-navy">
+      <span class="mask-line"><span>Real math, real signals,</span></span>
+      <span class="mask-line" style="--d:120ms"><span>no vanity scores.</span></span>
+    </h1>
+    <p class="reveal mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-navy/70" style="--d:240ms">
+      Start with a live scan of your actual page below. Every signal is verified from a real fetch, never guessed, and
+      your full report is emailed the moment it finishes.
+    </p>
+    <div class="reveal mx-auto mt-2 max-w-2xl text-left" style="--d:320ms">
+      <HeroScan client:load toolsHref={withBase('/tools/')} />
+    </div>
+  </section>
+
+  <!-- Channel checks -->
+  <section class="border-t border-navy/10 bg-off">
+    <div class="mx-auto max-w-6xl px-[5vw] py-16">
+      <div class="mx-auto max-w-2xl text-center">
+        <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">Channel checks</p>
+        <h2 class="reveal mt-3 font-display text-[clamp(1.6rem,3vw,2.4rem)] leading-[1.12] font-bold text-navy" style="--d:80ms">
+          A free readiness check for every channel.
+        </h2>
+        <p class="reveal mt-4 text-lg text-navy/70" style="--d:140ms">
+          Each check gives you a directional score and the headline findings for that channel. Want the full,
+          factor-by-factor audit? That is part of working with us.
+        </p>
+      </div>
+      <div class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {checks.map((c, i) => (
+          <Card id={c.id} class="reveal scroll-mt-28 flex flex-col" style={`--d:${(i % 3) * 90}ms`}>
+            <div class="mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 text-teal-dark"><c.icon size={20} stroke-width={2} aria-hidden="true" /></div>
+            <h3 class="font-display text-base font-semibold text-navy">{c.name}</h3>
+            <p class="mt-1.5 flex-1 text-sm leading-relaxed text-navy/60">{c.desc}</p>
+            <div class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm font-semibold">
+              <a href={withBase(c.service)} class="inline-flex items-center gap-1 text-teal-dark transition-colors hover:text-navy">
+                See the service
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </a>
+              <a href={withBase('/contact/')} class="text-navy/55 transition-colors hover:text-teal-dark">Get this check</a>
+            </div>
+          </Card>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Mid-page CTA -->
+  <section class="mx-auto max-w-6xl px-[5vw] pt-14">
+    <InlineCta
+      eyebrow="A score is a start, not a strategy"
+      title="Turn your findings into a plan, with a strategist who knows your category."
+      primaryLabel="Get your instant quote"
+      secondaryLabel="Talk to us"
+      secondaryHref="/contact/"
+    />
+  </section>
+
+  <!-- Calculators -->
+  <section class="border-t border-navy/10">
+    <div class="mx-auto max-w-6xl px-[5vw] py-16">
+      <div class="mx-auto max-w-2xl text-center">
+        <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">Calculators</p>
+        <h2 class="reveal mt-3 font-display text-[clamp(1.6rem,3vw,2.4rem)] leading-[1.12] font-bold text-navy" style="--d:80ms">
+          Put a rupee figure on the gap.
+        </h2>
+      </div>
+      <div class="mx-auto mt-10 grid max-w-3xl gap-5 sm:grid-cols-2">
+        {calculators.map((c, i) => (
+          <Card class="reveal flex flex-col" style={`--d:${i * 90}ms`}>
+            <div class="mb-4 grid h-11 w-11 place-items-center rounded-xl bg-coral/10 text-coral"><c.icon size={20} stroke-width={2} aria-hidden="true" /></div>
+            <h3 class="font-display text-base font-semibold text-navy">{c.name}</h3>
+            <p class="mt-1.5 flex-1 text-sm leading-relaxed text-navy/60">{c.desc}</p>
+            <a href={withBase('/contact/')} class="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-teal-dark transition-colors hover:text-navy">
+              Run it with a strategist
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+          </Card>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>
