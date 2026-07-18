@@ -162,6 +162,45 @@
   to { transform: rotate(360deg); }
 }
 
+/* ---------- Animated live-audit card (AuditDemo) ----------------------
+   A beam sweeps the card each cycle; signal rows check in on a stagger.
+   Keyed remount in the island restarts these once-through animations. */
+.audit-beam {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 44%;
+  background: linear-gradient(to bottom, rgba(78, 205, 196, 0) 0%, rgba(78, 205, 196, 0.18) 70%, rgba(78, 205, 196, 0.5) 100%);
+  border-bottom: 2px solid rgba(78, 205, 196, 0.7);
+  transform: translateY(-110%);
+  animation: audit-sweep 2.8s var(--ease-out-quart) forwards;
+  pointer-events: none;
+}
+@keyframes audit-sweep {
+  to { transform: translateY(240%); }
+}
+.audit-row {
+  opacity: 0;
+  transform: translateX(8px);
+  animation: audit-rowin 0.4s var(--ease-out-quart) forwards;
+}
+.audit-row .audit-check {
+  transform: scale(0.4);
+  animation: audit-pop 0.4s var(--ease-out-expo) forwards;
+  animation-delay: inherit;
+}
+@keyframes audit-rowin {
+  to { opacity: 1; transform: none; }
+}
+@keyframes audit-pop {
+  to { transform: scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .audit-row { opacity: 1; transform: none; animation: none; }
+  .audit-row .audit-check { transform: none; animation: none; }
+}
+
 /* Continuous gradient shimmer through a key phrase (headline accent). */
 .cnl-shimmer {
   background: linear-gradient(100deg, #2f9a92 0%, #4ecdc4 28%, #7ff0e8 42%, #4ecdc4 58%, #2f9a92 100%);
