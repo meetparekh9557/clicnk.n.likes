@@ -3,11 +3,13 @@
 // (Nav, Footer, motion utilities). Brand voice rules live in /CLAUDE.md.
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
+import ChatButton from '../components/ChatButton.astro';
+import CtaBand from '../components/CtaBand.astro';
 import { withBase } from '../lib/url';
 import '../styles/global.css';
 
-interface Props { title: string; description: string; canonical?: string; }
-const { title, description, canonical } = Astro.props;
+interface Props { title: string; description: string; canonical?: string; hideCta?: boolean; }
+const { title, description, canonical, hideCta } = Astro.props;
 // Preview builds (clicknlikes.com/preview/) must never be indexed, and
 // their canonicals point at the real future URL (base stripped).
 const isPreview = import.meta.env.PUBLIC_PREVIEW === '1';
@@ -67,7 +69,9 @@ const canonicalURL = canonical ?? new URL(cleanPath, Astro.site).href;
     <main id="main" class="pt-[72px]">
       <slot />
     </main>
+    {!hideCta && <CtaBand />}
     <Footer />
+    <ChatButton />
     <script src="../scripts/motion.js"></script>
   </body>
 </html>

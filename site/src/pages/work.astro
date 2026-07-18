@@ -4,6 +4,7 @@
 // case-study template once the founder's material + permissions land.
 import Base from '../layouts/Base.astro';
 import Card from '../components/Card.astro';
+import ClientLogos from '../components/ClientLogos.astro';
 import SimpleForm from '../components/islands/SimpleForm.jsx';
 import { withBase } from '../lib/url';
 
@@ -69,6 +70,22 @@ const formFields = [
           <p class="mt-2 text-[13.5px] leading-relaxed text-navy/60">{c.text}</p>
         </Card>
       ))}
+    </div>
+  </section>
+
+  <section class="border-t border-navy/10">
+    <div class="mx-auto max-w-6xl px-[5vw] py-16">
+      <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">Clients we have worked with</p>
+      <h2 class="reveal mt-3 max-w-2xl font-display text-[clamp(1.6rem,3vw,2.4rem)] leading-[1.12] font-bold text-navy" style="--d:80ms">
+        Growth across industries, not just one.
+      </h2>
+      <p class="reveal mt-3 max-w-2xl text-lg text-navy/70" style="--d:140ms">
+        From SaaS and manufacturing to legal, film, apparel, jewellery and hospitality, the playbook adapts to how
+        each market is actually searched and bought.
+      </p>
+      <div class="reveal mt-12" style="--d:200ms">
+        <ClientLogos />
+      </div>
     </div>
   </section>
 
