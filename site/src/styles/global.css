@@ -82,6 +82,56 @@
   will-change: transform;
 }
 
+/* ---------- Aurora hero background (continuous, CSS-only) --------------
+   Two soft, blurred colour fields that drift and breathe forever behind
+   the hero — the ambient motion the design direction calls for, kept
+   restrained (low opacity, slow 18–24s loops). Contained by its own
+   overflow:hidden so the large blobs never cause page overflow. Frozen
+   under prefers-reduced-motion. --------------------------------------- */
+.aurora {
+  position: absolute;
+  inset: 0;
+  z-index: -10;
+  overflow: hidden;
+  pointer-events: none;
+}
+.aurora::before,
+.aurora::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(70px);
+  will-change: transform;
+}
+.aurora::before {
+  width: 46vw;
+  height: 46vw;
+  left: -6%;
+  top: -24%;
+  background: radial-gradient(circle, rgba(78, 205, 196, 0.38), transparent 68%);
+  animation: aurora-drift-a 20s var(--ease-out-quart) infinite alternate;
+}
+.aurora::after {
+  width: 40vw;
+  height: 40vw;
+  right: -8%;
+  top: -6%;
+  background: radial-gradient(circle, rgba(255, 71, 87, 0.16), transparent 68%);
+  animation: aurora-drift-b 24s var(--ease-out-quart) infinite alternate;
+}
+@keyframes aurora-drift-a {
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(22%, 18%) scale(1.22); }
+}
+@keyframes aurora-drift-b {
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(-18%, 22%) scale(1.16); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .aurora::before,
+  .aurora::after { animation: none; }
+}
+
 /* ---------- Self-drawing bar chart (CtrChart) --------------------------
    Bars carry the accent/gray by role; they grow from the baseline (left)
    when the figure scrolls into view. Without JS the bars render at full
