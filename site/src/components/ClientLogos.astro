@@ -1,0 +1,24 @@
+---
+// Client logo wall. Single-tone by default (grayscale + dimmed), full
+// colour + lift on hover, per the founder's spec. Logos only, no names.
+// White backgrounds were stripped at build-prep so they blend on the
+// light surface. `limit` trims the set (homepage strip vs full Work grid).
+import { clients } from '../data/clients';
+import { withBase } from '../lib/url';
+
+interface Props { limit?: number; class?: string; }
+const { limit, class: extra = '' } = Astro.props;
+const list = limit ? clients.slice(0, limit) : clients;
+---
+
+<div class={`flex flex-wrap items-center justify-center gap-x-10 gap-y-8 ${extra}`.trim()}>
+  {list.map((c) => (
+    <img
+      src={withBase(`/clients/${c.slug}.png`)}
+      alt={c.name}
+      loading="lazy"
+      decoding="async"
+      class="h-8 w-auto max-w-[128px] object-contain opacity-55 grayscale transition duration-300 ease-out-quart hover:-translate-y-0.5 hover:opacity-100 hover:grayscale-0 sm:h-10"
+    />
+  ))}
+</div>

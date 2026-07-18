@@ -10,6 +10,7 @@ import LeadForm from '../components/islands/LeadForm.jsx';
 import AuditDemo from '../components/islands/AuditDemo.jsx';
 import FirstPageCliff from '../components/islands/FirstPageCliff.jsx';
 import StatTile from '../components/StatTile.astro';
+import ClientLogos from '../components/ClientLogos.astro';
 import { services } from '../data/site';
 import { marketStats } from '../data/market';
 import { withBase } from '../lib/url';
@@ -92,6 +93,18 @@ const iconWrap = 'mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 t
         <div><b class="block font-display text-3xl font-bold text-navy">76%</b><span class="text-sm text-navy/55">of "near me" searches visit within a day</span></div>
         <div><b class="block font-display text-3xl font-bold text-navy">4-6 mo</b><span class="text-sm text-navy/55">honest timeline for SEO to compound</span></div>
         <div><b class="block font-display text-3xl font-bold text-navy">₹16K</b><span class="text-sm text-navy/55">projects start from</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TRUSTED BY (client logo wall) ============ -->
+  <section class="border-t border-navy/10 bg-white">
+    <div class="mx-auto max-w-6xl px-[5vw] py-12">
+      <p class="reveal text-center text-xs font-semibold tracking-[0.14em] text-navy/40 uppercase">
+        Trusted across industries
+      </p>
+      <div class="reveal mt-7" style="--d:80ms">
+        <ClientLogos limit={10} />
       </div>
     </div>
   </section>
