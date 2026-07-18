@@ -35,6 +35,31 @@ function initMotion() {
         el.style.transform = '';
       });
     });
+
+    // Hero backdrop cursor parallax: the aurora field drifts opposite the
+    // pointer for depth. Tracked at the window level so it responds across
+    // the whole hero; values are normalized to -1..1 and eased via CSS.
+    const fields = document.querySelectorAll('[data-parallax]');
+    if (fields.length) {
+      let ticking = false;
+      window.addEventListener(
+        'pointermove',
+        (ev) => {
+          if (ticking) return;
+          ticking = true;
+          requestAnimationFrame(() => {
+            const px = (ev.clientX / window.innerWidth - 0.5) * 2;
+            const py = (ev.clientY / window.innerHeight - 0.5) * 2;
+            fields.forEach((f) => {
+              f.style.setProperty('--px', px.toFixed(3));
+              f.style.setProperty('--py', py.toFixed(3));
+            });
+            ticking = false;
+          });
+        },
+        { passive: true }
+      );
+    }
   }
 }
 
