@@ -4,7 +4,7 @@
 // with the forms/Apps Script wiring milestone so nothing ships dead.
 // Brand glyphs (Instagram/LinkedIn) are inline SVGs from v1 - Lucide
 // carries no brand icons.
-import { services, primaryNav, contact } from '../data/site';
+import { services, primaryNav, moreNav, contact } from '../data/site';
 import { withBase } from '../lib/url';
 
 const year = new Date().getFullYear();
@@ -39,8 +39,8 @@ const socialCls =
     <div>
       <h4 class="mb-4 text-[13px] font-semibold tracking-[0.08em] text-white uppercase">Company</h4>
       {primaryNav.map((item) => <a href={withBase(item.href)} class={linkCls}>{item.title}</a>)}
-      <a href={withBase('/pricing/')} class={linkCls}>Pricing</a>
-      <a href={withBase('/contact/')} class={linkCls}>Get a quote</a>
+      {moreNav.map((item) => <a href={withBase(item.href)} class={linkCls}>{item.title}</a>)}
+      <a href={withBase('/contact/')} class={linkCls}>Contact</a>
     </div>
 
     <div>

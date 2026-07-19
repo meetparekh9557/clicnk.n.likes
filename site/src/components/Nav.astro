@@ -1,10 +1,12 @@
 ---
 // Fixed top navigation with real per-page URLs. Desktop: hover/focus
-// dropdown for the seven services. Mobile: hamburger panel + scrim.
-// Links come from src/data/site.ts so Nav and Footer never drift apart.
+// dropdowns for Services and for "More" (Free Checks / Pricing / FAQs).
+// Mobile: hamburger panel where Services and More are collapsible
+// accordions, closed by default. Links come from src/data/site.ts so Nav
+// and Footer never drift apart.
 import ArrowRight from '@lucide/astro/icons/arrow-right';
 import ChevronDown from '@lucide/astro/icons/chevron-down';
-import { services, primaryNav } from '../data/site';
+import { services, primaryNav, moreNav } from '../data/site';
 import { withBase } from '../lib/url';
 
 // Strip the deploy base so active-link checks work at / and /preview/.
@@ -12,6 +14,7 @@ const base = import.meta.env.BASE_URL.replace(/\/+$/, '');
 const path = Astro.url.pathname.startsWith(base) ? Astro.url.pathname.slice(base.length) || '/' : Astro.url.pathname;
 const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
 const onServices = path.startsWith('/services/');
+const onMore = moreNav.some((m) => path.startsWith(m.href));
 
 const itemCls = (active: boolean) =>
   `rounded-lg px-3.5 py-2.5 text-[14.5px] font-medium transition-colors hover:text-teal-dark ${
@@ -31,18 +34,11 @@ const itemCls = (active: boolean) =>
     <a href={withBase('/')} class={itemCls(isActive('/'))} aria-current={isActive('/') ? 'page' : undefined}>Home</a>
 
     <div class="group relative">
-      <button
-        type="button"
-        class={`${itemCls(onServices)} inline-flex items-center gap-1`}
-        aria-haspopup="true"
-        aria-expanded="false"
-      >
+      <button type="button" class={`${itemCls(onServices)} inline-flex items-center gap-1`} aria-haspopup="true" aria-expanded="false">
         Services
         <ChevronDown size={14} stroke-width={2.4} aria-hidden="true" class="transition-transform duration-300 group-hover:rotate-180" />
       </button>
-      <div
-        class="invisible absolute top-full left-0 min-w-[300px] translate-y-2 rounded-2xl border border-navy/10 bg-white p-2 opacity-0 shadow-[0_18px_44px_rgba(26,43,74,0.12)] transition-all duration-300 ease-out-quart group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100"
-      >
+      <div class="invisible absolute top-full left-0 min-w-[300px] translate-y-2 rounded-2xl border border-navy/10 bg-white p-2 opacity-0 shadow-[0_18px_44px_rgba(26,43,74,0.12)] transition-all duration-300 ease-out-quart group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
         {services.map((s) => (
           <a href={withBase(s.href)} class="block rounded-xl px-4 py-3 transition-colors hover:bg-teal/10">
             <b class="block text-sm font-semibold text-navy">{s.title}</b>
@@ -53,15 +49,25 @@ const itemCls = (active: boolean) =>
     </div>
 
     {primaryNav.map((item) => (
-      <a href={withBase(item.href)} class={itemCls(isActive(item.href))} aria-current={isActive(item.href) ? 'page' : undefined}>
-        {item.title}
-      </a>
+      <a href={withBase(item.href)} class={itemCls(isActive(item.href))} aria-current={isActive(item.href) ? 'page' : undefined}>{item.title}</a>
     ))}
+
+    <div class="group relative">
+      <button type="button" class={`${itemCls(onMore)} inline-flex items-center gap-1`} aria-haspopup="true" aria-expanded="false">
+        More
+        <ChevronDown size={14} stroke-width={2.4} aria-hidden="true" class="transition-transform duration-300 group-hover:rotate-180" />
+      </button>
+      <div class="invisible absolute top-full right-0 min-w-[190px] translate-y-2 rounded-2xl border border-navy/10 bg-white p-2 opacity-0 shadow-[0_18px_44px_rgba(26,43,74,0.12)] transition-all duration-300 ease-out-quart group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
+        {moreNav.map((m) => (
+          <a href={withBase(m.href)} class="block rounded-xl px-4 py-2.5 text-sm font-semibold text-navy transition-colors hover:bg-teal/10 hover:text-teal-dark">{m.title}</a>
+        ))}
+      </div>
+    </div>
   </nav>
 
   <div class="flex items-center gap-3">
     <a
-      href={withBase('/contact/')}
+      href={withBase('/pricing/#quote')}
       class="hidden items-center gap-2 rounded-full bg-navy px-5 py-2.5 text-sm font-semibold text-white transition-all duration-300 ease-out-quart hover:bg-coral lg:inline-flex"
       data-magnetic
     >
@@ -91,16 +97,34 @@ const itemCls = (active: boolean) =>
   aria-label="Mobile"
 >
   <a href={withBase('/')} class="block border-b border-navy/10 py-3.5 font-medium text-navy">Home</a>
-  <p class="pt-4 pb-1 text-xs font-semibold tracking-[0.08em] text-navy/50 uppercase">
-    Services <span class="normal-case">(each includes a free check)</span>
-  </p>
-  {services.map((s) => (
-    <a href={withBase(s.href)} class="block border-b border-navy/10 py-3 pl-3 text-[14.5px] text-navy/80">{s.title}</a>
-  ))}
+
+  <!-- Services accordion (closed by default) -->
+  <button type="button" class="mob-acc flex w-full items-center justify-between border-b border-navy/10 py-3.5 text-left font-medium text-navy" aria-expanded="false" aria-controls="mob-services">
+    Services
+    <ChevronDown size={16} stroke-width={2.4} aria-hidden="true" class="mob-acc-chev transition-transform duration-300" />
+  </button>
+  <div id="mob-services" class="mob-acc-panel hidden pb-1">
+    {services.map((s) => (
+      <a href={withBase(s.href)} class="block border-b border-navy/5 py-2.5 pl-3 text-[14px] text-navy/75">{s.title}</a>
+    ))}
+  </div>
+
   {primaryNav.map((item) => (
     <a href={withBase(item.href)} class="block border-b border-navy/10 py-3.5 font-medium text-navy">{item.title}</a>
   ))}
-  <a href={withBase('/contact/')} class="mt-6 inline-flex items-center gap-2 rounded-full bg-navy px-6 py-3.5 text-sm font-semibold text-white">
+
+  <!-- More accordion (closed by default) -->
+  <button type="button" class="mob-acc flex w-full items-center justify-between border-b border-navy/10 py-3.5 text-left font-medium text-navy" aria-expanded="false" aria-controls="mob-more">
+    More
+    <ChevronDown size={16} stroke-width={2.4} aria-hidden="true" class="mob-acc-chev transition-transform duration-300" />
+  </button>
+  <div id="mob-more" class="mob-acc-panel hidden pb-1">
+    {moreNav.map((m) => (
+      <a href={withBase(m.href)} class="block border-b border-navy/5 py-2.5 pl-3 text-[14px] text-navy/75">{m.title}</a>
+    ))}
+  </div>
+
+  <a href={withBase('/pricing/#quote')} class="mt-6 inline-flex items-center gap-2 rounded-full bg-navy px-6 py-3.5 text-sm font-semibold text-white">
     Get a quote
     <ArrowRight size={14} stroke-width={2.4} aria-hidden="true" />
   </a>
@@ -133,10 +157,22 @@ const itemCls = (active: boolean) =>
     };
     toggle.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
     scrim.addEventListener('click', () => setOpen(false));
-    panel.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') setOpen(false);
+
+    // Mobile accordions: closed by default, toggle on tap.
+    panel.querySelectorAll('.mob-acc').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const target = document.getElementById(btn.getAttribute('aria-controls') || '');
+        const isOpen = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', String(!isOpen));
+        if (target) target.classList.toggle('hidden', isOpen);
+        const chev = btn.querySelector('.mob-acc-chev');
+        if (chev) chev.classList.toggle('rotate-180', !isOpen);
+      });
     });
+
+    // Close the panel when any real link is tapped.
+    panel.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setOpen(false); });
   }
 
   initNav();

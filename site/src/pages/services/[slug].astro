@@ -81,7 +81,7 @@ const HeroIcon = icons[service.cards[0].icon];
       <p class="reveal mt-5 max-w-2xl text-lg leading-relaxed text-navy/70" style="--d:160ms">{service.lead}</p>
       <div class="reveal mt-8 flex flex-wrap items-center gap-4" style="--d:260ms">
         <Button href="#tool" arrow magnetic>Run a free readiness check</Button>
-        <a href="#quote" class="text-sm font-semibold text-navy underline-offset-4 transition-colors hover:text-teal-dark hover:underline">or skip straight to pricing →</a>
+        <a href={withBase('/pricing/#quote')} class="text-sm font-semibold text-navy underline-offset-4 transition-colors hover:text-teal-dark hover:underline">or skip straight to pricing →</a>
       </div>
     </div>
   </section>
@@ -172,6 +172,7 @@ const HeroIcon = icons[service.cards[0].icon];
       eyebrow={`${service.title}, done right`}
       title={`Ready to put ${service.title} to work for your business?`}
       primaryLabel="Build my instant quote"
+      primaryHref="/pricing/#quote"
       secondaryLabel="Run a free check"
       secondaryHref="#tool"
     />
@@ -193,19 +194,4 @@ const HeroIcon = icons[service.cards[0].icon];
     </div>
   </section>
 
-  <!-- Quote (calculator island embeds here in the tools milestone) -->
-  <section id="quote" class="mx-auto max-w-6xl scroll-mt-24 px-[5vw] py-16 text-center">
-    <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">Get a quote</p>
-    <h2 class="reveal mt-3 font-display text-[clamp(1.6rem,3vw,2.4rem)] leading-[1.12] font-bold text-navy" style="--d:80ms">{service.quote.name}</h2>
-    <p class="reveal mx-auto mt-3 max-w-xl text-lg text-navy/70" style="--d:140ms">
-      {service.quote.lead}
-      {service.crossLink && (
-        <> {service.crossLink.text} <a href={withBase(service.crossLink.href)} class="text-teal-dark underline">{service.crossLink.label}</a></>
-      )}
-    </p>
-    <div class="reveal mt-8 flex flex-wrap items-center justify-center gap-4" style="--d:200ms">
-      <Button href="/contact/" arrow magnetic>Build my instant quote</Button>
-      <Button href="/work/" variant="outline">See real results first</Button>
-    </div>
-  </section>
 </Base>
