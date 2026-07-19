@@ -13,6 +13,11 @@
 @import "@fontsource/dm-sans/500.css";
 @import "@fontsource/dm-sans/700.css";
 
+/* The page ground lives on <html> so the fixed background current
+   (components/SiteBackdrop.astro) can sit behind a transparent <body>
+   and paint over white. */
+html { background-color: #ffffff; }
+
 /* Brand tokens: ported from the v1 site, single source of truth. */
 @theme {
   --color-teal: #4ECDC4;

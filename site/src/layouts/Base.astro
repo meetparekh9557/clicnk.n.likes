@@ -5,6 +5,7 @@ import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import ChatButton from '../components/ChatButton.astro';
 import CtaBand from '../components/CtaBand.astro';
+import SiteBackdrop from '../components/SiteBackdrop.astro';
 import { withBase } from '../lib/url';
 import '../styles/global.css';
 
@@ -58,7 +59,8 @@ const canonicalURL = canonical ?? new URL(cleanPath, Astro.site).href;
     <!-- Fonts are self-hosted via @fontsource (imported in global.css);
          no external font request is made. -->
   </head>
-  <body class="bg-white font-body text-navy antialiased">
+  <body class="bg-transparent font-body text-navy antialiased">
+    <SiteBackdrop />
     <a
       href="#main"
       class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[60] focus:rounded-lg focus:bg-navy focus:px-4 focus:py-2 focus:text-white"
