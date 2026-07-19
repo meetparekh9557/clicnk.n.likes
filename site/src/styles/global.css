@@ -18,6 +18,9 @@
    and paint over white. */
 html { background-color: #ffffff; }
 
+/* Range sliders in the tool islands: brand-teal track/thumb. */
+.cnl-range { accent-color: #4ECDC4; height: 6px; cursor: pointer; }
+
 /* Brand tokens: ported from the v1 site, single source of truth. */
 @theme {
   --color-teal: #4ECDC4;
