@@ -17,10 +17,28 @@
  *      viewport, link counts). Single page only — no crawling, no
  *      rankings, no backlinks. The website's free tools blend these
  *      verified facts into their scoring when a visitor provides a URL.
+ *
+ * JavaScript-rendered sites: a plain server fetch only sees the HTML as
+ * delivered, so a React/Vue/Wix-style site that paints its content with
+ * JavaScript looks empty and would score wrongly. When the raw fetch
+ * comes back as an empty shell (or fails outright), analyzePage asks
+ * Cloudflare Browser Rendering to load the page like a real browser and
+ * re-reads the rendered HTML, so those sites score truthfully instead of
+ * failing. This needs two private Script Properties (Project Settings →
+ * Script Properties), never committed to the public repo:
+ *   CF_ACCOUNT_ID    — your Cloudflare account id (the hex string only)
+ *   CF_BROWSER_TOKEN — an API token scoped to Browser Rendering (Edit)
+ * A hard daily cap (RENDER_DAILY_CAP) keeps it inside the free tier: once
+ * hit, the scan degrades honestly (flags the site as JS-rendered) instead
+ * of rendering more, so it can never roll into a charge.
  */
 
 var SHEET_ID = '1fdqShmBkDnVPPdhtmEo4wdmkc5u9bJe2kKteJpmUsWo';
 var BRAND_ALIAS = 'business@clicknlikes.com';
+var RENDER_DAILY_CAP = 200; // max Cloudflare renders per day (free-tier guard)
+// Logo for the email header, inlined via CID so recipients always see it
+// (no hotlink for Gmail to hide). Fetched server-side at send time.
+var LOGO_URL = 'https://raw.githubusercontent.com/meetparekh9557/clicnk.n.likes/main/site/public/logo.png';
 
 /**
  * ONE-TIME SETUP HELPER — run this manually from the editor (select
@@ -39,6 +57,25 @@ function testAnalyze(){
   Logger.log('Sheet reachable: ' + ss.getName());
 }
 
+/**
+ * TEST HELPER for the render path — analyzes a deliberately JS-rendered
+ * page (its quotes are injected by JavaScript, so a raw fetch sees almost
+ * nothing). A healthy result shows facts.rendered === true and a real
+ * wordCount. Run it once after pasting; it proves Cloudflare rendering is
+ * wired up before you redeploy the live web app.
+ */
+function testJsRender(){
+  var result = analyzePage('https://quotes.toscrape.com/js/');
+  if(result.ok){
+    Logger.log('rendered: ' + result.facts.rendered
+      + ' | renderReason: ' + (result.facts.renderReason || '(none)')
+      + ' | wordCount: ' + result.facts.wordCount
+      + ' | h1: ' + result.facts.h1Count);
+  } else {
+    Logger.log('FAILED: ' + JSON.stringify(result));
+  }
+}
+
 function doGet(e){
   var p = (e && e.parameter) || {};
   var out = (p.action === 'analyze' && p.url) ? analyzePage(p.url) : {ok:false, reason:'bad_request'};
@@ -54,19 +91,35 @@ function doPost(e){
       ? String(data.html)
       : String(data.body || '').replace(/&/g,'&amp;').replace(/</g,'&lt;')
           .replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+    // Pull the logo as an inline (CID) image. If the fetch ever fails we
+    // fall back to a clean wordmark so the email still looks intentional.
+    var logoBlob = null;
+    try{ logoBlob = UrlFetchApp.fetch(LOGO_URL, {muteHttpExceptions:true}).getBlob().setName('cnllogo'); }catch(err){}
+    var header = logoBlob
+      ? '<img src="cid:cnllogo" width="150" alt="Click.n.likes" style="display:block;width:150px;max-width:58%;height:auto;border:0;outline:none;text-decoration:none;" />'
+      : '<span style="font-size:19px;font-weight:700;letter-spacing:-0.2px;color:#1A2B4A;">Click.n.likes</span>';
+
+    var htmlBody =
+        '<div style="margin:0;padding:24px 12px;background:#eef1f5;">'
+      +   '<div style="max-width:640px;margin:0 auto;background:#ffffff;border:1px solid #e6ebf1;'
+      +       'border-radius:16px;overflow:hidden;font-family:Segoe UI,system-ui,-apple-system,sans-serif;color:#1A2B4A;">'
+      +     '<div style="height:5px;line-height:5px;font-size:0;background:#4ECDC4;">&nbsp;</div>'
+      +     '<div style="padding:28px 32px 8px;">' + header + '</div>'
+      +     '<div style="padding:6px 32px 26px;font-size:14px;line-height:1.65;">' + inner + '</div>'
+      +     '<div style="padding:18px 32px;border-top:1px solid #eef1f4;font-size:12px;color:#8a93a2;">'
+      +       'Organic growth, engineered &middot; '
+      +       '<a href="https://clicknlikes.com" style="color:#1A2B4A;text-decoration:none;font-weight:600;">clicknlikes.com</a>'
+      +     '</div>'
+      +   '</div>'
+      + '</div>';
+
     var opts = {
       name: 'Click.n.likes',
       replyTo: data.replyTo || BRAND_ALIAS,
       bcc: data.bcc || '',
-      htmlBody: '<div style="font-family:Segoe UI,system-ui,sans-serif;'
-        + 'font-size:14px;color:#1A2B4A;line-height:1.65;max-width:640px;">'
-        + '<div style="border-top:4px solid #4ECDC4;padding:16px 0 6px;">'
-        + '<strong style="font-size:17px;">Click.n.likes</strong></div>'
-        + '<div style="padding:8px 0;">' + inner + '</div>'
-        + '<div style="margin-top:16px;padding-top:10px;border-top:1px dashed #ccc;'
-        + 'font-size:12px;color:#777;">Click.n.likes · Organic growth, engineered'
-        + ' · clicknlikes.com</div></div>'
+      htmlBody: htmlBody
     };
+    if(logoBlob) opts.inlineImages = { cnllogo: logoBlob };
     if(GmailApp.getAliases().indexOf(BRAND_ALIAS) !== -1){
       opts.from = BRAND_ALIAS;
     }
@@ -83,31 +136,146 @@ function doPost(e){
 }
 
 /**
- * Fetches one page and extracts verifiable on-page facts. Never throws:
- * returns {ok:false, reason} on any failure so the website's tools can
- * fall back to self-reported scoring cleanly.
+ * Analyzes one page. Fetches the raw HTML server-side first (free, fast).
+ * If that HTML is an empty JavaScript shell — or the fetch is blocked —
+ * it asks Cloudflare Browser Rendering to load the page like a real
+ * browser and re-reads the rendered HTML, so JS-built sites score
+ * truthfully. Never throws: returns {ok:false, reason} on genuine
+ * failure so the website's tools can fall back cleanly.
  */
 function analyzePage(url){
   url = String(url).trim();
   if(!/^https?:\/\//i.test(url)) url = 'https://' + url;
-  var resp;
-  try{
-    resp = UrlFetchApp.fetch(url, {
-      muteHttpExceptions: true,
-      followRedirects: true
-    });
-  }catch(err){
-    // Surface the real cause: a permissions error here means the
-    // "Connect to an external service" scope was never authorized:
-    // run testAnalyze() once from the editor to trigger the prompt.
-    return {ok:false, reason:'fetch_error', detail:String(err).slice(0,300)};
-  }
-  var code = resp.getResponseCode();
-  if(code >= 400) return {ok:false, reason:'http_' + code};
-  var html = resp.getContentText() || '';
-  if(!html) return {ok:false, reason:'empty_response'};
-  if(html.length > 900000) html = html.slice(0, 900000);
 
+  var raw = fetchRaw_(url);
+
+  // Raw fetch failed (timeout, blocked, DNS). Cloudflare's real browser
+  // can often reach what UrlFetchApp cannot, so try a render before we
+  // ever report a failure.
+  if(!raw.ok){
+    var rescueHtml = renderWithCloudflare_(url);
+    if(rescueHtml){
+      var rf = extractFacts_(rescueHtml, url);
+      rf.rendered = true;
+      rf.renderReason = 'fetch_failed';
+      return {ok:true, facts:rf};
+    }
+    return {ok:false, reason:raw.reason, detail:raw.detail};
+  }
+
+  var facts = extractFacts_(raw.html, url);
+
+  // If the delivered HTML looks like a JS shell, render and re-read.
+  if(looksLikeShell_(facts, raw.html)){
+    var renderedHtml = renderWithCloudflare_(url);
+    if(renderedHtml){
+      var rf2 = extractFacts_(renderedHtml, url);
+      // Only prefer the rendered read if it actually recovered content.
+      if(rf2.wordCount > facts.wordCount || rf2.h1Count > facts.h1Count){
+        rf2.rendered = true;
+        rf2.renderReason = 'js_shell';
+        return {ok:true, facts:rf2};
+      }
+    }
+    // Render unavailable (cap hit / failed): be honest, don't fake it.
+    facts.rendered = false;
+    facts.jsShellSuspected = true;
+    return {ok:true, facts:facts};
+  }
+
+  facts.rendered = false;
+  return {ok:true, facts:facts};
+}
+
+/**
+ * Raw server-side fetch. Returns {ok:true, html} or {ok:false, reason}.
+ * Retries once over http:// if an https:// fetch fails, so a plain
+ * protocol mismatch never surfaces as a failure to the visitor.
+ */
+function fetchRaw_(url){
+  var attempts = [url];
+  if(/^https:\/\//i.test(url)) attempts.push(url.replace(/^https:/i, 'http:'));
+  var lastReason = 'fetch_error', lastDetail = '';
+  for(var i = 0; i < attempts.length; i++){
+    try{
+      var resp = UrlFetchApp.fetch(attempts[i], {muteHttpExceptions:true, followRedirects:true});
+      var code = resp.getResponseCode();
+      if(code >= 400){ lastReason = 'http_' + code; continue; }
+      var html = resp.getContentText() || '';
+      if(!html){ lastReason = 'empty_response'; continue; }
+      if(html.length > 900000) html = html.slice(0, 900000);
+      return {ok:true, html:html};
+    }catch(err){
+      lastReason = 'fetch_error';
+      lastDetail = String(err).slice(0,300);
+    }
+  }
+  return {ok:false, reason:lastReason, detail:lastDetail};
+}
+
+/**
+ * Heuristic: does this HTML look like a JavaScript shell whose real
+ * content only appears after scripts run? Conservative on purpose, so we
+ * spend a render only when the raw read genuinely has little to score.
+ */
+function looksLikeShell_(facts, html){
+  var spaMarker = /<div[^>]+id\s*=\s*["'](root|app|__next|__nuxt|q-app)["']/i.test(html)
+    || /__NEXT_DATA__|data-reactroot|data-react-root|ng-version|data-server-rendered|window\.__NUXT__|__NUXT__/i.test(html);
+  if(facts.wordCount < 60) return true;               // almost nothing to read
+  if(spaMarker && facts.wordCount < 200) return true;  // known SPA + thin body
+  return false;
+}
+
+/**
+ * Renders a URL through Cloudflare Browser Rendering (REST) and returns
+ * the rendered HTML string, or null if unavailable (missing keys, daily
+ * cap reached, or any error). Never throws.
+ */
+function renderWithCloudflare_(url){
+  var props = PropertiesService.getScriptProperties();
+  var acct = props.getProperty('CF_ACCOUNT_ID');
+  var token = props.getProperty('CF_BROWSER_TOKEN');
+  if(!acct || !token) return null;
+  if(!underDailyRenderCap_(props)) return null;
+  try{
+    var endpoint = 'https://api.cloudflare.com/client/v4/accounts/' + acct + '/browser-rendering/content';
+    var resp = UrlFetchApp.fetch(endpoint, {
+      method: 'post',
+      contentType: 'application/json',
+      headers: { Authorization: 'Bearer ' + token },
+      payload: JSON.stringify({ url: url }),
+      muteHttpExceptions: true
+    });
+    if(resp.getResponseCode() !== 200) return null;
+    var data = JSON.parse(resp.getContentText() || '{}');
+    if(data && data.success && data.result){
+      bumpDailyRenderCount_(props);
+      var html = String(data.result);
+      if(html.length > 900000) html = html.slice(0, 900000);
+      return html;
+    }
+  }catch(err){ /* fall through to null: honest degradation, never a fake */ }
+  return null;
+}
+
+function renderCountKey_(){
+  return 'CF_RENDERS_' + Utilities.formatDate(new Date(), 'GMT', 'yyyyMMdd');
+}
+function underDailyRenderCap_(props){
+  var n = parseInt(props.getProperty(renderCountKey_()) || '0', 10);
+  return n < RENDER_DAILY_CAP;
+}
+function bumpDailyRenderCount_(props){
+  var key = renderCountKey_();
+  var n = parseInt(props.getProperty(key) || '0', 10);
+  props.setProperty(key, String(n + 1));
+}
+
+/**
+ * Extracts verifiable on-page facts from an HTML string. Pure parsing —
+ * works identically on a raw fetch or a Cloudflare-rendered page.
+ */
+function extractFacts_(html, url){
   function attr(tag, name){
     var m = tag.match(new RegExp(name + '\\s*=\\s*("([^"]*)"|\'([^\']*)\')', 'i'));
     return m ? (m[2] !== undefined ? m[2] : m[3]) : null;
@@ -183,7 +351,7 @@ function analyzePage(url){
   var shared = titleWords.filter(function(w){ return normH1.indexOf(w) !== -1; }).length;
   var h1UnrelatedToTitle = !!normH1 && !!normTitle && titleWords.length > 0 && shared === 0;
 
-  return {ok:true, facts:{
+  return {
     finalUrl: url,
     title: title,
     titleLength: title.length,
@@ -207,5 +375,5 @@ function analyzePage(url){
     h1DuplicatesTitle: h1DuplicatesTitle,
     h1UnrelatedToTitle: h1UnrelatedToTitle,
     textSample: text.slice(0, 4000)
-  }};
+  };
 }
