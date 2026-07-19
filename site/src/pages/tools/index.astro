@@ -56,8 +56,44 @@ const checks = [
     </div>
   </section>
 
+  <!-- Funnel Leak & ROI Calculator (live) -->
+  <section id="roi" class="scroll-mt-28 border-t border-navy/10">
+    <div class="mx-auto max-w-5xl px-[5vw] py-16">
+      <div class="mx-auto max-w-2xl text-center">
+        <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">Calculator</p>
+        <h2 class="reveal mt-3 font-display text-[clamp(1.6rem,3vw,2.4rem)] leading-[1.12] font-bold text-navy" style="--d:80ms">
+          Funnel Leak &amp; ROI Calculator
+        </h2>
+        <p class="reveal mt-3 text-lg text-navy/70" style="--d:140ms">
+          Pure math, no black box: your numbers against a healthy 3% conversion benchmark, live as you move the sliders.
+        </p>
+      </div>
+      <div class="reveal mt-10" style="--d:180ms">
+        <FunnelRoiCalculator client:visible />
+      </div>
+    </div>
+  </section>
+
+  <!-- Competitor Threat Estimator (live) -->
+  <section id="competitor" class="scroll-mt-28 border-t border-navy/10 bg-off">
+    <div class="mx-auto max-w-3xl px-[5vw] py-16">
+      <div class="mx-auto max-w-2xl text-center">
+        <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">Quiz</p>
+        <h2 class="reveal mt-3 font-display text-[clamp(1.6rem,3vw,2.4rem)] leading-[1.12] font-bold text-navy" style="--d:80ms">
+          Competitor Threat Estimator
+        </h2>
+        <p class="reveal mt-3 text-lg text-navy/70" style="--d:140ms">
+          Answer three questions about your main competitor. We score it with a fixed weighted matrix, no scraping, no guessing.
+        </p>
+      </div>
+      <div class="reveal mt-10" style="--d:180ms">
+        <CompetitorThreat client:visible />
+      </div>
+    </div>
+  </section>
+
   <!-- Channel checks -->
-  <section class="border-t border-navy/10 bg-off">
+  <section class="border-t border-navy/10">
     <div class="mx-auto max-w-6xl px-[5vw] py-16">
       <div class="mx-auto max-w-2xl text-center">
         <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">Channel checks</p>
@@ -97,41 +133,5 @@ const checks = [
       secondaryLabel="Talk to us"
       secondaryHref="/contact/"
     />
-  </section>
-
-  <!-- Funnel Leak & ROI Calculator (live) -->
-  <section id="roi" class="scroll-mt-28 border-t border-navy/10">
-    <div class="mx-auto max-w-5xl px-[5vw] py-16">
-      <div class="mx-auto max-w-2xl text-center">
-        <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">Calculator</p>
-        <h2 class="reveal mt-3 font-display text-[clamp(1.6rem,3vw,2.4rem)] leading-[1.12] font-bold text-navy" style="--d:80ms">
-          Funnel Leak &amp; ROI Calculator
-        </h2>
-        <p class="reveal mt-3 text-lg text-navy/70" style="--d:140ms">
-          Pure math, no black box: your numbers against a healthy 3% conversion benchmark, live as you move the sliders.
-        </p>
-      </div>
-      <div class="reveal mt-10" style="--d:180ms">
-        <FunnelRoiCalculator client:visible />
-      </div>
-    </div>
-  </section>
-
-  <!-- Competitor Threat Estimator (live) -->
-  <section id="competitor" class="scroll-mt-28 border-t border-navy/10 bg-off">
-    <div class="mx-auto max-w-3xl px-[5vw] py-16">
-      <div class="mx-auto max-w-2xl text-center">
-        <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">Quiz</p>
-        <h2 class="reveal mt-3 font-display text-[clamp(1.6rem,3vw,2.4rem)] leading-[1.12] font-bold text-navy" style="--d:80ms">
-          Competitor Threat Estimator
-        </h2>
-        <p class="reveal mt-3 text-lg text-navy/70" style="--d:140ms">
-          Answer three questions about your main competitor. We score it with a fixed weighted matrix, no scraping, no guessing.
-        </p>
-      </div>
-      <div class="reveal mt-10" style="--d:180ms">
-        <CompetitorThreat client:visible />
-      </div>
-    </div>
   </section>
 </Base>
