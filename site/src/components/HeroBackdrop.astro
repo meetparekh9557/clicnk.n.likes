@@ -1,0 +1,65 @@
+---
+// Homepage hero background motion. Deliberately NOT the old aurora (big
+// coloured blobs) - instead a faint navy signal-grid that drifts one cell
+// forever, with a slow teal "scan" sheen sweeping across it, echoing the
+// beam in the audit card. Edge-masked to a soft vignette so the headline
+// and form stay crisp. Pure CSS transforms (GPU-cheap); fully stilled
+// under prefers-reduced-motion.
+---
+<div class="hero-fx" aria-hidden="true">
+  <div class="hero-fx__grid"></div>
+  <div class="hero-fx__sheen"></div>
+</div>
+
+<style>
+  .hero-fx {
+    position: absolute;
+    inset: 0;
+    z-index: -10;
+    overflow: hidden;
+    pointer-events: none;
+    -webkit-mask-image: radial-gradient(120% 100% at 70% 0%, #000 35%, transparent 78%);
+    mask-image: radial-gradient(120% 100% at 70% 0%, #000 35%, transparent 78%);
+  }
+
+  /* Drifting dot grid: two dot layers at different sizes for subtle depth. */
+  .hero-fx__grid {
+    position: absolute;
+    inset: -60px;
+    background-image:
+      radial-gradient(circle, rgba(26, 43, 74, 0.07) 1px, transparent 1.6px),
+      radial-gradient(circle, rgba(78, 205, 196, 0.10) 1px, transparent 1.6px);
+    background-size: 30px 30px, 90px 90px;
+    background-position: 0 0, 0 0;
+    animation: heroDrift 22s linear infinite;
+  }
+
+  /* Slow scan sheen sweeping left-to-right, matching the audit beam. */
+  .hero-fx__sheen {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      110deg,
+      transparent 34%,
+      rgba(78, 205, 196, 0.14) 48%,
+      rgba(78, 205, 196, 0.05) 54%,
+      transparent 66%
+    );
+    transform: translateX(-45%);
+    animation: heroSheen 11s ease-in-out infinite;
+  }
+
+  @keyframes heroDrift {
+    to { transform: translate(30px, 30px); }
+  }
+
+  @keyframes heroSheen {
+    0%, 100% { transform: translateX(-45%); opacity: 0.7; }
+    50% { transform: translateX(45%); opacity: 1; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-fx__grid,
+    .hero-fx__sheen { animation: none; }
+  }
+</style>

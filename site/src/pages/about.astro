@@ -1,13 +1,17 @@
 ---
-// About page, ported from v1: origin story, how-we're-built card,
-// how-we-work trio (incl. the profit-reporting note), contact form.
+// About page: mission, the founder's real story (adapted from the
+// founder's own LinkedIn writing), how-we-work principles, contact form.
+// Multi-industry framing throughout. The founder note is first-person
+// and true to the source; name + photo drop into the marked spot.
 import Base from '../layouts/Base.astro';
 import Card from '../components/Card.astro';
+import ClientLogos from '../components/ClientLogos.astro';
+import InlineCta from '../components/InlineCta.astro';
 import SimpleForm from '../components/islands/SimpleForm.jsx';
 import { withBase } from '../lib/url';
 import Clock from '@lucide/astro/icons/clock';
 import MessageSquare from '@lucide/astro/icons/message-square';
-import Zap from '@lucide/astro/icons/zap';
+import Layers from '@lucide/astro/icons/layers';
 
 const formFields = [
   { name: 'name', label: 'Full name', placeholder: 'Your name' },
@@ -20,45 +24,101 @@ const formFields = [
 
 <Base
   title="About | Click.n.likes"
-  description="Click.n.likes is a full-stack organic growth agency for SaaS, manufacturers, legal and professional firms, D2C brands and local businesses - built for owners already burned by agencies that promised the world and delivered a follower count."
+  description="Nine years of building organic growth systems for businesses across industries - SEO and content that keep generating leads long after the spend stops. Built on fundamentals, not the algorithm update of the month."
 >
-  <section class="mx-auto grid max-w-6xl gap-12 px-[5vw] pt-16 pb-14 lg:grid-cols-2 lg:items-center lg:pt-20">
-    <div>
+  <!-- Hero -->
+  <section class="relative overflow-hidden">
+    <div class="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-teal/[0.07] via-transparent to-transparent"></div>
+    <div class="mx-auto max-w-6xl px-[5vw] pt-16 pb-14 lg:pt-20">
       <p class="reveal inline-flex items-center gap-2 rounded-full border border-teal/30 bg-teal/5 px-4 py-1.5 text-[13px] font-semibold text-navy">
         <span class="h-1.5 w-1.5 rounded-full bg-teal"></span> About Click.n.likes
       </p>
-      <h1 class="reveal-mask mt-5 font-display text-[clamp(2.1rem,4.4vw,3.4rem)] leading-[1.08] font-bold text-navy">
-        <span class="mask-line"><span>We started this agency because</span></span>
-        <span class="mask-line" style="--d:120ms"><span>most agencies waste your money.</span></span>
+      <h1 class="reveal-mask mt-5 max-w-3xl font-display text-[clamp(2.1rem,4.4vw,3.4rem)] leading-[1.08] font-bold text-navy">
+        <span class="mask-line"><span>Growth that does not disappear</span></span>
+        <span class="mask-line" style="--d:120ms"><span>the moment the budget does.</span></span>
       </h1>
-      <p class="reveal mt-5 text-lg leading-relaxed text-navy/70" style="--d:240ms">
+      <p class="reveal mt-5 max-w-2xl text-lg leading-relaxed text-navy/70" style="--d:240ms">
         Click.n.likes is a full-stack organic growth agency for SaaS companies, manufacturers, legal and professional
-        firms, D2C brands and local businesses. We exist for the owner who's already been burned by an agency that
-        promised the world and delivered a follower count.
+        firms, D2C brands and local businesses. We build organic systems, SEO and content that keep generating leads
+        long after the work is done, so growth compounds instead of resetting every time the ad spend pauses.
       </p>
-      <p class="reveal mt-4 text-lg leading-relaxed text-navy/70" style="--d:320ms">
-        Every service we run, SEO, AI Search, content, social, websites and paid, ties back to one thing: does this
-        get you an actual customer.
-      </p>
-    </div>
-    <div class="reveal" style="--d:160ms">
-      <Card class="p-8">
-        <div class="flex items-center justify-between">
-          <b class="font-display text-base font-semibold text-navy">How we're built</b>
-          <span class="inline-flex items-center gap-1.5 rounded-full bg-teal/10 px-3 py-1 text-xs font-semibold text-teal-dark">
-            <i class="h-1.5 w-1.5 rounded-full bg-teal"></i> 2024 →
-          </span>
-        </div>
-        <ul class="mt-6 space-y-5">
-          <li class="flex gap-3.5"><span class="mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full bg-teal"></span><span class="text-[15px] text-navy/80"><b class="text-navy">Full-stack, not siloed.</b> SEO, content, social and web run as one coordinated strategy, handled by specialists instead of scattered across vendors.</span></li>
-          <li class="flex gap-3.5"><span class="mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full bg-teal"></span><span class="text-[15px] text-navy/80"><b class="text-navy">Niche-first.</b> A SaaS company and a manufacturer need completely different playbooks. We never copy-paste.</span></li>
-          <li class="flex gap-3.5"><span class="mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full bg-teal"></span><span class="text-[15px] text-navy/80"><b class="text-navy">Built to scale globally.</b> Same rigor, priced for growth-stage businesses anywhere, from ₹16,000.</span></li>
-        </ul>
-      </Card>
     </div>
   </section>
 
-  <section class="border-y border-navy/10 bg-off">
+  <!-- The founder's story -->
+  <section class="border-t border-navy/10 bg-off">
+    <div class="mx-auto max-w-6xl px-[5vw] py-16">
+      <div class="grid gap-10 lg:grid-cols-[1.35fr_0.65fr] lg:items-start">
+        <div class="reveal">
+          <p class="text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">Why this agency exists</p>
+          <h2 class="mt-3 font-display text-[clamp(1.6rem,3vw,2.4rem)] leading-[1.15] font-bold text-navy">
+            Most businesses are renting their growth. We build the kind you own.
+          </h2>
+          <div class="mt-6 space-y-5 text-[17px] leading-relaxed text-navy/75">
+            <p>
+              Nearly every business I have worked with started the same way: spending on ads, getting results, then
+              spending more to hold on to those results, and quietly realising that the moment the budget stops,
+              everything stops. That is not a growth strategy. That is a dependency.
+            </p>
+            <p>
+              For the past nine years, I have helped businesses across industries break that cycle by building organic
+              growth systems, SEO and content that keep generating leads long after the work is done. A legal services
+              brand came to me struggling to generate consistent inbound leads; within three months, SEO was their most
+              reliable source. An eCommerce brand wanted visibility beyond paid ads; within two months, their site was
+              appearing directly in Google's AI answers, pulling traffic and leads from a channel their competitors had
+              not even considered yet.
+            </p>
+            <p>
+              Here is what makes the difference: I do not build strategies around the latest algorithm update or the
+              trending tactic of the month. I build on fundamentals, how people actually search, how trust is actually
+              built, and how content compounds over time. Algorithms change. Human behaviour does not. Strategies built
+              on that foundation keep working regardless of what Google ships next.
+            </p>
+            <p>
+              I will be upfront about one thing: organic growth is not instant. If you need leads next week, paid ads
+              are your answer. But if you are ready to build something that does not vanish when the budget does, that
+              is exactly what we do, always built around your specific business, never a template.
+            </p>
+          </div>
+        </div>
+
+        <!-- Founder note card. Drop the founder's name + photo into the marked spots. -->
+        <aside class="reveal lg:sticky lg:top-24" style="--d:140ms">
+          <Card class="p-7">
+            <div class="flex items-center gap-4">
+              <!-- Founder photo goes here (replace the initials circle) -->
+              <span class="grid h-14 w-14 shrink-0 place-items-center rounded-full bg-navy font-display text-lg font-bold text-white">C.n.l</span>
+              <div>
+                <p class="font-display text-base font-semibold text-navy">The Founder</p>
+                <p class="text-sm text-navy/55">Click.n.likes</p>
+              </div>
+            </div>
+            <p class="mt-5 text-[15px] leading-relaxed text-navy/75">
+              "Nine years in, my rule has not changed: build the growth asset, not the dependency. If it stops working
+              the day you stop paying, it was never yours."
+            </p>
+            <div class="mt-5 flex flex-wrap gap-x-6 gap-y-2 border-t border-navy/10 pt-5 text-sm">
+              <span><b class="font-display text-navy">9 yrs</b> <span class="text-navy/55">building organic growth</span></span>
+              <span><b class="font-display text-navy">Every</b> <span class="text-navy/55">industry, tailored</span></span>
+            </div>
+          </Card>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- Mid-page CTA -->
+  <section class="mx-auto max-w-6xl px-[5vw] py-12">
+    <InlineCta
+      eyebrow="No dependency, just growth you own"
+      title="Curious what an owned growth asset looks like for your business?"
+      primaryLabel="Talk to a strategist"
+      secondaryLabel="Scan my site free"
+    />
+  </section>
+
+  <!-- How we work -->
+  <section class="border-t border-navy/10">
     <div class="mx-auto max-w-6xl px-[5vw] py-16">
       <div class="mx-auto max-w-2xl text-center">
         <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">How we work</p>
@@ -67,34 +127,43 @@ const formFields = [
         </h2>
         <p class="reveal mt-4 text-lg text-navy/70" style="--d:140ms">
           And one number we report that most agencies don't: not just revenue, but <b class="text-navy">profit</b>. A
-          ₹50,000 month means nothing if it costs ₹60,000 to generate it, so every report breaks out what a result
-          was actually worth after cost, not just the traffic or revenue headline.
+          ₹50,000 month means nothing if it costs ₹60,000 to generate it, so every report breaks out what a result was
+          actually worth after cost, not just the traffic or revenue headline.
         </p>
       </div>
       <div class="mt-10 grid gap-5 sm:grid-cols-3">
         <Card class="reveal" style="--d:0ms">
-          <div class="mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 text-teal-dark"><Clock size={20} stroke-width={2} aria-hidden="true" /></div>
-          <h3 class="font-display text-base font-semibold text-navy">Research first</h3>
-          <p class="mt-1.5 text-sm leading-relaxed text-navy/60">We study your competitors before we write a word of strategy or copy.</p>
+          <div class="mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 text-teal-dark"><MessageSquare size={20} stroke-width={2} aria-hidden="true" /></div>
+          <h3 class="font-display text-base font-semibold text-navy">Fundamentals, not fads</h3>
+          <p class="mt-1.5 text-sm leading-relaxed text-navy/60">Built on how people search and how trust compounds, not the algorithm update of the month.</p>
         </Card>
         <Card class="reveal" style="--d:90ms">
-          <div class="mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 text-teal-dark"><MessageSquare size={20} stroke-width={2} aria-hidden="true" /></div>
-          <h3 class="font-display text-base font-semibold text-navy">Plain language</h3>
-          <p class="mt-1.5 text-sm leading-relaxed text-navy/60">No jargon-heavy decks. If we can't explain it simply, we haven't understood it yet.</p>
+          <div class="mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 text-teal-dark"><Layers size={20} stroke-width={2} aria-hidden="true" /></div>
+          <h3 class="font-display text-base font-semibold text-navy">Built for you, not a template</h3>
+          <p class="mt-1.5 text-sm leading-relaxed text-navy/60">Sometimes a full SEO and content build, sometimes consulting your team on what to fix. Always specific to your business.</p>
         </Card>
         <Card class="reveal" style="--d:180ms">
-          <div class="mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 text-teal-dark"><Zap size={20} stroke-width={2} aria-hidden="true" /></div>
+          <div class="mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 text-teal-dark"><Clock size={20} stroke-width={2} aria-hidden="true" /></div>
           <h3 class="font-display text-base font-semibold text-navy">Honest timelines</h3>
-          <p class="mt-1.5 text-sm leading-relaxed text-navy/60">Organic growth takes months, not days. We tell you that upfront, every time.</p>
+          <p class="mt-1.5 text-sm leading-relaxed text-navy/60">Organic compounds, it does not switch on overnight. We tell you that upfront, every time.</p>
         </Card>
       </div>
     </div>
   </section>
 
+  <!-- Clients -->
+  <section class="border-t border-navy/10 bg-off">
+    <div class="mx-auto max-w-6xl px-[5vw] py-14">
+      <p class="reveal text-center text-xs font-semibold tracking-[0.14em] text-navy/40 uppercase">Trusted across industries</p>
+      <div class="reveal mt-7" style="--d:80ms"><ClientLogos gridCols="grid-cols-3 sm:grid-cols-5" /></div>
+    </div>
+  </section>
+
+  <!-- Contact form -->
   <section class="mx-auto max-w-3xl px-[5vw] py-16 text-center">
     <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">Let's talk</p>
     <h2 class="reveal mt-3 font-display text-[clamp(1.6rem,3vw,2.4rem)] leading-[1.12] font-bold text-navy" style="--d:80ms">
-      Have a project in mind? Tell us where you're stuck.
+      Ready to build growth you actually own?
     </h2>
     <div class="reveal mt-8" style="--d:160ms">
       <SimpleForm

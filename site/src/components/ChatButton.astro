@@ -1,11 +1,41 @@
 ---
 // Persistent WhatsApp chat button, fixed on every page (rendered from
 // Base). Sits below the mobile nav panel/scrim (z-30) so an open menu
-// covers it. Links to the real WhatsApp line from src/data/site.ts.
-import { contact } from '../data/site';
+// covers it. Links to the real WhatsApp line from src/data/site.ts, and
+// pre-fills the message with the exact page the visitor is on, so the
+// first message already carries context (which page, which service).
+import { contact, services } from '../data/site';
+
+// Strip the deploy base (/preview) so the path map works at / and /preview/.
+const base = import.meta.env.BASE_URL.replace(/\/+$/, '');
+const path = Astro.url.pathname.startsWith(base)
+  ? Astro.url.pathname.slice(base.length) || '/'
+  : Astro.url.pathname;
+
+// A human label for the page, so the auto-filled message reads naturally.
+function pageLabel(p: string): string {
+  if (p === '/') return 'your homepage';
+  if (p === '/tools/') return 'your free tools page';
+  if (p === '/contact/') return 'your contact page';
+  if (p === '/about/') return 'your About page';
+  if (p === '/work/') return 'your Work & Results page';
+  if (p === '/faq/') return 'your FAQ page';
+  if (p === '/privacy/') return 'your Privacy page';
+  if (p === '/terms/') return 'your Terms page';
+  if (p === '/insights/') return 'your Insights page';
+  if (p.startsWith('/insights/')) return 'one of your Insights articles';
+  if (p.startsWith('/services/')) {
+    const svc = services.find((s) => s.href === p);
+    return svc ? `your ${svc.title} page` : 'one of your service pages';
+  }
+  return 'your website';
+}
+
+const prefill = `Hi Click.n.likes, I'm on ${pageLabel(path)} and I'd like to grow my business. Can you help?`;
+const href = `${contact.whatsappHref}?text=${encodeURIComponent(prefill)}`;
 ---
 <a
-  href={contact.whatsappHref}
+  href={href}
   target="_blank"
   rel="noopener"
   aria-label="Chat with us on WhatsApp"

@@ -7,6 +7,7 @@
 import Base from '../../layouts/Base.astro';
 import Button from '../../components/Button.astro';
 import Card from '../../components/Card.astro';
+import InlineCta from '../../components/InlineCta.astro';
 import StatTile from '../../components/StatTile.astro';
 import FirstPageCliff from '../../components/islands/FirstPageCliff.jsx';
 import { serviceDetails, serviceProof } from '../../data/services';
@@ -126,6 +127,17 @@ const HeroIcon = icons[service.cards[0].icon];
       </div>
     </section>
   )}
+
+  <!-- Mid-page CTA -->
+  <section class="mx-auto max-w-6xl px-[5vw] py-4">
+    <InlineCta
+      eyebrow={`${service.title}, done right`}
+      title={`Ready to put ${service.title} to work for your business?`}
+      primaryLabel="Build my instant quote"
+      secondaryLabel="Run a free check"
+      secondaryHref={`/tools/#${service.toolKey}`}
+    />
+  </section>
 
   <!-- Free tool (tool island embeds here in the tools milestone) -->
   <section class="border-y border-navy/10 bg-off">

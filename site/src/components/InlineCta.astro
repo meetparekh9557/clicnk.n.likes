@@ -1,0 +1,51 @@
+---
+// Compact mid-page CTA, meant to sit inside a page's body (not the big
+// pre-footer CtaBand). Teal-tinted card, headline + primary/secondary
+// buttons. Every prop has a sensible default so a bare <InlineCta /> works,
+// but callers pass page-specific copy so the ask matches the context.
+import { withBase } from '../lib/url';
+interface Props {
+  eyebrow?: string;
+  title?: string;
+  primaryLabel?: string;
+  primaryHref?: string;
+  secondaryLabel?: string;
+  secondaryHref?: string;
+  class?: string;
+}
+const {
+  eyebrow = 'Ready when you are',
+  title = 'See where you stand, then talk to a strategist.',
+  primaryLabel = 'Get your instant quote',
+  primaryHref = '/contact/',
+  secondaryLabel = 'Scan my site free',
+  secondaryHref = '/tools/',
+  class: extra = '',
+} = Astro.props;
+---
+<div class={`reveal overflow-hidden rounded-2xl border border-teal/30 bg-gradient-to-br from-teal/[0.08] to-teal/[0.02] p-7 sm:p-8 ${extra}`.trim()}>
+  <div class="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+    <div class="max-w-xl">
+      <p class="text-xs font-semibold tracking-[0.12em] text-teal-dark uppercase">{eyebrow}</p>
+      <p class="mt-2 font-display text-xl font-bold text-navy sm:text-2xl">{title}</p>
+    </div>
+    <div class="flex shrink-0 flex-wrap gap-3">
+      <a
+        href={withBase(primaryHref)}
+        data-magnetic
+        class="inline-flex items-center gap-2 rounded-full bg-navy px-5 py-3 text-sm font-semibold text-white transition-all duration-300 ease-out-quart hover:-translate-y-0.5 hover:bg-coral"
+      >
+        {primaryLabel}
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+      {secondaryLabel && (
+        <a
+          href={withBase(secondaryHref)}
+          class="inline-flex items-center gap-2 rounded-full border-[1.5px] border-navy/15 px-5 py-3 text-sm font-semibold text-navy transition-all duration-300 ease-out-quart hover:border-teal hover:text-teal-dark"
+        >
+          {secondaryLabel}
+        </a>
+      )}
+    </div>
+  </div>
+</div>

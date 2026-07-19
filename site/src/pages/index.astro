@@ -11,6 +11,7 @@ import AuditDemo from '../components/islands/AuditDemo.jsx';
 import FirstPageCliff from '../components/islands/FirstPageCliff.jsx';
 import StatTile from '../components/StatTile.astro';
 import ClientLogos from '../components/ClientLogos.astro';
+import HeroBackdrop from '../components/HeroBackdrop.astro';
 import { services } from '../data/site';
 import { marketStats } from '../data/market';
 import { withBase } from '../lib/url';
@@ -55,7 +56,7 @@ const iconWrap = 'mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 t
 >
   <!-- ============ HERO: the audit weapon ============ -->
   <section class="relative overflow-hidden">
-    <div class="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-teal/[0.07] via-transparent to-transparent"></div>
+    <HeroBackdrop />
     <div class="mx-auto max-w-6xl px-[5vw] pt-14 pb-14 lg:pt-20">
       <div class="grid items-center gap-x-10 gap-y-12 lg:grid-cols-[1.12fr_0.88fr]">
         <!-- Left: message + real scan form -->
@@ -104,7 +105,7 @@ const iconWrap = 'mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 t
         Trusted across industries
       </p>
       <div class="reveal mt-7" style="--d:80ms">
-        <ClientLogos limit={10} />
+        <ClientLogos limit={10} gridCols="grid-cols-2 sm:grid-cols-5" />
       </div>
     </div>
   </section>
@@ -257,7 +258,7 @@ const iconWrap = 'mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 t
         </ul>
       </div>
       <div class="reveal grid gap-4 sm:grid-cols-2" style="--d:120ms">
-        <Card><div class={iconWrap}><Layers size={20} stroke-width={2} aria-hidden="true" /></div><h3 class="font-display text-base font-semibold text-navy">Full-stack</h3><p class="mt-1.5 text-sm text-navy/60">SEO to websites, one strategist owns the whole picture.</p></Card>
+        <Card><div class={iconWrap}><Layers size={20} stroke-width={2} aria-hidden="true" /></div><h3 class="font-display text-base font-semibold text-navy">Full-stack</h3><p class="mt-1.5 text-sm text-navy/60">SEO to websites, specialists working under one coordinated strategy.</p></Card>
         <Card><div class={iconWrap}><Zap size={20} stroke-width={2} aria-hidden="true" /></div><h3 class="font-display text-base font-semibold text-navy">Fast to launch</h3><p class="mt-1.5 text-sm text-navy/60">Most engagements go live inside 7 working days.</p></Card>
         <Card><div class={iconWrap}><BarChart3 size={20} stroke-width={2} aria-hidden="true" /></div><h3 class="font-display text-base font-semibold text-navy">Revenue-tied</h3><p class="mt-1.5 text-sm text-navy/60">We report against bookings and leads, not just rankings.</p></Card>
         <Card><div class={iconWrap}><MapPin size={20} stroke-width={2} aria-hidden="true" /></div><h3 class="font-display text-base font-semibold text-navy">Locally fluent, globally built</h3><p class="mt-1.5 text-sm text-navy/60">Built around how your specific market actually searches and buys: wherever that is.</p></Card>

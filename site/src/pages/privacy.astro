@@ -1,0 +1,67 @@
+---
+// Privacy Policy. Content ported from v1, with one deliberate update:
+// the site now runs Google Analytics on production (added this rebuild),
+// so the old "no third-party trackers" line is replaced with an honest
+// analytics disclosure. Plain-English register, per the founder's voice.
+import Base from '../layouts/Base.astro';
+import { contact } from '../data/site';
+
+const sections = [
+  {
+    h: 'What we collect',
+    p: 'When you use a form or a free tool on this site, we collect what you type in: typically your name, business name, email address, WhatsApp number, and the details you share about your business or website (such as a URL you ask us to analyze). Our free tools fetch and analyze only the page you explicitly submit.',
+  },
+  {
+    h: 'How we use it',
+    p: 'To send you the report, quotation or reply you requested, to follow up on your enquiry, and, if you subscribed, to send our newsletter (unsubscribe anytime by replying). We do not sell, rent or share your information with third parties for their marketing.',
+  },
+  {
+    h: 'Where it lives',
+    p: "Submissions are delivered to our business inbox and logged in a private spreadsheet, both on Google's infrastructure, accessible only to Click.n.likes. Emails to you are sent from business@clicknlikes.com.",
+  },
+  {
+    h: 'Analytics & cookies',
+    p: 'We use Google Analytics to understand, in aggregate, how visitors find and move through this site, so we can improve it. This sets analytics cookies and shares standard usage data (such as pages viewed, approximate region and device type) with Google. We do not run advertising cookies, and we do not sell your data. The free tools on this site never load third-party trackers into your results. You can block analytics cookies in your browser settings at any time without affecting how the site works.',
+  },
+  {
+    h: 'Your choices',
+    plink: true,
+  },
+];
+---
+
+<Base
+  title="Privacy Policy | Click.n.likes"
+  description="How Click.n.likes collects, uses and protects the information you share through our forms and free tools. Plain English, no legalese."
+>
+  <section class="mx-auto max-w-3xl px-[5vw] pt-16 pb-6 lg:pt-20">
+    <p class="reveal inline-flex items-center gap-2 rounded-full border border-teal/30 bg-teal/5 px-4 py-1.5 text-[13px] font-semibold text-navy">
+      <span class="h-1.5 w-1.5 rounded-full bg-teal"></span> Legal
+    </p>
+    <h1 class="reveal-mask mt-5 font-display text-[clamp(2rem,4vw,3rem)] leading-[1.1] font-bold text-navy">
+      <span class="mask-line"><span>Privacy Policy</span></span>
+    </h1>
+    <p class="reveal mt-4 text-lg leading-relaxed text-navy/70" style="--d:140ms">
+      Plain English, because that is how we do everything. Last updated: July 2026.
+    </p>
+  </section>
+
+  <section class="mx-auto max-w-3xl px-[5vw] pb-16">
+    <div class="space-y-8">
+      {sections.map((s, i) => (
+        <div class="reveal" style={`--d:${i * 60}ms`}>
+          <h2 class="font-display text-lg font-semibold text-navy">{s.h}</h2>
+          {s.plink ? (
+            <p class="mt-2 text-[15.5px] leading-relaxed text-navy/70">
+              Want your data corrected or deleted? Email{' '}
+              <a href={`mailto:${contact.email}`} class="font-medium text-teal-dark underline decoration-teal/40 underline-offset-2 hover:decoration-teal">{contact.email}</a>{' '}
+              and we will do it within 7 days.
+            </p>
+          ) : (
+            <p class="mt-2 text-[15.5px] leading-relaxed text-navy/70">{s.p}</p>
+          )}
+        </div>
+      ))}
+    </div>
+  </section>
+</Base>

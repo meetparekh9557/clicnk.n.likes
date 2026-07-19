@@ -65,7 +65,12 @@ Hard gates: Lighthouse ≥95/page, <2s mobile, zero horizontal overflow at
       founder voice). Bodies ported verbatim into `site/src/data/articles.ts`
       (internal links rebased via withBase); newsletter island reuses v1's
       blog-newsletter email/log behavior.
-- [ ] Work, About, FAQ, Contact, Privacy, Terms pages.
+- [x] Work, About, FAQ, Contact, Privacy, Terms pages, plus the Tools hub
+      shell (flagship live Website Health Scan runs for real; per-channel
+      interactive checks land in the tools milestone above). About carries the
+      founder's real story; every page has unique meta, multi-industry framing,
+      a mid-page InlineCta, the per-page-aware WhatsApp chat button, and the
+      even client-logo grid. Privacy discloses the new Google Analytics use.
 - [ ] Phase 3 polish pass: view transitions, animated calculator totals,
       self-drawing charts component, before/after slider component (for
       Phase 4), aurora hero, full motion audit, `prefers-reduced-motion`.

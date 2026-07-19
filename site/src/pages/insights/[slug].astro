@@ -3,6 +3,7 @@
 // v1 (data/articles.ts) with root-relative internal links, rebased
 // through withBase() so they work at / and /preview/.
 import Base from '../../layouts/Base.astro';
+import InlineCta from '../../components/InlineCta.astro';
 import { articles } from '../../data/articles';
 import { withBase } from '../../lib/url';
 
@@ -12,6 +13,15 @@ export function getStaticPaths() {
 
 const { article } = Astro.props;
 const body = article.body.replace(/href="(\/[^"]*)"/g, (_m, p) => `href="${withBase(p)}"`);
+
+// Split the article at a paragraph boundary near the middle so a CTA can
+// sit inside the read, not only at the top and bottom. Cutting only at
+// </p> keeps every block intact.
+const paras = body.split('</p>');
+const canSplit = paras.length >= 5;
+const mid = Math.ceil(paras.length / 2);
+const bodyTop = canSplit ? paras.slice(0, mid).join('</p>') + '</p>' : body;
+const bodyRest = canSplit ? paras.slice(mid).join('</p>') : '';
 ---
 
 <Base title={`${article.title} | Click.n.likes Insights`} description={article.excerpt}>
@@ -27,6 +37,17 @@ const body = article.body.replace(/href="(\/[^"]*)"/g, (_m, p) => `href="${withB
   </section>
 
   <section class="mx-auto max-w-3xl px-[5vw] pb-20">
-    <div class="article-body reveal" style="--d:200ms" set:html={body} />
+    <div class="article-body reveal" style="--d:200ms" set:html={bodyTop} />
+    {canSplit && (
+      <div class="my-10">
+        <InlineCta
+          eyebrow={`More on ${article.tag}?`}
+          title="We do this for clients every day. Want it done for you?"
+          primaryLabel="Get your instant quote"
+          secondaryLabel="Scan my site free"
+        />
+      </div>
+    )}
+    {canSplit && <div class="article-body" set:html={bodyRest} />}
   </section>
 </Base>

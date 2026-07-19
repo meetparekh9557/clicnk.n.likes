@@ -5,6 +5,7 @@
 import Base from '../layouts/Base.astro';
 import Card from '../components/Card.astro';
 import ClientLogos from '../components/ClientLogos.astro';
+import InlineCta from '../components/InlineCta.astro';
 import SimpleForm from '../components/islands/SimpleForm.jsx';
 import { withBase } from '../lib/url';
 
@@ -73,6 +74,15 @@ const formFields = [
     </div>
   </section>
 
+  <section class="mx-auto max-w-6xl px-[5vw] pb-4">
+    <InlineCta
+      eyebrow="Your category next"
+      title="Want a realistic growth curve mapped for your business?"
+      primaryLabel="Get your instant quote"
+      secondaryLabel="Run a free check"
+    />
+  </section>
+
   <section class="border-t border-navy/10">
     <div class="mx-auto max-w-6xl px-[5vw] py-16">
       <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">Clients we have worked with</p>
@@ -84,7 +94,7 @@ const formFields = [
         each market is actually searched and bought.
       </p>
       <div class="reveal mt-12" style="--d:200ms">
-        <ClientLogos />
+        <ClientLogos gridCols="grid-cols-3 sm:grid-cols-5" />
       </div>
     </div>
   </section>

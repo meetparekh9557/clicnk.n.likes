@@ -3,15 +3,20 @@
 // colour + lift on hover, per the founder's spec. Logos only, no names.
 // White backgrounds were stripped at build-prep so they blend on the
 // light surface. `limit` trims the set (homepage strip vs full Work grid).
+// `gridCols` switches from centred wrap to an even grid (equal gaps, no
+// ragged last row) - e.g. "grid-cols-2 sm:grid-cols-5" for a clean 2x5.
 import { clients } from '../data/clients';
 import { withBase } from '../lib/url';
 
-interface Props { limit?: number; class?: string; }
-const { limit, class: extra = '' } = Astro.props;
+interface Props { limit?: number; class?: string; gridCols?: string; }
+const { limit, class: extra = '', gridCols } = Astro.props;
 const list = limit ? clients.slice(0, limit) : clients;
+const wrapCls = gridCols
+  ? `grid ${gridCols} place-items-center gap-x-8 gap-y-9 ${extra}`
+  : `flex flex-wrap items-center justify-center gap-x-10 gap-y-8 ${extra}`;
 ---
 
-<div class={`flex flex-wrap items-center justify-center gap-x-10 gap-y-8 ${extra}`.trim()}>
+<div class={wrapCls.trim()}>
   {list.map((c) => (
     <img
       src={withBase(`/clients/${c.slug}.png`)}
