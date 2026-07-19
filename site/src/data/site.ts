@@ -46,11 +46,17 @@ export const services: ServiceLink[] = [
   },
 ];
 
+// Flat top-level links (rendered inline in the nav).
 export const primaryNav = [
   { title: 'Work', href: '/work/' },
   { title: 'About', href: '/about/' },
   { title: 'Insights', href: '/insights/' },
-  { title: 'More Free Checks', href: '/tools/' },
+];
+
+// Grouped under the "More" dropdown in the nav (and listed in the footer).
+export const moreNav = [
+  { title: 'Free Checks', href: '/tools/' },
+  { title: 'Pricing', href: '/pricing/' },
   { title: 'FAQs', href: '/faq/' },
 ];
 

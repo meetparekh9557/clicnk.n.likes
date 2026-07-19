@@ -10,7 +10,9 @@ import Card from '../../components/Card.astro';
 import InlineCta from '../../components/InlineCta.astro';
 import StatTile from '../../components/StatTile.astro';
 import FirstPageCliff from '../../components/islands/FirstPageCliff.jsx';
+import GatedTool from '../../components/islands/GatedTool.jsx';
 import { serviceDetails, serviceProof, serviceDeepDive } from '../../data/services';
+import { toolConfigs } from '../../data/toolConfigs';
 import { withBase } from '../../lib/url';
 import LayoutTemplate from '@lucide/astro/icons/layout-template';
 import Search from '@lucide/astro/icons/search';
@@ -57,6 +59,7 @@ const icons: Record<string, any> = {
 const { service } = Astro.props;
 const proof = serviceProof[service.slug];
 const deep = serviceDeepDive[service.slug];
+const toolConfig = toolConfigs[service.toolKey];
 const iconWrap = 'mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 text-teal-dark';
 const HeroIcon = icons[service.cards[0].icon];
 ---
@@ -77,8 +80,8 @@ const HeroIcon = icons[service.cards[0].icon];
       </h1>
       <p class="reveal mt-5 max-w-2xl text-lg leading-relaxed text-navy/70" style="--d:160ms">{service.lead}</p>
       <div class="reveal mt-8 flex flex-wrap items-center gap-4" style="--d:260ms">
-        <Button href={`/tools/#${service.toolKey}`} arrow magnetic>Run a free readiness check</Button>
-        <a href="#quote" class="text-sm font-semibold text-navy underline-offset-4 transition-colors hover:text-teal-dark hover:underline">or skip straight to pricing →</a>
+        <Button href="#tool" arrow magnetic>Run a free readiness check</Button>
+        <a href={withBase('/pricing/#quote')} class="text-sm font-semibold text-navy underline-offset-4 transition-colors hover:text-teal-dark hover:underline">or skip straight to pricing →</a>
       </div>
     </div>
   </section>
@@ -169,49 +172,26 @@ const HeroIcon = icons[service.cards[0].icon];
       eyebrow={`${service.title}, done right`}
       title={`Ready to put ${service.title} to work for your business?`}
       primaryLabel="Build my instant quote"
+      primaryHref="/pricing/#quote"
       secondaryLabel="Run a free check"
-      secondaryHref={`/tools/#${service.toolKey}`}
+      secondaryHref="#tool"
     />
   </section>
 
-  <!-- Free tool (tool island embeds here in the tools milestone) -->
-  <section class="border-y border-navy/10 bg-off">
-    <div class="mx-auto max-w-6xl px-[5vw] py-16">
+  <!-- Free tool: the real gated tool for this service, scored live -->
+  <section id="tool" class="scroll-mt-24 border-y border-navy/10 bg-off">
+    <div class="mx-auto max-w-3xl px-[5vw] py-16">
       <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">Free tool</p>
       <h2 class="reveal mt-3 font-display text-[clamp(1.6rem,3vw,2.4rem)] leading-[1.12] font-bold text-navy" style="--d:80ms">{service.tool.name}</h2>
-      <p class="reveal mt-3 max-w-xl text-lg text-navy/70" style="--d:140ms">{service.tool.lead}</p>
+      <p class="reveal mt-3 max-w-xl text-lg text-navy/70" style="--d:140ms">
+        {toolConfig?.lead || service.tool.lead}
+      </p>
       <div class="reveal mt-8" style="--d:200ms">
-        <Card class="max-w-2xl bg-gradient-to-br from-white to-off">
-          <div class="flex flex-wrap gap-2">
-            <span class="rounded-full bg-teal/10 px-3 py-1 text-xs font-semibold text-teal-dark">⚡ 30-second scan</span>
-            <span class="rounded-full bg-coral/10 px-3 py-1 text-xs font-semibold text-coral">Overview only, not a full audit</span>
-          </div>
-          <p class="mt-4 text-sm leading-relaxed text-navy/70">
-            Real scoring math runs the second you submit, and your full factor-by-factor report is emailed to you.
-            Where you give us a URL, we fetch the page live and label those rows "verified"; everything else stays
-            clearly labelled self-reported.
-          </p>
-          <div class="mt-5">
-            <Button href={`/tools/#${service.toolKey}`} arrow>Open the {service.tool.name}</Button>
-          </div>
-        </Card>
+        {toolConfig
+          ? <GatedTool config={toolConfig} serviceLabel={service.tool.name} client:visible />
+          : <p class="text-sm text-navy/60">This check is available from the tools hub.</p>}
       </div>
     </div>
   </section>
 
-  <!-- Quote (calculator island embeds here in the tools milestone) -->
-  <section id="quote" class="mx-auto max-w-6xl scroll-mt-24 px-[5vw] py-16 text-center">
-    <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">Get a quote</p>
-    <h2 class="reveal mt-3 font-display text-[clamp(1.6rem,3vw,2.4rem)] leading-[1.12] font-bold text-navy" style="--d:80ms">{service.quote.name}</h2>
-    <p class="reveal mx-auto mt-3 max-w-xl text-lg text-navy/70" style="--d:140ms">
-      {service.quote.lead}
-      {service.crossLink && (
-        <> {service.crossLink.text} <a href={withBase(service.crossLink.href)} class="text-teal-dark underline">{service.crossLink.label}</a></>
-      )}
-    </p>
-    <div class="reveal mt-8 flex flex-wrap items-center justify-center gap-4" style="--d:200ms">
-      <Button href="/contact/" arrow magnetic>Build my instant quote</Button>
-      <Button href="/work/" variant="outline">See real results first</Button>
-    </div>
-  </section>
 </Base>
