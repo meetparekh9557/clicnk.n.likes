@@ -126,11 +126,16 @@ export function buildReportEmailHtml(o) {
         ? `<p style="margin:10px 0 0;font-size:12px;color:#777;">"Verified live" = measured directly from the page/data you gave us during this check. "Self-reported" = based on your own answer, which we can't independently confirm.</p>`
         : `<p style="margin:10px 0 0;font-size:12px;color:#777;">Every row above is based on your own answers: nothing in this report was measured from a live page, and we won't label anything as verified unless it genuinely was.</p>`
     }
-    <h3 style="${H}font-size:15px;margin:22px 0 8px;">Your next steps, in order</h3>
-    <ol style="margin:0;padding-left:20px;font-size:14px;color:#1A2B4A;">${steps}</ol>
-    <div style="margin:24px 0 6px;">
-      <a href="https://clicknlikes.com" style="background:#1A2B4A;color:#ffffff;text-decoration:none;padding:12px 22px;border-radius:100px;font-weight:700;font-size:14px;display:inline-block;">Get an instant quote to fix this →</a>
-      <p style="margin:10px 0 0;font-size:13px;color:#777;">Or simply reply to this email: a strategist (not a bot) reads every reply, usually within one business day.</p>
+    ${
+      steps
+        ? `<h3 style="${H}font-size:15px;margin:22px 0 8px;">Your next steps, in order</h3>
+    <ol style="margin:0;padding-left:20px;font-size:14px;color:#1A2B4A;">${steps}</ol>`
+        : `<h3 style="${H}font-size:15px;margin:22px 0 8px;">Where to focus next</h3>
+    <p style="margin:0;font-size:14px;color:#1A2B4A;line-height:1.6;">No urgent on-page fixes were flagged in this check: your fundamentals are genuinely solid. The next real gains are in content depth, authority and conversion, which is exactly what a strategy call would map out for your specific market.</p>`
+    }
+    <div style="margin:26px 0 6px;">
+      <a href="https://clicknlikes.com" style="background:#1A2B4A;color:#ffffff !important;text-decoration:none;padding:14px 26px;border-radius:100px;font-weight:700;font-size:14px;display:inline-block;">Get an instant quote &rarr;</a>
+      <p style="margin:12px 0 0;font-size:13px;color:#777;">Or simply reply to this email: a strategist (not a bot) reads every reply, usually within one business day.</p>
     </div>`;
 }
 

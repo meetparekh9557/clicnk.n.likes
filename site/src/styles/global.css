@@ -35,20 +35,32 @@
    [data-magnetic] subtle cursor-follow hover, handled in motion.js       */
 
 :root {
-  --dur-reveal: 700ms;
+  --dur-reveal: 820ms;
   --dur-line: 900ms;
 }
 
+/* Base reveal: rise + settle with a hair of scale, on the expo curve for a
+   premium, decelerating entrance. Applied through the class so every
+   .reveal across the site is upgraded at once. */
 .reveal {
   opacity: 0;
-  transform: translateY(26px);
+  transform: translateY(30px) scale(0.985);
   transition:
-    opacity var(--dur-reveal) var(--ease-out-quart) var(--d, 0ms),
-    transform var(--dur-reveal) var(--ease-out-quart) var(--d, 0ms);
+    opacity var(--dur-reveal) var(--ease-out-expo) var(--d, 0ms),
+    transform var(--dur-reveal) var(--ease-out-expo) var(--d, 0ms),
+    filter var(--dur-reveal) var(--ease-out-expo) var(--d, 0ms);
+  will-change: opacity, transform;
 }
 .reveal.in {
   opacity: 1;
   transform: none;
+}
+/* Opt-in richer variant for feature blocks: adds a soft focus-in. */
+.reveal-soft {
+  filter: blur(9px);
+}
+.reveal-soft.in {
+  filter: none;
 }
 
 .mask-line {
@@ -304,9 +316,11 @@
 
 @media (prefers-reduced-motion: reduce) {
   .reveal,
+  .reveal-soft,
   .reveal-mask .mask-line > span {
     opacity: 1;
     transform: none;
+    filter: none;
     transition: none;
   }
   .marquee-track {
