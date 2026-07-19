@@ -7,6 +7,7 @@
 // would not trust an agency that only ever looks cheap.
 import Base from '../layouts/Base.astro';
 import Card from '../components/Card.astro';
+import QuoteCalculator from '../components/islands/QuoteCalculator.jsx';
 import { withBase } from '../lib/url';
 import Check from '@lucide/astro/icons/check';
 
@@ -125,8 +126,27 @@ const notes = [
       ))}
     </div>
     <p class="reveal mt-6 text-center text-sm text-navy/55" style="--d:120ms">
-      Not sure which fits? <a href={withBase('/contact/')} class="font-semibold text-teal-dark underline decoration-teal/40 underline-offset-2 hover:decoration-teal">Build an instant quote</a> and we will tell you honestly where you should start.
+      Want your exact number? <a href="#quote" class="font-semibold text-teal-dark underline decoration-teal/40 underline-offset-2 hover:decoration-teal">Build an instant quote</a> below, tuned to the exact scope you need.
     </p>
+  </section>
+
+  <!-- Instant quote calculator (live) -->
+  <section id="quote" class="scroll-mt-28 border-t border-navy/10">
+    <div class="mx-auto max-w-6xl px-[5vw] py-16">
+      <div class="mx-auto max-w-2xl text-center">
+        <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">Instant quote</p>
+        <h2 class="reveal mt-3 font-display text-[clamp(1.6rem,3vw,2.4rem)] leading-[1.12] font-bold text-navy" style="--d:80ms">
+          Build your exact number in a minute.
+        </h2>
+        <p class="reveal mt-3 text-lg text-navy/70" style="--d:140ms">
+          Pick your services and dial in the scope. Every service starts from a flat ₹16,000 base and adds only the
+          line items you choose, the honest sum, never rounded to a nicer figure.
+        </p>
+      </div>
+      <div class="reveal mt-10" style="--d:180ms">
+        <QuoteCalculator client:visible />
+      </div>
+    </div>
   </section>
 
   <!-- The honest notes -->
