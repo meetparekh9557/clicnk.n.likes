@@ -10,7 +10,7 @@ import Card from '../../components/Card.astro';
 import InlineCta from '../../components/InlineCta.astro';
 import StatTile from '../../components/StatTile.astro';
 import FirstPageCliff from '../../components/islands/FirstPageCliff.jsx';
-import { serviceDetails, serviceProof } from '../../data/services';
+import { serviceDetails, serviceProof, serviceDeepDive } from '../../data/services';
 import { withBase } from '../../lib/url';
 import LayoutTemplate from '@lucide/astro/icons/layout-template';
 import Search from '@lucide/astro/icons/search';
@@ -56,6 +56,7 @@ const icons: Record<string, any> = {
 
 const { service } = Astro.props;
 const proof = serviceProof[service.slug];
+const deep = serviceDeepDive[service.slug];
 const iconWrap = 'mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 text-teal-dark';
 const HeroIcon = icons[service.cards[0].icon];
 ---
@@ -124,6 +125,40 @@ const HeroIcon = icons[service.cards[0].icon];
         {(proof.showCliff || proof.stat) && proof.note && (
           <p class="reveal mt-6 max-w-2xl text-sm text-navy/55" style="--d:280ms">{proof.note}</p>
         )}
+      </div>
+    </section>
+  )}
+
+  <!-- Why Click.n.likes: the persuasion layer, founder's voice -->
+  {deep && (
+    <section class="border-t border-navy/10 bg-off">
+      <div class="mx-auto max-w-3xl px-[5vw] py-16">
+        <p class="reveal text-xs font-semibold tracking-[0.14em] text-teal-dark uppercase">Why Click.n.likes for {service.title}</p>
+        <h2 class="reveal mt-3 font-display text-[clamp(1.6rem,3vw,2.4rem)] leading-[1.15] font-bold text-navy" style="--d:60ms">
+          {deep.heading}
+        </h2>
+        <p class="reveal mt-5 text-[17px] leading-relaxed text-navy/75" style="--d:120ms">{deep.bridge}</p>
+
+        <ul class="mt-8 space-y-5">
+          {deep.pillars.map((p, i) => (
+            <li class="reveal flex gap-4" style={`--d:${160 + i * 80}ms`}>
+              <span class="mt-2 h-2 w-2 shrink-0 rounded-full bg-teal"></span>
+              <p class="text-[16px] leading-relaxed text-navy/75">
+                <b class="font-semibold text-navy">{p.label}:</b> {p.text}
+              </p>
+            </li>
+          ))}
+        </ul>
+
+        <div class="reveal mt-9 rounded-2xl border border-teal/30 bg-white p-6 sm:p-7" style="--d:120ms">
+          <p class="text-xs font-semibold tracking-[0.14em] text-teal-dark uppercase">Example in Action</p>
+          <p class="mt-2 text-[16px] leading-relaxed text-navy/80">
+            <b class="font-semibold text-navy">{deep.example.metric}</b> {deep.example.text}
+          </p>
+        </div>
+
+        <h3 class="reveal mt-10 font-display text-xl font-bold text-navy" style="--d:80ms">{deep.conclusion.title}</h3>
+        <p class="reveal mt-3 text-[17px] leading-relaxed text-navy/75" style="--d:140ms">{deep.conclusion.text}</p>
       </div>
     </section>
   )}
