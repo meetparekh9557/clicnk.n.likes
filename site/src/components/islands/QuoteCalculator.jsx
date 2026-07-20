@@ -95,7 +95,6 @@ export default function QuoteCalculator({ preselect }) {
   if (selected.has('paid')) notes.push('Ad spend is billed directly from your card on the ad platform (Meta / Google) and is not included in the total above.');
   if (selected.has('social')) notes.push('Photo / video shoot production is arranged through our shoot partner agency and billed separately.');
   if (discountPct > 0) notes.push(`A ${Math.round(discountPct * 100)}% multi-service bundle discount has been applied to the monthly services above.`);
-  notes.push('This is an indicative quote from a fixed formula. Your final scope and price are confirmed in a written proposal.');
 
   function submit(evt) {
     evt.preventDefault();
