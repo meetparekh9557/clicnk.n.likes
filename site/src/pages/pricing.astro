@@ -8,6 +8,7 @@
 import Base from '../layouts/Base.astro';
 import Card from '../components/Card.astro';
 import QuoteCalculator from '../components/islands/QuoteCalculator.jsx';
+import CustomQuote from '../components/islands/CustomQuote.jsx';
 import { withBase } from '../lib/url';
 import { abs, breadcrumbSchema } from '../lib/seo';
 import Check from '@lucide/astro/icons/check';
@@ -177,6 +178,26 @@ const jsonLd = [
       </div>
       <div class="reveal mt-10" style="--d:180ms">
         <QuoteCalculator client:visible />
+      </div>
+    </div>
+  </section>
+
+  <!-- Custom quote builder (industry-aware, email-gated, unique reference) -->
+  <section id="custom" class="scroll-mt-28 border-t border-navy/10 bg-off">
+    <div class="mx-auto max-w-6xl px-[5vw] py-16">
+      <div class="mx-auto max-w-2xl text-center">
+        <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">Custom quote</p>
+        <h2 class="reveal mt-3 font-display text-[clamp(1.6rem,3vw,2.4rem)] leading-[1.12] font-bold text-navy" style="--d:80ms">
+          Need it built around your industry?
+        </h2>
+        <p class="reveal mt-3 text-lg text-navy/70" style="--d:140ms">
+          Tell us your industry, what you want built and how hard you want to push. We build your number now, stamp it
+          with a unique reference, and send the full breakdown you can turn into a proposal. Your industry shapes the
+          plan, never the price.
+        </p>
+      </div>
+      <div class="reveal mt-10" style="--d:180ms">
+        <CustomQuote client:visible />
       </div>
     </div>
   </section>
