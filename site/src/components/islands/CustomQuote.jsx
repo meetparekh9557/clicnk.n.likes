@@ -9,8 +9,9 @@
 // betray the transparent-pricing promise the whole page is built on. It
 // tags the lead and sets sensible default services. Price scales only
 // with scope/ambition: more work, more money, never with who is asking.
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { OWNER_EMAIL, autoEmailReady, sendFromClicknlikes, buildReportEmailHtml, fact, hashStr } from '../../lib/engine';
+import { getCurrency, loadRates, onCurrency, formatMoney } from '../../lib/currency.js';
 
 const BASE_FEE = 16000;
 const MIN_PROJECT = 16000;
@@ -60,6 +61,16 @@ export default function CustomQuote() {
   const [email, setEmail] = useState('');
   const [sending, setSending] = useState(false);
   const [result, setResult] = useState(null);
+  const [cur, setCur] = useState('INR');
+  const [rates, setRates] = useState(null);
+  useEffect(() => {
+    setCur(getCurrency());
+    loadRates().then((r) => setRates(r.rates));
+    return onCurrency((c) => setCur(c || getCurrency()));
+  }, []);
+  // Display in the visitor's currency; the emailed quote keeps INR, the
+  // currency the work is actually billed in.
+  const money = (n) => formatMoney(n, cur, rates);
 
   function pickIndustry(k) {
     setIndustry(k);
@@ -115,7 +126,8 @@ export default function CustomQuote() {
     if (discountPct > 0) factors.push(fact('Bundle discount', `${Math.round(discountPct * 100)}% off monthly`, 'self', 'applied'));
     if (goal.trim()) factors.push(fact('What success looks like', goal.trim(), 'self', 'noted'));
 
-    const interpretation = `This is your personalised quote (reference ${ref}) for a ${AMBITION[ambition].label.toLowerCase()} push across ${svcLabels}. Every service includes a flat ₹16,000 base and scales with the depth of work, never with your industry. Reply with your reference and we build the written proposal around exactly this.`;
+    const curNote = cur !== 'INR' && rates && rates[cur] ? ` On screen we showed these figures in ${cur} at today's exchange rate; our pricing is set in INR.` : '';
+    const interpretation = `This is your personalised quote (reference ${ref}) for a ${AMBITION[ambition].label.toLowerCase()} push across ${svcLabels}. Every service includes a flat ₹16,000 base and scales with the depth of work, never with your industry.${curNote} Reply with your reference and we build the written proposal around exactly this.`;
 
     const notes = [];
     if (selected.has('paid')) notes.push('Ad spend is billed directly from your card on the ad platform, separate from this fee.');
@@ -141,7 +153,7 @@ export default function CustomQuote() {
     });
 
     setSending(true);
-    setTimeout(() => { setSending(false); setResult({ ref, totalLine, lines, discountPct }); }, 700);
+    setTimeout(() => { setSending(false); setResult({ ref, monthly, onetime, lines, discountPct }); }, 700);
   }
 
   return (
@@ -198,14 +210,16 @@ export default function CustomQuote() {
         {result ? (
           <div className="rounded-xl border border-teal/40 bg-teal/[0.06] p-5">
             <p className="text-[11px] font-bold tracking-[0.08em] text-teal-dark uppercase">Your unique quote</p>
-            <p className="mt-1 font-display text-[clamp(1.6rem,4vw,2.3rem)] leading-none font-bold text-navy tabular-nums">{result.totalLine || '—'}</p>
+            {result.monthly > 0 && <p className="mt-1 font-display text-[clamp(1.6rem,4vw,2.3rem)] leading-none font-bold text-navy tabular-nums">{money(result.monthly)}<span className="text-base font-semibold text-navy/55">/month</span></p>}
+            {result.onetime > 0 && <p className="mt-1 font-display text-xl font-bold text-navy tabular-nums">{money(result.onetime)}<span className="text-sm font-semibold text-navy/55"> one-time</span></p>}
             <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-navy px-3 py-1.5">
               <span className="text-[10px] font-semibold tracking-[0.08em] text-white/50 uppercase">Ref</span>
               <span className="font-display text-[13px] font-bold tracking-[0.05em] text-white tabular-nums">{result.ref}</span>
             </div>
             <ul className="mt-4 space-y-1.5 border-t border-navy/10 pt-3 text-[12.5px] text-navy/65">
-              {result.lines.map((l) => <li key={l.label} className="flex justify-between gap-2"><span>{l.label}</span><span className="tabular-nums whitespace-nowrap">{inr(l.amt)} {l.unit}</span></li>)}
+              {result.lines.map((l) => <li key={l.label} className="flex justify-between gap-2"><span>{l.label}</span><span className="tabular-nums whitespace-nowrap">{money(l.amt)} {l.unit}</span></li>)}
             </ul>
+            {cur !== 'INR' && <p className="mt-3 text-[11px] leading-relaxed text-navy/50">Shown in {cur} at today's exchange rate. Our pricing is set in INR.</p>}
             <p className="mt-4 text-[12.5px] leading-relaxed text-navy/70">
               {autoEmailReady ? <>Sent to <b>{email}</b> with reference <b>{result.ref}</b>. Reply with that reference and we build the written proposal around exactly this scope.</> : <>Your details and reference <b>{result.ref}</b> are logged, and a strategist will follow up with the written proposal.</>}
             </p>

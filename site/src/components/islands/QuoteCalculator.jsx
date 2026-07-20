@@ -5,8 +5,9 @@
 // pay base + Σ(extra × rate) - the honest sum of line items, never rounded
 // to a nicer number. Bundle discount and the ₹16,000 project floor match
 // v1. An email sends the itemised quote via the shared engine.
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { OWNER_EMAIL, autoEmailReady, sendFromClicknlikes, buildReportEmailHtml, fact } from '../../lib/engine';
+import { getCurrency, loadRates, onCurrency, formatMoney } from '../../lib/currency.js';
 
 const BASE_FEE = 16000;
 const MIN_PROJECT = 16000;
@@ -65,6 +66,16 @@ export default function QuoteCalculator({ preselect }) {
   const [email, setEmail] = useState('');
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
+  const [cur, setCur] = useState('INR');
+  const [rates, setRates] = useState(null);
+  useEffect(() => {
+    setCur(getCurrency());
+    loadRates().then((r) => setRates(r.rates));
+    return onCurrency((c) => setCur(c || getCurrency()));
+  }, []);
+  // Display in the visitor's currency; `inr()` stays for the emailed
+  // quote, which is documented in the INR the work is billed in.
+  const money = (n) => formatMoney(n, cur, rates);
 
   const getQty = (s, u) => qty[`${s}.${u.key}`] ?? u.included;
   const getWords = (s, u) => words[`${s}.${u.key}`] ?? u.includedWords;
@@ -101,7 +112,8 @@ export default function QuoteCalculator({ preselect }) {
     const factors = lines.map((l) => fact(l.label, inr(l.amt) + ' ' + l.unit, 'self', 'quote line'));
     if (discountPct > 0) factors.push(fact('Bundle discount', `${Math.round(discountPct * 100)}% off monthly`, 'self', 'applied'));
     const totalLine = [monthly > 0 ? inr(monthly) + '/month' : null, onetime > 0 ? inr(onetime) + ' one-time' : null].filter(Boolean).join(' + ');
-    const interpretation = `Based on the services and quantities you selected, your indicative investment is ${totalLine}. Every service includes a flat ₹16,000 base (strategy, account management and reporting) plus the exact line items you chose above it.`;
+    const curNote = cur !== 'INR' && rates && rates[cur] ? ` On screen we showed these figures in ${cur} at today's exchange rate; our pricing is set in INR.` : '';
+    const interpretation = `Based on the services and quantities you selected, your indicative investment is ${totalLine}. Every service includes a flat ₹16,000 base (strategy, account management and reporting) plus the exact line items you chose above it.${curNote}`;
     const bodyText = `Hi,\n\nHere is your instant quote from Click.n.likes for ${business || 'your business'}:\n\n${interpretation}\n\nLine items:\n${lines.map((l) => `• ${l.label}: ${inr(l.amt)} ${l.unit}`).join('\n')}\n\nNotes:\n${notes.map((n) => `• ${n}`).join('\n')}\n\nReply to this email to turn this into a written proposal, or reach us at clicknlikes.com.\n\nBest,\nClick.n.likes\nbusiness@clicknlikes.com`;
     const bodyHtml = buildReportEmailHtml({
       toolLabel: 'Instant Quote',
@@ -144,12 +156,12 @@ export default function QuoteCalculator({ preselect }) {
                   <div key={u.key} className="mt-3">
                     <div className="flex items-center justify-between text-[12.5px]">
                       <span className="font-medium text-navy/80">{u.label}</span>
-                      <span className="font-display font-bold text-teal-dark tabular-nums">{q}{extra > 0 ? ` (+${inr(extra * unitRate(u, w))})` : ''}</span>
+                      <span className="font-display font-bold text-teal-dark tabular-nums">{q}{extra > 0 ? ` (+${money(extra * unitRate(u, w))})` : ''}</span>
                     </div>
                     <input type="range" min={u.included} max={u.max} step={u.step} value={q}
                       onChange={(e) => setQty((p) => ({ ...p, [`${k}.${u.key}`]: parseInt(e.target.value, 10) }))}
                       className="cnl-range mt-1.5 w-full" aria-label={u.label} />
-                    <p className="text-[11px] text-navy/45">{u.included} included · ₹{u.price.toLocaleString('en-IN')} each extra{u.type === 'wordblog' ? ` up to ${u.includedWords} words` : ''}</p>
+                    <p className="text-[11px] text-navy/45">{u.included} included · {money(u.price)} each extra{u.type === 'wordblog' ? ` up to ${u.includedWords} words` : ''}</p>
                     {u.type === 'wordblog' && extra > 0 && (
                       <div className="mt-2">
                         <div className="flex items-center justify-between text-[12px]"><span className="text-navy/60">Avg words per piece</span><span className="font-display font-bold text-navy tabular-nums">{w}</span></div>
@@ -170,15 +182,16 @@ export default function QuoteCalculator({ preselect }) {
       <div className="flex flex-col">
         <div className="rounded-xl border border-teal/40 bg-teal/[0.06] p-5">
           <p className="text-[11px] font-bold tracking-[0.08em] text-teal-dark uppercase">Your indicative quote</p>
-          {monthly > 0 && <p className="mt-1 font-display text-[clamp(1.8rem,4vw,2.6rem)] leading-none font-bold text-navy tabular-nums">{inr(monthly)}<span className="text-base font-semibold text-navy/55">/month</span></p>}
-          {onetime > 0 && <p className="mt-2 font-display text-2xl font-bold text-navy tabular-nums">{inr(onetime)}<span className="text-sm font-semibold text-navy/55"> one-time</span></p>}
+          {monthly > 0 && <p className="mt-1 font-display text-[clamp(1.8rem,4vw,2.6rem)] leading-none font-bold text-navy tabular-nums">{money(monthly)}<span className="text-base font-semibold text-navy/55">/month</span></p>}
+          {onetime > 0 && <p className="mt-2 font-display text-2xl font-bold text-navy tabular-nums">{money(onetime)}<span className="text-sm font-semibold text-navy/55"> one-time</span></p>}
           {sel.length === 0 && <p className="mt-1 font-display text-xl font-bold text-navy/40">—</p>}
           <ul className="mt-4 space-y-1.5 border-t border-navy/10 pt-3 text-[12.5px] text-navy/65">
-            {lines.map((l) => <li key={l.label} className="flex justify-between gap-2"><span>{l.label}</span><span className="tabular-nums whitespace-nowrap">{inr(l.amt)} {l.unit}</span></li>)}
+            {lines.map((l) => <li key={l.label} className="flex justify-between gap-2"><span>{l.label}</span><span className="tabular-nums whitespace-nowrap">{money(l.amt)} {l.unit}</span></li>)}
           </ul>
           <ul className="mt-3 space-y-1.5 text-[11px] leading-relaxed text-navy/50">
             {notes.map((n, i) => <li key={i}>· {n}</li>)}
           </ul>
+          {cur !== 'INR' && <p className="mt-2 text-[11px] leading-relaxed text-navy/45">Shown in {cur} at today's exchange rate. Our pricing is set in INR.</p>}
         </div>
 
         {sent ? (

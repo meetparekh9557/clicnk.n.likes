@@ -17,6 +17,7 @@ const tiers = [
   {
     name: 'Launch',
     price: '₹16,000',
+    inr: 16000,
     cadence: '/month',
     for: 'For the business ready to own one channel properly before adding more.',
     highlight: false,
@@ -31,6 +32,7 @@ const tiers = [
   {
     name: 'Growth',
     price: '₹42,000',
+    inr: 42000,
     cadence: '/month',
     for: 'For the business ready to run the organic engine across channels, not just one.',
     highlight: true,
@@ -46,6 +48,7 @@ const tiers = [
   {
     name: 'Partner',
     price: '₹1,50,000',
+    inr: 150000,
     cadence: '/month',
     for: 'For the business treating growth as a core function, across the full stack.',
     highlight: false,
@@ -121,6 +124,14 @@ const jsonLd = [
 
   <!-- Tiers -->
   <section class="mx-auto max-w-6xl px-[5vw] pb-6">
+    <!-- Currency switcher: auto-detects the visitor's currency and converts
+         the INR pricing at that day's live rate. Progressive enhancement -
+         with no JS it simply shows the honest INR figures. -->
+    <div class="reveal mb-6 flex flex-wrap items-center gap-x-3 gap-y-1.5">
+      <label for="cnlCurrency" class="text-[13px] font-semibold text-navy/70">Show prices in</label>
+      <select id="cnlCurrency" class="rounded-full border-[1.5px] border-navy/15 bg-white px-3.5 py-1.5 text-[13px] font-semibold text-navy outline-none focus:border-teal"></select>
+      <span id="cnlFxNote" class="text-[12px] text-navy/45"></span>
+    </div>
     <div class="grid gap-5 lg:grid-cols-3 lg:items-start">
       {tiers.map((tier, i) => (
         <Card
@@ -132,7 +143,7 @@ const jsonLd = [
           )}
           <h2 class="font-display text-lg font-semibold text-navy">{tier.name}</h2>
           <div class="mt-3 flex items-baseline gap-1">
-            <span class="font-display text-4xl font-bold text-navy">{tier.price}</span>
+            <span class="cnl-price font-display text-4xl font-bold text-navy" data-inr={tier.inr}>{tier.price}</span>
             <span class="text-sm text-navy/55">{tier.cadence}</span>
           </div>
           <p class="mt-1 text-[13px] text-navy/45">indicative starting point</p>
@@ -243,4 +254,48 @@ const jsonLd = [
       </p>
     </div>
   </section>
+
+  <script>
+    import { CURRENCIES, detectCurrency, getCurrency, setCurrency, loadRates, formatMoney, onCurrency } from '../lib/currency.js';
+
+    function initCurrency() {
+      const select = document.getElementById('cnlCurrency');
+      const note = document.getElementById('cnlFxNote');
+      if (!select) return;
+      if (!select.options.length) {
+        for (const [code, c] of Object.entries(CURRENCIES)) {
+          const o = document.createElement('option');
+          o.value = code;
+          o.textContent = c.label;
+          select.appendChild(o);
+        }
+      }
+      let fx = { rates: null, live: false };
+
+      const apply = () => {
+        const cur = getCurrency();
+        select.value = cur;
+        document.querySelectorAll('.cnl-price').forEach((el) => {
+          const inr = parseInt(el.getAttribute('data-inr'), 10);
+          if (!Number.isNaN(inr)) el.textContent = formatMoney(inr, cur, fx.rates);
+        });
+        if (note) {
+          if (cur === 'INR') note.textContent = 'In Indian Rupees. Switch if you are elsewhere.';
+          else if (fx.rates && fx.rates[cur]) note.textContent = `Converted from INR at today's rate${fx.live ? '' : ' (last available)'}. Quoted in INR.`;
+          else note.textContent = 'Live rate unavailable, showing our base INR pricing.';
+        }
+      };
+
+      const cur0 = detectCurrency();
+      window.__cnlCur = cur0;
+      select.value = cur0;
+      apply();
+      loadRates().then((r) => { fx = r; apply(); });
+      select.addEventListener('change', () => setCurrency(select.value));
+      onCurrency(() => apply());
+    }
+
+    initCurrency();
+    document.addEventListener('astro:page-load', initCurrency);
+  </script>
 </Base>
