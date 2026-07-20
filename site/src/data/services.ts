@@ -157,6 +157,11 @@ export const serviceDetails: ServiceDetail[] = [
       name: 'Instant AI SEO & AI Overview quote',
       lead: "Adjust the sliders, we'll email you the exact number.",
     },
+    crossLink: {
+      text: 'Need content built to be cited in the first place?',
+      label: 'See Content Marketing →',
+      href: '/services/content-marketing/',
+    },
   },
   {
     slug: 'social-media-growth',
@@ -178,6 +183,11 @@ export const serviceDetails: ServiceDetail[] = [
     quote: {
       name: 'Instant Social Media quote',
       lead: "Adjust the sliders, we'll email you the exact number.",
+    },
+    crossLink: {
+      text: 'Ready to amplify the best of it with paid?',
+      label: 'See Paid Campaigns →',
+      href: '/services/paid-campaigns/',
     },
   },
   {
@@ -201,6 +211,11 @@ export const serviceDetails: ServiceDetail[] = [
       name: 'Instant Content Marketing quote',
       lead: "Adjust the sliders, we'll email you the exact number.",
     },
+    crossLink: {
+      text: 'Want that content cited by AI answers too?',
+      label: 'See AI SEO →',
+      href: '/services/ai-seo/',
+    },
   },
   {
     slug: 'website-development',
@@ -223,6 +238,11 @@ export const serviceDetails: ServiceDetail[] = [
       name: 'Instant Website Development quote',
       lead: "Adjust the sliders, we'll email you the exact number.",
     },
+    crossLink: {
+      text: 'Want the new site engineered to rank from day one?',
+      label: 'See SEO →',
+      href: '/services/seo/',
+    },
   },
   {
     slug: 'paid-campaigns',
@@ -244,6 +264,11 @@ export const serviceDetails: ServiceDetail[] = [
     quote: {
       name: 'Instant Paid Campaigns quote',
       lead: "Management fee only, ad budget is separate. We'll email you the exact number.",
+    },
+    crossLink: {
+      text: 'Building the organic social engine underneath it?',
+      label: 'See Social Media Growth →',
+      href: '/services/social-media-growth/',
     },
   },
 ];

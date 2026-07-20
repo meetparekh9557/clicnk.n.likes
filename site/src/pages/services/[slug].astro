@@ -14,6 +14,7 @@ import GatedTool from '../../components/islands/GatedTool.jsx';
 import { serviceDetails, serviceProof, serviceDeepDive } from '../../data/services';
 import { toolConfigs } from '../../data/toolConfigs';
 import { withBase } from '../../lib/url';
+import { breadcrumbSchema, serviceSchema } from '../../lib/seo';
 import LayoutTemplate from '@lucide/astro/icons/layout-template';
 import Search from '@lucide/astro/icons/search';
 import Zap from '@lucide/astro/icons/zap';
@@ -60,6 +61,14 @@ const { service } = Astro.props;
 const proof = serviceProof[service.slug];
 const deep = serviceDeepDive[service.slug];
 const toolConfig = toolConfigs[service.toolKey];
+const servicePath = `/services/${service.slug}/`;
+const jsonLd = [
+  serviceSchema({ name: service.title, description: service.lead, path: servicePath }),
+  breadcrumbSchema([
+    ['Home', '/'],
+    [service.title, servicePath],
+  ]),
+];
 const iconWrap = 'mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 text-teal-dark';
 const HeroIcon = icons[service.cards[0].icon];
 ---
@@ -67,6 +76,7 @@ const HeroIcon = icons[service.cards[0].icon];
 <Base
   title={`${service.title} | Click.n.likes`}
   description={service.lead}
+  jsonLd={jsonLd}
 >
   <!-- Hero -->
   <section class="relative overflow-hidden">

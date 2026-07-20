@@ -13,6 +13,7 @@ import HeroScan from '../../components/islands/HeroScan.jsx';
 import FunnelRoiCalculator from '../../components/islands/FunnelRoiCalculator.jsx';
 import CompetitorThreat from '../../components/islands/CompetitorThreat.jsx';
 import { withBase } from '../../lib/url';
+import { breadcrumbSchema } from '../../lib/seo';
 import Gauge from '@lucide/astro/icons/gauge';
 import Search from '@lucide/astro/icons/search';
 import MapPin from '@lucide/astro/icons/map-pin';
@@ -32,11 +33,17 @@ const checks = [
   { id: 'webdev', name: 'Infrastructure Health Check', icon: CodeXml, service: '/services/website-development/', desc: 'Speed, crawlability, mobile experience and conversion structure, the four things quietly costing your site bookings before anyone calls.' },
   { id: 'paid', name: 'Ad Budget Waste Simulator', icon: Megaphone, service: '/services/paid-campaigns/', desc: 'An estimate of how much of a monthly ad budget is likely leaking to poor targeting and weak landing pages, and what tightening it would return.' },
 ];
+
+const jsonLd = breadcrumbSchema([
+  ['Home', '/'],
+  ['Free Checks', '/tools/'],
+]);
 ---
 
 <Base
-  title="Free Growth Tools & Website Checks | Click.n.likes"
+  title="Free SEO & Website Health Check Tools | Click.n.likes"
   description="Run a live Website Health Scan and a suite of free directional checks across SEO, local, AI search, social, content, websites and paid, honest scores, real signals, no sales call required."
+  jsonLd={jsonLd}
 >
   <!-- Hero + live scan -->
   <section class="mx-auto max-w-4xl px-[5vw] pt-16 pb-12 text-center lg:pt-20">

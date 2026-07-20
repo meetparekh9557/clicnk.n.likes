@@ -1,9 +1,11 @@
 ---
 // Fixed top navigation with real per-page URLs. Desktop: hover/focus
-// dropdowns for Services and for "More" (Free Checks / Pricing / FAQs).
-// Mobile: hamburger panel where Services and More are collapsible
-// accordions, closed by default. Links come from src/data/site.ts so Nav
-// and Footer never drift apart.
+// dropdowns for Services and for "More" (Free Checks / FAQs). Pricing is
+// deliberately kept out of the nav - the "Get a quote" CTA already routes
+// to the pricing page - though it stays in the footer sitemap. Contact is
+// a flat top-level link. Mobile: hamburger panel where Services and More
+// are collapsible accordions, closed by default. Links come from
+// src/data/site.ts so Nav and Footer never drift apart.
 import ArrowRight from '@lucide/astro/icons/arrow-right';
 import ChevronDown from '@lucide/astro/icons/chevron-down';
 import { services, primaryNav, moreNav } from '../data/site';
@@ -14,7 +16,10 @@ const base = import.meta.env.BASE_URL.replace(/\/+$/, '');
 const path = Astro.url.pathname.startsWith(base) ? Astro.url.pathname.slice(base.length) || '/' : Astro.url.pathname;
 const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
 const onServices = path.startsWith('/services/');
-const onMore = moreNav.some((m) => path.startsWith(m.href));
+// Pricing lives behind the "Get a quote" CTA, not the More dropdown, so
+// filter it out of the nav (it remains in the footer's full moreNav).
+const navMore = moreNav.filter((m) => m.href !== '/pricing/');
+const onMore = navMore.some((m) => path.startsWith(m.href));
 
 const itemCls = (active: boolean) =>
   `rounded-lg px-3.5 py-2.5 text-[14.5px] font-medium transition-colors hover:text-teal-dark ${
@@ -52,13 +57,15 @@ const itemCls = (active: boolean) =>
       <a href={withBase(item.href)} class={itemCls(isActive(item.href))} aria-current={isActive(item.href) ? 'page' : undefined}>{item.title}</a>
     ))}
 
+    <a href={withBase('/contact/')} class={itemCls(isActive('/contact/'))} aria-current={isActive('/contact/') ? 'page' : undefined}>Contact</a>
+
     <div class="group relative">
       <button type="button" class={`${itemCls(onMore)} inline-flex items-center gap-1`} aria-haspopup="true" aria-expanded="false">
         More
         <ChevronDown size={14} stroke-width={2.4} aria-hidden="true" class="transition-transform duration-300 group-hover:rotate-180" />
       </button>
       <div class="invisible absolute top-full right-0 min-w-[190px] translate-y-2 rounded-2xl border border-navy/10 bg-white p-2 opacity-0 shadow-[0_18px_44px_rgba(26,43,74,0.12)] transition-all duration-300 ease-out-quart group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
-        {moreNav.map((m) => (
+        {navMore.map((m) => (
           <a href={withBase(m.href)} class="block rounded-xl px-4 py-2.5 text-sm font-semibold text-navy transition-colors hover:bg-teal/10 hover:text-teal-dark">{m.title}</a>
         ))}
       </div>
@@ -113,13 +120,15 @@ const itemCls = (active: boolean) =>
     <a href={withBase(item.href)} class="block border-b border-navy/10 py-3.5 font-medium text-navy">{item.title}</a>
   ))}
 
+  <a href={withBase('/contact/')} class="block border-b border-navy/10 py-3.5 font-medium text-navy">Contact</a>
+
   <!-- More accordion (closed by default) -->
   <button type="button" class="mob-acc flex w-full items-center justify-between border-b border-navy/10 py-3.5 text-left font-medium text-navy" aria-expanded="false" aria-controls="mob-more">
     More
     <ChevronDown size={16} stroke-width={2.4} aria-hidden="true" class="mob-acc-chev transition-transform duration-300" />
   </button>
   <div id="mob-more" class="mob-acc-panel hidden pb-1">
-    {moreNav.map((m) => (
+    {navMore.map((m) => (
       <a href={withBase(m.href)} class="block border-b border-navy/5 py-2.5 pl-3 text-[14px] text-navy/75">{m.title}</a>
     ))}
   </div>

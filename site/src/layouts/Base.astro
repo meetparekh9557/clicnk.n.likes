@@ -7,10 +7,19 @@ import ChatButton from '../components/ChatButton.astro';
 import CtaBand from '../components/CtaBand.astro';
 import SiteBackdrop from '../components/SiteBackdrop.astro';
 import { withBase } from '../lib/url';
+import { OG_DEFAULT, ORG_NAME, organizationSchema, webSiteSchema } from '../lib/seo';
 import '../styles/global.css';
 
-interface Props { title: string; description: string; canonical?: string; hideCta?: boolean; }
-const { title, description, canonical, hideCta } = Astro.props;
+interface Props {
+  title: string;
+  description: string;
+  canonical?: string;
+  hideCta?: boolean;
+  ogImage?: string;
+  ogType?: string;
+  jsonLd?: unknown | unknown[];
+}
+const { title, description, canonical, hideCta, ogImage, ogType, jsonLd } = Astro.props;
 // Preview builds (clicknlikes.com/preview/) must never be indexed, and
 // their canonicals point at the real future URL (base stripped).
 const isPreview = import.meta.env.PUBLIC_PREVIEW === '1';
@@ -19,6 +28,16 @@ const cleanPath = basePrefix && Astro.url.pathname.startsWith(basePrefix)
   ? Astro.url.pathname.slice(basePrefix.length) || '/'
   : Astro.url.pathname;
 const canonicalURL = canonical ?? new URL(cleanPath, Astro.site).href;
+const shareImage = ogImage ?? OG_DEFAULT;
+// Site-wide identity graph plus any page-specific schema, deduped into
+// one array. Structured data always describes the live production site,
+// so it is emitted on preview too (the noindex tag keeps preview out of
+// the index; the JSON-LD stays valid for the cutover).
+const structuredData = [
+  organizationSchema(),
+  webSiteSchema(),
+  ...(jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : []),
+];
 ---
 <!doctype html>
 <html lang="en">
@@ -33,12 +52,12 @@ const canonicalURL = canonical ?? new URL(cleanPath, Astro.site).href;
          in the analytics. Activates automatically at cutover. -->
     {!isPreview && (
       <>
-        <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-LB423REFGS"></script>
+        <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-150CCHPK6L"></script>
         <script is:inline>
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
-          gtag('config', 'G-LB423REFGS');
+          gtag('config', 'G-150CCHPK6L');
         </script>
       </>
     )}
@@ -51,11 +70,28 @@ const canonicalURL = canonical ?? new URL(cleanPath, Astro.site).href;
     {isPreview && <meta name="robots" content="noindex,nofollow" />}
     <link rel="canonical" href={canonicalURL} />
     <link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
+    <!-- Open Graph (Facebook, LinkedIn, WhatsApp) -->
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalURL} />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType ?? 'website'} />
+    <meta property="og:site_name" content={ORG_NAME} />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:image" content={shareImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${ORG_NAME} - full-stack organic growth`} />
+    <!-- Twitter / X large-image card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={shareImage} />
     <meta name="theme-color" content="#1A2B4A" />
+    <!-- Structured data: Organization + WebSite site-wide, plus any
+         per-page schema passed in via the jsonLd prop. -->
+    {structuredData.map((node) => (
+      <script type="application/ld+json" set:html={JSON.stringify(node)} />
+    ))}
     <!-- Fonts are self-hosted via @fontsource (imported in global.css);
          no external font request is made. -->
   </head>

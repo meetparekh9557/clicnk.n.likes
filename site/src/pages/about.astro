@@ -2,13 +2,15 @@
 // About page: mission, the founder's real story (adapted from the
 // founder's own LinkedIn writing), how-we-work principles, contact form.
 // Multi-industry framing throughout. The founder note is first-person
-// and true to the source; name + photo drop into the marked spot.
+// and true to the source; the card names the founder and links their
+// LinkedIn instead of carrying a photo.
 import Base from '../layouts/Base.astro';
 import Card from '../components/Card.astro';
 import ClientLogos from '../components/ClientLogos.astro';
 import InlineCta from '../components/InlineCta.astro';
 import SimpleForm from '../components/islands/SimpleForm.jsx';
 import { withBase } from '../lib/url';
+import { breadcrumbSchema } from '../lib/seo';
 import Clock from '@lucide/astro/icons/clock';
 import MessageSquare from '@lucide/astro/icons/message-square';
 import Layers from '@lucide/astro/icons/layers';
@@ -20,11 +22,17 @@ const formFields = [
   { name: 'phone', label: 'WhatsApp number', type: 'tel', placeholder: '+91 98765 43210', required: false, optional: 'optional, for a faster reply' },
   { name: 'message', label: "What's the one thing holding your growth back right now?", type: 'textarea', placeholder: "Tell us honestly, we'll be honest back" },
 ];
+
+const jsonLd = breadcrumbSchema([
+  ['Home', '/'],
+  ['About', '/about/'],
+]);
 ---
 
 <Base
-  title="About | Click.n.likes"
+  title="About Click.n.likes | Full-Stack Organic Growth Agency"
   description="Nine years of building organic growth systems for businesses across industries - SEO and content that keep generating leads long after the spend stops. Built on fundamentals, not the algorithm update of the month."
+  jsonLd={jsonLd}
 >
   <!-- Hero -->
   <section class="relative overflow-hidden">
@@ -82,16 +90,23 @@ const formFields = [
           </div>
         </div>
 
-        <!-- Founder note card. Drop the founder's name + photo into the marked spots. -->
+        <!-- Founder note card: name + LinkedIn link, no photo. -->
         <aside class="reveal lg:sticky lg:top-24" style="--d:140ms">
           <Card class="p-7">
-            <div class="flex items-center gap-4">
-              <!-- Founder photo goes here (replace the initials circle) -->
-              <span class="grid h-14 w-14 shrink-0 place-items-center rounded-full bg-navy font-display text-lg font-bold text-white">C.n.l</span>
+            <div class="flex items-center justify-between gap-4">
               <div>
-                <p class="font-display text-base font-semibold text-navy">The Founder</p>
-                <p class="text-sm text-navy/55">Click.n.likes</p>
+                <p class="font-display text-base font-semibold text-navy">Meet Parekh</p>
+                <p class="text-sm text-navy/55">Founder, Click.n.likes</p>
               </div>
+              <a
+                href="https://www.linkedin.com/in/meetparekh21/"
+                target="_blank"
+                rel="noopener"
+                aria-label="Meet Parekh on LinkedIn"
+                class="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-navy/15 text-navy transition-colors duration-300 ease-out-quart hover:border-teal hover:bg-teal/10 hover:text-teal-dark"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S.02 4.88.02 3.5C.02 2.12 1.13 1 2.5 1s2.48 1.12 2.48 2.5zM.5 8h4V23h-4V8zm7.5 0h3.8v2.05h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1V23h-4v-7.9c0-1.88-.03-4.3-2.62-4.3-2.62 0-3.02 2.05-3.02 4.17V23H8V8z"/></svg>
+              </a>
             </div>
             <p class="mt-5 text-[15px] leading-relaxed text-navy/75">
               "Nine years in, my rule has not changed: build the growth asset, not the dependency. If it stops working
@@ -126,9 +141,9 @@ const formFields = [
           No sugarcoating. Just what's working and what isn't.
         </h2>
         <p class="reveal mt-4 text-lg text-navy/70" style="--d:140ms">
-          And one number we report that most agencies don't: not just revenue, but <b class="text-navy">profit</b>. A
-          ₹50,000 month means nothing if it costs ₹60,000 to generate it, so every report breaks out what a result was
-          actually worth after cost, not just the traffic or revenue headline.
+          And we report only what we can honestly stand behind: the <b class="text-navy">leads, calls and enquiries</b>
+          the work generated, and what each one cost to earn. We will not put a revenue or profit figure in a report
+          that only your own books can confirm, so what you see from us is measured, never guessed.
         </p>
       </div>
       <div class="mt-10 grid gap-5 sm:grid-cols-3">

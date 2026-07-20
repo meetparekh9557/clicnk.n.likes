@@ -1,27 +1,34 @@
 ---
-// Work page: headline metrics, case snapshots, benchmark request form.
-// Content ported from v1; Phase 4 replaces snapshots with the real
-// case-study template once the founder's material + permissions land.
+// Work page: how we define and measure a result, the industries we grow,
+// and a benchmark-request form. It carries NO client metrics until the
+// founder supplies real, permissioned numbers - nothing here is invented.
+// Phase 4 replaces the "how we measure" framing with real case studies
+// built from that material.
 import Base from '../layouts/Base.astro';
 import Card from '../components/Card.astro';
 import ClientLogos from '../components/ClientLogos.astro';
 import InlineCta from '../components/InlineCta.astro';
 import SimpleForm from '../components/islands/SimpleForm.jsx';
 import { withBase } from '../lib/url';
+import { breadcrumbSchema } from '../lib/seo';
 
-const metrics = [
-  { value: '187%', label: 'Average organic traffic lift in 6 months' },
-  { value: '3.4x', label: 'Average increase in booked appointments' },
-  { value: '42', label: 'Average new leads per month, local clients' },
-  { value: '7 days', label: 'Typical time to first deliverables live' },
+const jsonLd = breadcrumbSchema([
+  ['Home', '/'],
+  ['Work', '/work/'],
+]);
+
+// What a result actually means to us: the signals we can measure and
+// stand behind, never a client's private revenue.
+const measures = [
+  { h: 'Leads and enquiries', t: 'The forms, messages and enquiries the work brings in, attributed to the channel that earned them.' },
+  { h: 'Calls and bookings', t: 'Booked calls and appointments, counted through the call and booking tracking we set up, not guessed at.' },
+  { h: 'Cost per lead', t: 'What each lead actually costs to earn, so spend is judged on what it returns, not on how busy it looks.' },
+  { h: 'Rankings and organic traffic', t: 'Where you rank for the terms that matter, and how much qualified organic traffic that visibility brings, month on month.' },
 ];
 
-const cases = [
-  { chip: 'Local SEO · Dental, Ahmedabad', metric: '#1', text: 'Ranked #1 in the local Maps pack for "dentist near me" within 4 months, appointment enquiries up 3.1x.' },
-  { chip: 'AI SEO · Dermatology, Dubai', metric: 'Cited', text: "First clinic in category cited directly inside Google's AI Overview for \"acne treatment near me.\"" },
-  { chip: 'Social + Content · D2C skincare', metric: '4.2x', text: 'Instagram following grew 4.2x in 90 days, direct DM-to-sale flow built and converting.' },
-  { chip: 'Website + SEO · Salon chain, London', metric: '2.6x', text: 'Rebuilt site cut load time from 6.2s to 1.8s, online booking conversion up 2.6x.' },
-  { chip: 'Paid + Organic · D2C founder, Toronto', metric: '-38%', text: 'Cost per lead down 38% once paid campaigns were layered on top of an already-ranking site.' },
+const industries = [
+  'SaaS and software', 'Manufacturing and industrial', 'Legal and professional services',
+  'D2C and eCommerce', 'Local and multi-location', 'Film and media',
 ];
 
 const formFields = [
@@ -35,49 +42,75 @@ const formFields = [
 ---
 
 <Base
-  title="Work & Results | Click.n.likes"
-  description="Every engagement is measured against bookings, calls and revenue, not just rankings. Real categories, real growth curves."
+  title="Our Work & How We Measure Growth | Click.n.likes"
+  description="How we define a real result: leads, calls, cost per lead and organic rankings, measured honestly and never vanity metrics, across SaaS, manufacturing, legal, D2C and local businesses."
+  jsonLd={jsonLd}
 >
   <section class="mx-auto max-w-6xl px-[5vw] pt-16 pb-10 lg:pt-20">
     <p class="reveal inline-flex items-center gap-2 rounded-full border border-teal/30 bg-teal/5 px-4 py-1.5 text-[13px] font-semibold text-navy">
       <span class="h-1.5 w-1.5 rounded-full bg-teal"></span> Results
     </p>
     <h1 class="reveal-mask mt-5 max-w-3xl font-display text-[clamp(2.1rem,4.4vw,3.4rem)] leading-[1.08] font-bold text-navy">
-      <span class="mask-line"><span>Numbers we're happy to show you.</span></span>
+      <span class="mask-line"><span>A result you can measure,</span></span>
+      <span class="mask-line" style="--d:120ms"><span>not a headline you have to trust.</span></span>
     </h1>
     <p class="reveal mt-5 max-w-2xl text-lg leading-relaxed text-navy/70" style="--d:160ms">
-      Every engagement is measured against bookings, calls and revenue, not just rankings.
+      Every engagement is judged against the numbers we can genuinely stand behind: the leads, calls and enquiries the
+      work generated, and what each one cost to earn. Not rankings for their own sake, and never a revenue figure only
+      your own books can confirm.
     </p>
-    <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-      {metrics.map((m, i) => (
-        <Card class="reveal text-center" style={`--d:${i * 70}ms`}>
-          <div class="font-display text-4xl font-bold text-teal-dark">{m.value}</div>
-          <p class="mt-2 text-[13px] text-navy/55">{m.label}</p>
-        </Card>
-      ))}
-    </div>
   </section>
 
+  <!-- How we measure a result -->
   <section class="mx-auto max-w-6xl px-[5vw] pb-16">
-    <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">Case snapshots</p>
-    <h2 class="reveal mt-3 font-display text-[clamp(1.6rem,3vw,2.4rem)] leading-[1.12] font-bold text-navy" style="--d:80ms">
-      Real categories, real growth curves.
+    <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">How we measure a result</p>
+    <h2 class="reveal mt-3 max-w-2xl font-display text-[clamp(1.6rem,3vw,2.4rem)] leading-[1.12] font-bold text-navy" style="--d:80ms">
+      Four numbers we report, and can prove.
     </h2>
-    <div class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-      {cases.map((c, i) => (
-        <Card class="reveal" style={`--d:${(i % 3) * 90}ms`}>
-          <span class="inline-block rounded-full bg-teal/10 px-3 py-1 text-xs font-semibold text-teal-dark">{c.chip}</span>
-          <div class="mt-4 font-display text-4xl font-bold text-navy">{c.metric}</div>
-          <p class="mt-2 text-[13.5px] leading-relaxed text-navy/60">{c.text}</p>
+    <div class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      {measures.map((m, i) => (
+        <Card class="reveal" style={`--d:${(i % 4) * 80}ms`}>
+          <h3 class="font-display text-base font-semibold text-navy">{m.h}</h3>
+          <p class="mt-2 text-[13.5px] leading-relaxed text-navy/60">{m.t}</p>
         </Card>
       ))}
     </div>
   </section>
 
-  <section class="mx-auto max-w-6xl px-[5vw] pb-4">
+  <!-- Industries -->
+  <section class="border-t border-navy/10">
+    <div class="mx-auto max-w-6xl px-[5vw] py-16">
+      <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">Where we drive growth</p>
+      <h2 class="reveal mt-3 max-w-2xl font-display text-[clamp(1.6rem,3vw,2.4rem)] leading-[1.12] font-bold text-navy" style="--d:80ms">
+        The same fundamentals, adapted to how each market is searched and bought.
+      </h2>
+      <p class="reveal mt-3 max-w-2xl text-lg text-navy/70" style="--d:140ms">
+        From SaaS and manufacturing to legal, film, apparel, jewellery and hospitality, the playbook changes with the
+        buyer, an engineer sourcing a supplier searches nothing like a patient booking a clinic.
+      </p>
+      <div class="reveal mt-8 flex flex-wrap gap-2.5" style="--d:180ms">
+        {industries.map((name) => (
+          <span class="rounded-full border-[1.5px] border-navy/10 bg-white px-4 py-2 text-[13.5px] font-semibold text-navy/75">{name}</span>
+        ))}
+      </div>
+      <div class="reveal mt-10 rounded-2xl border border-teal/30 bg-teal/[0.05] p-6 sm:p-7" style="--d:220ms">
+        <p class="text-[15px] leading-relaxed text-navy/75">
+          <b class="font-semibold text-navy">On detailed case studies:</b> we publish them here with real numbers as
+          each client gives us permission to share theirs. We would rather map a realistic projection for your own
+          category than borrow someone else's headline, so
+          <a href={withBase('/tools/')} class="font-semibold text-teal-dark underline decoration-teal/40 underline-offset-2 hover:decoration-teal">run a free check</a>
+          or
+          <a href={withBase('/contact/')} class="font-semibold text-teal-dark underline decoration-teal/40 underline-offset-2 hover:decoration-teal">tell us your category</a>
+          and we will show you what is realistic for you.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-6xl px-[5vw] pt-14 pb-4">
     <InlineCta
       eyebrow="Your category next"
-      title="Want a realistic growth curve mapped for your business?"
+      title="Want a realistic growth projection mapped for your business?"
       primaryLabel="Get your instant quote"
       secondaryLabel="Run a free check"
     />

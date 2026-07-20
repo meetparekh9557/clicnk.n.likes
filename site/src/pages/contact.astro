@@ -8,6 +8,12 @@ import Card from '../components/Card.astro';
 import SimpleForm from '../components/islands/SimpleForm.jsx';
 import { contact } from '../data/site';
 import { withBase } from '../lib/url';
+import { breadcrumbSchema } from '../lib/seo';
+
+const jsonLd = breadcrumbSchema([
+  ['Home', '/'],
+  ['Contact', '/contact/'],
+]);
 
 const formFields = [
   { name: 'name', label: 'Full name', placeholder: 'Your name' },
@@ -34,18 +40,19 @@ const channels = [
     icon: 'whatsapp',
   },
   {
-    label: 'Based in',
-    value: 'Ahmedabad & Mumbai',
-    note: 'Serving clients worldwide.',
+    label: 'Where we work',
+    value: 'Worldwide',
+    note: 'Serving clients across time zones.',
     icon: 'pin',
   },
 ];
 ---
 
 <Base
-  title="Contact & Instant Quote | Click.n.likes"
+  title="Contact Us & Get an Instant Quote | Click.n.likes"
   description="Talk to a strategist, not a bot. Message us, WhatsApp us, or build an instant quote - and get an honest read on what growth is realistic for your business."
   hideCta
+  jsonLd={jsonLd}
 >
   <section class="mx-auto max-w-6xl px-[5vw] pt-16 pb-10 lg:pt-20">
     <p class="reveal inline-flex items-center gap-2 rounded-full border border-teal/30 bg-teal/5 px-4 py-1.5 text-[13px] font-semibold text-navy">
@@ -102,7 +109,7 @@ const channels = [
           </Card>
         ))}
 
-        <Card class="bg-navy p-6 text-white">
+        <div class="relative rounded-2xl border border-white/10 bg-navy p-6 text-white shadow-[0_18px_44px_rgba(26,43,74,0.14)]">
           <p class="text-xs font-semibold tracking-[0.1em] text-white/50 uppercase">Not ready to talk yet?</p>
           <p class="mt-2 text-[15px] leading-relaxed text-white/80">
             Get a live Website Health Score first. Real fetch of your actual page, 11 verified signals, full report
@@ -115,7 +122,7 @@ const channels = [
             Scan my site free
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </a>
-        </Card>
+        </div>
       </aside>
     </div>
   </section>
