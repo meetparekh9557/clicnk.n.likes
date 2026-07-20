@@ -1,13 +1,15 @@
-# Builds the Astro rebuild (site/) on every push that touches it.
+# Builds the Astro site (site/) on every push that touches it.
 # - On feature branches: build check + downloadable dist artifact.
-# - On main: additionally publishes the build to /preview/ on the main
-#   branch, which GitHub Pages serves at clicknlikes.com/preview/.
-#   v1 (index.html at the root) keeps serving the real domain untouched;
-#   cutover stays a separate, founder-approved step.
-# The publish commit only touches preview/**, which this workflow's
-# paths filter ignores, so it cannot retrigger itself.
+# - On main: publishes the production build to the repo ROOT (the live
+#   clicknlikes.com) and a noindex staging copy to /preview/. GitHub Pages
+#   serves the main branch root, so the committed build goes live within a
+#   minute of the publish commit, with no Pages settings change.
+#   To roll back to v1, revert the publish commit (restores index.html).
+# The publish commit only touches built output at the root and preview/**,
+# never site/** (this workflow's paths filter), and site/dist is gitignored,
+# so the commit can never retrigger this workflow.
 
-name: Build site + publish preview
+name: Build & deploy site
 
 on:
   push:
@@ -37,7 +39,7 @@ jobs:
           name: site-dist
           path: site/dist
 
-  publish-preview:
+  publish-live:
     if: github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-latest
@@ -50,23 +52,40 @@ jobs:
           cache-dependency-path: site/package-lock.json
       - run: npm ci
         working-directory: site
-      - name: Build with /preview/ base + noindex
+
+      - name: Build production site (base=/, indexable, analytics on)
+        run: npm run build
+        working-directory: site
+      - name: Stage the live build at the repo root
+        run: |
+          # Replace only the entries the build produces; source dirs
+          # (site/, docs/, .github/, apps-script.gs, CNAME, ...) are never
+          # in dist, so they are left untouched.
+          for entry in $(ls -A site/dist); do rm -rf "./$entry"; done
+          cp -r site/dist/. ./
+
+      - name: Build noindex staging copy (base=/preview/)
         run: npm run build
         working-directory: site
         env:
           PREVIEW_BASE: /preview/
           PUBLIC_PREVIEW: '1'
-      - name: Commit preview build to main
+      - name: Stage the /preview/ mirror
         run: |
           rm -rf preview
           mkdir preview
           cp -r site/dist/. preview/
+
+      - name: Preserve custom domain + Jekyll opt-out, then publish
+        run: |
+          echo "clicknlikes.com" > CNAME
+          touch .nojekyll
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A preview
+          git add -A
           if git diff --cached --quiet; then
-            echo "Preview unchanged, nothing to publish."
+            echo "Site unchanged, nothing to publish."
           else
-            git commit -m "Publish preview build to /preview/ [skip ci]"
+            git commit -m "Publish live site to root + /preview/ [skip ci]"
             git push
           fi
