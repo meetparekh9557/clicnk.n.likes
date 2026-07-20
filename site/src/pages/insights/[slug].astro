@@ -6,7 +6,7 @@ import Base from '../../layouts/Base.astro';
 import InlineCta from '../../components/InlineCta.astro';
 import { articles } from '../../data/articles';
 import { withBase } from '../../lib/url';
-import { articleSchema, breadcrumbSchema } from '../../lib/seo';
+import { abs, articleSchema, breadcrumbSchema } from '../../lib/seo';
 
 export function getStaticPaths() {
   return articles.map((a) => ({ params: { slug: a.slug }, props: { article: a } }));
@@ -15,6 +15,29 @@ export function getStaticPaths() {
 const { article } = Astro.props;
 const body = article.body.replace(/href="(\/[^"]*)"/g, (_m, p) => `href="${withBase(p)}"`);
 const articlePath = `/insights/${article.slug}/`;
+const featuredPath = `/insights/${article.slug}.png`;
+
+// SEO meta per article, written in the founder's voice (the on-page
+// headline stays as-is). Titles in Title Case, descriptions ~155ch.
+const articleMeta: Record<string, { title: string; description: string }> = {
+  'ai-search': {
+    title: 'Why ChatGPT, Not Google, Now Decides Who Gets Found | Click.n.likes',
+    description: 'AI answers name two or three businesses, then stop. Here is how to structure your headings, facts and schema so the engines quote you when your customer asks, not your competitor.',
+  },
+  'gbp-mistakes': {
+    title: 'Five Profile Mistakes Losing You the Local Pack | Click.n.likes',
+    description: "The businesses missing from the map pack usually aren't worse, they are just making a handful of profile mistakes. Here are the five we find most often, and how to fix each one.",
+  },
+  'blog-that-ranks': {
+    title: 'How to Write One Blog Post That Actually Ranks | Click.n.likes',
+    description: "Most business blogs fail twice: they don't rank, and when they are read, they don't convert. Here is the structure we use so a single post does both, for humans and AI alike.",
+  },
+  '3-second-test': {
+    title: 'The Three-Second Test Your Website Keeps Failing | Click.n.likes',
+    description: 'A first-time visitor gives your site about three seconds. Here is the test we run before touching a line of code, and the four quiet leaks that cost you bookings.',
+  },
+};
+const meta = articleMeta[article.slug] ?? { title: `${article.title} | Click.n.likes Insights`, description: article.excerpt };
 const jsonLd = [
   articleSchema({
     title: article.title,
@@ -43,7 +66,7 @@ const bodyTop = canSplit ? paras.slice(0, mid).join('</p>') + '</p>' : body;
 const bodyRest = canSplit ? paras.slice(mid).join('</p>') : '';
 ---
 
-<Base title={`${article.title} | Click.n.likes Insights`} description={article.excerpt} ogType="article" jsonLd={jsonLd}>
+<Base title={meta.title} description={meta.description} ogType="article" ogImage={abs(featuredPath)} jsonLd={jsonLd}>
   <section class="mx-auto max-w-3xl px-[5vw] pt-14 pb-6 lg:pt-18">
     <a href={withBase('/insights/')} class="reveal text-sm font-semibold text-navy/55 transition-colors hover:text-teal-dark">← All insights</a>
     <p class="reveal mt-5 inline-flex items-center gap-2 rounded-full border border-teal/30 bg-teal/5 px-4 py-1.5 text-[13px] font-semibold text-navy" style="--d:60ms">
@@ -57,7 +80,18 @@ const bodyRest = canSplit ? paras.slice(mid).join('</p>') : '';
     </p>
   </section>
 
-  <section class="mx-auto max-w-3xl px-[5vw] pb-20">
+  <div class="mx-auto max-w-3xl px-[5vw]">
+    <img
+      src={withBase(featuredPath)}
+      width="1200"
+      height="630"
+      alt={article.title}
+      class="reveal w-full rounded-2xl border border-navy/10 shadow-[0_18px_44px_rgba(26,43,74,0.10)]"
+      style="--d:180ms"
+    />
+  </div>
+
+  <section class="mx-auto max-w-3xl px-[5vw] pt-10 pb-20">
     <div class="article-body reveal" style="--d:200ms" set:html={bodyTop} />
     {canSplit && (
       <div class="my-10">

@@ -29,13 +29,6 @@ const jsonLd = [
   ]),
 ];
 
-// Abstract card thumbs, carried over from v1's blog grid.
-const thumbs = [
-  '<svg viewBox="0 0 300 160" aria-hidden="true"><circle cx="60" cy="80" r="50" fill="#4ECDC4" opacity=".3"/><circle cx="220" cy="50" r="30" fill="#FF4757" opacity=".25"/></svg>',
-  '<svg viewBox="0 0 300 160" aria-hidden="true"><rect x="40" y="40" width="90" height="90" rx="14" fill="#FF4757" opacity=".22"/><rect x="160" y="60" width="90" height="60" rx="14" fill="#4ECDC4" opacity=".3"/></svg>',
-  '<svg viewBox="0 0 300 160" aria-hidden="true"><circle cx="150" cy="80" r="60" fill="#4ECDC4" opacity=".2"/><circle cx="150" cy="80" r="30" fill="#FF4757" opacity=".25"/></svg>',
-  '<svg viewBox="0 0 300 160" aria-hidden="true"><rect x="20" y="30" width="260" height="100" rx="16" fill="#FF4757" opacity=".15"/></svg>',
-];
 ---
 
 <Base
@@ -64,7 +57,14 @@ const thumbs = [
           class="reveal group overflow-hidden rounded-2xl border border-navy/10 bg-white transition-all duration-500 ease-out-quart hover:-translate-y-1 hover:border-teal/40 hover:shadow-[0_18px_44px_rgba(26,43,74,0.10)]"
           style={`--d:${(i % 2) * 90}ms`}
         >
-          <div class="bg-off [&>svg]:block [&>svg]:w-full" set:html={thumbs[i]} />
+          <img
+            src={withBase(`/insights/${a.slug}.png`)}
+            width="1200"
+            height="630"
+            alt={a.title}
+            loading="lazy"
+            class="block aspect-[1200/630] w-full object-cover"
+          />
           <div class="p-6">
             <span class="rounded-full bg-teal/10 px-3 py-1 text-xs font-semibold text-teal-dark">{a.tag}</span>
             <h3 class="mt-3 font-display text-lg leading-snug font-semibold text-navy">{a.title}</h3>

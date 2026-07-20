@@ -62,6 +62,40 @@ const proof = serviceProof[service.slug];
 const deep = serviceDeepDive[service.slug];
 const toolConfig = toolConfigs[service.toolKey];
 const servicePath = `/services/${service.slug}/`;
+
+// Per-page SEO meta, written in the founder's voice (not the generic
+// "<title> | brand" fallback). Titles in Title Case, descriptions ~155ch.
+const serviceMeta: Record<string, { title: string; description: string }> = {
+  seo: {
+    title: 'SEO That Ranks You for What Buyers Actually Search | Click.n.likes',
+    description: 'We build your SEO around the way your category is really searched, so the visitors you earn are the ones who turn into enquiries, not just traffic that looks good in a report.',
+  },
+  'local-seo': {
+    title: 'Local SEO That Wins You the Google Maps Pack | Click.n.likes',
+    description: 'The local pack is the shopfront of the modern high street. We sharpen your Google Business Profile, earn you real reviews, and track your rank against the rivals in your own city.',
+  },
+  'ai-seo': {
+    title: 'Be the Business ChatGPT and AI Overviews Cite | Click.n.likes',
+    description: 'Search is splitting into blue links and AI answers. We shape your content and schema so that when someone asks an AI about your category, it names you, and not your competitor.',
+  },
+  'social-media-growth': {
+    title: 'Social Growth That Earns a Real Audience | Click.n.likes',
+    description: 'Social done the honest way: content and strategy that build a following worth having and turn it into enquiries, judged on the leads it brings you, never the likes.',
+  },
+  'content-marketing': {
+    title: 'Content That Ranks on Google and Gets Cited by AI | Click.n.likes',
+    description: 'One buyer question, answered completely. That is how we write content that ranks on Google, gets quoted by AI, and turns a reader into an enquiry instead of a bounce.',
+  },
+  'website-development': {
+    title: 'Websites That Load Fast and Turn Visitors Into Leads | Click.n.likes',
+    description: 'A visitor decides in about three seconds. We build sites that answer them fast, load in under two, and are ready to rank from day one, with no lock-in to a proprietary builder.',
+  },
+  'paid-campaigns': {
+    title: 'Paid Ads That Amplify Your Organic Growth | Click.n.likes',
+    description: 'Paid works best on a site that already earns its rankings. We run Meta and Google campaigns that amplify your organic engine rather than paper over its gaps. Ad spend stays separate.',
+  },
+};
+const meta = serviceMeta[service.slug] ?? { title: `${service.title} | Click.n.likes`, description: service.lead };
 const jsonLd = [
   serviceSchema({ name: service.title, description: service.lead, path: servicePath }),
   breadcrumbSchema([
@@ -74,8 +108,8 @@ const HeroIcon = icons[service.cards[0].icon];
 ---
 
 <Base
-  title={`${service.title} | Click.n.likes`}
-  description={service.lead}
+  title={meta.title}
+  description={meta.description}
   jsonLd={jsonLd}
 >
   <!-- Hero -->
