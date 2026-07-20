@@ -58,9 +58,13 @@ Hard gates: Lighthouse ≥95/page, <2s mobile, zero horizontal overflow at
       voice pass). Data-driven template `site/src/pages/services/[slug].astro`
       + `site/src/data/services.ts`; tool/calculator sections marked for the
       tools milestone to embed islands into.
-- [ ] Tools migration: port all 9 tools + quote calculator as React islands;
-      shared engine (scoring logic copied verbatim from v1); re-run the full
-      Playwright suite against the new build. HIGHEST RISK — do not rush.
+- [x] Tools migration: all tools + quote calculator ported as React islands
+      (Website Health Scan, Funnel Leak & ROI, Competitor Threat, Instant
+      Quote, and the 7 per-channel gated checks). Scorers copied verbatim from
+      v1's TOOL_LOGIC via `lib/toolScorers.js`; email-gated with honest
+      verified/self-reported labels; each service page runs its own check at
+      `#tool`. Verified in-browser (exact v1 math). Merged in PRs #21-#23.
+      (Web Dev's live Google PageSpeed blend is the one deferred item.)
 - [x] Insights index + 4 article pages (content exists in v1, already in
       founder voice). Bodies ported verbatim into `site/src/data/articles.ts`
       (internal links rebased via withBase); newsletter island reuses v1's
@@ -74,7 +78,20 @@ Hard gates: Lighthouse ≥95/page, <2s mobile, zero horizontal overflow at
 - [ ] Phase 3 polish pass: view transitions, animated calculator totals,
       self-drawing charts component, before/after slider component (for
       Phase 4), aurora hero, full motion audit, `prefers-reduced-motion`.
-- [ ] sitemap.xml, robots.txt, per-page JSON-LD, OG images.
+- [x] SEO plumbing: dynamic `sitemap.xml` (21 URLs, built from the single
+      route list in `lib/seo.ts` so it never drifts) and `robots.txt`
+      endpoints (production allows + points to the sitemap; the /preview/
+      build disallows all, belt-and-braces with the per-page noindex).
+      Site-wide Organization + WebSite JSON-LD from the Base layout, plus
+      per-page schema via a `jsonLd` prop: Service + BreadcrumbList on service
+      pages, BlogPosting + BreadcrumbList on articles (real datePublished added
+      to `articles.ts`), Blog on the Insights index, FAQPage on FAQ,
+      OfferCatalog (the three tier prices) on Pricing, breadcrumbs on the top
+      pages. Branded 1200x630 OG share image (`public/og-default.png`,
+      rendered in the real brand type — Space Grotesk + DM Sans) wired site-
+      wide with Open Graph + Twitter summary_large_image tags; articles use
+      og:type=article. All structured data emits absolute production URLs and
+      validates; verified across the production and preview builds.
 - [ ] Full QA: Lighthouse all pages, iPhone-13 Playwright suite, tool parity
       tests, forms end-to-end (Apps Script emails + sheet rows).
 - [ ] Founder preview approval → cutover (Pages serves `site/` build; v1

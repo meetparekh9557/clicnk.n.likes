@@ -6,6 +6,7 @@ import Base from '../../layouts/Base.astro';
 import InlineCta from '../../components/InlineCta.astro';
 import { articles } from '../../data/articles';
 import { withBase } from '../../lib/url';
+import { articleSchema, breadcrumbSchema } from '../../lib/seo';
 
 export function getStaticPaths() {
   return articles.map((a) => ({ params: { slug: a.slug }, props: { article: a } }));
@@ -13,6 +14,24 @@ export function getStaticPaths() {
 
 const { article } = Astro.props;
 const body = article.body.replace(/href="(\/[^"]*)"/g, (_m, p) => `href="${withBase(p)}"`);
+const articlePath = `/insights/${article.slug}/`;
+const jsonLd = [
+  articleSchema({
+    title: article.title,
+    description: article.excerpt,
+    path: articlePath,
+    author: article.author,
+    datePublished: article.date,
+  }),
+  breadcrumbSchema([
+    ['Home', '/'],
+    ['Insights', '/insights/'],
+    [article.title, articlePath],
+  ]),
+];
+const displayDate = new Date(article.date + 'T00:00:00Z').toLocaleDateString('en-US', {
+  year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC',
+});
 
 // Split the article at a paragraph boundary near the middle so a CTA can
 // sit inside the read, not only at the top and bottom. Cutting only at
@@ -24,7 +43,7 @@ const bodyTop = canSplit ? paras.slice(0, mid).join('</p>') + '</p>' : body;
 const bodyRest = canSplit ? paras.slice(mid).join('</p>') : '';
 ---
 
-<Base title={`${article.title} | Click.n.likes Insights`} description={article.excerpt}>
+<Base title={`${article.title} | Click.n.likes Insights`} description={article.excerpt} ogType="article" jsonLd={jsonLd}>
   <section class="mx-auto max-w-3xl px-[5vw] pt-14 pb-6 lg:pt-18">
     <a href={withBase('/insights/')} class="reveal text-sm font-semibold text-navy/55 transition-colors hover:text-teal-dark">← All insights</a>
     <p class="reveal mt-5 inline-flex items-center gap-2 rounded-full border border-teal/30 bg-teal/5 px-4 py-1.5 text-[13px] font-semibold text-navy" style="--d:60ms">
@@ -33,7 +52,9 @@ const bodyRest = canSplit ? paras.slice(mid).join('</p>') : '';
     <h1 class="reveal-mask mt-4 font-display text-[clamp(1.9rem,3.8vw,2.8rem)] leading-[1.12] font-bold text-navy">
       <span class="mask-line"><span>{article.title}</span></span>
     </h1>
-    <p class="reveal mt-4 text-sm text-navy/55" style="--d:140ms">{article.author} · {article.readTime}</p>
+    <p class="reveal mt-4 text-sm text-navy/55" style="--d:140ms">
+      {article.author} · <time datetime={article.date}>{displayDate}</time> · {article.readTime}
+    </p>
   </section>
 
   <section class="mx-auto max-w-3xl px-[5vw] pb-20">

@@ -8,6 +8,12 @@ import Card from '../components/Card.astro';
 import SimpleForm from '../components/islands/SimpleForm.jsx';
 import { contact } from '../data/site';
 import { withBase } from '../lib/url';
+import { breadcrumbSchema } from '../lib/seo';
+
+const jsonLd = breadcrumbSchema([
+  ['Home', '/'],
+  ['Contact', '/contact/'],
+]);
 
 const formFields = [
   { name: 'name', label: 'Full name', placeholder: 'Your name' },
@@ -46,6 +52,7 @@ const channels = [
   title="Contact & Instant Quote | Click.n.likes"
   description="Talk to a strategist, not a bot. Message us, WhatsApp us, or build an instant quote - and get an honest read on what growth is realistic for your business."
   hideCta
+  jsonLd={jsonLd}
 >
   <section class="mx-auto max-w-6xl px-[5vw] pt-16 pb-10 lg:pt-20">
     <p class="reveal inline-flex items-center gap-2 rounded-full border border-teal/30 bg-teal/5 px-4 py-1.5 text-[13px] font-semibold text-navy">

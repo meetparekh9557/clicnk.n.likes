@@ -9,6 +9,7 @@ import ClientLogos from '../components/ClientLogos.astro';
 import InlineCta from '../components/InlineCta.astro';
 import SimpleForm from '../components/islands/SimpleForm.jsx';
 import { withBase } from '../lib/url';
+import { breadcrumbSchema } from '../lib/seo';
 import Clock from '@lucide/astro/icons/clock';
 import MessageSquare from '@lucide/astro/icons/message-square';
 import Layers from '@lucide/astro/icons/layers';
@@ -20,11 +21,17 @@ const formFields = [
   { name: 'phone', label: 'WhatsApp number', type: 'tel', placeholder: '+91 98765 43210', required: false, optional: 'optional, for a faster reply' },
   { name: 'message', label: "What's the one thing holding your growth back right now?", type: 'textarea', placeholder: "Tell us honestly, we'll be honest back" },
 ];
+
+const jsonLd = breadcrumbSchema([
+  ['Home', '/'],
+  ['About', '/about/'],
+]);
 ---
 
 <Base
   title="About | Click.n.likes"
   description="Nine years of building organic growth systems for businesses across industries - SEO and content that keep generating leads long after the spend stops. Built on fundamentals, not the algorithm update of the month."
+  jsonLd={jsonLd}
 >
   <!-- Hero -->
   <section class="relative overflow-hidden">

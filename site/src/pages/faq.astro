@@ -5,12 +5,13 @@
 // AI Overviews - which is literally a service we sell.
 import Base from '../layouts/Base.astro';
 import { withBase } from '../lib/url';
+import { breadcrumbSchema } from '../lib/seo';
 import Plus from '@lucide/astro/icons/plus';
 
 const faqs = [
   {
     q: 'How much does a project cost?',
-    a: 'Projects start from ₹16,000. The exact number depends on the service, your market, and how much you need each month. Use the instant quote calculator on the Contact page, or on any service page, to get a real number in under a minute.',
+    a: 'Projects start from ₹16,000. The exact number depends on the service, your market, and how much you need each month. Use the instant quote calculator on the Pricing page to get a real number in under a minute.',
   },
   {
     q: 'Do you guarantee page 1 rankings?',
@@ -42,20 +43,27 @@ const faqs = [
   },
 ];
 
-const faqSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: faqs.map((f) => ({
-    '@type': 'Question',
-    name: f.q,
-    acceptedAnswer: { '@type': 'Answer', text: f.a },
-  })),
-};
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  },
+  breadcrumbSchema([
+    ['Home', '/'],
+    ['FAQs', '/faq/'],
+  ]),
+];
 ---
 
 <Base
   title="FAQs | Click.n.likes"
   description="Straight answers on pricing, timelines, ranking guarantees, paid ad spend and how our services work, the questions every business asks before they sign."
+  jsonLd={jsonLd}
 >
   <section class="mx-auto max-w-3xl px-[5vw] pt-16 pb-8 lg:pt-20">
     <p class="reveal inline-flex items-center gap-2 rounded-full border border-teal/30 bg-teal/5 px-4 py-1.5 text-[13px] font-semibold text-navy">
@@ -107,6 +115,4 @@ const faqSchema = {
       </div>
     </div>
   </section>
-
-  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
 </Base>

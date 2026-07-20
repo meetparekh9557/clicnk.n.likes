@@ -4,6 +4,30 @@ import Base from '../../layouts/Base.astro';
 import NewsletterForm from '../../components/islands/NewsletterForm.jsx';
 import { articles } from '../../data/articles';
 import { withBase } from '../../lib/url';
+import { abs, breadcrumbSchema } from '../../lib/seo';
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Blog',
+    name: 'Click.n.likes Insights',
+    description: 'Practical breakdowns on SEO, AI search, social and websites.',
+    url: abs('/insights/'),
+    publisher: { '@id': 'https://clicknlikes.com/#organization' },
+    blogPost: articles.map((a) => ({
+      '@type': 'BlogPosting',
+      headline: a.title,
+      description: a.excerpt,
+      url: abs(`/insights/${a.slug}/`),
+      datePublished: a.date,
+      author: { '@type': 'Organization', name: a.author },
+    })),
+  },
+  breadcrumbSchema([
+    ['Home', '/'],
+    ['Insights', '/insights/'],
+  ]),
+];
 
 // Abstract card thumbs, carried over from v1's blog grid.
 const thumbs = [
@@ -17,6 +41,7 @@ const thumbs = [
 <Base
   title="Insights | Click.n.likes"
   description="Practical breakdowns on SEO, AI search, social and websites, written the way we'd explain it to a client over coffee."
+  jsonLd={jsonLd}
 >
   <section class="mx-auto max-w-6xl px-[5vw] pt-16 pb-10 lg:pt-20">
     <p class="reveal inline-flex items-center gap-2 rounded-full border border-teal/30 bg-teal/5 px-4 py-1.5 text-[13px] font-semibold text-navy">

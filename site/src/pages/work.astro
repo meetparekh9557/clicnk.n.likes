@@ -8,6 +8,12 @@ import ClientLogos from '../components/ClientLogos.astro';
 import InlineCta from '../components/InlineCta.astro';
 import SimpleForm from '../components/islands/SimpleForm.jsx';
 import { withBase } from '../lib/url';
+import { breadcrumbSchema } from '../lib/seo';
+
+const jsonLd = breadcrumbSchema([
+  ['Home', '/'],
+  ['Work', '/work/'],
+]);
 
 const metrics = [
   { value: '187%', label: 'Average organic traffic lift in 6 months' },
@@ -37,6 +43,7 @@ const formFields = [
 <Base
   title="Work & Results | Click.n.likes"
   description="Every engagement is measured against bookings, calls and revenue, not just rankings. Real categories, real growth curves."
+  jsonLd={jsonLd}
 >
   <section class="mx-auto max-w-6xl px-[5vw] pt-16 pb-10 lg:pt-20">
     <p class="reveal inline-flex items-center gap-2 rounded-full border border-teal/30 bg-teal/5 px-4 py-1.5 text-[13px] font-semibold text-navy">

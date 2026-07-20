@@ -9,6 +9,7 @@ import Base from '../layouts/Base.astro';
 import Card from '../components/Card.astro';
 import QuoteCalculator from '../components/islands/QuoteCalculator.jsx';
 import { withBase } from '../lib/url';
+import { abs, breadcrumbSchema } from '../lib/seo';
 import Check from '@lucide/astro/icons/check';
 
 const tiers = [
@@ -63,11 +64,42 @@ const notes = [
   { h: 'Websites are quoted per project', t: 'A website build is scoped to what it needs to do, not a monthly line, and handed over with no lock-in to a proprietary builder.' },
   { h: 'Every number is confirmed in writing', t: 'These are honest starting points. Your exact scope and price are set in a written proposal before any engagement begins.' },
 ];
+
+// Published tier prices, expressed as an OfferCatalog. Amounts are the
+// monthly starting fees shown on the page (INR), tied to the org as seller.
+const tierAmounts: Record<string, number> = { Launch: 16000, Growth: 42000, Partner: 150000 };
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'OfferCatalog',
+    name: 'Click.n.likes growth plans',
+    url: abs('/pricing/'),
+    itemListElement: tiers.map((t) => ({
+      '@type': 'Offer',
+      name: t.name,
+      description: t.for,
+      priceCurrency: 'INR',
+      price: tierAmounts[t.name],
+      priceSpecification: {
+        '@type': 'UnitPriceSpecification',
+        price: tierAmounts[t.name],
+        priceCurrency: 'INR',
+        unitText: 'MONTH',
+      },
+      seller: { '@id': 'https://clicknlikes.com/#organization' },
+    })),
+  },
+  breadcrumbSchema([
+    ['Home', '/'],
+    ['Pricing', '/pricing/'],
+  ]),
+];
 ---
 
 <Base
   title="Pricing | Click.n.likes"
   description="Transparent, tiered pricing for organic growth: Launch, Growth and Partner, from ₹16,000/month. Real work at every stage, no hidden retainers, ad spend always separate."
+  jsonLd={jsonLd}
 >
   <!-- Hero -->
   <section class="mx-auto max-w-6xl px-[5vw] pt-16 pb-8 lg:pt-20">
