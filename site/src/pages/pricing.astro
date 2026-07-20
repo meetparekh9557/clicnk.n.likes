@@ -281,7 +281,7 @@ const jsonLd = [
         });
         if (note) {
           if (cur === 'INR') note.textContent = 'In Indian Rupees. Switch if you are elsewhere.';
-          else if (fx.rates && fx.rates[cur]) note.textContent = `Converted from INR at today's rate${fx.live ? '' : ' (last available)'}. Quoted in INR.`;
+          else if (fx.rates && fx.rates[cur]) note.textContent = `Shown in your currency at today's rate${fx.live ? '' : ' (last available)'}, confirmed in the written proposal.`;
           else note.textContent = 'Live rate unavailable, showing our base INR pricing.';
         }
       };

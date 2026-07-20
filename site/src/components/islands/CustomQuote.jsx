@@ -114,20 +114,21 @@ export default function CustomQuote() {
     const ref = makeRef();
     const indLabel = INDUSTRIES.find((i) => i.key === industry).label;
     const svcLabels = sel.map((k) => SERVICES[k].label).join(', ');
-    const totalLine = [monthly > 0 ? inr(monthly) + '/month' : null, onetime > 0 ? inr(onetime) + ' one-time' : null].filter(Boolean).join(' + ');
+    const totalLine = [monthly > 0 ? money(monthly) + '/month' : null, onetime > 0 ? money(onetime) + ' one-time' : null].filter(Boolean).join(' + ');
+    const totalLineInr = [monthly > 0 ? inr(monthly) + '/month' : null, onetime > 0 ? inr(onetime) + ' one-time' : null].filter(Boolean).join(' + ');
 
     const factors = [
       fact('Industry', indLabel, 'self', 'noted'),
       fact('Services', svcLabels, 'self', 'selected'),
       fact('Growth ambition', `${AMBITION[ambition].label} - ${AMBITION[ambition].note}`, 'self', 'selected'),
       fact('Timeline', timeline, 'self', 'noted'),
-      ...lines.map((l) => fact(l.label, inr(l.amt) + ' ' + l.unit, 'self', 'quote line')),
+      ...lines.map((l) => fact(l.label, money(l.amt) + ' ' + l.unit, 'self', 'quote line')),
     ];
     if (discountPct > 0) factors.push(fact('Bundle discount', `${Math.round(discountPct * 100)}% off monthly`, 'self', 'applied'));
     if (goal.trim()) factors.push(fact('What success looks like', goal.trim(), 'self', 'noted'));
 
-    const curNote = cur !== 'INR' && rates && rates[cur] ? ` On screen we showed these figures in ${cur} at today's exchange rate; our pricing is set in INR.` : '';
-    const interpretation = `This is your personalised quote (reference ${ref}) for a ${AMBITION[ambition].label.toLowerCase()} push across ${svcLabels}. Every service includes a flat ₹16,000 base and scales with the depth of work, never with your industry.${curNote} Reply with your reference and we build the written proposal around exactly this.`;
+    const curNote = cur !== 'INR' && rates && rates[cur] ? ` These figures are shown in ${cur} at today's exchange rate; your written proposal confirms the final amount in ${cur}.` : '';
+    const interpretation = `This is your personalised quote (reference ${ref}) for a ${AMBITION[ambition].label.toLowerCase()} push across ${svcLabels}. Every service includes a flat ${money(16000)} base and scales with the depth of work, never with your industry.${curNote} Reply with your reference and we build the written proposal around exactly this.`;
 
     const notes = [];
     if (selected.has('paid')) notes.push('Ad spend is billed directly from your card on the ad platform, separate from this fee.');
@@ -135,7 +136,7 @@ export default function CustomQuote() {
     if (discountPct > 0) notes.push(`A ${Math.round(discountPct * 100)}% multi-service bundle discount is included above.`);
     notes.push(`Quote your reference ${ref} when you reply, and the written proposal is built around exactly this scope.`);
 
-    const bodyText = `Hi,\n\nHere is your custom quote from Click.n.likes for ${business || 'your business'}.\n\nUnique quote reference: ${ref}\nIndustry: ${indLabel}\nServices: ${svcLabels}\nGrowth ambition: ${AMBITION[ambition].label}\nTimeline: ${timeline}\n\nIndicative investment: ${totalLine}\n\nLine items:\n${lines.map((l) => `• ${l.label}: ${inr(l.amt)} ${l.unit}`).join('\n')}\n\n${goal.trim() ? `What success looks like for you:\n${goal.trim()}\n\n` : ''}Notes:\n${notes.map((n) => `• ${n}`).join('\n')}\n\nReply to this email to turn it into a written proposal.\n\nBest,\nClick.n.likes\nbusiness@clicknlikes.com`;
+    const bodyText = `Hi,\n\nHere is your custom quote from Click.n.likes for ${business || 'your business'}.\n\nUnique quote reference: ${ref}\nIndustry: ${indLabel}\nServices: ${svcLabels}\nGrowth ambition: ${AMBITION[ambition].label}\nTimeline: ${timeline}\n\nIndicative investment: ${totalLine}\n\nLine items:\n${lines.map((l) => `• ${l.label}: ${money(l.amt)} ${l.unit}`).join('\n')}\n\n${goal.trim() ? `What success looks like for you:\n${goal.trim()}\n\n` : ''}Notes:\n${notes.map((n) => `• ${n}`).join('\n')}\n\nReply to this email to turn it into a written proposal.\n\nBest,\nClick.n.likes\nbusiness@clicknlikes.com`;
 
     const bodyHtml = buildReportEmailHtml({
       toolLabel: 'Custom Quote',
@@ -149,7 +150,7 @@ export default function CustomQuote() {
     sendFromClicknlikes({
       toEmail: OWNER_EMAIL, replyTo: email,
       subject: `New custom-quote lead: ${business || email} (${ref})`,
-      bodyText: `New custom quote ${ref}:\n\nBusiness: ${business}\nEmail: ${email}\nIndustry: ${indLabel}\nServices: ${svcLabels}\nAmbition: ${AMBITION[ambition].label}\nTimeline: ${timeline}\nInvestment: ${totalLine}\nGoal: ${goal.trim() || '-'}`,
+      bodyText: `New custom quote ${ref}:\n\nBusiness: ${business}\nEmail: ${email}\nProspect currency: ${cur}\nIndustry: ${indLabel}\nServices: ${svcLabels}\nAmbition: ${AMBITION[ambition].label}\nTimeline: ${timeline}\nInvestment: ${totalLine}${cur !== 'INR' ? ` (INR base: ${totalLineInr})` : ''}\nGoal: ${goal.trim() || '-'}`,
     });
 
     setSending(true);
@@ -219,7 +220,7 @@ export default function CustomQuote() {
             <ul className="mt-4 space-y-1.5 border-t border-navy/10 pt-3 text-[12.5px] text-navy/65">
               {result.lines.map((l) => <li key={l.label} className="flex justify-between gap-2"><span>{l.label}</span><span className="tabular-nums whitespace-nowrap">{money(l.amt)} {l.unit}</span></li>)}
             </ul>
-            {cur !== 'INR' && <p className="mt-3 text-[11px] leading-relaxed text-navy/50">Shown in {cur} at today's exchange rate. Our pricing is set in INR.</p>}
+            {cur !== 'INR' && <p className="mt-3 text-[11px] leading-relaxed text-navy/50">Shown in {cur} at today's exchange rate. Your quote is confirmed in {cur} in the written proposal.</p>}
             <p className="mt-4 text-[12.5px] leading-relaxed text-navy/70">
               {autoEmailReady ? <>Sent to <b>{email}</b> with reference <b>{result.ref}</b>. Reply with that reference and we build the written proposal around exactly this scope.</> : <>Your details and reference <b>{result.ref}</b> are logged, and a strategist will follow up with the written proposal.</>}
             </p>

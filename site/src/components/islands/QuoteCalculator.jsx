@@ -109,12 +109,12 @@ export default function QuoteCalculator({ preselect }) {
 
   function submit(evt) {
     evt.preventDefault();
-    const factors = lines.map((l) => fact(l.label, inr(l.amt) + ' ' + l.unit, 'self', 'quote line'));
+    const factors = lines.map((l) => fact(l.label, money(l.amt) + ' ' + l.unit, 'self', 'quote line'));
     if (discountPct > 0) factors.push(fact('Bundle discount', `${Math.round(discountPct * 100)}% off monthly`, 'self', 'applied'));
-    const totalLine = [monthly > 0 ? inr(monthly) + '/month' : null, onetime > 0 ? inr(onetime) + ' one-time' : null].filter(Boolean).join(' + ');
-    const curNote = cur !== 'INR' && rates && rates[cur] ? ` On screen we showed these figures in ${cur} at today's exchange rate; our pricing is set in INR.` : '';
-    const interpretation = `Based on the services and quantities you selected, your indicative investment is ${totalLine}. Every service includes a flat ₹16,000 base (strategy, account management and reporting) plus the exact line items you chose above it.${curNote}`;
-    const bodyText = `Hi,\n\nHere is your instant quote from Click.n.likes for ${business || 'your business'}:\n\n${interpretation}\n\nLine items:\n${lines.map((l) => `• ${l.label}: ${inr(l.amt)} ${l.unit}`).join('\n')}\n\nNotes:\n${notes.map((n) => `• ${n}`).join('\n')}\n\nReply to this email to turn this into a written proposal, or reach us at clicknlikes.com.\n\nBest,\nClick.n.likes\nbusiness@clicknlikes.com`;
+    const totalLine = [monthly > 0 ? money(monthly) + '/month' : null, onetime > 0 ? money(onetime) + ' one-time' : null].filter(Boolean).join(' + ');
+    const curNote = cur !== 'INR' && rates && rates[cur] ? ` These figures are shown in ${cur} at today's exchange rate; your written proposal confirms the final amount in ${cur}.` : '';
+    const interpretation = `Based on the services and quantities you selected, your indicative investment is ${totalLine}. Every service includes a flat ${money(16000)} base (strategy, account management and reporting) plus the exact line items you chose above it.${curNote}`;
+    const bodyText = `Hi,\n\nHere is your instant quote from Click.n.likes for ${business || 'your business'}:\n\n${interpretation}\n\nLine items:\n${lines.map((l) => `• ${l.label}: ${money(l.amt)} ${l.unit}`).join('\n')}\n\nNotes:\n${notes.map((n) => `• ${n}`).join('\n')}\n\nReply to this email to turn this into a written proposal, or reach us at clicknlikes.com.\n\nBest,\nClick.n.likes\nbusiness@clicknlikes.com`;
     const bodyHtml = buildReportEmailHtml({
       toolLabel: 'Instant Quote',
       forLine: `Prepared for ${business || 'your business'} · ${new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}`,
@@ -126,7 +126,7 @@ export default function QuoteCalculator({ preselect }) {
     sendFromClicknlikes({
       toEmail: OWNER_EMAIL, replyTo: email,
       subject: `New instant-quote lead: ${business || email}`,
-      bodyText: `New instant quote:\n\nBusiness: ${business}\nEmail: ${email}\nServices: ${sel.map((k) => SERVICES[k].label).join(', ')}\nMonthly: ${inr(monthly)} | One-time: ${inr(onetime)} | Discount: ${Math.round(discountPct * 100)}%\n\nLines:\n${lines.map((l) => `  ${l.label}: ${inr(l.amt)} ${l.unit}`).join('\n')}`,
+      bodyText: `New instant quote:\n\nBusiness: ${business}\nEmail: ${email}\nProspect currency: ${cur}\nServices: ${sel.map((k) => SERVICES[k].label).join(', ')}\nMonthly: ${inr(monthly)} | One-time: ${inr(onetime)} | Discount: ${Math.round(discountPct * 100)}% (INR base)\n\nLines (INR):\n${lines.map((l) => `  ${l.label}: ${inr(l.amt)} ${l.unit}`).join('\n')}`,
     });
     setSending(true);
     setTimeout(() => { setSending(false); setSent(true); }, 600);
@@ -191,7 +191,7 @@ export default function QuoteCalculator({ preselect }) {
           <ul className="mt-3 space-y-1.5 text-[11px] leading-relaxed text-navy/50">
             {notes.map((n, i) => <li key={i}>· {n}</li>)}
           </ul>
-          {cur !== 'INR' && <p className="mt-2 text-[11px] leading-relaxed text-navy/45">Shown in {cur} at today's exchange rate. Our pricing is set in INR.</p>}
+          {cur !== 'INR' && <p className="mt-2 text-[11px] leading-relaxed text-navy/45">Shown in {cur} at today's exchange rate. Your quote is confirmed in {cur} in the written proposal.</p>}
         </div>
 
         {sent ? (
