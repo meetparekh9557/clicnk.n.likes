@@ -6,6 +6,7 @@ import Footer from '../components/Footer.astro';
 import ChatButton from '../components/ChatButton.astro';
 import CtaBand from '../components/CtaBand.astro';
 import SiteBackdrop from '../components/SiteBackdrop.astro';
+import { ClientRouter } from 'astro:transitions';
 import { withBase } from '../lib/url';
 import { OG_DEFAULT, ORG_NAME, organizationSchema, webSiteSchema } from '../lib/seo';
 import '../styles/global.css';
@@ -94,6 +95,11 @@ const structuredData = [
     ))}
     <!-- Fonts are self-hosted via @fontsource (imported in global.css);
          no external font request is made. -->
+    <!-- View Transitions (Phase 3): SPA-style navigation with a soft cross
+         fade. Every inline/DOM script on the site already re-inits on
+         astro:page-load, and the fade is skipped under prefers-reduced-
+         motion by the browser's own handling of the view-transition API. -->
+    <ClientRouter fallback="swap" />
   </head>
   <body class="bg-transparent font-body text-navy antialiased">
     <SiteBackdrop />

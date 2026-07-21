@@ -5,6 +5,45 @@
 function initMotion() {
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  // StatTile numbers count up from zero once they scroll into view. The
+  // final value is already in the DOM (server-rendered), so this only ever
+  // enhances; under reduced motion we leave it exactly as rendered.
+  if (!reduce && 'IntersectionObserver' in window) {
+    const fmt = (n, decimals, sep) => {
+      const fixed = n.toFixed(decimals);
+      if (!sep) return fixed;
+      const [int, frac] = fixed.split('.');
+      const grouped = Number(int).toLocaleString('en-IN');
+      return frac ? `${grouped}.${frac}` : grouped;
+    };
+    const countIo = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          const el = entry.target;
+          countIo.unobserve(el);
+          const numEl = el.querySelector('.stat-count-num');
+          const target = parseFloat(el.dataset.count);
+          if (!numEl || !isFinite(target)) continue;
+          const decimals = parseInt(el.dataset.decimals || '0', 10);
+          const sep = el.dataset.sep === '1';
+          const start = performance.now();
+          const DUR = 1100;
+          const tick = (now) => {
+            const t = Math.min(1, (now - start) / DUR);
+            const eased = 1 - Math.pow(1 - t, 3);
+            numEl.textContent = fmt(target * eased, decimals, sep);
+            if (t < 1) requestAnimationFrame(tick);
+            else numEl.textContent = fmt(target, decimals, sep);
+          };
+          requestAnimationFrame(tick);
+        }
+      },
+      { threshold: 0.4 }
+    );
+    document.querySelectorAll('.stat-count').forEach((el) => countIo.observe(el));
+  }
+
   const targets = document.querySelectorAll('.reveal:not(.in), .reveal-mask:not(.in)');
   if (reduce || !('IntersectionObserver' in window)) {
     targets.forEach((el) => el.classList.add('in'));

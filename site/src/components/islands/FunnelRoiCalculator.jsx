@@ -6,6 +6,7 @@
 // the shared engine exactly like v1's runROIGate.
 import { useState } from 'react';
 import { OWNER_EMAIL, autoEmailReady, sendFromClicknlikes, buildReportEmailHtml, fact } from '../../lib/engine';
+import { useCountUp } from '../../lib/useCountUp.js';
 
 const inr = (n) => '₹' + Math.round(n).toLocaleString('en-IN');
 
@@ -47,6 +48,9 @@ export default function FunnelRoiCalculator() {
   const [sent, setSent] = useState(false);
 
   const r = compute(traffic, convRate, aov, margin);
+  // Count the revenue and profit figures up/down as the sliders move.
+  const amountView = useCountUp(r.amount);
+  const profitView = useCountUp(r.profitAmount);
   const tag = r.amount === 0 ? 'At benchmark' : r.isSurplus ? 'Revenue surplus' : 'Revenue leaked';
   const profitTag = r.amount === 0 ? 'At benchmark' : r.isSurplus ? 'Profit surplus' : 'Profit leaked';
   const good = r.isSurplus || r.amount === 0;
@@ -116,12 +120,12 @@ export default function FunnelRoiCalculator() {
         <div className={`rounded-xl border p-5 ${good ? 'border-teal/40 bg-teal/[0.06]' : 'border-coral/40 bg-coral/[0.05]'}`}>
           <p className={`text-[11px] font-bold tracking-[0.08em] uppercase ${good ? 'text-teal-dark' : 'text-coral'}`}>{tag}</p>
           <p className={`mt-1 font-display text-[clamp(1.8rem,4vw,2.6rem)] leading-none font-bold tabular-nums ${good ? 'text-teal-dark' : 'text-coral'}`}>
-            {r.amount === 0 ? 'At benchmark' : inr(r.amount) + '/mo'}
+            {r.amount === 0 ? 'At benchmark' : inr(amountView) + '/mo'}
           </p>
           <div className="mt-4 border-t border-navy/10 pt-4">
             <p className={`text-[11px] font-bold tracking-[0.08em] uppercase ${good ? 'text-teal-dark' : 'text-coral'}`}>{profitTag}</p>
             <p className={`mt-1 font-display text-[clamp(1.4rem,3vw,2rem)] leading-none font-bold tabular-nums ${good ? 'text-teal-dark' : 'text-coral'}`}>
-              {r.amount === 0 ? '₹0/mo' : inr(r.profitAmount) + '/mo'}
+              {r.amount === 0 ? '₹0/mo' : inr(profitView) + '/mo'}
             </p>
           </div>
           <p className="mt-3 text-[12.5px] leading-relaxed text-navy/60">

@@ -12,6 +12,7 @@
 import { useState, useEffect } from 'react';
 import { OWNER_EMAIL, autoEmailReady, sendFromClicknlikes, buildReportEmailHtml, fact, hashStr } from '../../lib/engine';
 import { getCurrency, loadRates, onCurrency, formatMoney } from '../../lib/currency.js';
+import { useCountUp } from '../../lib/useCountUp.js';
 
 const BASE_FEE = 16000;
 const MIN_PROJECT = 16000;
@@ -71,6 +72,9 @@ export default function CustomQuote() {
   // Display in the visitor's currency; the emailed quote keeps INR, the
   // currency the work is actually billed in.
   const money = (n) => formatMoney(n, cur, rates);
+  // Count the revealed totals up from zero when the quote lands.
+  const monthlyView = useCountUp(result?.monthly ?? 0);
+  const onetimeView = useCountUp(result?.onetime ?? 0);
 
   function pickIndustry(k) {
     setIndustry(k);
@@ -211,8 +215,8 @@ export default function CustomQuote() {
         {result ? (
           <div className="rounded-xl border border-teal/40 bg-teal/[0.06] p-5">
             <p className="text-[11px] font-bold tracking-[0.08em] text-teal-dark uppercase">Your unique quote</p>
-            {result.monthly > 0 && <p className="mt-1 font-display text-[clamp(1.6rem,4vw,2.3rem)] leading-none font-bold text-navy tabular-nums">{money(result.monthly)}<span className="text-base font-semibold text-navy/55">/month</span></p>}
-            {result.onetime > 0 && <p className="mt-1 font-display text-xl font-bold text-navy tabular-nums">{money(result.onetime)}<span className="text-sm font-semibold text-navy/55"> one-time</span></p>}
+            {result.monthly > 0 && <p className="mt-1 font-display text-[clamp(1.6rem,4vw,2.3rem)] leading-none font-bold text-navy tabular-nums">{money(monthlyView)}<span className="text-base font-semibold text-navy/55">/month</span></p>}
+            {result.onetime > 0 && <p className="mt-1 font-display text-xl font-bold text-navy tabular-nums">{money(onetimeView)}<span className="text-sm font-semibold text-navy/55"> one-time</span></p>}
             <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-navy px-3 py-1.5">
               <span className="text-[10px] font-semibold tracking-[0.08em] text-white/50 uppercase">Ref</span>
               <span className="font-display text-[13px] font-bold tracking-[0.05em] text-white tabular-nums">{result.ref}</span>

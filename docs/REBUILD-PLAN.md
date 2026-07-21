@@ -75,9 +75,19 @@ Hard gates: Lighthouse ≥95/page, <2s mobile, zero horizontal overflow at
       founder's real story; every page has unique meta, multi-industry framing,
       a mid-page InlineCta, the per-page-aware WhatsApp chat button, and the
       even client-logo grid. Privacy discloses the new Google Analytics use.
-- [ ] Phase 3 polish pass: view transitions, animated calculator totals,
-      self-drawing charts component, before/after slider component (for
-      Phase 4), aurora hero, full motion audit, `prefers-reduced-motion`.
+- [x] Phase 3 polish pass: Astro View Transitions (`ClientRouter` in Base,
+      `fallback="swap"`; every inline/DOM script already re-inits on
+      `astro:page-load`). Animated calculator totals via the shared
+      `lib/useCountUp.js` hook — Instant Quote and Funnel ROI tally on drag,
+      Custom Quote counts up from zero on reveal. Self-drawing charts:
+      `FirstPageCliff` columns + multiplier, `CtrChart` bars, and StatTile
+      numbers now count up from zero on scroll-in (guarded so ranges like
+      "4-6 months" stay static). Hero motion is the `HeroFunnel` convergence
+      streaks funnelling into the live audit card (the aurora hero was tried
+      and rejected by the founder — kept the clean white look). Full motion
+      audit done: every animation honours `prefers-reduced-motion` (snap to
+      final state, no motion). Before/after slider is deferred to Phase 4
+      (needs real case-study imagery).
 - [x] SEO plumbing: dynamic `sitemap.xml` (21 URLs, built from the single
       route list in `lib/seo.ts` so it never drifts) and `robots.txt`
       endpoints (production allows + points to the sitemap; the /preview/
@@ -92,10 +102,18 @@ Hard gates: Lighthouse ≥95/page, <2s mobile, zero horizontal overflow at
       wide with Open Graph + Twitter summary_large_image tags; articles use
       og:type=article. All structured data emits absolute production URLs and
       validates; verified across the production and preview builds.
-- [ ] Full QA: Lighthouse all pages, iPhone-13 Playwright suite, tool parity
-      tests, forms end-to-end (Apps Script emails + sheet rows).
-- [ ] Founder preview approval → cutover (Pages serves `site/` build; v1
-      revert = one merge). Only after founder says go.
+- [~] Full QA: iPhone-13 Playwright suite passes (no horizontal overflow and
+      zero console errors across home, pricing, services, tools, work, about,
+      insights, article and contact; view-transition nav and count-ups
+      verified). Tool math is ported verbatim from v1 and previously verified
+      in-browser. Two gates the sandbox can't run and the founder owns:
+      Lighthouse (not installed here — run Google PageSpeed on the live URL,
+      target ≥95), and forms end-to-end (a real send lands a live email + Sheet
+      row on the founder's account, so the founder does the live smoke test).
+- [x] Founder preview approval → cutover: DONE. The production build now
+      publishes to the repo root (Pages "deploy from branch main / root") with
+      a /preview/ mirror, CNAME + .nojekyll preserved. Site is LIVE on
+      clicknlikes.com; reverting to v1 is a single revert of the publish job.
 - [ ] Phase 4: case-study template + founder's real material (numbers +
       client permissions — founder is gathering).
 

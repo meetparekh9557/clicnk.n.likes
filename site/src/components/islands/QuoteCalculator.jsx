@@ -8,6 +8,7 @@
 import { useState, useEffect } from 'react';
 import { OWNER_EMAIL, autoEmailReady, sendFromClicknlikes, buildReportEmailHtml, fact } from '../../lib/engine';
 import { getCurrency, loadRates, onCurrency, formatMoney } from '../../lib/currency.js';
+import { useCountUp } from '../../lib/useCountUp.js';
 
 const BASE_FEE = 16000;
 const MIN_PROJECT = 16000;
@@ -102,6 +103,10 @@ export default function QuoteCalculator({ preselect }) {
   if (sel.length && monthly > 0 && monthly < MIN_PROJECT) monthly = MIN_PROJECT;
   if (sel.length === 1 && SERVICES[sel[0]].kind === 'onetime' && onetime < MIN_PROJECT) onetime = MIN_PROJECT;
 
+  // Count-up the two headline totals so a slider drag reads as a live tally.
+  const monthlyView = useCountUp(monthly);
+  const onetimeView = useCountUp(onetime);
+
   const notes = [];
   if (selected.has('paid')) notes.push('Ad spend is billed directly from your card on the ad platform (Meta / Google) and is not included in the total above.');
   if (selected.has('social')) notes.push('Photo / video shoot production is arranged through our shoot partner agency and billed separately.');
@@ -182,8 +187,8 @@ export default function QuoteCalculator({ preselect }) {
       <div className="flex flex-col">
         <div className="rounded-xl border border-teal/40 bg-teal/[0.06] p-5">
           <p className="text-[11px] font-bold tracking-[0.08em] text-teal-dark uppercase">Your indicative quote</p>
-          {monthly > 0 && <p className="mt-1 font-display text-[clamp(1.8rem,4vw,2.6rem)] leading-none font-bold text-navy tabular-nums">{money(monthly)}<span className="text-base font-semibold text-navy/55">/month</span></p>}
-          {onetime > 0 && <p className="mt-2 font-display text-2xl font-bold text-navy tabular-nums">{money(onetime)}<span className="text-sm font-semibold text-navy/55"> one-time</span></p>}
+          {monthly > 0 && <p className="mt-1 font-display text-[clamp(1.8rem,4vw,2.6rem)] leading-none font-bold text-navy tabular-nums">{money(monthlyView)}<span className="text-base font-semibold text-navy/55">/month</span></p>}
+          {onetime > 0 && <p className="mt-2 font-display text-2xl font-bold text-navy tabular-nums">{money(onetimeView)}<span className="text-sm font-semibold text-navy/55"> one-time</span></p>}
           {sel.length === 0 && <p className="mt-1 font-display text-xl font-bold text-navy/40">—</p>}
           <ul className="mt-4 space-y-1.5 border-t border-navy/10 pt-3 text-[12.5px] text-navy/65">
             {lines.map((l) => <li key={l.label} className="flex justify-between gap-2"><span>{l.label}</span><span className="tabular-nums whitespace-nowrap">{money(l.amt)} {l.unit}</span></li>)}
