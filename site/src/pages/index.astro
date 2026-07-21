@@ -281,8 +281,10 @@ const iconWrap = 'mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 t
   </section>
 
   <script>
-    // Rotates the hero headline's final word. Falls back to the static
-    // "search next." (the SEO headline) with no JS or under reduced motion.
+    // Typewriter for the hero headline's final word: types a word, holds,
+    // deletes, types the next. Falls back to the static "search next." (the
+    // SEO headline) with no JS or under reduced motion. A blinking caret is
+    // added via the .caret class so it never shows without JS.
     function initHeroRotate() {
       const el = document.getElementById('heroRotate');
       if (!el || el.dataset.on === '1') return;
@@ -290,18 +292,23 @@ const iconWrap = 'mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 t
       const words = (el.getAttribute('data-words') || '').split('|').filter(Boolean);
       if (words.length < 2) return;
       el.dataset.on = '1';
-      el.style.transition = 'opacity 0.35s var(--ease-out-quart, ease), filter 0.35s ease';
-      let i = 0;
-      setInterval(() => {
-        el.style.opacity = '0';
-        el.style.filter = 'blur(4px)';
-        setTimeout(() => {
-          i = (i + 1) % words.length;
-          el.textContent = words[i];
-          el.style.opacity = '1';
-          el.style.filter = 'blur(0)';
-        }, 350);
-      }, 2600);
+      el.classList.add('caret');
+      el.textContent = '';
+      let wi = 0, ci = 0, deleting = false;
+      const step = () => {
+        const word = words[wi];
+        if (!deleting) {
+          ci++;
+          el.textContent = word.slice(0, ci);
+          if (ci === word.length) { deleting = true; return setTimeout(step, 1500); }
+          return setTimeout(step, 85 + Math.random() * 55);
+        }
+        ci--;
+        el.textContent = word.slice(0, ci);
+        if (ci === 0) { deleting = false; wi = (wi + 1) % words.length; return setTimeout(step, 350); }
+        return setTimeout(step, 40);
+      };
+      step();
     }
     initHeroRotate();
     document.addEventListener('astro:page-load', () => {

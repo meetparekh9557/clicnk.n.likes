@@ -1,10 +1,9 @@
 ---
-// Hero motion: a subtle, monochrome "growth funnel" - faint teal particles
-// orbit and spiral inward into a single point (the conversion sink) behind
-// the audit card, so many visitors visibly converge into one lead. Canvas,
-// brand teal only (no colour wash), low opacity so the white hero and navy
-// text stay clean. Frozen entirely under prefers-reduced-motion, and paused
-// when the hero scrolls out of view.
+// Hero motion: a full-bleed "growth funnel" vortex. Teal particles spawn
+// across the whole hero and spiral inward, brightening as they converge on
+// a central glowing sink (the "hole") - many visitors funnelling into one
+// lead. Brand teal only, no colour wash. Frozen under prefers-reduced-motion
+// and paused when the hero scrolls out of view.
 ---
 <canvas id="heroFunnel" class="pointer-events-none absolute inset-0 -z-10 h-full w-full" aria-hidden="true"></canvas>
 
@@ -16,19 +15,16 @@
     canvas.dataset.on = '1';
     const ctx = canvas.getContext('2d');
     const DPR = Math.min(window.devicePixelRatio || 1, 2);
-    let w = 0, h = 0, cx = 0, cy = 0, raf = 0, running = false;
-    const N = 96;
+    let w = 0, h = 0, cx = 0, cy = 0, R = 1, raf = 0, running = false;
+    const N = 190;
     let parts = [];
 
-    const spawn = () => {
-      const reach = Math.max(w, h) * 0.5;
-      return {
-        ang: Math.random() * Math.PI * 2,
-        rad: reach * (0.55 + Math.random() * 0.6),
-        radv: 0.35 + Math.random() * 0.7,
-        size: 0.7 + Math.random() * 1.7,
-      };
-    };
+    const spawn = (fromEdge) => ({
+      ang: Math.random() * Math.PI * 2,
+      rad: R * (fromEdge ? 0.9 + Math.random() * 0.35 : Math.random()),
+      radv: 0.3 + Math.random() * 0.7,
+      size: 0.9 + Math.random() * 2.1,
+    });
 
     const resize = () => {
       const r = canvas.getBoundingClientRect();
@@ -36,23 +32,30 @@
       canvas.width = Math.round(w * DPR);
       canvas.height = Math.round(h * DPR);
       ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-      cx = w * 0.72;               // sink sits behind the audit card
-      cy = h * 0.46;
+      cx = w * 0.5;                 // centred -> the vortex spans the whole hero
+      cy = h * 0.5;
+      R = Math.hypot(w, h) * 0.55;  // reach past the corners = full-screen cover
     };
 
-    const reach = () => Math.max(w, h) * 0.5;
     const tick = () => {
       if (!running) return;
       ctx.clearRect(0, 0, w, h);
-      const R = reach();
+      // the sink glow (the "hole")
+      const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, R * 0.55);
+      g.addColorStop(0, 'rgba(78,205,196,0.14)');
+      g.addColorStop(0.4, 'rgba(78,205,196,0.05)');
+      g.addColorStop(1, 'rgba(78,205,196,0)');
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, w, h);
+      // particles spiralling in, brighter as they converge
       for (const p of parts) {
         const near = 1 - Math.min(1, p.rad / R);
-        p.ang += 0.004 + near * 0.02;   // spin faster as it nears the sink
-        p.rad -= p.radv * (0.5 + near);
-        if (p.rad < 5) Object.assign(p, spawn(), { rad: R * (0.9 + Math.random() * 0.3) });
+        p.ang += 0.003 + near * near * 0.05;      // whips faster near the sink
+        p.rad -= p.radv * (0.45 + near * 1.4);
+        if (p.rad < 4) Object.assign(p, spawn(true));
         const x = cx + Math.cos(p.ang) * p.rad;
-        const y = cy + Math.sin(p.ang) * p.rad * 0.6;   // elliptical funnel
-        const a = Math.min(0.28, (p.rad / R) * 0.3);
+        const y = cy + Math.sin(p.ang) * p.rad * 0.66;   // elliptical funnel
+        const a = Math.min(0.55, 0.12 + near * 0.45);
         ctx.beginPath();
         ctx.arc(x, y, p.size, 0, Math.PI * 2);
         ctx.fillStyle = 'rgba(78,205,196,' + a + ')';
@@ -65,10 +68,9 @@
     const stop = () => { running = false; cancelAnimationFrame(raf); };
 
     resize();
-    parts = Array.from({ length: N }, spawn);
+    parts = Array.from({ length: N }, () => spawn(false));
     window.addEventListener('resize', resize);
 
-    // Only animate while the hero is on screen.
     const io = new IntersectionObserver((es) => {
       es[0] && es[0].isIntersecting ? start() : stop();
     }, { threshold: 0 });
