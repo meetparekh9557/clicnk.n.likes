@@ -66,7 +66,7 @@ const iconWrap = 'mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 t
           </p>
           <h1 class="reveal-mask mt-5 font-display text-[clamp(2rem,3.4vw,2.9rem)] leading-[1.08] font-bold text-navy tracking-[-0.01em]">
             <span class="mask-line"><span>Grow On Search You <span class="cnl-shimmer">Own</span>,</span></span>
-            <span class="mask-line" style="--d:120ms"><span id="heroRotate" data-words="Not Ads You Rent.|Not Clicks You Buy.|Not Traffic You Chase.|Not Growth You Rent.">Not Ads You Rent.</span></span>
+            <span class="mask-line" style="--d:120ms"><span id="heroRotate" data-words="Not Ads You Rent.|Not Clicks You Buy.|Not Growth You Rent."><span class="cnl-roll-word">Not Ads You Rent.</span></span></span>
           </h1>
           <p class="reveal mt-5 max-w-xl text-lg leading-relaxed text-navy/70" style="--d:320ms">
             A full-stack organic growth agency built for where search is heading: SEO, AI Search, Social, Content and
@@ -280,34 +280,41 @@ const iconWrap = 'mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 t
   </section>
 
   <script>
-    // Typewriter for the hero headline's final word: types a word, holds,
-    // deletes, types the next. Falls back to the static "search next." (the
-    // SEO headline) with no JS or under reduced motion. A blinking caret is
-    // added via the .caret class so it never shows without JS.
+    // Rotating headline word: each phrase rolls up and fades out while the
+    // next rises in from below. Driven by the Web Animations API on transform
+    // + opacity only, so the browser runs it on the compositor - it stays
+    // smooth regardless of how busy the hero canvases keep the main thread.
+    // With no JS, or under reduced motion, the first phrase simply stays put.
     function initHeroRotate() {
       const el = document.getElementById('heroRotate');
       if (!el || el.dataset.on === '1') return;
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const word = el.querySelector('.cnl-roll-word');
       const words = (el.getAttribute('data-words') || '').split('|').filter(Boolean);
-      if (words.length < 2) return;
+      if (!word || words.length < 2) return;
       el.dataset.on = '1';
-      el.classList.add('caret');
-      el.textContent = '';
-      let wi = 0, ci = 0, deleting = false;
-      const step = () => {
-        const word = words[wi];
-        if (!deleting) {
-          ci++;
-          el.textContent = word.slice(0, ci);
-          if (ci === word.length) { deleting = true; return setTimeout(step, 1500); }
-          return setTimeout(step, 85 + Math.random() * 55);
-        }
-        ci--;
-        el.textContent = word.slice(0, ci);
-        if (ci === 0) { deleting = false; wi = (wi + 1) % words.length; return setTimeout(step, 350); }
-        return setTimeout(step, 40);
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { word.textContent = words[0]; return; }
+      const EASE = 'cubic-bezier(0.16, 1, 0.3, 1)', DUR = 560, HOLD = 2200;
+      let i = 0;
+      word.textContent = words[0];
+      // Play one keyframe set, commit its end state inline, then drop the
+      // animation object so nothing piles up over a long session.
+      const play = (frames, done) => {
+        const a = word.animate(frames, { duration: DUR, easing: EASE, fill: 'forwards' });
+        a.onfinish = () => { try { a.commitStyles(); } catch (e) {} a.cancel(); done(); };
       };
-      step();
+      const roll = () => {
+        // Stop cleanly if the node was swapped out (View Transitions) or reset.
+        if (!el.isConnected || el.dataset.on !== '1') return;
+        play([{ transform: 'translateY(0)', opacity: 1 }, { transform: 'translateY(-0.55em)', opacity: 0 }], () => {
+          if (!el.isConnected || el.dataset.on !== '1') return;
+          i = (i + 1) % words.length;
+          word.textContent = words[i];
+          play([{ transform: 'translateY(0.55em)', opacity: 0 }, { transform: 'translateY(0)', opacity: 1 }], () => {
+            setTimeout(roll, HOLD);
+          });
+        });
+      };
+      setTimeout(roll, HOLD);
     }
     initHeroRotate();
     document.addEventListener('astro:page-load', () => {
