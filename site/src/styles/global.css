@@ -234,22 +234,12 @@ html { background-color: #ffffff; }
   to { background-position: -250% center; }
 }
 
-/* Typewriter caret for the rotating hero word (only shown once JS adds
-   .caret, so it never appears without the typing effect). */
-#heroRotate.caret::after {
-  content: "";
+/* Rotating hero word: the phrase that rolls up/in. Kept inline-block so the
+   transform animation (Web Animations API, compositor-run) applies; the
+   parent .mask-line's overflow:hidden clips the roll for a clean wipe. */
+#heroRotate .cnl-roll-word {
   display: inline-block;
-  width: 3px;
-  height: 0.82em;
-  margin-left: 5px;
-  vertical-align: -2px;
-  border-radius: 2px;
-  background: var(--color-teal-dark);
-  animation: cnl-caret 1s steps(1) infinite;
-}
-@keyframes cnl-caret {
-  0%, 49% { opacity: 1; }
-  50%, 100% { opacity: 0; }
+  will-change: transform, opacity;
 }
 
 @media (prefers-reduced-motion: reduce) {
