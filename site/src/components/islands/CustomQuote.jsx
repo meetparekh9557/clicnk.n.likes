@@ -12,6 +12,7 @@
 import { useState, useEffect } from 'react';
 import { OWNER_EMAIL, autoEmailReady, sendFromClicknlikes, buildReportEmailHtml, fact, hashStr } from '../../lib/engine';
 import { getCurrency, loadRates, onCurrency, formatMoney } from '../../lib/currency.js';
+import { useCountUp } from '../../lib/useCountUp.js';
 
 const BASE_FEE = 16000;
 const MIN_PROJECT = 16000;
@@ -71,6 +72,9 @@ export default function CustomQuote() {
   // Display in the visitor's currency; the emailed quote keeps INR, the
   // currency the work is actually billed in.
   const money = (n) => formatMoney(n, cur, rates);
+  // Count the revealed totals up from zero when the quote lands.
+  const monthlyView = useCountUp(result?.monthly ?? 0);
+  const onetimeView = useCountUp(result?.onetime ?? 0);
 
   function pickIndustry(k) {
     setIndustry(k);
@@ -160,8 +164,10 @@ export default function CustomQuote() {
   return (
     <div className="grid gap-6 rounded-2xl border border-navy/10 bg-white p-6 shadow-[0_10px_30px_rgba(26,43,74,0.06)] sm:p-8 lg:grid-cols-[1.25fr_0.75fr]">
       <div>
-        <label className="block text-[13px] font-semibold text-navy">1. Your industry</label>
+        <label htmlFor="cq-industry" className="block text-[13px] font-semibold text-navy">1. Your industry</label>
         <select
+          id="cq-industry"
+          aria-label="Your industry"
           value={industry}
           onChange={(e) => pickIndustry(e.target.value)}
           className="mt-2 w-full rounded-[10px] border-[1.5px] border-navy/10 bg-white px-4 py-3 text-sm text-navy outline-none focus:border-teal"
@@ -193,8 +199,8 @@ export default function CustomQuote() {
 
         <div className="mt-6 grid gap-4 sm:grid-cols-2">
           <div>
-            <label className="block text-[13px] font-semibold text-navy">4. Timeline</label>
-            <select value={timeline} onChange={(e) => setTimeline(e.target.value)}
+            <label htmlFor="cq-timeline" className="block text-[13px] font-semibold text-navy">4. Timeline</label>
+            <select id="cq-timeline" aria-label="Timeline" value={timeline} onChange={(e) => setTimeline(e.target.value)}
               className="mt-2 w-full rounded-[10px] border-[1.5px] border-navy/10 bg-white px-4 py-3 text-sm text-navy outline-none focus:border-teal">
               {TIMELINES.map((t) => <option key={t} value={t}>{t}</option>)}
             </select>
@@ -211,8 +217,8 @@ export default function CustomQuote() {
         {result ? (
           <div className="rounded-xl border border-teal/40 bg-teal/[0.06] p-5">
             <p className="text-[11px] font-bold tracking-[0.08em] text-teal-dark uppercase">Your unique quote</p>
-            {result.monthly > 0 && <p className="mt-1 font-display text-[clamp(1.6rem,4vw,2.3rem)] leading-none font-bold text-navy tabular-nums">{money(result.monthly)}<span className="text-base font-semibold text-navy/55">/month</span></p>}
-            {result.onetime > 0 && <p className="mt-1 font-display text-xl font-bold text-navy tabular-nums">{money(result.onetime)}<span className="text-sm font-semibold text-navy/55"> one-time</span></p>}
+            {result.monthly > 0 && <p className="mt-1 font-display text-[clamp(1.6rem,4vw,2.3rem)] leading-none font-bold text-navy tabular-nums">{money(monthlyView)}<span className="text-base font-semibold text-navy/55">/month</span></p>}
+            {result.onetime > 0 && <p className="mt-1 font-display text-xl font-bold text-navy tabular-nums">{money(onetimeView)}<span className="text-sm font-semibold text-navy/55"> one-time</span></p>}
             <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-navy px-3 py-1.5">
               <span className="text-[10px] font-semibold tracking-[0.08em] text-white/50 uppercase">Ref</span>
               <span className="font-display text-[13px] font-bold tracking-[0.05em] text-white tabular-nums">{result.ref}</span>
