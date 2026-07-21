@@ -1,9 +1,11 @@
 ---
-// Hero motion: a full-bleed "growth funnel" vortex. Teal particles spawn
-// across the whole hero and spiral inward, brightening as they converge on
-// a central glowing sink (the "hole") - many visitors funnelling into one
-// lead. Brand teal only, no colour wash. Frozen under prefers-reduced-motion
-// and paused when the hero scrolls out of view.
+// Hero motion: a "hole" / wormhole in the Animate UI mould, rebuilt natively
+// so it fits our Astro stack (no framer-motion, no shadcn). A stack of
+// concentric ellipse rings is twisted into a spiral and slowly rotated, with
+// a glowing teal core at the centre - the growth funnel as a vortex pulling
+// everything inward. Brand teal only, full-bleed. Outer rings stay faint so
+// the navy hero text over them keeps its contrast. Static single frame under
+// prefers-reduced-motion; paused when the hero scrolls out of view.
 ---
 <canvas id="heroFunnel" class="pointer-events-none absolute inset-0 -z-10 h-full w-full" aria-hidden="true"></canvas>
 
@@ -11,20 +13,12 @@
   function initHeroFunnel() {
     const canvas = document.getElementById('heroFunnel');
     if (!canvas || canvas.dataset.on === '1') return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     canvas.dataset.on = '1';
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const ctx = canvas.getContext('2d');
     const DPR = Math.min(window.devicePixelRatio || 1, 2);
-    let w = 0, h = 0, cx = 0, cy = 0, R = 1, raf = 0, running = false;
-    const N = 190;
-    let parts = [];
-
-    const spawn = (fromEdge) => ({
-      ang: Math.random() * Math.PI * 2,
-      rad: R * (fromEdge ? 0.9 + Math.random() * 0.35 : Math.random()),
-      radv: 0.3 + Math.random() * 0.7,
-      size: 0.9 + Math.random() * 2.1,
-    });
+    const RINGS = 46;
+    let w = 0, h = 0, cx = 0, cy = 0, R = 1, rot = 0, t0 = 0, raf = 0, running = false;
 
     const resize = () => {
       const r = canvas.getBoundingClientRect();
@@ -32,45 +26,57 @@
       canvas.width = Math.round(w * DPR);
       canvas.height = Math.round(h * DPR);
       ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-      cx = w * 0.5;                 // centred -> the vortex spans the whole hero
+      cx = w * 0.58;                 // core sits toward the audit card
       cy = h * 0.5;
-      R = Math.hypot(w, h) * 0.55;  // reach past the corners = full-screen cover
+      R = Math.hypot(w, h) * 0.62;   // reaches past the corners = full-bleed
     };
 
-    const tick = () => {
-      if (!running) return;
+    const draw = (now) => {
+      const pulse = 1 + Math.sin(now / 1400) * 0.05;
       ctx.clearRect(0, 0, w, h);
-      // the sink glow (the "hole")
-      const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, R * 0.55);
-      g.addColorStop(0, 'rgba(78,205,196,0.14)');
-      g.addColorStop(0.4, 'rgba(78,205,196,0.05)');
-      g.addColorStop(1, 'rgba(78,205,196,0)');
-      ctx.fillStyle = g;
+
+      // luminous core (the light down the hole)
+      const core = ctx.createRadialGradient(cx, cy, 0, cx, cy, R * 0.5);
+      core.addColorStop(0, 'rgba(78,205,196,0.30)');
+      core.addColorStop(0.18, 'rgba(78,205,196,0.12)');
+      core.addColorStop(0.5, 'rgba(78,205,196,0.03)');
+      core.addColorStop(1, 'rgba(78,205,196,0)');
+      ctx.fillStyle = core;
       ctx.fillRect(0, 0, w, h);
-      // particles spiralling in, brighter as they converge
-      for (const p of parts) {
-        const near = 1 - Math.min(1, p.rad / R);
-        p.ang += 0.003 + near * near * 0.05;      // whips faster near the sink
-        p.rad -= p.radv * (0.45 + near * 1.4);
-        if (p.rad < 4) Object.assign(p, spawn(true));
-        const x = cx + Math.cos(p.ang) * p.rad;
-        const y = cy + Math.sin(p.ang) * p.rad * 0.66;   // elliptical funnel
-        const a = Math.min(0.55, 0.12 + near * 0.45);
+
+      // twisted concentric rings -> the vortex
+      for (let i = 0; i < RINGS; i++) {
+        const t = i / RINGS;                      // 0 outer .. 1 inner
+        const rx = R * (1 - t * 0.985) * pulse;
+        const ry = rx * 0.5;
+        const a = rot * (1 + t * 0.6) + t * Math.PI * 1.5;   // progressive twist
+        const alpha = 0.05 + t * t * 0.5;         // faint outside, bright core
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(a);
         ctx.beginPath();
-        ctx.arc(x, y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(78,205,196,' + a + ')';
-        ctx.fill();
+        ctx.ellipse(0, 0, Math.max(0.5, rx), Math.max(0.5, ry), 0, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(78,205,196,' + Math.min(0.55, alpha) + ')';
+        ctx.lineWidth = 0.7 + t * 1.4;
+        ctx.stroke();
+        ctx.restore();
       }
+    };
+
+    const tick = (now) => {
+      if (!running) return;
+      if (!t0) t0 = now;
+      rot = (now - t0) * 0.00016;
+      draw(now);
       raf = requestAnimationFrame(tick);
     };
-
-    const start = () => { if (running) return; running = true; raf = requestAnimationFrame(tick); };
+    const start = () => { if (running || reduce) return; running = true; raf = requestAnimationFrame(tick); };
     const stop = () => { running = false; cancelAnimationFrame(raf); };
 
     resize();
-    parts = Array.from({ length: N }, () => spawn(false));
-    window.addEventListener('resize', resize);
+    window.addEventListener('resize', () => { resize(); if (reduce) draw(0); });
 
+    if (reduce) { draw(0); return; }              // one static frame, no motion
     const io = new IntersectionObserver((es) => {
       es[0] && es[0].isIntersecting ? start() : stop();
     }, { threshold: 0 });
