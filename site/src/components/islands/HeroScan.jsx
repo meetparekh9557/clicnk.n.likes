@@ -156,7 +156,7 @@ export default function HeroScan({ toolsHref }) {
               Scanning…
             </>
           ) : (
-            'Scan my site free'
+            'Scan my site'
           )}
         </button>
       </div>
