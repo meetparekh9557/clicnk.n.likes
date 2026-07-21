@@ -32,19 +32,19 @@ const socialCls =
     </div>
 
     <div>
-      <h4 class="mb-4 text-[13px] font-semibold tracking-[0.08em] text-white uppercase">Services</h4>
+      <h2 class="mb-4 text-[13px] font-semibold tracking-[0.08em] text-white uppercase">Services</h2>
       {services.map((s) => <a href={withBase(s.href)} class={linkCls}>{s.title}</a>)}
     </div>
 
     <div>
-      <h4 class="mb-4 text-[13px] font-semibold tracking-[0.08em] text-white uppercase">Company</h4>
+      <h2 class="mb-4 text-[13px] font-semibold tracking-[0.08em] text-white uppercase">Company</h2>
       {primaryNav.map((item) => <a href={withBase(item.href)} class={linkCls}>{item.title}</a>)}
       {moreNav.map((item) => <a href={withBase(item.href)} class={linkCls}>{item.title}</a>)}
       <a href={withBase('/contact/')} class={linkCls}>Contact</a>
     </div>
 
     <div>
-      <h4 class="mb-4 text-[13px] font-semibold tracking-[0.08em] text-white uppercase">Contact</h4>
+      <h2 class="mb-4 text-[13px] font-semibold tracking-[0.08em] text-white uppercase">Contact</h2>
       <a href={`mailto:${contact.email}`} class={`${linkCls} flex items-center gap-2`}>
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
         {contact.email}

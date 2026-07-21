@@ -174,7 +174,7 @@ export default function HeroScan({ toolsHref }) {
         </p>
       )}
       {phase !== 'scanning' && phase !== 'failed' && (
-        <p className="mt-3 text-xs text-navy/55">
+        <p className="mt-3 text-xs text-navy/70">
           Live fetch of your actual page, 11 verified signals, full report emailed. No call required.
         </p>
       )}

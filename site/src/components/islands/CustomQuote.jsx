@@ -164,8 +164,10 @@ export default function CustomQuote() {
   return (
     <div className="grid gap-6 rounded-2xl border border-navy/10 bg-white p-6 shadow-[0_10px_30px_rgba(26,43,74,0.06)] sm:p-8 lg:grid-cols-[1.25fr_0.75fr]">
       <div>
-        <label className="block text-[13px] font-semibold text-navy">1. Your industry</label>
+        <label htmlFor="cq-industry" className="block text-[13px] font-semibold text-navy">1. Your industry</label>
         <select
+          id="cq-industry"
+          aria-label="Your industry"
           value={industry}
           onChange={(e) => pickIndustry(e.target.value)}
           className="mt-2 w-full rounded-[10px] border-[1.5px] border-navy/10 bg-white px-4 py-3 text-sm text-navy outline-none focus:border-teal"
@@ -197,8 +199,8 @@ export default function CustomQuote() {
 
         <div className="mt-6 grid gap-4 sm:grid-cols-2">
           <div>
-            <label className="block text-[13px] font-semibold text-navy">4. Timeline</label>
-            <select value={timeline} onChange={(e) => setTimeline(e.target.value)}
+            <label htmlFor="cq-timeline" className="block text-[13px] font-semibold text-navy">4. Timeline</label>
+            <select id="cq-timeline" aria-label="Timeline" value={timeline} onChange={(e) => setTimeline(e.target.value)}
               className="mt-2 w-full rounded-[10px] border-[1.5px] border-navy/10 bg-white px-4 py-3 text-sm text-navy outline-none focus:border-teal">
               {TIMELINES.map((t) => <option key={t} value={t}>{t}</option>)}
             </select>

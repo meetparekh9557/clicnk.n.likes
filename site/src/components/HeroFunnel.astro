@@ -75,8 +75,13 @@
       }
     };
 
+    // `activated` gates the very first start until the browser is idle, so
+    // the decorative canvas never competes with island hydration during the
+    // load window (keeps Total Blocking Time down). After that the
+    // IntersectionObserver pauses/resumes it on scroll as usual.
+    let activated = false;
     const tick = () => { if (!running) return; step(); raf = requestAnimationFrame(tick); };
-    const start = () => { if (running || reduce) return; running = true; raf = requestAnimationFrame(tick); };
+    const start = () => { if (running || reduce || !activated) return; running = true; raf = requestAnimationFrame(tick); };
     const stop = () => { running = false; cancelAnimationFrame(raf); };
 
     resize();
@@ -88,7 +93,10 @@
       es[0] && es[0].isIntersecting ? start() : stop();
     }, { threshold: 0 });
     io.observe(canvas);
-    start();
+    // Purely visual, so a beat's delay before the streaks appear is invisible.
+    const kick = () => { activated = true; start(); };
+    if ('requestIdleCallback' in window) requestIdleCallback(kick, { timeout: 1200 });
+    else setTimeout(kick, 600);
   }
 
   initHeroFunnel();

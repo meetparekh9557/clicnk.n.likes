@@ -1,7 +1,7 @@
 /* ============================================================
    SHARED SITE ENGINE - ported verbatim from v1 (index.html).
    Single source of truth for the Apps Script backend client, the
-   report-email builder and the deterministic scoring math. Used by
+   report-email builder and the deterministic scoring logic. Used by
    the hero scan island and every migrated free tool. Scoring must
    stay deterministic and honestly labelled: 'verified' only ever
    means "measured from a live fetch in THIS session".

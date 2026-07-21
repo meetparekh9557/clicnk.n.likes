@@ -52,28 +52,19 @@ const REPORTS = [
 const CYCLE_MS = 5200;
 const COUNT_MS = 2600;
 
-function ScoreRing({ pct, color, reduce }) {
-  const R = 34;
-  const C = 2 * Math.PI * R;
-  return (
-    <svg width="88" height="88" viewBox="0 0 88 88" className="shrink-0" aria-hidden="true">
-      <circle cx="44" cy="44" r={R} fill="none" stroke="rgba(26,43,74,0.10)" strokeWidth="7" />
-      <circle
-        cx="44" cy="44" r={R} fill="none" stroke={color} strokeWidth="7" strokeLinecap="round"
-        strokeDasharray={C}
-        strokeDashoffset={C * (1 - pct / 100)}
-        transform="rotate(-90 44 44)"
-        style={{ transition: reduce ? 'none' : 'stroke-dashoffset 90ms linear, stroke 300ms ease' }}
-      />
-    </svg>
-  );
-}
+const RING_R = 34;
+const RING_C = 2 * Math.PI * RING_R;
 
 export default function AuditDemo() {
   const reduce = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const [cycle, setCycle] = useState(reduce ? 2 : 0);
   const report = REPORTS[cycle % REPORTS.length];
-  const [score, setScore] = useState(reduce ? report.target : 0);
+  // The count-up is driven imperatively through refs so it never triggers a
+  // React re-render per frame (that was the home page's biggest source of
+  // main-thread blocking). React only re-renders on the discrete cycle
+  // change every few seconds; the number and ring animate via the DOM.
+  const numRef = useRef(null);
+  const ringRef = useRef(null);
   const raf = useRef(0);
 
   useEffect(() => {
@@ -83,15 +74,19 @@ export default function AuditDemo() {
   }, [reduce]);
 
   useEffect(() => {
-    if (reduce) { setScore(report.target); return; }
+    const paint = (val) => {
+      if (numRef.current) numRef.current.textContent = String(Math.round(val));
+      if (ringRef.current) ringRef.current.style.strokeDashoffset = String(RING_C * (1 - val / 100));
+    };
+    if (reduce) { paint(report.target); return; }
     const start = performance.now();
     const tick = (now) => {
       const t = Math.min(1, (now - start) / COUNT_MS);
       const eased = 1 - Math.pow(1 - t, 3);
-      setScore(Math.round(report.target * eased));
+      paint(report.target * eased);
       if (t < 1) raf.current = requestAnimationFrame(tick);
     };
-    setScore(0);
+    paint(0);
     raf.current = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf.current);
   }, [cycle, reduce]);
@@ -115,10 +110,20 @@ export default function AuditDemo() {
         {!reduce && <span key={`beam-${cycle}`} className="audit-beam" aria-hidden="true"></span>}
 
         <div className="flex items-center gap-4">
-          <ScoreRing pct={score} color={report.ring} reduce={reduce} />
+          <svg width="88" height="88" viewBox="0 0 88 88" className="shrink-0" aria-hidden="true">
+            <circle cx="44" cy="44" r={RING_R} fill="none" stroke="rgba(26,43,74,0.10)" strokeWidth="7" />
+            <circle
+              ref={ringRef}
+              cx="44" cy="44" r={RING_R} fill="none" stroke={report.ring} strokeWidth="7" strokeLinecap="round"
+              strokeDasharray={RING_C}
+              strokeDashoffset={RING_C * (1 - (reduce ? report.target : 0) / 100)}
+              transform="rotate(-90 44 44)"
+              style={{ transition: reduce ? 'none' : 'stroke 300ms ease' }}
+            />
+          </svg>
           <div>
             <div className="font-display text-3xl font-bold tabular-nums" style={{ color: report.num }}>
-              {score}<span className="text-lg text-navy/40">/100</span>
+              <span ref={numRef}>{reduce ? report.target : 0}</span><span className="text-lg text-navy/40">/100</span>
             </div>
             <div className="text-xs text-navy/55">Website Health Score</div>
             <div className="mt-0.5 text-[11px] font-semibold" style={{ color: report.num }}>{report.label}</div>

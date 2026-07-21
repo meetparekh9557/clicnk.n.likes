@@ -1,4 +1,4 @@
-// Funnel Leak & ROI Calculator. The slider math is ported verbatim from
+// Funnel Leak & ROI Calculator. The slider scoring is ported verbatim from
 // v1 (updateROI): current vs. a healthy 3% conversion benchmark, shown as
 // both a revenue gap and the profit that gap is actually worth. The live
 // preview is visible as you drag (self-reported inputs, no external
