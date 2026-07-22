@@ -106,18 +106,6 @@ export async function fetchAiVisibility(q, brand) {
   return callTool('?action=aivisibility&q=' + encodeURIComponent(q) + '&brand=' + encodeURIComponent(brand || ''));
 }
 
-/* Live Google Business Profile facts (Places API) for a business query. */
-export async function fetchPlaces(q) {
-  if (!q || !q.trim()) return { available: false, reason: 'no_query' };
-  return callTool('?action=places&q=' + encodeURIComponent(q));
-}
-
-/* Real Google SERP position for a keyword + domain (third-party provider). */
-export async function fetchSerpRank(q, domain, location) {
-  if (!q || !q.trim()) return { available: false, reason: 'no_query' };
-  return callTool('?action=serp&q=' + encodeURIComponent(q) + '&domain=' + encodeURIComponent(domain || '') + '&location=' + encodeURIComponent(location || ''));
-}
-
 /* Escapes user-typed text before it's interpolated into HTML strings. */
 export function escapeHtml(str) {
   return String(str == null ? '' : str).replace(/[&<>"']/g, (c) => ({

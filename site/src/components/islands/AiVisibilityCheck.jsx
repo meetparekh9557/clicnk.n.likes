@@ -49,7 +49,8 @@ export default function AiVisibilityCheck({ toolsHref }) {
     }
 
     const mentioned = r.mentioned === true;
-    const modelLabel = `${r.provider === 'openai' ? 'OpenAI' : 'Anthropic'} (${r.model})`;
+    const providerName = r.provider === 'openai' ? 'OpenAI' : r.provider === 'gemini' ? 'Google Gemini' : 'Anthropic';
+    const modelLabel = `${providerName} (${r.model})`;
     const interpretation = mentioned
       ? `Your business WAS named when we asked ${modelLabel} "${query}" just now. That is real AI-search visibility, but it is one answer at one moment: AI engines vary run to run, so the job is to be cited consistently, everywhere, not just this once.`
       : `Your business was NOT named when we asked ${modelLabel} "${query}" just now. Today, buyers ask an AI this exact kind of question and act on the names it gives back. If you are not in the answer, you are invisible at the moment of decision, and that is fixable with content structured to be quoted.`;
