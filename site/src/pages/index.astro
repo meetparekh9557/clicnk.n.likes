@@ -9,10 +9,8 @@ import HeroScan from '../components/islands/HeroScan.jsx';
 import LeadForm from '../components/islands/LeadForm.jsx';
 import AuditDemo from '../components/islands/AuditDemo.jsx';
 import HeroFunnel from '../components/HeroFunnel.astro';
-import StatTile from '../components/StatTile.astro';
 import ClientLogos from '../components/ClientLogos.astro';
 import { services } from '../data/site';
-import { marketStats } from '../data/market';
 import { withBase } from '../lib/url';
 import Search from '@lucide/astro/icons/search';
 import MapPin from '@lucide/astro/icons/map-pin';
@@ -125,24 +123,19 @@ const iconWrap = 'mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 t
     </div>
   </div>
 
-  <!-- ============ THE DATA / OPPORTUNITY (real cited market numbers) ==== -->
+  <!-- ============ THE DATA / OPPORTUNITY (teaser -> /why-organic/) ======= -->
   <section class="border-b border-navy/10 bg-off">
-    <div class="mx-auto max-w-6xl px-[5vw] py-20">
+    <div class="mx-auto max-w-6xl px-[5vw] py-16">
       <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">The opportunity</p>
       <h2 class="reveal mt-3 max-w-2xl font-display text-[clamp(1.8rem,3.4vw,2.7rem)] leading-[1.12] font-bold text-navy" style="--d:80ms">
         Organic isn't a nice-to-have. It's where your buyers already are.
       </h2>
       <p class="reveal mt-3 max-w-2xl text-lg text-navy/70" style="--d:140ms">
-        These are industry figures, not our own clients' numbers, every one sourced. The pattern they describe is the
-        reason we build the way we do.
+        Across every channel, the industry data points the same way: your buyers start on search, act fast, and rarely
+        look past the first result. We pulled the figures together, each with a named source, on one page.
       </p>
-      <div class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        {marketStats.map((s, i) => (
-          <StatTile value={s.value} label={s.label} source={s.source} class="reveal" style={`--d:${(i % 4) * 80}ms`} />
-        ))}
-      </div>
-      <a href={withBase('/why-organic/')} class="reveal mt-8 inline-flex items-center gap-1.5 text-sm font-semibold text-teal-dark transition-colors hover:text-navy" style="--d:220ms">
-        See the full data, and the first-page cliff
+      <a href={withBase('/why-organic/')} class="reveal mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-teal-dark transition-colors hover:text-navy" style="--d:200ms">
+        See the data for every marketing channel
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
       </a>
     </div>
