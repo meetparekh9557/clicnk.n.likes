@@ -22,9 +22,15 @@ repo. Keys live only in the Apps Script project, as **Script Properties**.
 |---|---|---|---|
 | `PSI_KEY` | Live Speed & Core Web Vitals | Optional (works keyless at low volume; a key raises the quota) | Google Cloud Console → enable **PageSpeed Insights API** → create API key |
 | `CF_ACCOUNT_ID`, `CF_BROWSER_TOKEN` | First-impression snapshot **and** JS-page rendering in the health scan | Already in use | Cloudflare dashboard → Browser Rendering |
-| `AI_KEY` | "Does AI name your business?" | Required for that tool | Anthropic or OpenAI console. Set `AI_PROVIDER` = `anthropic` (default) or `openai`, and optionally `AI_MODEL` |
-| `PLACES_KEY` | Your Google reputation (rating + reviews) | Required for that tool | Google Cloud Console → enable **Places API** → create API key (billing must be enabled) |
-| `SERP_KEY` | Where do you actually rank? | Required for that tool | A SERP provider, default **serper.dev** (set `SERP_PROVIDER` = `serper`). Paid usage |
+| `AI_KEY` | "Does AI name your business?" | Required for that tool | **Free: Google Gemini** — get a key at [aistudio.google.com](https://aistudio.google.com) (free tier). Default `AI_PROVIDER` is now `gemini` (`AI_MODEL` defaults to `gemini-2.0-flash`). Also supports `openai` / `anthropic` (paid) if you prefer |
+| `PLACES_KEY` | Your Google reputation (rating + reviews) | Required for that tool | Google Cloud Console → enable **Places API** → API key. **Effectively free within Google's $200/month credit** (~6,000 lookups), but a billing account/card must be on file |
+| `SERP_KEY` | Where do you actually rank? | Required for that tool | **serper.dev** — 2,500 free searches on signup, then paid (set `SERP_PROVIDER` = `serper`). Or SerpApi (100 free/month). No sustainable card-free option |
+
+### Free vs paid, at a glance
+
+- **Free, no card:** Speed (PageSpeed), Snapshot (your existing Cloudflare keys), and **AI visibility via Gemini** (Google AI Studio free tier).
+- **Free within a credit, card required:** Reputation (Google Places, $200/month credit covers normal volume).
+- **Free at low volume, then paid:** Rank (serper.dev's 2,500 free searches, or SerpApi 100/month). Scraping Google directly is against its terms and gets blocked — not a real option.
 
 ## Honest-degradation behaviour
 

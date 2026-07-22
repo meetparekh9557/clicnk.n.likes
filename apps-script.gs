@@ -184,11 +184,22 @@ function aiVisibility_(q, brand){
   var props = PropertiesService.getScriptProperties();
   var key = props.getProperty('AI_KEY');
   if(!key) return {ok:false, reason:'not_configured'};
-  var provider = (props.getProperty('AI_PROVIDER')||'anthropic').toLowerCase();
-  var model = props.getProperty('AI_MODEL') || (provider==='openai' ? 'gpt-4o-mini' : 'claude-3-5-haiku-latest');
+  var provider = (props.getProperty('AI_PROVIDER')||'gemini').toLowerCase();
+  var model = props.getProperty('AI_MODEL') || (provider==='openai' ? 'gpt-4o-mini' : provider==='gemini' ? 'gemini-2.0-flash' : 'claude-3-5-haiku-latest');
   try{
     var answer = '';
-    if(provider === 'openai'){
+    if(provider === 'gemini'){
+      // Google Gemini via AI Studio — has a genuinely free tier, and it's an
+      // AI engine buyers actually use, so "did Gemini name you?" is meaningful.
+      var rg = UrlFetchApp.fetch('https://generativelanguage.googleapis.com/v1beta/models/' + encodeURIComponent(model) + ':generateContent?key=' + encodeURIComponent(key), {
+        method:'post', contentType:'application/json',
+        payload: JSON.stringify({ contents:[{ parts:[{ text:q }] }] }),
+        muteHttpExceptions:true });
+      if(rg.getResponseCode()!==200) return {ok:false, reason:'ai_http_' + rg.getResponseCode()};
+      var dg = JSON.parse(rg.getContentText()||'{}');
+      answer = (dg.candidates && dg.candidates[0] && dg.candidates[0].content && dg.candidates[0].content.parts && dg.candidates[0].content.parts[0])
+        ? String(dg.candidates[0].content.parts[0].text||'') : '';
+    } else if(provider === 'openai'){
       var r = UrlFetchApp.fetch('https://api.openai.com/v1/chat/completions', {
         method:'post', contentType:'application/json', headers:{ Authorization:'Bearer ' + key },
         payload: JSON.stringify({ model:model, messages:[{role:'user', content:q}], max_tokens:700, temperature:0 }),
