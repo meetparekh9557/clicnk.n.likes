@@ -76,39 +76,12 @@ function testJsRender(){
   }
 }
 
-/**
- * DIAGNOSTIC for the AI-visibility tool — run this from the editor if the
- * "Does AI name your business?" tool says the AI didn't answer. It prints
- * which properties are set (never the key itself, only a safe prefix), the
- * result our own function returns, and — crucially — Google's RAW error
- * message, which tells you exactly what's wrong (invalid key, API not
- * enabled, wrong model name, etc.).
- */
-function testAiVisibility(){
-  var props = PropertiesService.getScriptProperties();
-  var key = props.getProperty('AI_KEY');
-  var provider = (props.getProperty('AI_PROVIDER') || 'gemini').toLowerCase();
-  var model = props.getProperty('AI_MODEL') || (provider === 'openai' ? 'gpt-4o-mini' : provider === 'gemini' ? 'gemini-2.0-flash' : 'claude-3-5-haiku-latest');
-  Logger.log('AI_KEY set: ' + (key ? 'yes (' + key.length + ' chars, starts "' + key.slice(0, 6) + '…")' : 'NO — not set'));
-  Logger.log('AI_PROVIDER: ' + provider + '  |  AI_MODEL: ' + model);
-  var result = aiVisibility_('Who are the best SEO agencies in Ahmedabad, India?', 'Click.n.likes');
-  Logger.log('Our result: ' + JSON.stringify(result).slice(0, 900));
-  if(provider === 'gemini' && key){
-    var resp = UrlFetchApp.fetch('https://generativelanguage.googleapis.com/v1beta/models/' + encodeURIComponent(model) + ':generateContent?key=' + encodeURIComponent(key), {
-      method:'post', contentType:'application/json',
-      payload: JSON.stringify({ contents:[{ parts:[{ text:'Say hello in three words.' }] }] }),
-      muteHttpExceptions:true });
-    Logger.log('Gemini RAW HTTP ' + resp.getResponseCode() + ': ' + resp.getContentText().slice(0, 700));
-  }
-}
-
 function doGet(e){
   var p = (e && e.parameter) || {};
   var out;
   if(p.action === 'analyze' && p.url)        out = analyzePage(p.url);
   else if(p.action === 'pagespeed' && p.url) out = pageSpeed_(p.url, p.strategy);
   else if(p.action === 'screenshot' && p.url)out = screenshot_(p.url);
-  else if(p.action === 'aivisibility' && p.q)out = aiVisibility_(p.q, p.brand);
   else                                        out = {ok:false, reason:'bad_request'};
   return ContentService.createTextOutput(JSON.stringify(out))
     .setMimeType(ContentService.MimeType.JSON);
@@ -194,55 +167,6 @@ function screenshot_(url){
     bumpDailyRenderCount_(props);
     return {ok:true, image:'data:image/png;base64,' + Utilities.base64Encode(resp.getBlob().getBytes()), w:1200, h:750};
   }catch(err){ return {ok:false, reason:'cf_error', detail:String(err).slice(0,160)}; }
-}
-
-/**
- * AI-search visibility: asks a real LLM the visitor's buyer query and
- * reports the verbatim answer plus whether the brand was named. Reads
- * AI_KEY (and optional AI_PROVIDER / AI_MODEL) from Script Properties;
- * returns {ok:false, reason:'not_configured'} until a key is set, so the
- * tool degrades to an honest "coming soon" state instead of a fake result.
- */
-function aiVisibility_(q, brand){
-  q = String(q||'').slice(0,400); brand = String(brand||'').slice(0,120);
-  var props = PropertiesService.getScriptProperties();
-  var key = props.getProperty('AI_KEY');
-  if(!key) return {ok:false, reason:'not_configured'};
-  var provider = (props.getProperty('AI_PROVIDER')||'gemini').toLowerCase();
-  var model = props.getProperty('AI_MODEL') || (provider==='openai' ? 'gpt-4o-mini' : provider==='gemini' ? 'gemini-2.0-flash' : 'claude-3-5-haiku-latest');
-  try{
-    var answer = '';
-    if(provider === 'gemini'){
-      // Google Gemini via AI Studio — has a genuinely free tier, and it's an
-      // AI engine buyers actually use, so "did Gemini name you?" is meaningful.
-      var rg = UrlFetchApp.fetch('https://generativelanguage.googleapis.com/v1beta/models/' + encodeURIComponent(model) + ':generateContent?key=' + encodeURIComponent(key), {
-        method:'post', contentType:'application/json',
-        payload: JSON.stringify({ contents:[{ parts:[{ text:q }] }] }),
-        muteHttpExceptions:true });
-      if(rg.getResponseCode()!==200) return {ok:false, reason:'ai_http_' + rg.getResponseCode()};
-      var dg = JSON.parse(rg.getContentText()||'{}');
-      answer = (dg.candidates && dg.candidates[0] && dg.candidates[0].content && dg.candidates[0].content.parts && dg.candidates[0].content.parts[0])
-        ? String(dg.candidates[0].content.parts[0].text||'') : '';
-    } else if(provider === 'openai'){
-      var r = UrlFetchApp.fetch('https://api.openai.com/v1/chat/completions', {
-        method:'post', contentType:'application/json', headers:{ Authorization:'Bearer ' + key },
-        payload: JSON.stringify({ model:model, messages:[{role:'user', content:q}], max_tokens:700, temperature:0 }),
-        muteHttpExceptions:true });
-      if(r.getResponseCode()!==200) return {ok:false, reason:'ai_http_' + r.getResponseCode()};
-      var d = JSON.parse(r.getContentText()||'{}');
-      answer = d.choices && d.choices[0] && d.choices[0].message ? String(d.choices[0].message.content||'') : '';
-    } else {
-      var r2 = UrlFetchApp.fetch('https://api.anthropic.com/v1/messages', {
-        method:'post', contentType:'application/json', headers:{ 'x-api-key': key, 'anthropic-version':'2023-06-01' },
-        payload: JSON.stringify({ model:model, max_tokens:700, messages:[{role:'user', content:q}] }),
-        muteHttpExceptions:true });
-      if(r2.getResponseCode()!==200) return {ok:false, reason:'ai_http_' + r2.getResponseCode()};
-      var d2 = JSON.parse(r2.getContentText()||'{}');
-      answer = (d2.content && d2.content[0] && d2.content[0].text) ? String(d2.content[0].text) : '';
-    }
-    var mentioned = brand ? (answer.toLowerCase().indexOf(brand.toLowerCase()) !== -1) : null;
-    return {ok:true, answer:answer.slice(0,4000), mentioned:mentioned, model:model, provider:provider};
-  }catch(err){ return {ok:false, reason:'ai_error', detail:String(err).slice(0,160)}; }
 }
 
 function doPost(e){

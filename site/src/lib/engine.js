@@ -100,12 +100,6 @@ export async function fetchScreenshot(rawUrl) {
   return callTool('?action=screenshot&url=' + encodeURIComponent(target));
 }
 
-/* AI-search visibility: ask a real LLM `q`, report whether `brand` was named. */
-export async function fetchAiVisibility(q, brand) {
-  if (!q || !q.trim()) return { available: false, reason: 'no_query' };
-  return callTool('?action=aivisibility&q=' + encodeURIComponent(q) + '&brand=' + encodeURIComponent(brand || ''));
-}
-
 /* Escapes user-typed text before it's interpolated into HTML strings. */
 export function escapeHtml(str) {
   return String(str == null ? '' : str).replace(/[&<>"']/g, (c) => ({

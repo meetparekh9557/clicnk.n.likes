@@ -22,18 +22,17 @@ repo. Keys live only in the Apps Script project, as **Script Properties**.
 |---|---|---|---|
 | `PSI_KEY` | Live Speed & Core Web Vitals | Optional (works keyless at low volume; a key raises the quota) | Google Cloud Console → enable **PageSpeed Insights API** → create API key |
 | `CF_ACCOUNT_ID`, `CF_BROWSER_TOKEN` | First-impression snapshot **and** JS-page rendering in the health scan | Already in use | Cloudflare dashboard → Browser Rendering |
-| `AI_KEY` | "Does AI name your business?" | Required for that tool | **Free: Google Gemini** — get a key at [aistudio.google.com](https://aistudio.google.com) (free tier). Default `AI_PROVIDER` is `gemini` (`AI_MODEL` defaults to `gemini-2.0-flash`). Also supports `openai` / `anthropic` (paid) if you prefer |
 
-The paid-only Reputation (Google Places) and Rank (SERP) tools were removed:
-they can't return real data without a billing card / paid provider, so they
-were dropped rather than shipped as dead "coming soon" cards. The backend can
-grow them back later if that changes.
+Three tools that needed a paid/gated API were removed rather than shipped as
+dead "coming soon" cards: Reputation (Google Places — needs a billing card),
+Rank (SERP — no free, unlimited API exists), and AI visibility (Gemini's free
+tier turned out not to be available for this Google account, and we chose not
+to put a card on file). The backend can grow any of them back if that changes.
 
 ### Free vs paid, at a glance
 
-Every live tool is now **free**: Speed (PageSpeed), Snapshot (your existing
-Cloudflare keys), and **AI visibility via Gemini** (Google AI Studio free tier).
-No card required for any of them.
+Both live real-data tools are **free, no card**: Speed (Google PageSpeed) and
+Snapshot (your existing Cloudflare keys).
 
 ## Honest-degradation behaviour
 
@@ -44,11 +43,8 @@ error and never a fabricated result. So the tools can ship before the keys are
 added; each one lights up the moment its key is present and the script is
 redeployed.
 
-## Suggested go-live order
+## Live tools
 
-1. **PageSpeed** — add `PSI_KEY`, paste the latest `apps-script.gs`, redeploy.
-   Works immediately, no billing.
-2. **Snapshot** — already works (reuses the existing Cloudflare keys).
-3. **AI visibility** — add `AI_KEY` (a free Google AI Studio / Gemini key).
-   `AI_PROVIDER` defaults to `gemini`, so the key alone is enough. Re-paste
-   `apps-script.gs` and redeploy.
+1. **PageSpeed** — add `PSI_KEY` (optional; works keyless too), paste the
+   latest `apps-script.gs`, redeploy. No billing.
+2. **Snapshot** — works via the existing Cloudflare keys.
