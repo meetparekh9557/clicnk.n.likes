@@ -11,6 +11,7 @@ import Card from '../../components/Card.astro';
 import InlineCta from '../../components/InlineCta.astro';
 import HeroScan from '../../components/islands/HeroScan.jsx';
 import SpeedCheck from '../../components/islands/SpeedCheck.jsx';
+import AiVisibilityCheck from '../../components/islands/AiVisibilityCheck.jsx';
 import FunnelRoiCalculator from '../../components/islands/FunnelRoiCalculator.jsx';
 import CompetitorThreat from '../../components/islands/CompetitorThreat.jsx';
 import { withBase } from '../../lib/url';
@@ -78,6 +79,24 @@ const jsonLd = breadcrumbSchema([
       </div>
       <div class="reveal mx-auto mt-10 max-w-2xl" style="--d:180ms">
         <SpeedCheck client:visible toolsHref={withBase('/tools/')} />
+      </div>
+    </div>
+  </section>
+
+  <!-- AI-search visibility (real LLM query) -->
+  <section id="aivisibility" class="scroll-mt-28 border-t border-navy/10">
+    <div class="mx-auto max-w-3xl px-[5vw] py-16">
+      <div class="mx-auto max-w-2xl text-center">
+        <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">Live AI check</p>
+        <h2 class="reveal mt-3 font-display text-[clamp(1.6rem,3vw,2.4rem)] leading-[1.12] font-bold text-navy" style="--d:80ms">
+          Does AI name your business?
+        </h2>
+        <p class="reveal mt-3 text-lg text-navy/70" style="--d:140ms">
+          Your buyers now ask an AI "who's the best…" and act on the names it gives back. We ask a real AI your customer's question, live, and show you whether you're in the answer.
+        </p>
+      </div>
+      <div class="reveal mx-auto mt-10 max-w-2xl" style="--d:180ms">
+        <AiVisibilityCheck client:visible toolsHref={withBase('/tools/')} />
       </div>
     </div>
   </section>
