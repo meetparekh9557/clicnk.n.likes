@@ -142,10 +142,9 @@ export function buildReportEmailHtml(o) {
   const rows = (o.factors || [])
     .map(
       (f) => `<tr>
-      <td style="padding:9px 10px;border-bottom:1px solid #eee;font-size:13px;color:#1A2B4A;vertical-align:top;"><b>${esc(f.name)}</b></td>
-      <td style="padding:9px 10px;border-bottom:1px solid #eee;font-size:13px;color:#444;vertical-align:top;">${esc(f.found)}</td>
-      <td style="padding:9px 10px;border-bottom:1px solid #eee;vertical-align:top;">${chip(f.source)}</td>
-      <td style="padding:9px 10px;border-bottom:1px solid #eee;font-size:13px;font-weight:700;vertical-align:top;white-space:nowrap;color:${/^[−-]/.test(f.impact) ? '#FF4757' : '#1F7A74'};">${esc(f.impact)}</td>
+      <td style="padding:10px;border-bottom:1px solid #eee;font-size:13px;color:#1A2B4A;vertical-align:top;overflow-wrap:break-word;word-break:break-word;"><b>${esc(f.name)}</b></td>
+      <td style="padding:10px;border-bottom:1px solid #eee;font-size:13px;color:#444;vertical-align:top;overflow-wrap:break-word;word-break:break-word;">${esc(f.found)}</td>
+      <td style="padding:10px;border-bottom:1px solid #eee;vertical-align:top;">${chip(f.source)}<div style="margin-top:5px;font-size:12px;font-weight:700;overflow-wrap:break-word;word-break:break-word;color:${/^[−-]/.test(f.impact) ? '#FF4757' : '#1F7A74'};">${esc(f.impact)}</div></td>
     </tr>`
     )
     .join('');
@@ -166,10 +165,9 @@ export function buildReportEmailHtml(o) {
     <h3 style="${H}font-size:15px;margin:18px 0 8px;">Everything we checked</h3>
     <table style="border-collapse:collapse;width:100%;background:#fff;border:1px solid #eee;border-radius:8px;">
       <tr>
-        <th style="text-align:left;padding:8px 10px;font-size:11px;color:#777;text-transform:uppercase;letter-spacing:.05em;border-bottom:2px solid #4ECDC4;">Factor</th>
-        <th style="text-align:left;padding:8px 10px;font-size:11px;color:#777;text-transform:uppercase;letter-spacing:.05em;border-bottom:2px solid #4ECDC4;">What we found</th>
-        <th style="text-align:left;padding:8px 10px;font-size:11px;color:#777;text-transform:uppercase;letter-spacing:.05em;border-bottom:2px solid #4ECDC4;">Source</th>
-        <th style="text-align:left;padding:8px 10px;font-size:11px;color:#777;text-transform:uppercase;letter-spacing:.05em;border-bottom:2px solid #4ECDC4;">Impact</th>
+        <th style="text-align:left;padding:8px 10px;font-size:11px;color:#777;text-transform:uppercase;letter-spacing:.05em;border-bottom:2px solid #4ECDC4;width:44%;">Factor</th>
+        <th style="text-align:left;padding:8px 10px;font-size:11px;color:#777;text-transform:uppercase;letter-spacing:.05em;border-bottom:2px solid #4ECDC4;width:31%;">What we found</th>
+        <th style="text-align:left;padding:8px 10px;font-size:11px;color:#777;text-transform:uppercase;letter-spacing:.05em;border-bottom:2px solid #4ECDC4;">Status</th>
       </tr>
       ${rows}
     </table>
