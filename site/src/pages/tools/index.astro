@@ -12,6 +12,9 @@ import InlineCta from '../../components/InlineCta.astro';
 import HeroScan from '../../components/islands/HeroScan.jsx';
 import SpeedCheck from '../../components/islands/SpeedCheck.jsx';
 import AiVisibilityCheck from '../../components/islands/AiVisibilityCheck.jsx';
+import SnapshotCheck from '../../components/islands/SnapshotCheck.jsx';
+import ReputationCheck from '../../components/islands/ReputationCheck.jsx';
+import RankCheck from '../../components/islands/RankCheck.jsx';
 import FunnelRoiCalculator from '../../components/islands/FunnelRoiCalculator.jsx';
 import CompetitorThreat from '../../components/islands/CompetitorThreat.jsx';
 import { withBase } from '../../lib/url';
@@ -97,6 +100,60 @@ const jsonLd = breadcrumbSchema([
       </div>
       <div class="reveal mx-auto mt-10 max-w-2xl" style="--d:180ms">
         <AiVisibilityCheck client:visible toolsHref={withBase('/tools/')} />
+      </div>
+    </div>
+  </section>
+
+  <!-- First-impression snapshot (live Cloudflare render) -->
+  <section id="snapshot" class="scroll-mt-28 border-t border-navy/10 bg-off">
+    <div class="mx-auto max-w-3xl px-[5vw] py-16">
+      <div class="mx-auto max-w-2xl text-center">
+        <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">Live render</p>
+        <h2 class="reveal mt-3 font-display text-[clamp(1.6rem,3vw,2.4rem)] leading-[1.12] font-bold text-navy" style="--d:80ms">
+          The 3-second test, for real
+        </h2>
+        <p class="reveal mt-3 text-lg text-navy/70" style="--d:140ms">
+          We render your live homepage above the fold and show you exactly what a first-time visitor sees before they scroll, or leave.
+        </p>
+      </div>
+      <div class="reveal mx-auto mt-10 max-w-2xl" style="--d:180ms">
+        <SnapshotCheck client:visible toolsHref={withBase('/tools/')} />
+      </div>
+    </div>
+  </section>
+
+  <!-- Live Google reputation (Places API) -->
+  <section id="reputation" class="scroll-mt-28 border-t border-navy/10">
+    <div class="mx-auto max-w-3xl px-[5vw] py-16">
+      <div class="mx-auto max-w-2xl text-center">
+        <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">Live from Google</p>
+        <h2 class="reveal mt-3 font-display text-[clamp(1.6rem,3vw,2.4rem)] leading-[1.12] font-bold text-navy" style="--d:80ms">
+          Your Google reputation, right now
+        </h2>
+        <p class="reveal mt-3 text-lg text-navy/70" style="--d:140ms">
+          Your real Google rating and review count, pulled live, the exact numbers a buyer weighs before they ever reach your website.
+        </p>
+      </div>
+      <div class="reveal mx-auto mt-10 max-w-2xl" style="--d:180ms">
+        <ReputationCheck client:visible toolsHref={withBase('/tools/')} />
+      </div>
+    </div>
+  </section>
+
+  <!-- Live Google rank check (SERP provider) -->
+  <section id="rank" class="scroll-mt-28 border-t border-navy/10 bg-off">
+    <div class="mx-auto max-w-3xl px-[5vw] py-16">
+      <div class="mx-auto max-w-2xl text-center">
+        <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">Live on Google</p>
+        <h2 class="reveal mt-3 font-display text-[clamp(1.6rem,3vw,2.4rem)] leading-[1.12] font-bold text-navy" style="--d:80ms">
+          Where do you actually rank?
+        </h2>
+        <p class="reveal mt-3 text-lg text-navy/70" style="--d:140ms">
+          Pick a keyword and we check Google's real results live, and tell you your exact position. No "you're probably on page two".
+        </p>
+      </div>
+      <div class="reveal mx-auto mt-10 max-w-2xl" style="--d:180ms">
+        <RankCheck client:visible toolsHref={withBase('/tools/')} />
       </div>
     </div>
   </section>
