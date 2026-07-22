@@ -78,9 +78,189 @@ function testJsRender(){
 
 function doGet(e){
   var p = (e && e.parameter) || {};
-  var out = (p.action === 'analyze' && p.url) ? analyzePage(p.url) : {ok:false, reason:'bad_request'};
+  var out;
+  if(p.action === 'analyze' && p.url)        out = analyzePage(p.url);
+  else if(p.action === 'pagespeed' && p.url) out = pageSpeed_(p.url, p.strategy);
+  else if(p.action === 'screenshot' && p.url)out = screenshot_(p.url);
+  else if(p.action === 'aivisibility' && p.q)out = aiVisibility_(p.q, p.brand);
+  else if(p.action === 'places' && p.q)      out = placesLookup_(p.q);
+  else if(p.action === 'serp' && p.q)        out = serpRank_(p.q, p.domain, p.location);
+  else                                        out = {ok:false, reason:'bad_request'};
   return ContentService.createTextOutput(JSON.stringify(out))
     .setMimeType(ContentService.MimeType.JSON);
+}
+
+/**
+ * Live Core Web Vitals via Google PageSpeed Insights (Lighthouse lab data
+ * plus CrUX real-user field data when Google has enough traffic for the
+ * URL). Works without a key at low volume; an optional PSI_KEY in Script
+ * Properties raises the quota for production. Returns verifiable, live-
+ * measured performance facts, or {ok:false} so the tool falls back honestly
+ * to a self-reported check instead of ever inventing a number.
+ */
+function pageSpeed_(url, strategy){
+  url = String(url).trim();
+  if(!/^https?:\/\//i.test(url)) url = 'https://' + url;
+  strategy = (strategy === 'desktop') ? 'desktop' : 'mobile';
+  var key = PropertiesService.getScriptProperties().getProperty('PSI_KEY');
+  try{
+    var endpoint = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed'
+      + '?url=' + encodeURIComponent(url)
+      + '&strategy=' + strategy
+      + '&category=performance'
+      + (key ? '&key=' + encodeURIComponent(key) : '');
+    var resp = UrlFetchApp.fetch(endpoint, {muteHttpExceptions:true});
+    if(resp.getResponseCode() !== 200) return {ok:false, reason:'psi_http_' + resp.getResponseCode()};
+    var data = JSON.parse(resp.getContentText() || '{}');
+    var lh = data.lighthouseResult;
+    if(!lh || !lh.categories || !lh.categories.performance) return {ok:false, reason:'psi_no_data'};
+    var a = lh.audits || {};
+    function num(id){ return (a[id] && typeof a[id].numericValue === 'number') ? a[id].numericValue : null; }
+    function disp(id){ return (a[id] && a[id].displayValue) ? a[id].displayValue : null; }
+    var psi = {
+      strategy: strategy,
+      finalUrl: data.id || url,
+      score: Math.round((lh.categories.performance.score || 0) * 100),
+      lcpMs: num('largest-contentful-paint'), lcpText: disp('largest-contentful-paint'),
+      cls: num('cumulative-layout-shift'),     clsText: disp('cumulative-layout-shift'),
+      tbtMs: num('total-blocking-time'),        tbtText: disp('total-blocking-time'),
+      fcpMs: num('first-contentful-paint'),     fcpText: disp('first-contentful-paint'),
+      siText: disp('speed-index'),
+      hasField: false
+    };
+    var le = data.loadingExperience;
+    if(le && le.metrics){
+      psi.hasField = true;
+      psi.fieldOverall = le.overall_category || null; // FAST / AVERAGE / SLOW
+      var m = le.metrics;
+      if(m.LARGEST_CONTENTFUL_PAINT_MS){ psi.fieldLcpMs = m.LARGEST_CONTENTFUL_PAINT_MS.percentile; psi.fieldLcpCat = m.LARGEST_CONTENTFUL_PAINT_MS.category; }
+      if(m.CUMULATIVE_LAYOUT_SHIFT_SCORE){ psi.fieldCls = m.CUMULATIVE_LAYOUT_SHIFT_SCORE.percentile/100; psi.fieldClsCat = m.CUMULATIVE_LAYOUT_SHIFT_SCORE.category; }
+      if(m.INTERACTION_TO_NEXT_PAINT){ psi.fieldInpMs = m.INTERACTION_TO_NEXT_PAINT.percentile; psi.fieldInpCat = m.INTERACTION_TO_NEXT_PAINT.category; }
+    }
+    return {ok:true, psi:psi};
+  }catch(err){
+    return {ok:false, reason:'psi_error', detail:String(err).slice(0,200)};
+  }
+}
+
+/**
+ * Above-the-fold screenshot via Cloudflare Browser Rendering (reuses the
+ * CF_ACCOUNT_ID / CF_BROWSER_TOKEN already used for page rendering, under
+ * the same daily cap). Returns a data: PNG the tool can show the visitor,
+ * or {ok:false, reason:'not_configured'} when the CF keys are absent.
+ */
+function screenshot_(url){
+  url = String(url).trim();
+  if(!/^https?:\/\//i.test(url)) url = 'https://' + url;
+  var props = PropertiesService.getScriptProperties();
+  var acct = props.getProperty('CF_ACCOUNT_ID'), token = props.getProperty('CF_BROWSER_TOKEN');
+  if(!acct || !token) return {ok:false, reason:'not_configured'};
+  if(!underDailyRenderCap_(props)) return {ok:false, reason:'render_cap'};
+  try{
+    var endpoint = 'https://api.cloudflare.com/client/v4/accounts/' + acct + '/browser-rendering/screenshot';
+    var resp = UrlFetchApp.fetch(endpoint, {
+      method:'post', contentType:'application/json',
+      headers:{ Authorization:'Bearer ' + token },
+      payload: JSON.stringify({ url:url, viewport:{width:1200,height:750,deviceScaleFactor:1}, screenshotOptions:{fullPage:false}, gotoOptions:{waitUntil:'networkidle0', timeout:20000} }),
+      muteHttpExceptions:true
+    });
+    if(resp.getResponseCode() !== 200) return {ok:false, reason:'cf_http_' + resp.getResponseCode()};
+    var ct = String(resp.getHeaders()['Content-Type'] || resp.getHeaders()['content-type'] || '');
+    if(ct.indexOf('image') === -1) return {ok:false, reason:'cf_no_image'};
+    bumpDailyRenderCount_(props);
+    return {ok:true, image:'data:image/png;base64,' + Utilities.base64Encode(resp.getBlob().getBytes()), w:1200, h:750};
+  }catch(err){ return {ok:false, reason:'cf_error', detail:String(err).slice(0,160)}; }
+}
+
+/**
+ * AI-search visibility: asks a real LLM the visitor's buyer query and
+ * reports the verbatim answer plus whether the brand was named. Reads
+ * AI_KEY (and optional AI_PROVIDER / AI_MODEL) from Script Properties;
+ * returns {ok:false, reason:'not_configured'} until a key is set, so the
+ * tool degrades to an honest "coming soon" state instead of a fake result.
+ */
+function aiVisibility_(q, brand){
+  q = String(q||'').slice(0,400); brand = String(brand||'').slice(0,120);
+  var props = PropertiesService.getScriptProperties();
+  var key = props.getProperty('AI_KEY');
+  if(!key) return {ok:false, reason:'not_configured'};
+  var provider = (props.getProperty('AI_PROVIDER')||'anthropic').toLowerCase();
+  var model = props.getProperty('AI_MODEL') || (provider==='openai' ? 'gpt-4o-mini' : 'claude-3-5-haiku-latest');
+  try{
+    var answer = '';
+    if(provider === 'openai'){
+      var r = UrlFetchApp.fetch('https://api.openai.com/v1/chat/completions', {
+        method:'post', contentType:'application/json', headers:{ Authorization:'Bearer ' + key },
+        payload: JSON.stringify({ model:model, messages:[{role:'user', content:q}], max_tokens:700, temperature:0 }),
+        muteHttpExceptions:true });
+      if(r.getResponseCode()!==200) return {ok:false, reason:'ai_http_' + r.getResponseCode()};
+      var d = JSON.parse(r.getContentText()||'{}');
+      answer = d.choices && d.choices[0] && d.choices[0].message ? String(d.choices[0].message.content||'') : '';
+    } else {
+      var r2 = UrlFetchApp.fetch('https://api.anthropic.com/v1/messages', {
+        method:'post', contentType:'application/json', headers:{ 'x-api-key': key, 'anthropic-version':'2023-06-01' },
+        payload: JSON.stringify({ model:model, max_tokens:700, messages:[{role:'user', content:q}] }),
+        muteHttpExceptions:true });
+      if(r2.getResponseCode()!==200) return {ok:false, reason:'ai_http_' + r2.getResponseCode()};
+      var d2 = JSON.parse(r2.getContentText()||'{}');
+      answer = (d2.content && d2.content[0] && d2.content[0].text) ? String(d2.content[0].text) : '';
+    }
+    var mentioned = brand ? (answer.toLowerCase().indexOf(brand.toLowerCase()) !== -1) : null;
+    return {ok:true, answer:answer.slice(0,4000), mentioned:mentioned, model:model, provider:provider};
+  }catch(err){ return {ok:false, reason:'ai_error', detail:String(err).slice(0,160)}; }
+}
+
+/**
+ * Live Google Business Profile facts via the Places API Text Search
+ * (real rating + review count). Reads PLACES_KEY from Script Properties;
+ * returns {ok:false, reason:'not_configured'} until the key + billing are
+ * in place.
+ */
+function placesLookup_(q){
+  q = String(q||'').slice(0,200);
+  var key = PropertiesService.getScriptProperties().getProperty('PLACES_KEY');
+  if(!key) return {ok:false, reason:'not_configured'};
+  try{
+    var url = 'https://maps.googleapis.com/maps/api/place/textsearch/json?query=' + encodeURIComponent(q) + '&key=' + encodeURIComponent(key);
+    var resp = UrlFetchApp.fetch(url, {muteHttpExceptions:true});
+    if(resp.getResponseCode()!==200) return {ok:false, reason:'places_http_' + resp.getResponseCode()};
+    var data = JSON.parse(resp.getContentText()||'{}');
+    if(data.status !== 'OK' || !data.results || !data.results.length) return {ok:false, reason:'places_none_' + (data.status||'')};
+    var r = data.results[0];
+    return {ok:true, place:{ name:r.name||'', address:r.formatted_address||'', rating:(typeof r.rating==='number'?r.rating:null), reviews:(typeof r.user_ratings_total==='number'?r.user_ratings_total:null), placeId:r.place_id||'' }};
+  }catch(err){ return {ok:false, reason:'places_error', detail:String(err).slice(0,160)}; }
+}
+
+/**
+ * Real Google SERP position for a keyword via a third-party SERP provider
+ * (default: serper.dev). Reads SERP_KEY (+ optional SERP_PROVIDER) from
+ * Script Properties; returns {ok:false, reason:'not_configured'} until a
+ * provider key is set and funded.
+ */
+function serpRank_(q, domain, location){
+  q = String(q||'').slice(0,200);
+  domain = String(domain||'').replace(/^https?:\/\//i,'').replace(/\/.*$/,'').replace(/^www\./i,'').toLowerCase();
+  var props = PropertiesService.getScriptProperties();
+  var key = props.getProperty('SERP_KEY');
+  if(!key) return {ok:false, reason:'not_configured'};
+  var provider = (props.getProperty('SERP_PROVIDER')||'serper').toLowerCase();
+  try{
+    if(provider === 'serper'){
+      var resp = UrlFetchApp.fetch('https://google.serper.dev/search', {
+        method:'post', contentType:'application/json', headers:{ 'X-API-KEY': key },
+        payload: JSON.stringify({ q:q, gl:'in', location: location||'India', num:50 }),
+        muteHttpExceptions:true });
+      if(resp.getResponseCode()!==200) return {ok:false, reason:'serp_http_' + resp.getResponseCode()};
+      var data = JSON.parse(resp.getContentText()||'{}');
+      var org = data.organic || [], rank = null, found = null;
+      for(var i=0;i<org.length;i++){
+        var link = String(org[i].link||'').toLowerCase();
+        if(domain && link.indexOf(domain) !== -1){ rank = org[i].position || (i+1); found = org[i].link; break; }
+      }
+      return {ok:true, query:q, domain:domain, rank:rank, foundUrl:found, checked:org.length};
+    }
+    return {ok:false, reason:'serp_provider_unsupported'};
+  }catch(err){ return {ok:false, reason:'serp_error', detail:String(err).slice(0,160)}; }
 }
 
 function doPost(e){
