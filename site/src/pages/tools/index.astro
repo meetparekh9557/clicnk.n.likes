@@ -1,22 +1,22 @@
 ---
-// Free tools hub. The flagship Live Website Health Scan runs for real
-// here (HeroScan island: live fetch, 11 verified signals, emailed report,
-// email gated before results - exactly like v1). Below it, every channel
-// check has an anchored card whose id matches the service page's toolKey,
-// so "Run a free readiness check" on a service page lands on the right
-// card. The deep interactive per-channel scoring migrates in the tools
-// milestone; until then each card routes to its service and a real check.
+// Free tools hub. The flagship Live Website Health Scan runs for real here
+// (HeroScan island: live fetch, 11 verified signals, emailed report, email
+// gated before results). The four other interactive tools each live on
+// their own page now (src/pages/tools/[tool].astro) and are surfaced as a
+// grid here so the hub stays scannable instead of a long stack. Below that:
+// the First-Page-Cliff lens (moved off the homepage), the per-channel
+// readiness checks (each routes to its service page's live check), and a CTA.
 import Base from '../../layouts/Base.astro';
 import Card from '../../components/Card.astro';
 import InlineCta from '../../components/InlineCta.astro';
 import HeroScan from '../../components/islands/HeroScan.jsx';
-import SpeedCheck from '../../components/islands/SpeedCheck.jsx';
-import SnapshotCheck from '../../components/islands/SnapshotCheck.jsx';
-import FunnelRoiCalculator from '../../components/islands/FunnelRoiCalculator.jsx';
-import CompetitorThreat from '../../components/islands/CompetitorThreat.jsx';
+import { toolPages, toolHref } from '../../data/tools';
 import { withBase } from '../../lib/url';
 import { breadcrumbSchema } from '../../lib/seo';
 import Gauge from '@lucide/astro/icons/gauge';
+import Eye from '@lucide/astro/icons/eye';
+import BarChart3 from '@lucide/astro/icons/chart-column-increasing';
+import Target from '@lucide/astro/icons/target';
 import Search from '@lucide/astro/icons/search';
 import MapPin from '@lucide/astro/icons/map-pin';
 import Sparkles from '@lucide/astro/icons/sparkles';
@@ -24,8 +24,12 @@ import Radar from '@lucide/astro/icons/radar';
 import FileText from '@lucide/astro/icons/file-text';
 import CodeXml from '@lucide/astro/icons/code-xml';
 import Megaphone from '@lucide/astro/icons/megaphone';
+import ArrowUpRight from '@lucide/astro/icons/arrow-up-right';
 
-// id = the service toolKey so /tools/#<toolKey> anchors resolve.
+const ICONS = { Gauge, Eye, BarChart3, Target, Search };
+
+// id = the service toolKey so /tools/#<toolKey> anchors resolve from the
+// service pages' "Run a free readiness check" links.
 const checks = [
   { id: 'seo', name: 'Organic Authority Index', icon: Search, service: '/services/seo/', desc: 'A directional read on how strongly your site is positioned to rank organically, scored across on-page structure, keyword focus and technical fundamentals.' },
   { id: 'localseo', name: 'Local Visibility Radius Checker', icon: MapPin, service: '/services/local-seo/', desc: 'How far your local presence actually reaches, and where you are losing the map pack to competitors in your own city.' },
@@ -38,16 +42,17 @@ const checks = [
 
 const jsonLd = breadcrumbSchema([
   ['Home', '/'],
-  ['Free Checks', '/tools/'],
+  ['Free Tools', '/tools/'],
 ]);
+const iconWrap = 'mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 text-teal-dark';
 ---
 
 <Base
-  title="Free SEO & Website Health Check Tools | Click.n.likes"
-  description="Run a live Website Health Scan and a suite of free directional checks across SEO, local, AI search, social, content, websites and paid, honest scores, real signals, no sales call required."
+  title="Free SEO, Speed & Website Health Tools | Click.n.likes"
+  description="Free tools that run for real: a live Website Health Scan, a Core Web Vitals speed test, a first-impression snapshot, an ROI calculator and a competitor estimator. Honest scores, no sales call."
   jsonLd={jsonLd}
 >
-  <!-- Hero + live scan -->
+  <!-- Hero + flagship live scan -->
   <section class="mx-auto max-w-4xl px-[5vw] pt-16 pb-12 text-center lg:pt-20">
     <p class="reveal mx-auto inline-flex items-center gap-2 rounded-full border border-teal/30 bg-teal/5 px-4 py-1.5 text-[13px] font-semibold text-navy">
       <span class="h-1.5 w-1.5 rounded-full bg-teal"></span> Free tools
@@ -65,80 +70,42 @@ const jsonLd = breadcrumbSchema([
     </div>
   </section>
 
-  <!-- Live Speed & Core Web Vitals (real Google PageSpeed Insights) -->
-  <section id="speed" class="scroll-mt-28 border-t border-navy/10 bg-off">
-    <div class="mx-auto max-w-3xl px-[5vw] py-16">
-      <div class="mx-auto max-w-2xl text-center">
-        <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">Live speed test</p>
-        <h2 class="reveal mt-3 font-display text-[clamp(1.6rem,3vw,2.4rem)] leading-[1.12] font-bold text-navy" style="--d:80ms">
-          How fast is your site, really?
-        </h2>
-        <p class="reveal mt-3 text-lg text-navy/70" style="--d:140ms">
-          Not a questionnaire: we load your live page the way a real visitor’s phone does and show you, in plain English, exactly what’s making people wait, and leave.
-        </p>
-      </div>
-      <div class="reveal mx-auto mt-10 max-w-2xl" style="--d:180ms">
-        <SpeedCheck client:visible toolsHref={withBase('/tools/')} />
-      </div>
-    </div>
-  </section>
-
-  <!-- First-impression snapshot (live Cloudflare render) -->
-  <section id="snapshot" class="scroll-mt-28 border-t border-navy/10">
-    <div class="mx-auto max-w-3xl px-[5vw] py-16">
-      <div class="mx-auto max-w-2xl text-center">
-        <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">Live render</p>
-        <h2 class="reveal mt-3 font-display text-[clamp(1.6rem,3vw,2.4rem)] leading-[1.12] font-bold text-navy" style="--d:80ms">
-          The 3-second test, for real
-        </h2>
-        <p class="reveal mt-3 text-lg text-navy/70" style="--d:140ms">
-          We render your live homepage above the fold and show you exactly what a first-time visitor sees before they scroll, or leave.
-        </p>
-      </div>
-      <div class="reveal mx-auto mt-10 max-w-2xl" style="--d:180ms">
-        <SnapshotCheck client:visible toolsHref={withBase('/tools/')} />
-      </div>
-    </div>
-  </section>
-
-  <!-- Funnel Leak & ROI Calculator (live) -->
-  <section id="roi" class="scroll-mt-28 border-t border-navy/10 bg-off">
-    <div class="mx-auto max-w-5xl px-[5vw] py-16">
-      <div class="mx-auto max-w-2xl text-center">
-        <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">Calculator</p>
-        <h2 class="reveal mt-3 font-display text-[clamp(1.6rem,3vw,2.4rem)] leading-[1.12] font-bold text-navy" style="--d:80ms">
-          Funnel Leak &amp; ROI Calculator
-        </h2>
-        <p class="reveal mt-3 text-lg text-navy/70" style="--d:140ms">
-          Transparent scoring, no black box: your numbers against a healthy 3% conversion benchmark, live as you move the sliders.
-        </p>
-      </div>
-      <div class="reveal mt-10" style="--d:180ms">
-        <FunnelRoiCalculator client:visible />
-      </div>
-    </div>
-  </section>
-
-  <!-- Competitor Threat Estimator (live) -->
-  <section id="competitor" class="scroll-mt-28 border-t border-navy/10">
-    <div class="mx-auto max-w-3xl px-[5vw] py-16">
-      <div class="mx-auto max-w-2xl text-center">
-        <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">Quiz</p>
-        <h2 class="reveal mt-3 font-display text-[clamp(1.6rem,3vw,2.4rem)] leading-[1.12] font-bold text-navy" style="--d:80ms">
-          Competitor Threat Estimator
-        </h2>
-        <p class="reveal mt-3 text-lg text-navy/70" style="--d:140ms">
-          Answer three questions about your main competitor. We score it with a fixed weighted matrix, no scraping, no guessing.
-        </p>
-      </div>
-      <div class="reveal mt-10" style="--d:180ms">
-        <CompetitorThreat client:visible />
-      </div>
-    </div>
-  </section>
-
-  <!-- Channel checks -->
+  <!-- The other interactive tools, each on its own page -->
   <section class="border-t border-navy/10 bg-off">
+    <div class="mx-auto max-w-6xl px-[5vw] py-16">
+      <div class="mx-auto max-w-2xl text-center">
+        <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">More free tools</p>
+        <h2 class="reveal mt-3 font-display text-[clamp(1.6rem,3vw,2.4rem)] leading-[1.12] font-bold text-navy" style="--d:80ms">
+          Pick a tool. Get a real answer.
+        </h2>
+        <p class="reveal mt-3 text-lg text-navy/70" style="--d:140ms">
+          Each one runs a genuine check on your live site or your own numbers, and emails you the full report. No call required.
+        </p>
+      </div>
+      <div class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        {toolPages.map((t, i) => {
+          const Icon = ICONS[t.icon] ?? Search;
+          return (
+            <Card href={toolHref(t)} class="reveal group flex flex-col" style={`--d:${(i % 4) * 80}ms`}>
+              <span class="absolute top-6 right-6 text-navy/20 transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-teal-dark">
+                <ArrowUpRight size={17} stroke-width={2.5} aria-hidden="true" />
+              </span>
+              <div class={iconWrap}><Icon size={22} stroke-width={2} aria-hidden="true" /></div>
+              <h3 class="font-display text-base font-semibold text-navy">{t.name}</h3>
+              <p class="mt-2 flex-1 text-sm leading-relaxed text-navy/60">{t.tagline}</p>
+              <span class="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-teal-dark">
+                Open tool
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </span>
+            </Card>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+
+  <!-- Per-channel readiness checks (route to each service page's live check) -->
+  <section class="border-t border-navy/10">
     <div class="mx-auto max-w-6xl px-[5vw] py-16">
       <div class="mx-auto max-w-2xl text-center">
         <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">Channel checks</p>

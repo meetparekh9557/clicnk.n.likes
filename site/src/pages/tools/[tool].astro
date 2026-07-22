@@ -1,0 +1,108 @@
+---
+// One focused page per interactive tool. The tool island is the whole point
+// of the page, so it hydrates on load; below it we cross-link the sibling
+// tools and the flagship scan. Meta + breadcrumb per tool. Slugs come from
+// the shared registry in data/tools.ts so the hub, nav and sitemap stay 1:1.
+import Base from '../../layouts/Base.astro';
+import Card from '../../components/Card.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import SpeedCheck from '../../components/islands/SpeedCheck.jsx';
+import SnapshotCheck from '../../components/islands/SnapshotCheck.jsx';
+import FunnelRoiCalculator from '../../components/islands/FunnelRoiCalculator.jsx';
+import CompetitorThreat from '../../components/islands/CompetitorThreat.jsx';
+import { tools, toolPages, toolHref } from '../../data/tools';
+import { withBase } from '../../lib/url';
+import { breadcrumbSchema } from '../../lib/seo';
+import Gauge from '@lucide/astro/icons/gauge';
+import Eye from '@lucide/astro/icons/eye';
+import BarChart3 from '@lucide/astro/icons/chart-column-increasing';
+import Target from '@lucide/astro/icons/target';
+import Search from '@lucide/astro/icons/search';
+import ArrowUpRight from '@lucide/astro/icons/arrow-up-right';
+import ArrowLeft from '@lucide/astro/icons/arrow-left';
+
+const ICONS = { Gauge, Eye, BarChart3, Target, Search };
+
+export function getStaticPaths() {
+  const meta = {
+    'website-speed': {
+      eyebrow: 'Live speed test',
+      h1: 'How fast is your site, really?',
+      lede: 'We load your live page the way a real visitor’s phone does and show you, in plain English, exactly what’s making people wait, and leave.',
+      title: 'Free Website Speed Test & Core Web Vitals | Click.n.likes',
+      description: 'Measure your website’s real mobile speed and Core Web Vitals live, explained in plain English, not jargon. Free, full report emailed, no call required.',
+    },
+    'first-impression': {
+      eyebrow: 'Live render',
+      h1: 'The 3-second test, for real',
+      lede: 'We render your live homepage above the fold and show you exactly what a first-time visitor sees before they scroll, or leave.',
+      title: 'Free First-Impression Website Snapshot | Click.n.likes',
+      description: 'See your live homepage above the fold, exactly as a first-time visitor does. A real render of the 3-second test. Free, no call required.',
+    },
+    'funnel-roi': {
+      eyebrow: 'Calculator',
+      h1: 'Funnel Leak & ROI Calculator',
+      lede: 'Transparent scoring, no black box: your numbers against a healthy 3% conversion benchmark, live as you move the sliders.',
+      title: 'Free Funnel Leak & ROI Calculator | Click.n.likes',
+      description: 'See the exact revenue you leak versus a healthy 3% conversion rate, live as you move the sliders. Free, with a CRO checklist emailed.',
+    },
+    'competitor-threat': {
+      eyebrow: 'Quiz',
+      h1: 'Competitor Threat Estimator',
+      lede: 'Answer three questions about your main competitor. We score it with a fixed weighted matrix, no scraping, no guessing.',
+      title: 'Free Competitor Threat Estimator | Click.n.likes',
+      description: 'Score how much of a threat your main competitor really is, from a fixed weighted matrix. Free, honest, no scraping. Full breakdown emailed.',
+    },
+  };
+  return toolPages.map((t) => ({ params: { tool: t.slug }, props: { tool: t, meta: meta[t.slug] } }));
+}
+
+const { tool, meta } = Astro.props;
+const others = tools.filter((t) => t.slug !== tool.slug);
+const jsonLd = breadcrumbSchema([['Home', '/'], ['Free Tools', '/tools/'], [tool.name, toolHref(tool)]]);
+const iconWrap = 'mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 text-teal-dark';
+---
+
+<Base title={meta.title} description={meta.description} jsonLd={jsonLd} hideCta>
+  <section class="mx-auto max-w-3xl px-[5vw] pt-14 pb-8 text-center lg:pt-20">
+    <a href={withBase('/tools/')} class="inline-flex items-center gap-1.5 text-[13px] font-semibold text-teal-dark transition-colors hover:text-navy">
+      <ArrowLeft size={15} stroke-width={2.5} aria-hidden="true" /> All free tools
+    </a>
+    <p class="reveal mt-5 text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">{meta.eyebrow}</p>
+    <h1 class="reveal mt-3 font-display text-[clamp(2rem,4.2vw,3rem)] leading-[1.08] font-bold text-navy">{meta.h1}</h1>
+    <p class="reveal mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-navy/70" style="--d:120ms">{meta.lede}</p>
+  </section>
+
+  <section class="mx-auto max-w-3xl px-[5vw] pb-16">
+    <div class="reveal">
+      {tool.slug === 'website-speed' && <SpeedCheck client:load toolsHref={withBase('/tools/')} />}
+      {tool.slug === 'first-impression' && <SnapshotCheck client:load toolsHref={withBase('/tools/')} />}
+      {tool.slug === 'funnel-roi' && <FunnelRoiCalculator client:load />}
+      {tool.slug === 'competitor-threat' && <CompetitorThreat client:load />}
+    </div>
+  </section>
+
+  <!-- Cross-links: keep people inside the free-tools suite -->
+  <section class="border-t border-navy/10 bg-off">
+    <div class="mx-auto max-w-6xl px-[5vw] py-16">
+      <h2 class="reveal font-display text-[clamp(1.4rem,2.6vw,2rem)] leading-[1.15] font-bold text-navy">More free tools</h2>
+      <div class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        {others.map((t, i) => {
+          const Icon = ICONS[t.icon] ?? Search;
+          return (
+            <Card href={toolHref(t)} class="reveal group" style={`--d:${(i % 4) * 80}ms`}>
+              <span class="absolute top-6 right-6 text-navy/20 transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-teal-dark">
+                <ArrowUpRight size={17} stroke-width={2.5} aria-hidden="true" />
+              </span>
+              <div class={iconWrap}><Icon size={22} stroke-width={2} aria-hidden="true" /></div>
+              <h3 class="font-display text-base font-semibold text-navy">{t.name}</h3>
+              <p class="mt-2 text-sm leading-relaxed text-navy/60">{t.tagline}</p>
+            </Card>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+
+  <CtaBand />
+</Base>

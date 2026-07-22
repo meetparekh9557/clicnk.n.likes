@@ -1,0 +1,152 @@
+---
+// The data page: a tabbed hub of cited stats for every marketing vertical,
+// plus the interactive First-Page-Cliff lens. Moved off the homepage so the
+// homepage stays short; linked from the homepage stat strip and the footer.
+// The per-vertical figures live in data/verticalStats.ts and are refreshed
+// automatically on a schedule (docs/STATS-REFRESH.md) - every number keeps a
+// named, checkable source and nothing is ever invented.
+import Base from '../layouts/Base.astro';
+import StatTile from '../components/StatTile.astro';
+import FirstPageCliff from '../components/islands/FirstPageCliff.jsx';
+import { verticalStats, statsLastUpdated } from '../data/verticalStats';
+import { breadcrumbSchema } from '../lib/seo';
+import { withBase } from '../lib/url';
+
+const jsonLd = breadcrumbSchema([
+  ['Home', '/'],
+  ['Why Organic', '/why-organic/'],
+]);
+const updatedLabel = new Date(statsLastUpdated + '-01').toLocaleDateString('en-IN', { month: 'long', year: 'numeric' });
+---
+
+<Base
+  title="Marketing Stats by Channel: The Data | Click.n.likes"
+  description="The industry data behind organic growth, by channel: SEO, Local, AI search, social, content, websites and paid. Every figure named and sourced, plus the first-page click cliff."
+  jsonLd={jsonLd}
+>
+  <!-- Intro -->
+  <section class="mx-auto max-w-4xl px-[5vw] pt-16 pb-4 text-center lg:pt-20">
+    <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">The data</p>
+    <h1 class="reveal-mask mt-4 font-display text-[clamp(2rem,4.2vw,3rem)] leading-[1.08] font-bold text-navy">
+      <span class="mask-line"><span>Organic isn't a nice-to-have.</span></span>
+      <span class="mask-line" style="--d:120ms"><span>It's where your buyers already are.</span></span>
+    </h1>
+    <p class="reveal mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-navy/70" style="--d:220ms">
+      Pick a channel to see the industry figures that make the case, every one with a named, checkable source. These are
+      market numbers, not our own clients' results, and they are the whole reason we build the way we do.
+    </p>
+  </section>
+
+  <!-- Tabbed per-channel stats hub -->
+  <section class="mx-auto max-w-6xl px-[5vw] py-10">
+    <div id="statTabs">
+      <div role="tablist" aria-label="Marketing channels" class="flex flex-wrap justify-center gap-2">
+        {verticalStats.map((v, i) => (
+          <button
+            type="button"
+            role="tab"
+            id={`tab-${v.key}`}
+            aria-controls={`panel-${v.key}`}
+            aria-selected={i === 0 ? 'true' : 'false'}
+            tabindex={i === 0 ? '0' : '-1'}
+            data-tab={v.key}
+            class="stat-tab rounded-full px-4 py-2 text-sm font-semibold transition-colors"
+          >{v.label}</button>
+        ))}
+      </div>
+
+      {verticalStats.map((v, i) => (
+        <div
+          role="tabpanel"
+          id={`panel-${v.key}`}
+          aria-labelledby={`tab-${v.key}`}
+          data-panel={v.key}
+          class={`stat-panel mt-9 ${i === 0 ? '' : 'hidden'}`}
+        >
+          <p class="mx-auto max-w-2xl text-center text-lg text-navy/70">{v.blurb}</p>
+          <div class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {v.stats.map((s) => <StatTile value={s.value} label={s.label} source={s.source} />)}
+          </div>
+        </div>
+      ))}
+    </div>
+    <p class="mt-8 text-center text-xs text-navy/45">
+      Figures verified {updatedLabel} and refreshed automatically. Every stat carries a named source.
+    </p>
+  </section>
+
+  <!-- The First-Page Cliff lens -->
+  <section class="border-y border-navy/10 bg-off">
+    <div class="mx-auto max-w-4xl px-[5vw] py-16">
+      <div class="mx-auto max-w-2xl text-center">
+        <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">The lens</p>
+        <h2 class="reveal mt-3 font-display text-[clamp(1.6rem,3vw,2.4rem)] leading-[1.12] font-bold text-navy" style="--d:80ms">
+          Why page one is the whole game
+        </h2>
+        <p class="reveal mt-3 text-lg text-navy/70" style="--d:140ms">
+          The first Google result takes more clicks than the next three combined. Tap a position to see exactly what it
+          wins you, and how much reaching #1 would multiply it.
+        </p>
+      </div>
+      <div class="reveal mt-10" style="--d:180ms">
+        <FirstPageCliff client:visible />
+      </div>
+    </div>
+  </section>
+
+  <!-- What it means -->
+  <section class="mx-auto max-w-3xl px-[5vw] py-16 text-center">
+    <h2 class="reveal font-display text-[clamp(1.6rem,3vw,2.2rem)] leading-[1.15] font-bold text-navy">
+      What this means for your business
+    </h2>
+    <p class="reveal mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-navy/70" style="--d:100ms">
+      If most of your buyers begin on search and the clicks collapse below the first result, then organic visibility is
+      not a marketing nicety, it is the front door. That is exactly what our
+      <a href={withBase('/services/seo/')} class="font-semibold text-teal-dark underline underline-offset-2 hover:text-navy">SEO</a>,
+      <a href={withBase('/services/ai-seo/')} class="font-semibold text-teal-dark underline underline-offset-2 hover:text-navy">AI search</a>
+      and <a href={withBase('/services/content-marketing/')} class="font-semibold text-teal-dark underline underline-offset-2 hover:text-navy">content</a>
+      work is built to earn, and you can start by running a free
+      <a href={withBase('/tools/')} class="font-semibold text-teal-dark underline underline-offset-2 hover:text-navy">live check of your own site</a>.
+    </p>
+  </section>
+</Base>
+
+<style>
+  .stat-tab { border: 1.5px solid rgba(26, 43, 74, 0.15); color: rgba(26, 43, 74, 0.7); }
+  .stat-tab:hover { border-color: rgba(78, 205, 196, 0.6); color: #1a2b4a; }
+  .stat-tab[aria-selected='true'] { background: #1a2b4a; border-color: #1a2b4a; color: #fff; }
+</style>
+
+<script>
+  function initStatTabs() {
+    const root = document.getElementById('statTabs');
+    if (!root || root.dataset.on === '1') return;
+    root.dataset.on = '1';
+    const tabs = Array.from(root.querySelectorAll('.stat-tab'));
+    const panels = Array.from(root.querySelectorAll('.stat-panel'));
+    const select = (key, focus) => {
+      tabs.forEach((t) => {
+        const on = t.getAttribute('data-tab') === key;
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+        t.setAttribute('tabindex', on ? '0' : '-1');
+        if (on && focus) t.focus();
+      });
+      panels.forEach((p) => p.classList.toggle('hidden', p.getAttribute('data-panel') !== key));
+    };
+    tabs.forEach((t) => t.addEventListener('click', () => select(t.getAttribute('data-tab'), false)));
+    tabs.forEach((t, i) =>
+      t.addEventListener('keydown', (e) => {
+        if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+        e.preventDefault();
+        const n = (i + (e.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
+        select(tabs[n].getAttribute('data-tab'), true);
+      })
+    );
+  }
+  initStatTabs();
+  document.addEventListener('astro:page-load', () => {
+    const r = document.getElementById('statTabs');
+    if (r) r.dataset.on = '';
+    initStatTabs();
+  });
+</script>

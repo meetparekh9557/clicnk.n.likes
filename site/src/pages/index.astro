@@ -9,7 +9,6 @@ import HeroScan from '../components/islands/HeroScan.jsx';
 import LeadForm from '../components/islands/LeadForm.jsx';
 import AuditDemo from '../components/islands/AuditDemo.jsx';
 import HeroFunnel from '../components/HeroFunnel.astro';
-import FirstPageCliff from '../components/islands/FirstPageCliff.jsx';
 import StatTile from '../components/StatTile.astro';
 import ClientLogos from '../components/ClientLogos.astro';
 import { services } from '../data/site';
@@ -28,6 +27,7 @@ import TrendingUp from '@lucide/astro/icons/trending-up';
 import Layers from '@lucide/astro/icons/layers';
 import BarChart3 from '@lucide/astro/icons/chart-column-increasing';
 import Target from '@lucide/astro/icons/target';
+import Gauge from '@lucide/astro/icons/gauge';
 import ArrowUpRight from '@lucide/astro/icons/arrow-up-right';
 
 const serviceIcons = [Search, MapPin, Sparkles, Share2, FileText, Monitor, Megaphone];
@@ -133,17 +133,18 @@ const iconWrap = 'mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 t
         Organic isn't a nice-to-have. It's where your buyers already are.
       </h2>
       <p class="reveal mt-3 max-w-2xl text-lg text-navy/70" style="--d:140ms">
-        These are industry figures, not our own clients' numbers - every one is sourced below. The pattern they
-        describe is the reason we build the way we do.
+        These are industry figures, not our own clients' numbers, every one sourced. The pattern they describe is the
+        reason we build the way we do.
       </p>
-      <div class="mt-10 grid gap-6 lg:grid-cols-2 lg:items-start">
-        <FirstPageCliff client:visible />
-        <div class="grid gap-5 sm:grid-cols-2">
-          {marketStats.map((s, i) => (
-            <StatTile value={s.value} label={s.label} source={s.source} class={`reveal`} />
-          ))}
-        </div>
+      <div class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        {marketStats.map((s, i) => (
+          <StatTile value={s.value} label={s.label} source={s.source} class="reveal" style={`--d:${(i % 4) * 80}ms`} />
+        ))}
       </div>
+      <a href={withBase('/why-organic/')} class="reveal mt-8 inline-flex items-center gap-1.5 text-sm font-semibold text-teal-dark transition-colors hover:text-navy" style="--d:220ms">
+        See the full data, and the first-page cliff
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
     </div>
   </section>
 
@@ -212,10 +213,10 @@ const iconWrap = 'mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 t
   <section class="mx-auto max-w-6xl px-[5vw] py-20">
     <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">03 - Try before you talk to us</p>
     <h2 class="reveal mt-3 max-w-xl font-display text-[clamp(1.8rem,3.4vw,2.7rem)] leading-[1.12] font-bold text-navy" style="--d:80ms">
-      Three free tools. Real scoring, real signals.
+      Free tools that actually run.
     </h2>
     <p class="reveal mt-3 max-w-xl text-lg text-navy/70" style="--d:140ms">
-      No paid crawl APIs, no black box: every score comes from a documented, transparent scoring model or a direct check of your own answers.
+      No paid crawl APIs, no black box: every score comes from a live check of your real page or a direct read of your own numbers.
     </p>
     <div class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
       <Card href="/tools/" class="reveal group" style="--d:0ms">
@@ -224,52 +225,29 @@ const iconWrap = 'mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 t
         <h3 class="font-display text-lg font-semibold text-navy">Live Website Health Scan</h3>
         <p class="mt-2 text-sm leading-relaxed text-navy/60">We fetch your page live and score 11 real signals: title, meta, headings, alt tags, schema, indexability.</p>
       </Card>
-      <Card href="/tools/#roi" class="reveal group" style="--d:90ms">
+      <Card href="/tools/website-speed/" class="reveal group" style="--d:90ms">
+        <span class="absolute top-6 right-6 text-navy/20 transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-teal-dark"><ArrowUpRight size={17} stroke-width={2.5} aria-hidden="true" /></span>
+        <div class={iconWrap}><Gauge size={22} stroke-width={2} aria-hidden="true" /></div>
+        <h3 class="font-display text-lg font-semibold text-navy">Website Speed Test</h3>
+        <p class="mt-2 text-sm leading-relaxed text-navy/60">Your real mobile speed and Core Web Vitals, measured live by Google and explained in plain English.</p>
+      </Card>
+      <Card href="/tools/funnel-roi/" class="reveal group" style="--d:180ms">
         <span class="absolute top-6 right-6 text-navy/20 transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-teal-dark"><ArrowUpRight size={17} stroke-width={2.5} aria-hidden="true" /></span>
         <div class={iconWrap}><BarChart3 size={22} stroke-width={2} aria-hidden="true" /></div>
         <h3 class="font-display text-lg font-semibold text-navy">Funnel Leak &amp; ROI Calculator</h3>
         <p class="mt-2 text-sm leading-relaxed text-navy/60">See the exact rupee amount you're leaving behind versus a healthy 3% conversion rate.</p>
       </Card>
-      <Card href="/tools/#competitor" class="reveal group" style="--d:180ms">
-        <span class="absolute top-6 right-6 text-navy/20 transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-teal-dark"><ArrowUpRight size={17} stroke-width={2.5} aria-hidden="true" /></span>
-        <div class={iconWrap}><Target size={22} stroke-width={2} aria-hidden="true" /></div>
-        <h3 class="font-display text-lg font-semibold text-navy">Competitor Threat Estimator</h3>
-        <p class="mt-2 text-sm leading-relaxed text-navy/60">A weighted quiz that scores how much of a threat your main competitor really is.</p>
-      </Card>
     </div>
-  </section>
-
-  <!-- ============ WHY CLICK.N.LIKES ============ -->
-  <section class="border-y border-navy/10 bg-off">
-    <div class="mx-auto grid max-w-6xl gap-12 px-[5vw] py-20 lg:grid-cols-2 lg:items-center">
-      <div class="reveal">
-        <p class="text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">04 - Why Click.n.likes</p>
-        <h2 class="mt-3 font-display text-[clamp(1.8rem,3.4vw,2.7rem)] leading-[1.12] font-bold text-navy">
-          Built for people burned by agencies before.
-        </h2>
-        <p class="mt-4 text-lg text-navy/70">
-          Most agencies sell you vanity metrics or jargon you can't verify. We connect every deliverable to something
-          you can check: bookings, calls, DMs, revenue.
-        </p>
-        <ul class="mt-8 space-y-5">
-          <li class="flex gap-3.5"><span class="mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full bg-teal"></span><span class="text-[15px] text-navy/80"><b class="text-navy">No jargon reports.</b> You get plain-English updates that tie to actual leads, not "impressions served."</span></li>
-          <li class="flex gap-3.5"><span class="mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full bg-teal"></span><span class="text-[15px] text-navy/80"><b class="text-navy">Niche-first strategy.</b> A dermatologist and a D2C skincare brand need completely different growth plans. We never copy-paste.</span></li>
-          <li class="flex gap-3.5"><span class="mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full bg-teal"></span><span class="text-[15px] text-navy/80"><b class="text-navy">Transparent pricing.</b> Every quote is generated in front of you, starting at ₹16,000. No mystery retainers.</span></li>
-        </ul>
-      </div>
-      <div class="reveal grid gap-4 sm:grid-cols-2" style="--d:120ms">
-        <Card><div class={iconWrap}><Layers size={20} stroke-width={2} aria-hidden="true" /></div><h3 class="font-display text-base font-semibold text-navy">Full-stack</h3><p class="mt-1.5 text-sm text-navy/60">SEO to websites, specialists working under one coordinated strategy.</p></Card>
-        <Card><div class={iconWrap}><Zap size={20} stroke-width={2} aria-hidden="true" /></div><h3 class="font-display text-base font-semibold text-navy">Fast to launch</h3><p class="mt-1.5 text-sm text-navy/60">Most engagements go live inside 7 working days.</p></Card>
-        <Card><div class={iconWrap}><BarChart3 size={20} stroke-width={2} aria-hidden="true" /></div><h3 class="font-display text-base font-semibold text-navy">Outcome-tied</h3><p class="mt-1.5 text-sm text-navy/60">We report against bookings and leads, not just rankings.</p></Card>
-        <Card><div class={iconWrap}><MapPin size={20} stroke-width={2} aria-hidden="true" /></div><h3 class="font-display text-base font-semibold text-navy">Locally fluent, globally built</h3><p class="mt-1.5 text-sm text-navy/60">Built around how your specific market actually searches and buys: wherever that is.</p></Card>
-      </div>
-    </div>
+    <a href={withBase('/tools/')} class="reveal mt-8 inline-flex items-center gap-1.5 text-sm font-semibold text-teal-dark transition-colors hover:text-navy" style="--d:240ms">
+      See all five free tools
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </a>
   </section>
 
   <!-- ============ LEAD FORM ============ -->
   <section class="mx-auto max-w-6xl px-[5vw] py-20">
     <div class="mx-auto max-w-2xl text-center">
-      <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">05 - Quick check</p>
+      <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">04 - Quick check</p>
       <h2 class="reveal mt-3 font-display text-[clamp(1.8rem,3.4vw,2.7rem)] leading-[1.12] font-bold text-navy" style="--d:80ms">
         Tell us about your business, get a growth snapshot back.
       </h2>
