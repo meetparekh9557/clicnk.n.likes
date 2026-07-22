@@ -78,9 +78,12 @@ export default function SpeedCheck({ toolsHref }) {
       { label: 'The first thing shows up', tech: 'fcp', v: psi.fcpText, b: band(psi.fcpMs, 1800, 3000), sub: 'When the very first piece of your page paints, the end of the blank-screen wait.' },
     ].filter((r) => r.v);
 
-    const factors = rows.map((r) => fact(r.label, `${r.v} — ${BAND[r.b].label}`, 'verified', r.sub));
+    // Keep the emailed table cells short so it never overflows a phone: the
+    // value goes in "what we found", a one-word verdict in "impact". The
+    // fuller "why it matters" lives on-screen and in the next steps below.
+    const factors = rows.map((r) => fact(r.label, r.v, 'verified', BAND[r.b].label));
     if (psi.hasField) {
-      factors.push(fact('Real visitors’ experience', `Actual people loading this page are rated ${plainField(psi.fieldOverall)} by Google`, 'verified', 'measured from real Chrome visitors, not just a lab test'));
+      factors.push(fact('Real visitors’ experience', `Rated ${plainField(psi.fieldOverall)}`, 'verified', 'field data'));
     }
     const worst = rows.filter((r) => r.b === 'poor' || r.b === 'needs').sort((a, b) => (a.b === 'poor' ? -1 : 1))[0];
     const interpretation = `${psi.score}/100. ${
