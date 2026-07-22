@@ -34,6 +34,8 @@ const BAND = {
   na: { fg: '#6b7280', label: '—' },
 };
 const scoreColor = (s) => (s >= 90 ? '#1F7A74' : s >= 50 ? '#A9750A' : '#E23744');
+const verdictWord = (s) => (s >= 90 ? 'Fast' : s >= 50 ? 'A little slow on mobile' : 'Slow on mobile');
+const plainField = (c) => ({ FAST: 'fast', AVERAGE: 'average', SLOW: 'slow' }[c] || 'mixed');
 
 export default function SpeedCheck({ toolsHref }) {
   const [url, setUrl] = useState('');
@@ -66,35 +68,38 @@ export default function SpeedCheck({ toolsHref }) {
       return;
     }
 
+    // Our own plain-language read of Google's raw measurements. The number
+    // is Google's; the words are ours, written for a business owner, not an
+    // engineer. `tech` is kept only for the emailed record and next-step logic.
     const rows = [
-      { key: 'Largest Contentful Paint', v: psi.lcpText, b: band(psi.lcpMs, 2500, 4000), why: 'how fast your main content appears' },
-      { key: 'Cumulative Layout Shift', v: psi.clsText, b: band(psi.cls, 0.1, 0.25), why: 'how much the page jumps while loading' },
-      { key: 'Total Blocking Time', v: psi.tbtText, b: band(psi.tbtMs, 200, 600), why: 'how long the page is frozen to taps' },
-      { key: 'First Contentful Paint', v: psi.fcpText, b: band(psi.fcpMs, 1800, 3000), why: 'when the first pixel of content paints' },
+      { label: 'Your main content appears', tech: 'lcp', v: psi.lcpText, b: band(psi.lcpMs, 2500, 4000), sub: 'How long before a visitor sees your headline and main image. Past about 2.5 seconds, people start leaving.' },
+      { label: 'The page holds still as it loads', tech: 'cls', v: psi.clsText, b: band(psi.cls, 0.1, 0.25), sub: 'Whether your buttons and text jump around while loading. A page that shifts feels broken and loses taps.' },
+      { label: 'It reacts the moment you tap', tech: 'tbt', v: psi.tbtText, b: band(psi.tbtMs, 200, 600), sub: 'How long the page ignores taps while it finishes loading. Long freezes make visitors think it is stuck.' },
+      { label: 'The first thing shows up', tech: 'fcp', v: psi.fcpText, b: band(psi.fcpMs, 1800, 3000), sub: 'When the very first piece of your page paints, the end of the blank-screen wait.' },
     ].filter((r) => r.v);
 
-    const factors = rows.map((r) => fact(r.key, `${r.v} (${BAND[r.b].label})`, 'verified', r.why));
+    const factors = rows.map((r) => fact(r.label, `${r.v} — ${BAND[r.b].label}`, 'verified', r.sub));
     if (psi.hasField) {
-      factors.push(fact('Real-user field data (CrUX)', `Google rates real visitors to this URL: ${psi.fieldOverall || 'n/a'}`, 'verified', 'measured from actual Chrome users, not a lab'));
+      factors.push(fact('Real visitors’ experience', `Actual people loading this page are rated ${plainField(psi.fieldOverall)} by Google`, 'verified', 'measured from real Chrome visitors, not just a lab test'));
     }
     const worst = rows.filter((r) => r.b === 'poor' || r.b === 'needs').sort((a, b) => (a.b === 'poor' ? -1 : 1))[0];
-    const interpretation = `${psi.score}/100 mobile performance, measured live by Google PageSpeed Insights. ${
+    const interpretation = `${psi.score}/100. ${
       psi.score >= 90
-        ? 'Your Core Web Vitals are genuinely strong: speed is not what is holding this page back.'
+        ? 'Your site loads fast on mobile — speed is not what is costing you visitors.'
         : psi.score >= 50
-          ? `Workable but leaking speed. Your weakest vital is ${worst ? worst.key + ' (' + worst.v + ')' : 'flagged below'}, and Google now uses these exact numbers as a ranking input.`
-          : `This page is slow enough to suppress its own rankings and conversions. ${worst ? 'Start with ' + worst.key + ' (' + worst.v + ').' : ''}`
+          ? `A few fixable things are making mobile visitors wait${worst ? `, starting with “${worst.label.toLowerCase()}” (${worst.v})` : ''}. Google now uses these exact speed signals to decide your rankings.`
+          : `Your page is slow enough to lose visitors and rankings before anyone even sees it${worst ? `. Start with “${worst.label.toLowerCase()}” (${worst.v})` : ''}.`
     }`;
 
     const nextSteps = [];
     rows.forEach((r) => {
       if (r.b === 'good') return;
-      if (r.key.startsWith('Largest')) nextSteps.push('Speed up your Largest Contentful Paint: compress and correctly size the hero image, preload it, and serve modern formats (WebP/AVIF).');
-      if (r.key.startsWith('Cumulative')) nextSteps.push('Kill the layout shift: set explicit width/height on images and embeds, and reserve space for anything that loads late (ads, banners, fonts).');
-      if (r.key.startsWith('Total')) nextSteps.push('Cut blocking time: defer non-critical JavaScript and remove unused scripts so the page responds to taps sooner.');
-      if (r.key.startsWith('First')) nextSteps.push('Improve first paint: reduce render-blocking CSS/JS and lean on server or edge caching.');
+      if (r.tech === 'lcp') nextSteps.push('Make your main content appear sooner: compress and correctly size your hero image, load it first, and use modern formats (WebP/AVIF).');
+      if (r.tech === 'cls') nextSteps.push('Stop the page jumping: give every image and embed a fixed width and height, and reserve space for anything that loads late (banners, fonts).');
+      if (r.tech === 'tbt') nextSteps.push('Make it respond faster to taps: defer or remove the heavy scripts that freeze the page while it loads.');
+      if (r.tech === 'fcp') nextSteps.push('Show the first content sooner: trim render-blocking code and turn on caching so the blank screen clears faster.');
     });
-    if (!nextSteps.length) nextSteps.push('Your vitals are healthy: protect them by keeping third-party scripts and large images in check as the site grows.');
+    if (!nextSteps.length) nextSteps.push('Your speed is healthy: keep it that way by watching image sizes and third-party scripts as the site grows.');
 
     const bodyText = `Hi,\n\nYour Live Core Web Vitals report for ${psi.finalUrl} (mobile), measured just now by Google PageSpeed Insights:\n\nPerformance score: ${psi.score}/100\n${interpretation}\n\nWhat we measured:\n${factors.map((f) => `• ${f.name}: ${f.found} [VERIFIED LIVE]`).join('\n')}\n\nYour next steps:\n${nextSteps.map((s, i) => `${i + 1}. ${s}`).join('\n')}\n\nReply to this email or grab a quote at clicknlikes.com for a full performance rebuild plan.\n\nBest,\nClick.n.likes\nbusiness@clicknlikes.com`;
     const bodyHtml = buildReportEmailHtml({
@@ -122,31 +127,38 @@ export default function SpeedCheck({ toolsHref }) {
     const { psi, rows, score } = result;
     return (
       <div className="rounded-2xl border border-teal/40 bg-white p-6 shadow-[0_18px_44px_rgba(26,43,74,0.10)] sm:p-8">
-        <div className="flex flex-wrap items-center gap-3">
-          <span className="rounded-full bg-teal/10 px-3 py-1 text-xs font-semibold text-teal-dark">✅ Measured live just now</span>
-          <span className="text-xs font-semibold text-teal-dark">Google PageSpeed Insights · mobile</span>
+        <span className="rounded-full bg-teal/10 px-3 py-1 text-xs font-semibold text-teal-dark">✅ Measured live just now · mobile</span>
+        <div className="mt-4 flex items-end gap-4">
+          <div>
+            <div className="flex items-baseline gap-2">
+              <span className="font-display text-5xl font-bold tabular-nums" style={{ color: scoreColor(score) }}>{score}</span>
+              <span className="text-sm text-navy/55">/100 speed score</span>
+            </div>
+            <p className="mt-1 text-sm font-semibold" style={{ color: scoreColor(score) }}>{verdictWord(score)}</p>
+          </div>
         </div>
-        <div className="mt-4 flex items-baseline gap-2">
-          <span className="font-display text-5xl font-bold tabular-nums" style={{ color: scoreColor(score) }}>{score}</span>
-          <span className="text-sm text-navy/55">/100 mobile performance</span>
-        </div>
-        <ul className="mt-5 space-y-2.5">
+        <ul className="mt-5 space-y-3.5">
           {rows.map((r) => (
-            <li key={r.key} className="flex items-center gap-3 border-b border-navy/5 pb-2.5 text-sm">
-              <span className="font-medium text-navy">{r.key}</span>
-              <span className="ml-auto tabular-nums text-navy/70">{r.v}</span>
-              <span className="w-24 text-right text-xs font-semibold" style={{ color: BAND[r.b].fg }}>{BAND[r.b].label}</span>
+            <li key={r.label} className="flex items-start gap-3 border-b border-navy/5 pb-3.5">
+              <div className="min-w-0">
+                <p className="text-sm font-semibold text-navy">{r.label}</p>
+                <p className="mt-0.5 text-xs leading-relaxed text-navy/55">{r.sub}</p>
+              </div>
+              <div className="ml-auto shrink-0 pl-2 text-right">
+                <div className="font-display text-sm font-bold tabular-nums text-navy">{r.v}</div>
+                <div className="text-xs font-semibold" style={{ color: BAND[r.b].fg }}>{BAND[r.b].label}</div>
+              </div>
             </li>
           ))}
         </ul>
         {psi.hasField && (
-          <p className="mt-3 rounded-lg bg-teal/[0.06] px-3 py-2 text-xs text-navy/70">
-            Real Chrome users on this URL are rated <b className="text-teal-dark">{psi.fieldOverall}</b> by Google (CrUX field data), not just a lab test.
+          <p className="mt-4 rounded-lg bg-teal/[0.06] px-3 py-2 text-xs text-navy/70">
+            And this isn’t just a lab test: real people loading your page right now experience it as <b className="text-teal-dark">{plainField(psi.fieldOverall)}</b>.
           </p>
         )}
         <p className="mt-4 text-xs text-teal-dark">✓ Your full report was emailed to {email}.</p>
-        <p className="mt-1 text-xs text-navy/60">
-          Every number above was measured live by Google, nothing self-reported.{' '}
+        <p className="mt-1 text-xs text-navy/55">
+          Measured live on your real page, nothing self-reported.{' '}
           <a href={toolsHref} className="text-teal-dark underline">Run the on-page health scan too →</a>
         </p>
       </div>
