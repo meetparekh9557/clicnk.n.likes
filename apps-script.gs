@@ -82,6 +82,7 @@ function doGet(e){
   if(p.action === 'analyze' && p.url)        out = analyzePage(p.url);
   else if(p.action === 'pagespeed' && p.url) out = pageSpeed_(p.url, p.strategy);
   else if(p.action === 'screenshot' && p.url)out = screenshot_(p.url);
+  else if(p.action === 'searchconsole')      out = searchConsole_(p.token, p.days);
   else                                        out = {ok:false, reason:'bad_request'};
   return ContentService.createTextOutput(JSON.stringify(out))
     .setMimeType(ContentService.MimeType.JSON);
@@ -167,6 +168,89 @@ function screenshot_(url){
     bumpDailyRenderCount_(props);
     return {ok:true, image:'data:image/png;base64,' + Utilities.base64Encode(resp.getBlob().getBytes()), w:1200, h:750};
   }catch(err){ return {ok:false, reason:'cf_error', detail:String(err).slice(0,160)}; }
+}
+
+/**
+ * Search Console "ranking opportunities" — the data feed behind the
+ * automated, data-driven blog. Because this script runs AS the Google
+ * account that owns the Search Console property, it can read the property's
+ * search-analytics directly with the script's own OAuth token — no service
+ * account, no key file, nothing secret in the public repo.
+ *
+ * It returns the queries where the site already ranks on the cusp of page
+ * one (average position ~4.5–20) with real impressions: the "so close"
+ * terms where one well-structured post can push a ranking up into the
+ * clicks. The weekly auto-blog reads this and writes to the biggest
+ * opportunity first, so content is aimed at what Google already sees the
+ * site for, not guesswork.
+ *
+ * Setup (one time, all on the Google side — see docs/RANKING-AUTOMATION.md):
+ *   1. Verify clicknlikes.com in Search Console under this same Google
+ *      account (a domain property, sc-domain:clicknlikes.com, is best).
+ *   2. Add the read-only Search Console scope to the manifest
+ *      (appsscript.json → "oauthScopes"):
+ *        "https://www.googleapis.com/auth/webmasters.readonly"
+ *      then run testSearchConsole once to approve the new permission.
+ *   3. Set two Script Properties:
+ *        SC_SITE   — the property URL (default sc-domain:clicknlikes.com)
+ *        SC_TOKEN  — any long random string; the caller must send the same
+ *                    value as &token=… so only our automation can read it.
+ * Until it's set up (or before Google has data), it returns {ok:false} and
+ * the blog falls back to the hand-written topic backlog — nothing breaks.
+ */
+function searchConsole_(token, days){
+  var props = PropertiesService.getScriptProperties();
+  var secret = props.getProperty('SC_TOKEN');
+  if(!secret)              return {ok:false, reason:'not_configured'};
+  if(token !== secret)     return {ok:false, reason:'unauthorized'};
+  var site = props.getProperty('SC_SITE') || 'sc-domain:clicknlikes.com';
+  var win = Math.min(Math.max(parseInt(days,10) || 28, 7), 90);
+  var end = new Date(Date.now() - 2*864e5);            // Search Console lags ~2 days
+  var start = new Date(end.getTime() - win*864e5);
+  var fmt = function(d){ return Utilities.formatDate(d, 'UTC', 'yyyy-MM-dd'); };
+  try{
+    var endpoint = 'https://www.googleapis.com/webmasters/v3/sites/'
+      + encodeURIComponent(site) + '/searchAnalytics/query';
+    var resp = UrlFetchApp.fetch(endpoint, {
+      method:'post', contentType:'application/json',
+      headers:{ Authorization:'Bearer ' + ScriptApp.getOAuthToken() },
+      payload: JSON.stringify({
+        startDate: fmt(start), endDate: fmt(end),
+        dimensions:['query','page'], rowLimit:2000, dataState:'all'
+      }),
+      muteHttpExceptions:true
+    });
+    if(resp.getResponseCode() !== 200)
+      return {ok:false, reason:'sc_http_' + resp.getResponseCode(), detail:String(resp.getContentText()).slice(0,180)};
+    var rows = (JSON.parse(resp.getContentText() || '{}').rows) || [];
+    // Keep the cusp-of-page-one queries with genuine demand, rank the
+    // biggest wins first (impressions weighted by how close to the top).
+    var opps = rows.filter(function(r){
+      var pos = r.position;
+      return pos >= 4.5 && pos <= 20.5 && (r.impressions || 0) >= 20;
+    }).map(function(r){
+      return {
+        query: r.keys[0], page: r.keys[1],
+        position: Math.round(r.position*10)/10,
+        impressions: r.impressions, clicks: r.clicks,
+        score: Math.round((r.impressions || 0) * (21 - r.position))
+      };
+    }).sort(function(a,b){ return b.score - a.score; }).slice(0, 25);
+    return {ok:true, site:site, window:{start:fmt(start), end:fmt(end)}, count:opps.length, opportunities:opps};
+  }catch(err){
+    return {ok:false, reason:'sc_error', detail:String(err).slice(0,180)};
+  }
+}
+
+/**
+ * ONE-TIME SETUP HELPER for the Search Console feed — run manually from the
+ * editor after adding the webmasters.readonly scope, to approve the new
+ * permission. Prints the top ranking opportunities as proof it can read the
+ * property. Temporarily set SC_TOKEN first (any value) so the guard passes.
+ */
+function testSearchConsole(){
+  var tok = PropertiesService.getScriptProperties().getProperty('SC_TOKEN') || '';
+  Logger.log(JSON.stringify(searchConsole_(tok, 28), null, 2));
 }
 
 function doPost(e){
