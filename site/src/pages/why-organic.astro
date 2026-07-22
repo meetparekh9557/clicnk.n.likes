@@ -1,0 +1,82 @@
+---
+// The data page. Holds the full "why organic" story that used to bloat the
+// homepage: the cited market figures and the interactive First-Page Cliff
+// lens. Linked from the homepage's compact stat strip ("See the full data")
+// so the homepage stays short while the detail lives on its own, indexable,
+// authority-building page. Every figure is an industry stat with a named
+// source (never a client result).
+import Base from '../layouts/Base.astro';
+import StatTile from '../components/StatTile.astro';
+import FirstPageCliff from '../components/islands/FirstPageCliff.jsx';
+import { marketStats } from '../data/market';
+import { breadcrumbSchema } from '../lib/seo';
+import { withBase } from '../lib/url';
+
+const jsonLd = breadcrumbSchema([
+  ['Home', '/'],
+  ['Why Organic', '/why-organic/'],
+]);
+---
+
+<Base
+  title="Why Organic Search Wins: The Data | Click.n.likes"
+  description="The industry data behind organic growth: 53% of trackable traffic starts with search, the first-page click cliff, and why SEO compounds. Every figure named and sourced."
+  jsonLd={jsonLd}
+>
+  <!-- Intro -->
+  <section class="mx-auto max-w-4xl px-[5vw] pt-16 pb-4 text-center lg:pt-20">
+    <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">The data</p>
+    <h1 class="reveal-mask mt-4 font-display text-[clamp(2rem,4.2vw,3rem)] leading-[1.08] font-bold text-navy">
+      <span class="mask-line"><span>Organic isn't a nice-to-have.</span></span>
+      <span class="mask-line" style="--d:120ms"><span>It's where your buyers already are.</span></span>
+    </h1>
+    <p class="reveal mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-navy/70" style="--d:220ms">
+      These are industry figures, not our own clients' numbers, and every one carries a named, checkable source. Taken
+      together, they are the whole reason we build the way we do: for where your customers actually search, decide and buy.
+    </p>
+  </section>
+
+  <!-- The headline figures -->
+  <section class="mx-auto max-w-6xl px-[5vw] py-12">
+    <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      {marketStats.map((s) => (
+        <StatTile value={s.value} label={s.label} source={s.source} class="reveal" />
+      ))}
+    </div>
+  </section>
+
+  <!-- The First-Page Cliff lens -->
+  <section class="border-y border-navy/10 bg-off">
+    <div class="mx-auto max-w-4xl px-[5vw] py-16">
+      <div class="mx-auto max-w-2xl text-center">
+        <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">The lens</p>
+        <h2 class="reveal mt-3 font-display text-[clamp(1.6rem,3vw,2.4rem)] leading-[1.12] font-bold text-navy" style="--d:80ms">
+          Why page one is the whole game
+        </h2>
+        <p class="reveal mt-3 text-lg text-navy/70" style="--d:140ms">
+          The first Google result takes more clicks than the next three combined. Tap a position to see exactly what it
+          wins you, and how much reaching #1 would multiply it.
+        </p>
+      </div>
+      <div class="reveal mt-10" style="--d:180ms">
+        <FirstPageCliff client:visible />
+      </div>
+    </div>
+  </section>
+
+  <!-- What it means -->
+  <section class="mx-auto max-w-3xl px-[5vw] py-16 text-center">
+    <h2 class="reveal font-display text-[clamp(1.6rem,3vw,2.2rem)] leading-[1.15] font-bold text-navy">
+      What this means for your business
+    </h2>
+    <p class="reveal mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-navy/70" style="--d:100ms">
+      If most of your buyers begin on search and the clicks collapse below the first result, then organic visibility is
+      not a marketing nicety, it is the front door. That is exactly what our
+      <a href={withBase('/services/seo/')} class="font-semibold text-teal-dark underline underline-offset-2 hover:text-navy">SEO</a>,
+      <a href={withBase('/services/ai-seo/')} class="font-semibold text-teal-dark underline underline-offset-2 hover:text-navy">AI search</a>
+      and <a href={withBase('/services/content-marketing/')} class="font-semibold text-teal-dark underline underline-offset-2 hover:text-navy">content</a>
+      work is built to earn, and you can start by running a free
+      <a href={withBase('/tools/')} class="font-semibold text-teal-dark underline underline-offset-2 hover:text-navy">live check of your own site</a>.
+    </p>
+  </section>
+</Base>

@@ -39,6 +39,7 @@ const socialCls =
     <div>
       <h2 class="mb-4 text-[13px] font-semibold tracking-[0.08em] text-white uppercase">Company</h2>
       {primaryNav.map((item) => <a href={withBase(item.href)} class={linkCls}>{item.title}</a>)}
+      <a href={withBase('/why-organic/')} class={linkCls}>Why Organic</a>
       {moreNav.map((item) => <a href={withBase(item.href)} class={linkCls}>{item.title}</a>)}
       <a href={withBase('/contact/')} class={linkCls}>Contact</a>
     </div>
