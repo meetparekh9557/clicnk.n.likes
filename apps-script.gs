@@ -76,6 +76,32 @@ function testJsRender(){
   }
 }
 
+/**
+ * DIAGNOSTIC for the AI-visibility tool — run this from the editor if the
+ * "Does AI name your business?" tool says the AI didn't answer. It prints
+ * which properties are set (never the key itself, only a safe prefix), the
+ * result our own function returns, and — crucially — Google's RAW error
+ * message, which tells you exactly what's wrong (invalid key, API not
+ * enabled, wrong model name, etc.).
+ */
+function testAiVisibility(){
+  var props = PropertiesService.getScriptProperties();
+  var key = props.getProperty('AI_KEY');
+  var provider = (props.getProperty('AI_PROVIDER') || 'gemini').toLowerCase();
+  var model = props.getProperty('AI_MODEL') || (provider === 'openai' ? 'gpt-4o-mini' : provider === 'gemini' ? 'gemini-2.0-flash' : 'claude-3-5-haiku-latest');
+  Logger.log('AI_KEY set: ' + (key ? 'yes (' + key.length + ' chars, starts "' + key.slice(0, 6) + '…")' : 'NO — not set'));
+  Logger.log('AI_PROVIDER: ' + provider + '  |  AI_MODEL: ' + model);
+  var result = aiVisibility_('Who are the best SEO agencies in Ahmedabad, India?', 'Click.n.likes');
+  Logger.log('Our result: ' + JSON.stringify(result).slice(0, 900));
+  if(provider === 'gemini' && key){
+    var resp = UrlFetchApp.fetch('https://generativelanguage.googleapis.com/v1beta/models/' + encodeURIComponent(model) + ':generateContent?key=' + encodeURIComponent(key), {
+      method:'post', contentType:'application/json',
+      payload: JSON.stringify({ contents:[{ parts:[{ text:'Say hello in three words.' }] }] }),
+      muteHttpExceptions:true });
+    Logger.log('Gemini RAW HTTP ' + resp.getResponseCode() + ': ' + resp.getContentText().slice(0, 700));
+  }
+}
+
 function doGet(e){
   var p = (e && e.parameter) || {};
   var out;
