@@ -9,6 +9,7 @@
 import { services } from '../data/site';
 import { serviceDetails } from '../data/services';
 import { articles } from '../data/articles';
+import { toolPages } from '../data/tools';
 
 // Must match `site` in astro.config.mjs. Kept as a plain constant so the
 // builders below work in static frontmatter without Astro.site plumbing.
@@ -150,8 +151,13 @@ export function sitemapEntries(): SitemapEntry[] {
     changefreq: 'monthly',
     priority: 0.6,
   }));
+  const toolDetailPages: SitemapEntry[] = toolPages.map((t) => ({
+    path: `/tools/${t.slug}/`,
+    changefreq: 'monthly',
+    priority: 0.7,
+  }));
   // services from site.ts and serviceDetails share slugs; use serviceDetails
   // (the render source) to stay 1:1 with generated pages.
   void services;
-  return [...staticPages, ...servicePages, ...articlePages];
+  return [...staticPages, ...servicePages, ...articlePages, ...toolDetailPages];
 }
