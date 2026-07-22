@@ -22,15 +22,18 @@ repo. Keys live only in the Apps Script project, as **Script Properties**.
 |---|---|---|---|
 | `PSI_KEY` | Live Speed & Core Web Vitals | Optional (works keyless at low volume; a key raises the quota) | Google Cloud Console → enable **PageSpeed Insights API** → create API key |
 | `CF_ACCOUNT_ID`, `CF_BROWSER_TOKEN` | First-impression snapshot **and** JS-page rendering in the health scan | Already in use | Cloudflare dashboard → Browser Rendering |
-| `AI_KEY` | "Does AI name your business?" | Required for that tool | **Free: Google Gemini** — get a key at [aistudio.google.com](https://aistudio.google.com) (free tier). Default `AI_PROVIDER` is now `gemini` (`AI_MODEL` defaults to `gemini-2.0-flash`). Also supports `openai` / `anthropic` (paid) if you prefer |
-| `PLACES_KEY` | Your Google reputation (rating + reviews) | Required for that tool | Google Cloud Console → enable **Places API** → API key. **Effectively free within Google's $200/month credit** (~6,000 lookups), but a billing account/card must be on file |
-| `SERP_KEY` | Where do you actually rank? | Required for that tool | **serper.dev** — 2,500 free searches on signup, then paid (set `SERP_PROVIDER` = `serper`). Or SerpApi (100 free/month). No sustainable card-free option |
+| `AI_KEY` | "Does AI name your business?" | Required for that tool | **Free: Google Gemini** — get a key at [aistudio.google.com](https://aistudio.google.com) (free tier). Default `AI_PROVIDER` is `gemini` (`AI_MODEL` defaults to `gemini-2.0-flash`). Also supports `openai` / `anthropic` (paid) if you prefer |
+
+The paid-only Reputation (Google Places) and Rank (SERP) tools were removed:
+they can't return real data without a billing card / paid provider, so they
+were dropped rather than shipped as dead "coming soon" cards. The backend can
+grow them back later if that changes.
 
 ### Free vs paid, at a glance
 
-- **Free, no card:** Speed (PageSpeed), Snapshot (your existing Cloudflare keys), and **AI visibility via Gemini** (Google AI Studio free tier).
-- **Free within a credit, card required:** Reputation (Google Places, $200/month credit covers normal volume).
-- **Free at low volume, then paid:** Rank (serper.dev's 2,500 free searches, or SerpApi 100/month). Scraping Google directly is against its terms and gets blocked — not a real option.
+Every live tool is now **free**: Speed (PageSpeed), Snapshot (your existing
+Cloudflare keys), and **AI visibility via Gemini** (Google AI Studio free tier).
+No card required for any of them.
 
 ## Honest-degradation behaviour
 
@@ -46,6 +49,6 @@ redeployed.
 1. **PageSpeed** — add `PSI_KEY`, paste the latest `apps-script.gs`, redeploy.
    Works immediately, no billing.
 2. **Snapshot** — already works (reuses the existing Cloudflare keys).
-3. **AI visibility** — add `AI_KEY` (+ `AI_PROVIDER`) when ready.
-4. **Reputation** — add `PLACES_KEY` once Places API billing is enabled.
-5. **Rank** — pick/fund a SERP provider, add `SERP_KEY`.
+3. **AI visibility** — add `AI_KEY` (a free Google AI Studio / Gemini key).
+   `AI_PROVIDER` defaults to `gemini`, so the key alone is enough. Re-paste
+   `apps-script.gs` and redeploy.

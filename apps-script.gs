@@ -83,8 +83,6 @@ function doGet(e){
   else if(p.action === 'pagespeed' && p.url) out = pageSpeed_(p.url, p.strategy);
   else if(p.action === 'screenshot' && p.url)out = screenshot_(p.url);
   else if(p.action === 'aivisibility' && p.q)out = aiVisibility_(p.q, p.brand);
-  else if(p.action === 'places' && p.q)      out = placesLookup_(p.q);
-  else if(p.action === 'serp' && p.q)        out = serpRank_(p.q, p.domain, p.location);
   else                                        out = {ok:false, reason:'bad_request'};
   return ContentService.createTextOutput(JSON.stringify(out))
     .setMimeType(ContentService.MimeType.JSON);
@@ -219,59 +217,6 @@ function aiVisibility_(q, brand){
     var mentioned = brand ? (answer.toLowerCase().indexOf(brand.toLowerCase()) !== -1) : null;
     return {ok:true, answer:answer.slice(0,4000), mentioned:mentioned, model:model, provider:provider};
   }catch(err){ return {ok:false, reason:'ai_error', detail:String(err).slice(0,160)}; }
-}
-
-/**
- * Live Google Business Profile facts via the Places API Text Search
- * (real rating + review count). Reads PLACES_KEY from Script Properties;
- * returns {ok:false, reason:'not_configured'} until the key + billing are
- * in place.
- */
-function placesLookup_(q){
-  q = String(q||'').slice(0,200);
-  var key = PropertiesService.getScriptProperties().getProperty('PLACES_KEY');
-  if(!key) return {ok:false, reason:'not_configured'};
-  try{
-    var url = 'https://maps.googleapis.com/maps/api/place/textsearch/json?query=' + encodeURIComponent(q) + '&key=' + encodeURIComponent(key);
-    var resp = UrlFetchApp.fetch(url, {muteHttpExceptions:true});
-    if(resp.getResponseCode()!==200) return {ok:false, reason:'places_http_' + resp.getResponseCode()};
-    var data = JSON.parse(resp.getContentText()||'{}');
-    if(data.status !== 'OK' || !data.results || !data.results.length) return {ok:false, reason:'places_none_' + (data.status||'')};
-    var r = data.results[0];
-    return {ok:true, place:{ name:r.name||'', address:r.formatted_address||'', rating:(typeof r.rating==='number'?r.rating:null), reviews:(typeof r.user_ratings_total==='number'?r.user_ratings_total:null), placeId:r.place_id||'' }};
-  }catch(err){ return {ok:false, reason:'places_error', detail:String(err).slice(0,160)}; }
-}
-
-/**
- * Real Google SERP position for a keyword via a third-party SERP provider
- * (default: serper.dev). Reads SERP_KEY (+ optional SERP_PROVIDER) from
- * Script Properties; returns {ok:false, reason:'not_configured'} until a
- * provider key is set and funded.
- */
-function serpRank_(q, domain, location){
-  q = String(q||'').slice(0,200);
-  domain = String(domain||'').replace(/^https?:\/\//i,'').replace(/\/.*$/,'').replace(/^www\./i,'').toLowerCase();
-  var props = PropertiesService.getScriptProperties();
-  var key = props.getProperty('SERP_KEY');
-  if(!key) return {ok:false, reason:'not_configured'};
-  var provider = (props.getProperty('SERP_PROVIDER')||'serper').toLowerCase();
-  try{
-    if(provider === 'serper'){
-      var resp = UrlFetchApp.fetch('https://google.serper.dev/search', {
-        method:'post', contentType:'application/json', headers:{ 'X-API-KEY': key },
-        payload: JSON.stringify({ q:q, gl:'in', location: location||'India', num:50 }),
-        muteHttpExceptions:true });
-      if(resp.getResponseCode()!==200) return {ok:false, reason:'serp_http_' + resp.getResponseCode()};
-      var data = JSON.parse(resp.getContentText()||'{}');
-      var org = data.organic || [], rank = null, found = null;
-      for(var i=0;i<org.length;i++){
-        var link = String(org[i].link||'').toLowerCase();
-        if(domain && link.indexOf(domain) !== -1){ rank = org[i].position || (i+1); found = org[i].link; break; }
-      }
-      return {ok:true, query:q, domain:domain, rank:rank, foundUrl:found, checked:org.length};
-    }
-    return {ok:false, reason:'serp_provider_unsupported'};
-  }catch(err){ return {ok:false, reason:'serp_error', detail:String(err).slice(0,160)}; }
 }
 
 function doPost(e){
