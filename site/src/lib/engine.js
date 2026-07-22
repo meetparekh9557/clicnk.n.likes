@@ -66,6 +66,58 @@ export async function fetchPageFacts(rawUrl) {
   }
 }
 
+/* Generic GET to the Apps Script for the live-data tool actions
+   (pagespeed, screenshot, aivisibility, places, serp). Each backend
+   handler returns {ok:true, <payload>} or {ok:false, reason}; a reason of
+   'not_configured' means the relevant API key is not yet set in Script
+   Properties, so the caller can show an honest "verified check coming"
+   state rather than a broken error. Never throws. */
+async function callTool(query) {
+  if (!autoEmailReady) return { available: false, reason: 'no_backend' };
+  try {
+    const res = await fetch(SHEET_WEBHOOK_URL + query);
+    if (!res.ok) return { available: false, reason: 'http_' + res.status };
+    const data = await res.json();
+    if (!data || !data.ok) return { available: false, reason: (data && data.reason) || 'failed' };
+    return Object.assign({ available: true }, data);
+  } catch (e) {
+    return { available: false, reason: 'network_error' };
+  }
+}
+
+/* Live Core Web Vitals (Google PageSpeed Insights) for one URL. */
+export async function fetchPageSpeed(rawUrl, strategy) {
+  const target = (rawUrl || '').trim();
+  if (!target) return { available: false, reason: 'no_url' };
+  const r = await callTool('?action=pagespeed&url=' + encodeURIComponent(target) + '&strategy=' + (strategy === 'desktop' ? 'desktop' : 'mobile'));
+  return r.available ? Object.assign({ available: true }, r.psi) : r;
+}
+
+/* Above-the-fold screenshot (Cloudflare Browser Rendering) for one URL. */
+export async function fetchScreenshot(rawUrl) {
+  const target = (rawUrl || '').trim();
+  if (!target) return { available: false, reason: 'no_url' };
+  return callTool('?action=screenshot&url=' + encodeURIComponent(target));
+}
+
+/* AI-search visibility: ask a real LLM `q`, report whether `brand` was named. */
+export async function fetchAiVisibility(q, brand) {
+  if (!q || !q.trim()) return { available: false, reason: 'no_query' };
+  return callTool('?action=aivisibility&q=' + encodeURIComponent(q) + '&brand=' + encodeURIComponent(brand || ''));
+}
+
+/* Live Google Business Profile facts (Places API) for a business query. */
+export async function fetchPlaces(q) {
+  if (!q || !q.trim()) return { available: false, reason: 'no_query' };
+  return callTool('?action=places&q=' + encodeURIComponent(q));
+}
+
+/* Real Google SERP position for a keyword + domain (third-party provider). */
+export async function fetchSerpRank(q, domain, location) {
+  if (!q || !q.trim()) return { available: false, reason: 'no_query' };
+  return callTool('?action=serp&q=' + encodeURIComponent(q) + '&domain=' + encodeURIComponent(domain || '') + '&location=' + encodeURIComponent(location || ''));
+}
+
 /* Escapes user-typed text before it's interpolated into HTML strings. */
 export function escapeHtml(str) {
   return String(str == null ? '' : str).replace(/[&<>"']/g, (c) => ({

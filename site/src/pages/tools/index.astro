@@ -10,6 +10,7 @@ import Base from '../../layouts/Base.astro';
 import Card from '../../components/Card.astro';
 import InlineCta from '../../components/InlineCta.astro';
 import HeroScan from '../../components/islands/HeroScan.jsx';
+import SpeedCheck from '../../components/islands/SpeedCheck.jsx';
 import FunnelRoiCalculator from '../../components/islands/FunnelRoiCalculator.jsx';
 import CompetitorThreat from '../../components/islands/CompetitorThreat.jsx';
 import { withBase } from '../../lib/url';
@@ -60,6 +61,24 @@ const jsonLd = breadcrumbSchema([
     </p>
     <div class="reveal mx-auto mt-2 max-w-2xl text-left" style="--d:320ms">
       <HeroScan client:load toolsHref={withBase('/tools/')} />
+    </div>
+  </section>
+
+  <!-- Live Speed & Core Web Vitals (real Google PageSpeed Insights) -->
+  <section id="speed" class="scroll-mt-28 border-t border-navy/10 bg-off">
+    <div class="mx-auto max-w-3xl px-[5vw] py-16">
+      <div class="mx-auto max-w-2xl text-center">
+        <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">Live measurement</p>
+        <h2 class="reveal mt-3 font-display text-[clamp(1.6rem,3vw,2.4rem)] leading-[1.12] font-bold text-navy" style="--d:80ms">
+          Live Speed &amp; Core Web Vitals
+        </h2>
+        <p class="reveal mt-3 text-lg text-navy/70" style="--d:140ms">
+          Not a questionnaire: we run your live page through Google PageSpeed Insights and report your real Core Web Vitals, the exact speed numbers Google uses to rank you.
+        </p>
+      </div>
+      <div class="reveal mx-auto mt-10 max-w-2xl" style="--d:180ms">
+        <SpeedCheck client:visible toolsHref={withBase('/tools/')} />
+      </div>
     </div>
   </section>
 
