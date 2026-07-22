@@ -10,15 +10,33 @@
 // stay in sync through localStorage + a 'cnl:currency' window event.
 
 export const CURRENCIES = {
-  INR: { code: 'INR', locale: 'en-IN', label: 'India (₹ INR)' },
-  USD: { code: 'USD', locale: 'en-US', label: 'United States ($ USD)' },
-  EUR: { code: 'EUR', locale: 'en-IE', label: 'Europe (€ EUR)' },
-  GBP: { code: 'GBP', locale: 'en-GB', label: 'United Kingdom (£ GBP)' },
-  AED: { code: 'AED', locale: 'en-AE', label: 'UAE (AED)' },
-  CAD: { code: 'CAD', locale: 'en-CA', label: 'Canada (CA$ CAD)' },
-  AUD: { code: 'AUD', locale: 'en-AU', label: 'Australia (A$ AUD)' },
-  SGD: { code: 'SGD', locale: 'en-SG', label: 'Singapore (S$ SGD)' },
+  INR: { code: 'INR', locale: 'en-IN', label: 'India (₹ INR)', short: '₹ INR' },
+  USD: { code: 'USD', locale: 'en-US', label: 'United States ($ USD)', short: '$ USD' },
+  EUR: { code: 'EUR', locale: 'en-IE', label: 'Europe (€ EUR)', short: '€ EUR' },
+  GBP: { code: 'GBP', locale: 'en-GB', label: 'United Kingdom (£ GBP)', short: '£ GBP' },
+  AED: { code: 'AED', locale: 'en-AE', label: 'UAE (Dh AED)', short: 'Dh AED' },
+  CAD: { code: 'CAD', locale: 'en-CA', label: 'Canada (CA$ CAD)', short: 'CA$ CAD' },
+  AUD: { code: 'AUD', locale: 'en-AU', label: 'Australia (A$ AUD)', short: 'A$ AUD' },
+  SGD: { code: 'SGD', locale: 'en-SG', label: 'Singapore (S$ SGD)', short: 'S$ SGD' },
 };
+
+// Curated, hand-set price points per market, keyed by the INR base amount of
+// each tier. These are deliberate clean numbers (£399, not £394.12) so the
+// pricing reads as intentional in every currency, not machine-converted. Any
+// currency NOT listed here falls back to a live-rate conversion (approx). The
+// contract is always billed in the INR base; local display is a convenience.
+export const CURATED = {
+  16000:  { INR: '₹16,000',   USD: '$190',   EUR: '€179',   GBP: '£149',   AED: 'Dh 699',   CAD: 'CA$259',   AUD: 'A$289',   SGD: 'S$259' },
+  42000:  { INR: '₹42,000',   USD: '$500',   EUR: '€469',   GBP: '£399',   AED: 'Dh 1,899', CAD: 'CA$699',   AUD: 'A$769',   SGD: 'S$679' },
+  150000: { INR: '₹1,50,000', USD: '$1,790', EUR: '€1,649', GBP: '£1,399', AED: 'Dh 6,599', CAD: 'CA$2,449', AUD: 'A$2,699', SGD: 'S$2,399' },
+};
+
+// The curated clean price string for a tier amount in a currency, or null if
+// this amount/currency isn't curated (caller then converts at the live rate).
+export function curatedPrice(inr, cur) {
+  const row = CURATED[inr];
+  return row && row[cur] ? row[cur] : null;
+}
 
 const LS_CUR = 'cnl_currency';
 const LS_FX = 'cnl_fxrates';
