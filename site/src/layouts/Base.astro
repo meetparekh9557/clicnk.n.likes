@@ -70,7 +70,9 @@ const structuredData = [
     <meta name="description" content={description} />
     {isPreview && <meta name="robots" content="noindex,nofollow" />}
     <link rel="canonical" href={canonicalURL} />
-    <link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
+    <link rel="icon" type="image/png" sizes="32x32" href={withBase('/favicon-32.png')} />
+    <link rel="icon" type="image/png" sizes="512x512" href={withBase('/favicon.png')} />
+    <link rel="apple-touch-icon" href={withBase('/apple-touch-icon.png')} />
     <!-- Open Graph (Facebook, LinkedIn, WhatsApp) -->
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
