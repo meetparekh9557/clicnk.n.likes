@@ -11,7 +11,9 @@ import QuoteCalculator from '../components/islands/QuoteCalculator.jsx';
 import CustomQuote from '../components/islands/CustomQuote.jsx';
 import { withBase } from '../lib/url';
 import { abs, breadcrumbSchema } from '../lib/seo';
+import { CURRENCIES } from '../lib/currency.js';
 import Check from '@lucide/astro/icons/check';
+import ChevronDown from '@lucide/astro/icons/chevron-down';
 
 const tiers = [
   {
@@ -124,12 +126,38 @@ const jsonLd = [
 
   <!-- Tiers -->
   <section class="mx-auto max-w-6xl px-[5vw] pb-6">
-    <!-- Currency switcher: auto-detects the visitor's currency and converts
-         the INR pricing at that day's live rate. Progressive enhancement -
-         with no JS it simply shows the honest INR figures. -->
-    <div class="reveal mb-6 flex flex-wrap items-center gap-x-3 gap-y-1.5">
-      <label for="cnlCurrency" class="text-[13px] font-semibold text-navy/70">Show prices in</label>
-      <select id="cnlCurrency" class="rounded-full border-[1.5px] border-navy/15 bg-white px-3.5 py-1.5 text-[13px] font-semibold text-navy outline-none focus:border-teal"></select>
+    <!-- Currency switcher: a rounded pill dropdown that auto-detects the
+         visitor's currency and shows curated, hand-set clean prices per
+         market (with a live-rate fallback for any other currency). Prices
+         are display only; the contract is billed in the INR base. With no
+         JS the honest INR figures render as authored. -->
+    <div class="reveal relative z-30 mb-6 flex flex-wrap items-center gap-x-3 gap-y-1.5">
+      <span class="text-[13px] font-semibold text-navy/70">Show prices in</span>
+      <div class="relative" id="cnlCurWrap">
+        <button
+          type="button"
+          id="cnlCurBtn"
+          aria-haspopup="listbox"
+          aria-expanded="false"
+          class="inline-flex min-w-[130px] items-center justify-between gap-2 rounded-full border-[1.5px] border-navy/15 bg-teal/10 px-4 py-2 text-[13.5px] font-semibold text-navy transition-colors hover:border-teal focus-visible:outline focus-visible:outline-2 focus-visible:outline-teal"
+        >
+          <span id="cnlCurLabel">₹ INR</span>
+          <ChevronDown size={15} stroke-width={2.4} aria-hidden="true" class="cnl-chev text-navy/50 transition-transform duration-300" />
+        </button>
+        <ul
+          id="cnlCurMenu"
+          role="listbox"
+          class="invisible absolute top-full right-0 z-30 mt-2 min-w-[196px] origin-top-right -translate-y-1 rounded-2xl border border-navy/10 bg-white p-1.5 opacity-0 shadow-[0_18px_44px_rgba(26,43,74,0.16)] transition-all duration-200 ease-out-quart"
+        >
+          {Object.entries(CURRENCIES).map(([code, c]) => (
+            <li
+              role="option"
+              data-cur={code}
+              class="cursor-pointer rounded-full px-4 py-2.5 text-[13.5px] font-medium text-navy/75 transition-colors hover:bg-teal/10 hover:text-teal-dark aria-selected:bg-teal/10 aria-selected:font-semibold aria-selected:text-teal-dark"
+            >{c.short}</li>
+          ))}
+        </ul>
+      </div>
       <span id="cnlFxNote" class="text-[12px] text-navy/70"></span>
     </div>
     <div class="grid gap-5 lg:grid-cols-3 lg:items-start">
@@ -256,42 +284,62 @@ const jsonLd = [
   </section>
 
   <script>
-    import { CURRENCIES, detectCurrency, getCurrency, setCurrency, loadRates, formatMoney, onCurrency } from '../lib/currency.js';
+    import { CURRENCIES, curatedPrice, detectCurrency, getCurrency, setCurrency, loadRates, formatMoney, onCurrency } from '../lib/currency.js';
 
     function initCurrency() {
-      const select = document.getElementById('cnlCurrency');
+      const wrap = document.getElementById('cnlCurWrap');
+      const btn = document.getElementById('cnlCurBtn');
+      const menu = document.getElementById('cnlCurMenu');
+      const label = document.getElementById('cnlCurLabel');
       const note = document.getElementById('cnlFxNote');
-      if (!select) return;
-      if (!select.options.length) {
-        for (const [code, c] of Object.entries(CURRENCIES)) {
-          const o = document.createElement('option');
-          o.value = code;
-          o.textContent = c.label;
-          select.appendChild(o);
-        }
-      }
+      if (!wrap || !btn || !menu) return;
+      // Guard against double-binding: the inline script runs initCurrency()
+      // directly AND on astro:page-load, which fires on first load too. Two
+      // click handlers would toggle the menu twice and cancel each other out.
+      if (wrap.dataset.curBound) return;
+      wrap.dataset.curBound = '1';
+      const opts = Array.from(menu.querySelectorAll('li'));
+      const chev = btn.querySelector('.cnl-chev');
+      // Live rates only matter as a fallback for a currency outside the
+      // curated set; curated tiers never wait on them.
       let fx = { rates: null, live: false };
+
+      const shortOf = (cur) => (CURRENCIES[cur] && CURRENCIES[cur].short) || cur;
+
+      const setOpen = (open) => {
+        menu.classList.toggle('invisible', !open);
+        menu.classList.toggle('opacity-0', !open);
+        menu.classList.toggle('-translate-y-1', !open);
+        menu.classList.toggle('opacity-100', open);
+        menu.classList.toggle('translate-y-0', open);
+        btn.setAttribute('aria-expanded', String(open));
+        if (chev) chev.classList.toggle('rotate-180', open);
+      };
 
       const apply = () => {
         const cur = getCurrency();
-        select.value = cur;
+        if (label) label.textContent = shortOf(cur);
+        opts.forEach((o) => o.setAttribute('aria-selected', String(o.getAttribute('data-cur') === cur)));
         document.querySelectorAll('.cnl-price').forEach((el) => {
           const inr = parseInt(el.getAttribute('data-inr'), 10);
-          if (!Number.isNaN(inr)) el.textContent = formatMoney(inr, cur, fx.rates);
+          if (Number.isNaN(inr)) return;
+          el.textContent = curatedPrice(inr, cur) || formatMoney(inr, cur, fx.rates);
         });
         if (note) {
           if (cur === 'INR') note.textContent = 'In Indian Rupees. Switch if you are elsewhere.';
-          else if (fx.rates && fx.rates[cur]) note.textContent = `Shown in your currency at today's rate${fx.live ? '' : ' (last available)'}, confirmed in the written proposal.`;
-          else note.textContent = 'Live rate unavailable, showing our base INR pricing.';
+          else note.textContent = 'Shown in your local currency, billed in INR and confirmed in the written proposal.';
         }
       };
 
       const cur0 = detectCurrency();
       window.__cnlCur = cur0;
-      select.value = cur0;
       apply();
       loadRates().then((r) => { fx = r; apply(); });
-      select.addEventListener('change', () => setCurrency(select.value));
+
+      btn.addEventListener('click', (e) => { e.stopPropagation(); setOpen(btn.getAttribute('aria-expanded') !== 'true'); });
+      opts.forEach((o) => o.addEventListener('click', () => { setCurrency(o.getAttribute('data-cur')); setOpen(false); }));
+      document.addEventListener('click', () => setOpen(false));
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setOpen(false); });
       onCurrency(() => apply());
     }
 
