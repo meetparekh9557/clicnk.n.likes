@@ -1,25 +1,23 @@
-// Plan builder. Each service is set at a tier (a base package price), then
-// fine-tuned with add-on sliders for that service's deliverables. Picking two
-// or more services applies a flat 15% multi-service discount. A project
-// duration then decides free months: 1 or 3 months pay in full, 6 months pay
-// for 5 (1 free), 12 months pay for 10 (2 free). Website is a one-time build
-// (from a 5-page base) and sits outside the duration; Paid is a monthly
-// management fee with ad budget billed to the client directly. Prices are
-// authored in INR and shown in the visitor's currency; the emailed quote is
-// documented in the INR the work is billed in.
+// Plan builder. Each service is set at a tier (Starter / Growth / Pro +
+// Custom) — the tier sets both the base package price AND the baseline volume
+// each deliverable includes (benchmarked against real agency pricing). Sliders
+// let a client add above their tier's baseline at the honest per-unit rate.
+// Two or more services take a flat 15% discount; project duration decides free
+// months (1/3 = full, 6 = pay 5, 12 = pay 10). Website is a one-time build
+// (from a 5-page base) outside the duration; Paid is a monthly management fee
+// with ad spend billed to the client directly. Prices are authored in INR and
+// shown in the visitor's currency; the emailed quote is documented in INR.
 import { useState, useEffect } from 'react';
 import { OWNER_EMAIL, autoEmailReady, sendFromClicknlikes, buildReportEmailHtml, fact } from '../../lib/engine';
 import { getCurrency, loadRates, onCurrency, formatMoney } from '../../lib/currency.js';
 import { useCountUp } from '../../lib/useCountUp.js';
 
-// Tier = the base package price per service (monthly, or one-time for a
-// website build). Custom drops out of the number and is quoted separately.
+// 3 tiers + Custom (benchmarked to the market — see docs). Each sets the base
+// monthly package price (one-time for a website); Custom is quoted separately.
 const TIERS = [
   { id: 'starter', name: 'Starter', price: 16000 },
-  { id: 'growth', name: 'Growth', price: 33000 },
-  { id: 'pro', name: 'Pro', price: 50000 },
-  { id: 'scale', name: 'Scale', price: 75000 },
-  { id: 'max', name: 'Max', price: 124000 },
+  { id: 'growth', name: 'Growth', price: 50000 },
+  { id: 'pro', name: 'Pro', price: 124000 },
   { id: 'custom', name: 'Custom', price: null },
 ];
 const tierById = (id) => TIERS.find((t) => t.id === id) || TIERS[0];
@@ -42,39 +40,42 @@ const SERVICES = {
   paid: { label: 'Paid Campaigns', kind: 'monthly' },
 };
 
-// Add-on sliders. Quantity is the TOTAL of each deliverable; `included` is
-// what the tier base already covers, so extra = max(0, qty - included).
+// Add-on sliders. `included` is per tier — the baseline each tier's price
+// already covers, benchmarked to real agency inclusions. extra = max(0, qty -
+// included at the active tier), charged at the per-unit rate.
 const UNITS = {
   seo: [
-    { key: 'keywords', label: 'Keywords tracked & optimised', type: 'flat', price: 500, included: 10, max: 160, step: 5 },
-    { key: 'blogs', label: 'SEO-supporting blog posts', type: 'wordblog', price: 1500, includedWords: 2000, overWordRate: 0.7, included: 4, max: 20, step: 1 },
+    { key: 'keywords', label: 'Keywords tracked & optimised', type: 'flat', price: 500, included: { starter: 15, growth: 30, pro: 50 }, max: 200, step: 5 },
+    { key: 'blogs', label: 'SEO-supporting blog posts', type: 'wordblog', price: 1500, includedWords: 2000, overWordRate: 0.7, included: { starter: 4, growth: 8, pro: 12 }, max: 30, step: 1 },
+    { key: 'guestposts', label: 'Guest posts / backlinks', type: 'flat', price: 3500, included: { starter: 1, growth: 3, pro: 6 }, max: 20, step: 1 },
   ],
   localseo: [
-    { key: 'gbpposts', label: 'Google Business Profile posts', type: 'flat', price: 800, included: 8, max: 38, step: 1 },
-    { key: 'citations', label: 'Local citations / backlinks', type: 'flat', price: 1000, included: 3, max: 23, step: 1 },
+    { key: 'gbpposts', label: 'Google Business Profile posts', type: 'flat', price: 800, included: { starter: 8, growth: 16, pro: 30 }, max: 60, step: 1 },
+    { key: 'citations', label: 'Local citations / backlinks', type: 'flat', price: 1000, included: { starter: 4, growth: 10, pro: 20 }, max: 40, step: 1 },
   ],
   aiseo: [
-    { key: 'aipages', label: 'Pages rewritten answer-first for AI', type: 'flat', price: 2000, included: 3, max: 23, step: 1 },
-    { key: 'schema', label: 'Schema / structured-data pages', type: 'flat', price: 1500, included: 2, max: 22, step: 1 },
+    { key: 'aipages', label: 'Pages made answer-first for AI', type: 'flat', price: 2000, included: { starter: 3, growth: 8, pro: 15 }, max: 30, step: 1 },
+    { key: 'schema', label: 'Schema / structured-data pages', type: 'flat', price: 1500, included: { starter: 2, growth: 6, pro: 12 }, max: 30, step: 1 },
   ],
   social: [
-    { key: 'posts', label: 'Feed posts', type: 'flat', price: 700, included: 6, max: 66, step: 1 },
-    { key: 'reels', label: 'Reels', type: 'flat', price: 1500, included: 6, max: 36, step: 1 },
+    { key: 'posts', label: 'Social posts / month (feed + reels)', type: 'flat', price: 1000, included: { starter: 12, growth: 20, pro: 30 }, max: 60, step: 1 },
   ],
   content: [
-    { key: 'pieces', label: 'Blogs / landing pages', type: 'wordblog', price: 1500, includedWords: 2000, overWordRate: 0.7, included: 7, max: 27, step: 1 },
+    { key: 'pieces', label: 'Blogs / landing pages', type: 'wordblog', price: 1500, includedWords: 2000, overWordRate: 0.7, included: { starter: 4, growth: 8, pro: 12 }, max: 30, step: 1 },
   ],
   webdev: [
-    { key: 'pages', label: 'Website pages', type: 'flat', price: 4500, included: 5, max: 45, step: 1 },
+    { key: 'pages', label: 'Website pages', type: 'flat', price: 4500, included: { starter: 5, growth: 12, pro: 20 }, max: 45, step: 1 },
   ],
   paid: [
-    { key: 'campaigns', label: 'Campaigns managed', type: 'flat', price: 5000, included: 1, max: 11, step: 1 },
-    { key: 'creatives', label: 'Ad creatives designed', type: 'flat', price: 1200, included: 6, max: 46, step: 1 },
+    { key: 'campaigns', label: 'Campaigns managed', type: 'flat', price: 5000, included: { starter: 2, growth: 4, pro: 6 }, max: 15, step: 1 },
+    { key: 'creatives', label: 'Ad creatives designed', type: 'flat', price: 1200, included: { starter: 6, growth: 14, pro: 24 }, max: 50, step: 1 },
   ],
 };
 
 const inr = (n) => '₹' + Math.round(n).toLocaleString('en-IN');
 const unitRate = (u, words) => (u.type === 'wordblog' ? u.price + Math.max(0, (words || u.includedWords) - u.includedWords) * u.overWordRate : u.price);
+// The baseline this unit includes at the given tier (falls back to Starter).
+const incOf = (u, tierId) => (u.included && typeof u.included === 'object' ? (u.included[tierId] ?? u.included.starter) : u.included);
 const KEYS = Object.keys(SERVICES);
 
 export default function QuoteCalculator({ preselect }) {
@@ -97,7 +98,12 @@ export default function QuoteCalculator({ preselect }) {
   const money = (n) => formatMoney(n, cur, rates);
 
   const getTier = (s) => tierOf[s] ?? 'starter';
-  const getQty = (s, u) => qty[`${s}.${u.key}`] ?? u.included;
+  // qty defaults to (and never drops below) the active tier's included baseline.
+  const getQty = (s, u) => {
+    const inc = incOf(u, getTier(s));
+    const stored = qty[`${s}.${u.key}`];
+    return stored != null ? Math.max(stored, inc) : inc;
+  };
   const getWords = (s, u) => words[`${s}.${u.key}`] ?? u.includedWords;
 
   function toggle(k) {
@@ -114,7 +120,7 @@ export default function QuoteCalculator({ preselect }) {
     if (tier.price == null) { hasCustom = true; lines.push({ label: SERVICES[k].label, custom: true, tier: tier.name }); return; }
     let amt = tier.price;
     UNITS[k].forEach((u) => {
-      const extra = Math.max(0, getQty(k, u) - u.included);
+      const extra = Math.max(0, getQty(k, u) - incOf(u, getTier(k)));
       amt += extra * unitRate(u, getWords(k, u));
     });
     if (SERVICES[k].kind === 'onetime') onetimeSub += amt; else monthlySub += amt;
@@ -206,7 +212,8 @@ export default function QuoteCalculator({ preselect }) {
                   <p className="mt-3 text-[12px] text-navy/55">We'll scope and quote this one with you — it stays out of the running total.</p>
                 ) : (
                   UNITS[k].map((u) => {
-                    const q = getQty(k, u); const extra = Math.max(0, q - u.included);
+                    const inc = incOf(u, activeTier);
+                    const q = getQty(k, u); const extra = Math.max(0, q - inc);
                     const w = getWords(k, u);
                     return (
                       <div key={u.key} className="mt-3">
@@ -214,10 +221,10 @@ export default function QuoteCalculator({ preselect }) {
                           <span className="font-medium text-navy/80">{u.label}</span>
                           <span className="font-display font-bold text-teal-dark tabular-nums">{q}{extra > 0 ? ` (+${money(extra * unitRate(u, w))})` : ''}</span>
                         </div>
-                        <input type="range" min={u.included} max={u.max} step={u.step} value={q}
+                        <input type="range" min={inc} max={u.max} step={u.step} value={q}
                           onChange={(e) => setQty((p) => ({ ...p, [`${k}.${u.key}`]: parseInt(e.target.value, 10) }))}
                           className="cnl-range mt-1.5 w-full" aria-label={u.label} />
-                        <p className="text-[11px] text-navy/45">{u.included} included · {money(u.price)} each extra{u.type === 'wordblog' ? ` up to ${u.includedWords} words` : ''}</p>
+                        <p className="text-[11px] text-navy/45">{inc} included · {money(u.price)} each extra{u.type === 'wordblog' ? ` up to ${u.includedWords} words` : ''}</p>
                         {u.type === 'wordblog' && extra > 0 && (
                           <div className="mt-2">
                             <div className="flex items-center justify-between text-[12px]"><span className="text-navy/60">Avg words per piece</span><span className="font-display font-bold text-navy tabular-nums">{w}</span></div>
@@ -245,7 +252,7 @@ export default function QuoteCalculator({ preselect }) {
               <button key={d.m} type="button" onClick={() => setDuration(d.m)}
                 className={`rounded-xl border-[1.5px] px-2 py-3 text-center text-[13px] font-semibold transition-colors ${duration === d.m ? 'border-navy bg-navy text-white' : 'border-navy/10 text-navy/70 hover:border-teal'}`}>
                 {d.m} mo
-                <span className={`mt-0.5 block text-[10.5px] font-semibold ${duration === d.m ? 'text-teal' : 'text-teal-dark'}`}>{free ? `${free} free` : ' '}</span>
+                <span className={`mt-0.5 block text-[10.5px] font-semibold ${duration === d.m ? 'text-teal' : 'text-teal-dark'}`}>{free ? `${free} free` : ' '}</span>
               </button>
             );
           })}
