@@ -25,10 +25,20 @@ const tiers = [
   { name: 'Custom', price: null, inr: null, blurb: 'Scoped and quoted with you.', highlight: false },
 ];
 
+// What every plan includes, and the costs that are always the client's own
+// (billed to them directly, never routed through us).
+const includes = [
+  'A documented strategy and onboarding call',
+  'A named point of contact for your account',
+  'All the execution listed in your chosen tier',
+  'Reporting tied to real leads and enquiries, not vanity metrics',
+  'The free live audit that sets the honest starting point',
+];
 const notes = [
-  { h: 'Ad spend is always separate', t: 'Paid budget is billed directly by Meta or Google from your own card, never routed through us. Our fee covers strategy, setup, creative and management only.' },
-  { h: 'Websites are quoted per project', t: 'A website build is scoped to what it needs to do, not a monthly line, and handed over with no lock-in to a proprietary builder.' },
-  { h: 'Every number is confirmed in writing', t: 'These are honest starting points. Your exact scope and price are set in a written proposal before any engagement begins.' },
+  { h: 'Ad spend is yours, paid directly', t: 'Paid budget goes on your own card at Meta or Google, never routed through us. Our fee covers strategy, setup, creative and management only.' },
+  { h: 'Domain, hosting & CMS are yours', t: 'For a website build, your domain, hosting and any CMS or plugin licence are bought in your own name and billed to you directly, with no lock-in.' },
+  { h: 'Tools & production, only if approved', t: 'Premium stock, fonts or third-party tools are billed at cost only with your say-so. Photo and video shoots are arranged via our shoot partner and billed separately.' },
+  { h: 'Every number is confirmed in writing', t: 'Prices here are honest starting points. Your exact scope and figure are set in a written proposal before any work begins.' },
 ];
 
 // Published tier prices, expressed as an OfferCatalog. Amounts are the
@@ -196,17 +206,36 @@ const jsonLd = [
       <div class="mx-auto max-w-2xl text-center">
         <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">No fine print</p>
         <h2 class="reveal mt-3 font-display text-[clamp(1.6rem,3vw,2.4rem)] leading-[1.12] font-bold text-navy" style="--d:80ms">
-          What the number does, and does not, include.
+          What's included, and what's billed to you directly.
         </h2>
       </div>
-      <div class="mt-10 grid gap-5 sm:grid-cols-3">
+
+      <!-- What every plan includes -->
+      <div class="reveal mx-auto mt-10 max-w-2xl rounded-2xl border border-teal/40 bg-teal/[0.05] p-6" style="--d:60ms">
+        <h3 class="font-display text-base font-semibold text-navy">Every plan includes</h3>
+        <ul class="mt-4 grid gap-2.5 sm:grid-cols-2">
+          {includes.map((f) => (
+            <li class="flex gap-2.5 text-[14px] leading-relaxed text-navy/75">
+              <span class="mt-0.5 grid h-[18px] w-[18px] shrink-0 place-items-center rounded-full bg-teal/15 text-teal-dark"><Check size={12} stroke-width={3} aria-hidden="true" /></span>
+              {f}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Billed to you directly -->
+      <p class="reveal mx-auto mt-8 max-w-2xl text-center text-[13px] font-semibold tracking-[0.08em] text-navy/45 uppercase" style="--d:80ms">Always your own cost, paid directly</p>
+      <div class="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {notes.map((n, i) => (
-          <Card class="reveal" style={`--d:${i * 90}ms`}>
+          <Card class="reveal" style={`--d:${i * 80}ms`}>
             <h3 class="font-display text-base font-semibold text-navy">{n.h}</h3>
             <p class="mt-2 text-sm leading-relaxed text-navy/65">{n.t}</p>
           </Card>
         ))}
       </div>
+      <p class="reveal mt-8 text-center text-sm text-navy/60" style="--d:120ms">
+        The full ground rules are in our <a href={withBase('/terms/')} class="font-semibold text-teal-dark underline decoration-teal/40 underline-offset-2 hover:decoration-teal">Terms</a>.
+      </p>
     </div>
   </section>
 
