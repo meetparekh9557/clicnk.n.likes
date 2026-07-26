@@ -15,54 +15,16 @@ import { CURRENCIES } from '../lib/currency.js';
 import Check from '@lucide/astro/icons/check';
 import ChevronDown from '@lucide/astro/icons/chevron-down';
 
+// Tier ladder (per-service starting points). The exact scope at each tier is
+// set in the plan builder + written proposal; the cards here are a glance of
+// the ladder, not channel-count bundles. `highlight` marks the anchor tier.
 const tiers = [
-  {
-    name: 'Launch',
-    price: '₹16,000',
-    inr: 16000,
-    cadence: '/month',
-    for: 'For the business ready to own one channel properly before adding more.',
-    highlight: false,
-    features: [
-      'One channel, run in full: SEO, Local, Social, Content or Paid',
-      'Monthly reporting tied to leads and calls, not impressions',
-      'A quarterly strategy review, in plain language',
-      'A free readiness check to set the honest starting point',
-    ],
-    cta: 'Start with Launch',
-  },
-  {
-    name: 'Growth',
-    price: '₹42,000',
-    inr: 42000,
-    cadence: '/month',
-    for: 'For the business ready to run the organic engine across channels, not just one.',
-    highlight: true,
-    features: [
-      'Two to three channels, coordinated under one strategy',
-      'Content built to rank on Google and be cited by AI answers',
-      'Monthly strategy, not just a report dropped in your inbox',
-      'Reporting tied to the leads and enquiries generated, and what each one costs',
-      'Priority turnaround on the work that moves your numbers',
-    ],
-    cta: 'Choose Growth',
-  },
-  {
-    name: 'Partner',
-    price: '₹1,50,000',
-    inr: 150000,
-    cadence: '/month',
-    for: 'For the business treating growth as a core function, across the full stack.',
-    highlight: false,
-    features: [
-      'All seven channels available, sequenced to a growth roadmap',
-      'A dedicated strategist who owns the whole picture',
-      'Website and conversion work built on the same strategy',
-      'Weekly reporting on cost per lead and cost per booking',
-      'First call on our capacity when a launch or push is time-critical',
-    ],
-    cta: 'Talk about Partner',
-  },
+  { name: 'Starter', price: '₹16,000', inr: 16000, blurb: 'A single service, run properly.', highlight: false },
+  { name: 'Growth', price: '₹33,000', inr: 33000, blurb: 'More depth and a faster cadence.', highlight: false },
+  { name: 'Pro', price: '₹50,000', inr: 50000, blurb: 'A serious, hands-on engagement.', highlight: true },
+  { name: 'Scale', price: '₹75,000', inr: 75000, blurb: 'High velocity, senior attention.', highlight: false },
+  { name: 'Max', price: '₹1,24,000', inr: 124000, blurb: 'Our deepest per-service tier.', highlight: false },
+  { name: 'Custom', price: null, inr: null, blurb: 'Scoped and quoted with you.', highlight: false },
 ];
 
 const notes = [
@@ -72,23 +34,23 @@ const notes = [
 ];
 
 // Published tier prices, expressed as an OfferCatalog. Amounts are the
-// monthly starting fees shown on the page (INR), tied to the org as seller.
-const tierAmounts: Record<string, number> = { Launch: 16000, Growth: 42000, Partner: 150000 };
+// per-service monthly starting fees shown on the page (INR); Custom is
+// excluded (no fixed price). Tied to the org as seller.
 const jsonLd = [
   {
     '@context': 'https://schema.org',
     '@type': 'OfferCatalog',
-    name: 'Click.n.likes growth plans',
+    name: 'Click.n.likes service tiers',
     url: abs('/pricing/'),
-    itemListElement: tiers.map((t) => ({
+    itemListElement: tiers.filter((t) => t.inr).map((t) => ({
       '@type': 'Offer',
       name: t.name,
-      description: t.for,
+      description: t.blurb,
       priceCurrency: 'INR',
-      price: tierAmounts[t.name],
+      price: t.inr,
       priceSpecification: {
         '@type': 'UnitPriceSpecification',
-        price: tierAmounts[t.name],
+        price: t.inr,
         priceCurrency: 'INR',
         unitText: 'MONTH',
       },
@@ -160,45 +122,33 @@ const jsonLd = [
       </div>
       <span id="cnlFxNote" class="text-[12px] text-navy/70"></span>
     </div>
-    <div class="grid gap-5 lg:grid-cols-3 lg:items-start">
+    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {tiers.map((tier, i) => (
-        <Card
-          class={`reveal flex flex-col ${tier.highlight ? 'border-teal/60 shadow-[0_18px_44px_rgba(26,43,74,0.10)] lg:-mt-3 lg:pb-8' : ''}`}
-          style={`--d:${i * 90}ms`}
+        <div
+          class={`reveal rounded-2xl border p-5 ${tier.highlight ? 'border-teal/60 bg-teal/[0.05] shadow-[0_12px_30px_rgba(26,43,74,0.08)]' : 'border-navy/10 bg-white'}`}
+          style={`--d:${i * 70}ms`}
         >
-          {tier.highlight && (
-            <span class="absolute -top-3 left-7 rounded-full bg-teal px-3 py-1 text-[11px] font-bold tracking-[0.08em] text-navy uppercase">Most chosen</span>
-          )}
-          <h2 class="font-display text-lg font-semibold text-navy">{tier.name}</h2>
-          <div class="mt-3 flex items-baseline gap-1">
-            <span class="cnl-price font-display text-4xl font-bold text-navy" data-inr={tier.inr}>{tier.price}</span>
-            <span class="text-sm text-navy/55">{tier.cadence}</span>
+          <div class="flex items-center justify-between gap-2">
+            <h2 class="font-display text-base font-semibold text-navy">{tier.name}</h2>
+            {tier.highlight && <span class="rounded-full bg-teal px-2.5 py-0.5 text-[10.5px] font-bold tracking-[0.06em] text-navy uppercase">Popular</span>}
           </div>
-          <p class="mt-1 text-[13px] text-navy/45">indicative starting point</p>
-          <p class="mt-4 text-[14.5px] leading-relaxed text-navy/70">{tier.for}</p>
-          <ul class="mt-6 flex-1 space-y-3">
-            {tier.features.map((f) => (
-              <li class="flex gap-2.5 text-[14px] leading-relaxed text-navy/75">
-                <span class="mt-0.5 grid h-[18px] w-[18px] shrink-0 place-items-center rounded-full bg-teal/15 text-teal-dark"><Check size={12} stroke-width={3} aria-hidden="true" /></span>
-                {f}
-              </li>
-            ))}
-          </ul>
-          <a
-            href={withBase('/contact/')}
-            data-magnetic
-            class={`mt-7 inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 text-sm font-semibold transition-all duration-300 ease-out-quart hover:-translate-y-0.5 ${
-              tier.highlight ? 'bg-navy text-white hover:bg-coral' : 'border-[1.5px] border-navy/15 text-navy hover:border-teal hover:text-teal-dark'
-            }`}
-          >
-            {tier.cta}
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-          </a>
-        </Card>
+          <div class="mt-2 flex items-baseline gap-1">
+            {tier.inr ? (
+              <>
+                <span class="text-[15px] font-semibold text-navy/45">from</span>
+                <span class="cnl-price font-display text-3xl font-bold text-navy" data-inr={tier.inr}>{tier.price}</span>
+                <span class="text-sm font-semibold text-navy/55">/mo</span>
+              </>
+            ) : (
+              <a href="#custom" class="font-display text-2xl font-bold text-teal-dark underline decoration-teal/40 underline-offset-4 hover:decoration-teal">Let’s talk →</a>
+            )}
+          </div>
+          <p class="mt-2 text-[13.5px] leading-relaxed text-navy/60">{tier.blurb}</p>
+        </div>
       ))}
     </div>
-    <p class="reveal mt-6 text-center text-sm text-navy/55" style="--d:120ms">
-      Want your exact number? <a href="#quote" class="font-semibold text-teal-dark underline decoration-teal/40 underline-offset-2 hover:decoration-teal">Build an instant quote</a> below, tuned to the exact scope you need.
+    <p class="reveal mt-6 text-center text-sm text-navy/60" style="--d:120ms">
+      These are per-service starting points. <a href="#quote" class="font-semibold text-teal-dark underline decoration-teal/40 underline-offset-2 hover:decoration-teal">Build your exact plan</a> below — pick your services, set each tier and a duration. Two or more services take 15% off, and 6- or 12-month commitments come with free months.
     </p>
   </section>
 
@@ -206,13 +156,14 @@ const jsonLd = [
   <section id="quote" class="scroll-mt-28 border-t border-navy/10">
     <div class="mx-auto max-w-6xl px-[5vw] py-16">
       <div class="mx-auto max-w-2xl text-center">
-        <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">Instant quote</p>
+        <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">Build your plan</p>
         <h2 class="reveal mt-3 font-display text-[clamp(1.6rem,3vw,2.4rem)] leading-[1.12] font-bold text-navy" style="--d:80ms">
-          Build your exact number in a minute.
+          Build your exact plan in a minute.
         </h2>
         <p class="reveal mt-3 text-lg text-navy/70" style="--d:140ms">
-          Pick your services and dial in the scope. Every service starts from a flat ₹16,000 base and adds only the
-          line items you choose, the honest sum, never rounded to a nicer figure.
+          Pick your services, set a tier for each, then add on exactly what you need. Choose a duration and the total
+          updates live: two or more services take 15% off, and longer commitments earn free months. The honest sum,
+          never rounded to a nicer figure.
         </p>
       </div>
       <div class="reveal mt-10" style="--d:180ms">
