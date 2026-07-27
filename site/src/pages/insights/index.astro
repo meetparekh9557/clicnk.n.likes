@@ -57,8 +57,8 @@ const jsonLd = [
   </section>
 
   <section class="mx-auto max-w-6xl px-[5vw] pb-16">
-    <div class="reveal mb-8">
-      <CategoryFilter categories={cats} total={articles.length} scope="insights" label="Filter by topic" />
+    <div class="reveal mb-7">
+      <CategoryFilter categories={cats} total={articles.length} scope="insights" label="Filter articles by topic" />
     </div>
     <div class="grid gap-6 sm:grid-cols-2" data-filter-scope="insights">
       {articles.map((a, i) => (
