@@ -5,7 +5,12 @@
 // light surface. `limit` trims the set (homepage strip vs full Work grid).
 // `gridCols` switches from centred wrap to an even grid (equal gaps, no
 // ragged last row) - e.g. "grid-cols-2 sm:grid-cols-5" for a clean 2x5.
+//
+// Where a client has a published case study, the logo becomes a link to it.
+// A logo someone recognises is the most natural thing to click, so leaving
+// it inert wastes the one moment a visitor asks "what did you do for them?".
 import { clients } from '../data/clients';
+import { caseStudies } from '../data/caseStudies';
 import { withBase } from '../lib/url';
 
 interface Props { limit?: number; class?: string; gridCols?: string; }
@@ -14,16 +19,28 @@ const list = limit ? clients.slice(0, limit) : clients;
 const wrapCls = gridCols
   ? `grid ${gridCols} place-items-center gap-x-8 gap-y-9 ${extra}`
   : `flex flex-wrap items-center justify-center gap-x-10 gap-y-8 ${extra}`;
+
+const studyFor = (slug: string) => caseStudies.find((c) => c.slug === slug);
+const imgCls =
+  'h-8 w-auto max-w-[128px] object-contain opacity-55 grayscale transition duration-300 ease-out-quart group-hover:-translate-y-0.5 group-hover:opacity-100 group-hover:grayscale-0 hover:-translate-y-0.5 hover:opacity-100 hover:grayscale-0 sm:h-10';
 ---
 
 <div class={wrapCls.trim()}>
-  {list.map((c) => (
-    <img
-      src={withBase(`/clients/${c.slug}.png`)}
-      alt={c.name}
-      loading="lazy"
-      decoding="async"
-      class="h-8 w-auto max-w-[128px] object-contain opacity-55 grayscale transition duration-300 ease-out-quart hover:-translate-y-0.5 hover:opacity-100 hover:grayscale-0 sm:h-10"
-    />
-  ))}
+  {list.map((c) => {
+    const study = studyFor(c.slug);
+    return study ? (
+      <a
+        href={withBase(`/work/${study.slug}/`)}
+        class="group relative grid place-items-center rounded-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-teal"
+        aria-label={`${c.name} case study`}
+      >
+        <img src={withBase(`/clients/${c.slug}.png`)} alt={c.name} loading="lazy" decoding="async" class={imgCls} />
+        <span class="pointer-events-none absolute -bottom-4 left-1/2 -translate-x-1/2 text-[10.5px] font-semibold whitespace-nowrap text-teal-dark opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100">
+          See the case study →
+        </span>
+      </a>
+    ) : (
+      <img src={withBase(`/clients/${c.slug}.png`)} alt={c.name} loading="lazy" decoding="async" class={imgCls} />
+    );
+  })}
 </div>
