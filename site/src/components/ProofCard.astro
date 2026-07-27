@@ -1,0 +1,100 @@
+---
+// Compact proof card for the Work hero: the most recent published engagement,
+// as a sparkline of its real reported monthly leads.
+//
+// It exists because a page headed "a result you can measure" should show one
+// in the first screen rather than describe one. Everything in it is read from
+// the case study data, so it can never drift out of step with the full chart
+// further down the page, and the honest bits stay visible at this size too —
+// the flat learning-phase start and the mid-engagement dip are both in the
+// curve.
+//
+// Paid is coral, organic the teal band stacked on top, matching LeadChart.
+import type { CaseStudy } from '../data/caseStudies';
+import { withBase } from '../lib/url';
+
+interface Props { cs: CaseStudy; }
+const { cs } = Astro.props;
+
+const W = 320, H = 104, P = 3;
+const pts = cs.leads;
+const maxY = Math.max(...pts.map((d) => d.paid + d.organic)) * 1.06;
+const x = (i: number) => P + (i * (W - 2 * P)) / (pts.length - 1);
+const y = (v: number) => H - P - (v / maxY) * (H - 2 * P);
+
+// Smooth cubic through the points, same shaping as the full chart.
+const line = (vals: number[]) => {
+  const p = vals.map((v, i) => [x(i), y(v)] as const);
+  let d = `M ${p[0][0].toFixed(1)},${p[0][1].toFixed(1)}`;
+  for (let i = 1; i < p.length; i++) {
+    const [px, py] = p[i - 1], [cx, cy] = p[i];
+    const mx = (px + cx) / 2;
+    d += ` C ${mx.toFixed(1)},${py.toFixed(1)} ${mx.toFixed(1)},${cy.toFixed(1)} ${cx.toFixed(1)},${cy.toFixed(1)}`;
+  }
+  return d;
+};
+const back = (vals: number[]) =>
+  vals
+    .map((v, i) => [x(i), y(v)] as const)
+    .reverse()
+    .map(([cx, cy]) => `L ${cx.toFixed(1)},${cy.toFixed(1)}`)
+    .join(' ');
+
+const paidVals = pts.map((d) => d.paid);
+const totalVals = pts.map((d) => d.paid + d.organic);
+const paidPath = line(paidVals);
+const totalPath = line(totalVals);
+const paidArea = `${paidPath} L ${x(pts.length - 1).toFixed(1)},${(H - P).toFixed(1)} L ${x(0).toFixed(1)},${(H - P).toFixed(1)} Z`;
+const organicBand = `${totalPath} ${back(paidVals)} Z`;
+
+const last = pts[pts.length - 1];
+---
+
+<a
+  href={withBase(`/work/${cs.slug}/`)}
+  class="group block rounded-2xl border border-navy/10 bg-white/85 p-5 backdrop-blur-sm transition-all duration-500 ease-out-quart hover:-translate-y-1 hover:border-teal/40 hover:shadow-[0_18px_44px_rgba(26,43,74,0.10)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-teal sm:p-6"
+>
+  <div class="flex items-center justify-between gap-3">
+    <span class="text-[11px] font-semibold tracking-[0.13em] text-navy/45 uppercase">Latest case study</span>
+    {cs.logo && (
+      <img onerror="this.style.display='none'" src={withBase(cs.logo)} alt={`${cs.client} logo`} width="110" height="32" class="h-6 w-auto object-contain" loading="lazy" />
+    )}
+  </div>
+
+  <p class="mt-3 font-display text-[15px] leading-snug font-semibold text-navy">
+    Reported leads a month, across {pts.length} months
+  </p>
+
+  <svg
+    class="mt-4 block h-auto w-full"
+    viewBox={`0 0 ${W} ${H}`}
+    role="img"
+    aria-label={`Monthly reported leads over ${pts.length} months, rising from ${pts[0].paid} to ${last.paid} from paid campaigns, with organic reaching ${last.organic} a month`}
+  >
+    <defs>
+      <linearGradient id="pc-paid" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#FF4757" stop-opacity="0.28" />
+        <stop offset="100%" stop-color="#FF4757" stop-opacity="0.06" />
+      </linearGradient>
+    </defs>
+    <path d={paidArea} fill="url(#pc-paid)" />
+    <path d={organicBand} fill="#4ECDC4" fill-opacity="0.5" />
+    <path d={paidPath} fill="none" stroke="#FF4757" stroke-width="2" stroke-linecap="round" />
+    <path d={totalPath} fill="none" stroke="#33A79F" stroke-width="2" stroke-linecap="round" />
+  </svg>
+
+  <div class="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[12px] text-navy/60">
+    <span class="inline-flex items-center gap-1.5">
+      <span class="h-2 w-2 rounded-full bg-coral"></span> Paid <b class="font-semibold text-navy tabular-nums">{last.paid}</b>
+    </span>
+    <span class="inline-flex items-center gap-1.5">
+      <span class="h-2 w-2 rounded-full bg-teal"></span> Organic <b class="font-semibold text-navy tabular-nums">{last.organic}</b>
+    </span>
+    <span class="text-navy/40">at close</span>
+  </div>
+
+  <p class="mt-4 flex items-center justify-between gap-3 border-t border-navy/10 pt-3">
+    <span class="text-[11.5px] text-navy/45">One engagement. Not a promise of the same.</span>
+    <span class="shrink-0 text-[13px] font-semibold whitespace-nowrap text-teal-dark transition-transform duration-300 group-hover:translate-x-0.5">See how →</span>
+  </p>
+</a>
