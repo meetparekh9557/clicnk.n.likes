@@ -175,7 +175,7 @@ export default function QuoteCalculator({ preselect }) {
   return (
     <div className="grid gap-6 rounded-2xl border border-navy/10 bg-white p-6 shadow-[0_10px_30px_rgba(26,43,74,0.06)] sm:p-8 lg:grid-cols-[1.3fr_0.7fr]">
       <div>
-        <p className="text-[13px] font-semibold text-navy">1. Pick your services</p>
+        <p className="text-[13px] font-semibold text-navy">Pick your services</p>
         <div className="mt-3 flex flex-wrap gap-2">
           {KEYS.map((k) => (
             <button key={k} type="button" onClick={() => toggle(k)}
@@ -243,21 +243,26 @@ export default function QuoteCalculator({ preselect }) {
           {sel.length === 0 && <p className="text-sm text-navy/50">Select at least one service to build your plan.</p>}
         </div>
 
-        {/* Duration */}
-        <p className="mt-7 text-[13px] font-semibold text-navy">2. Project duration</p>
-        <div className="mt-3 grid grid-cols-4 gap-2">
-          {DURATIONS.map((d) => {
-            const free = d.m - d.charged;
-            return (
-              <button key={d.m} type="button" onClick={() => setDuration(d.m)}
-                className={`rounded-xl border-[1.5px] px-2 py-3 text-center text-[13px] font-semibold transition-colors ${duration === d.m ? 'border-navy bg-navy text-white' : 'border-navy/10 text-navy/70 hover:border-teal'}`}>
-                {d.m} mo
-                <span className={`mt-0.5 block text-[10.5px] font-semibold ${duration === d.m ? 'text-teal' : 'text-teal-dark'}`}>{free ? `${free} free` : ' '}</span>
-              </button>
-            );
-          })}
-        </div>
-        <p className="mt-2 text-[11px] text-navy/45">Duration applies to the monthly services. A website build is one-time.</p>
+        {/* Duration — folded into the builder flow, directly below the
+            service accordion (not a separate step/section). */}
+        {sel.length > 0 && (
+          <div className="mt-4 rounded-xl border border-navy/10 p-4">
+            <p className="text-[13px] font-semibold text-navy">Project duration</p>
+            <div className="mt-3 grid grid-cols-4 gap-2">
+              {DURATIONS.map((d) => {
+                const free = d.m - d.charged;
+                return (
+                  <button key={d.m} type="button" onClick={() => setDuration(d.m)}
+                    className={`rounded-xl border-[1.5px] px-2 py-3 text-center text-[13px] font-semibold transition-colors ${duration === d.m ? 'border-navy bg-navy text-white' : 'border-navy/10 text-navy/70 hover:border-teal'}`}>
+                    {d.m} mo
+                    <span className={`mt-0.5 block text-[10.5px] font-semibold ${duration === d.m ? 'text-teal' : 'text-teal-dark'}`}>{free ? `${free} free` : ' '}</span>
+                  </button>
+                );
+              })}
+            </div>
+            <p className="mt-2 text-[11px] text-navy/45">Duration applies to the monthly services. A website build is one-time.</p>
+          </div>
+        )}
       </div>
 
       <div className="flex flex-col">
