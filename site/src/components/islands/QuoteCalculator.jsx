@@ -136,11 +136,15 @@ export default function QuoteCalculator({ preselect }) {
   // months of the monthly services and the one-time build.
   const savings = Math.round(monthlyNet * freeMonths + monthlySub * multi * dur.charged + onetimeSub * multi);
 
-  const grandView = useCountUp(grand);
+  // The term is paid once, up front, so the headline is the whole amount due
+  // — with the monthly equivalent shown underneath so the value still reads.
+  const heroAmount = grand;
+  const heroView = useCountUp(heroAmount);
 
   const notes = [];
+  if (monthlyNet > 0) notes.push(`The ${dur.m}-month term is invoiced once, up front. If we part ways early, every month you have paid for but not received is refunded in full within 14 working days.`);
   if (multi) notes.push('A 15% multi-service discount is applied because you selected more than one service.');
-  if (freeMonths) notes.push(`On a ${dur.m}-month commitment you pay for ${dur.charged} months — ${freeMonths} month${freeMonths > 1 ? 's' : ''} free.`);
+  if (freeMonths) notes.push(`You pay for ${dur.charged} months and receive ${dur.m} — ${freeMonths} month${freeMonths > 1 ? 's' : ''} free for committing to the full term.`);
   if (selected.has('webdev')) notes.push('The website fee covers the build and basic content. Your domain, hosting and any CMS licence are purchased in your own name and billed to you directly, never routed through us.');
   if (selected.has('paid')) notes.push('Ad spend is billed directly from your card on the ad platform (Meta / Google) and is not included in the total above.');
   if (selected.has('social')) notes.push('Photo / video shoot production is arranged through our shoot partner agency and billed separately.');
@@ -151,9 +155,10 @@ export default function QuoteCalculator({ preselect }) {
     const factors = lines.map((l) => fact(l.label + (l.tier ? ` · ${l.tier}` : ''), l.custom ? 'Custom — quoted separately' : money(l.amt) + ' ' + l.unit, 'self', 'plan line'));
     if (multi) factors.push(fact('Multi-service discount', '15% off', 'self', 'applied'));
     factors.push(fact('Project duration', `${dur.m} month${dur.m > 1 ? 's' : ''}${freeMonths ? ` · pay ${dur.charged}, ${freeMonths} free` : ''}`, 'self', 'selected'));
-    const totalLine = [monthlyForDuration > 0 ? money(monthlyForDuration) + ` over ${dur.m} mo` : null, onetimeNet > 0 ? money(onetimeNet) + ' one-time' : null].filter(Boolean).join(' + ');
+    const totalLine = [monthlyForDuration > 0 ? money(monthlyForDuration) + ` for ${dur.m} month${dur.m > 1 ? 's' : ''}` : null, onetimeNet > 0 ? money(onetimeNet) + ' one-time' : null].filter(Boolean).join(' + ');
     const curNote = cur !== 'INR' && rates && rates[cur] ? ` These figures are shown in ${cur} at today's exchange rate; your written proposal confirms the final amount in ${cur}.` : '';
-    const interpretation = `Based on the services, tiers and duration you selected, your indicative investment is ${totalLine || '—'}. Each service starts at its tier base (strategy, management and reporting) plus the add-ons you dialled in.${curNote}`;
+    const termLine = monthlyNet > 0 ? ` The term is invoiced once, up front, and works out to ${money(monthlyNet)} a month${freeMonths ? `, with ${freeMonths} month${freeMonths > 1 ? 's' : ''} free for committing to the full term` : ''}. If we part ways early, any month paid for but not delivered is refunded in full.` : '';
+    const interpretation = `Based on the services, tiers and duration you selected, your indicative investment is ${totalLine || '—'}.${termLine} Each service starts at its tier base (strategy, management and reporting) plus the add-ons you dialled in.${curNote}`;
     const bodyText = `Hi,\n\nHere is your plan from Click.n.likes for ${business || 'your business'}:\n\n${interpretation}\n\nLine items:\n${lines.map((l) => `• ${l.label}${l.tier ? ` (${l.tier})` : ''}: ${l.custom ? 'Custom — quoted separately' : money(l.amt) + ' ' + l.unit}`).join('\n')}\n\nNotes:\n${notes.map((n) => `• ${n}`).join('\n')}\n\nReply to this email to turn this into a written proposal, or reach us at clicknlikes.com.\n\nBest,\nClick.n.likes\nbusiness@clicknlikes.com`;
     const bodyHtml = buildReportEmailHtml({
       toolLabel: 'Your plan',
@@ -269,9 +274,22 @@ export default function QuoteCalculator({ preselect }) {
       <div className="flex flex-col">
         <div className="rounded-xl border border-teal/40 bg-teal/[0.06] p-5">
           <p className="text-[11px] font-bold tracking-[0.08em] text-teal-dark uppercase">Your plan</p>
-          <p className="mt-1 font-display text-[clamp(1.7rem,4vw,2.4rem)] leading-none font-bold text-navy tabular-nums">{!sel.length ? '—' : grand > 0 ? <>{money(grandView)}{hasCustom ? <span className="text-base font-semibold text-navy/55"> +</span> : null}</> : 'Custom'}</p>
+          <p className="mt-1 font-display text-[clamp(1.7rem,4vw,2.4rem)] leading-none font-bold text-navy tabular-nums">
+            {!sel.length ? '—' : heroAmount > 0 ? (
+              <>
+                {money(heroView)}
+                {hasCustom && <span className="text-base font-semibold text-navy/55"> +</span>}
+              </>
+            ) : 'Custom'}
+          </p>
           <p className="text-[12px] text-navy/55">
-            {!sel.length ? 'select a service' : grand > 0 ? `for ${dur.m} month${dur.m > 1 ? 's' : ''}${hasCustom ? ' + custom items' : ''}` : <a href="#custom" className="font-semibold text-teal-dark underline decoration-teal/40 underline-offset-2">scoped with you below →</a>}
+            {!sel.length ? 'select a service'
+              : heroAmount > 0 ? (
+                monthlyNet > 0
+                  ? <>for {dur.m} month{dur.m > 1 ? 's' : ''}, paid once up front · works out to {money(monthlyNet)}/month{hasCustom ? ' + custom items' : ''}</>
+                  : <>one-time build{hasCustom ? ' + custom items' : ''}</>
+              )
+              : <a href="#custom" className="font-semibold text-teal-dark underline decoration-teal/40 underline-offset-2">scoped with you below →</a>}
           </p>
           <ul className="mt-4 space-y-1.5 border-t border-navy/10 pt-3 text-[12.5px] text-navy/65">
             {lines.map((l) => <li key={l.label} className="flex justify-between gap-2"><span>{l.label.split(' (')[0]}{l.tier ? ` · ${l.tier}` : ''}</span><span className="tabular-nums whitespace-nowrap">{l.custom ? 'Custom' : `${money(l.amt)} ${l.unit}`}</span></li>)}
@@ -280,7 +298,7 @@ export default function QuoteCalculator({ preselect }) {
                 <li className="flex justify-between gap-2 pt-1"><span>Monthly subtotal</span><span className="tabular-nums whitespace-nowrap">{money(monthlySub)}/mo</span></li>
                 {multi > 0 && <li className="flex justify-between gap-2 font-semibold text-teal-dark"><span>Multi-service −15%</span><span className="tabular-nums whitespace-nowrap">−{money(monthlySub * multi)}/mo</span></li>}
                 <li className="flex justify-between gap-2"><span>Your monthly</span><span className="tabular-nums whitespace-nowrap">{money(monthlyNet)}/mo</span></li>
-                <li className="flex justify-between gap-2"><span>Over {dur.m} month{dur.m > 1 ? 's' : ''}{freeMonths ? ` (pay ${dur.charged})` : ''}</span><span className="tabular-nums whitespace-nowrap">{money(monthlyForDuration)}</span></li>
+                <li className="flex justify-between gap-2 font-semibold text-navy"><span>Due up front · {dur.m} month{dur.m > 1 ? 's' : ''}{freeMonths ? ` (pay ${dur.charged})` : ''}</span><span className="tabular-nums whitespace-nowrap">{money(monthlyForDuration)}</span></li>
               </>
             )}
             {onetimeNet > 0 && <li className="flex justify-between gap-2"><span>Website (one-time)</span><span className="tabular-nums whitespace-nowrap">{money(onetimeNet)}</span></li>}
