@@ -1,0 +1,3 @@
+# Rendered reels — regenerate with site/scripts/gen-reel.mjs
+*.mp4
+.reel-frames/
