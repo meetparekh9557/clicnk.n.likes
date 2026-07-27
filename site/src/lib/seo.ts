@@ -39,12 +39,21 @@ export function organizationSchema() {
     description:
       'Full-stack organic growth agency for SaaS, manufacturers, legal and professional firms, D2C brands and local businesses worldwide. SEO, AI Search, Social, Content, Websites and Paid.',
     email: 'business@clicknlikes.com',
-    areaServed: 'Worldwide',
-    // Only locations we actually operate from. A structured-data address is
-    // a machine-readable claim to Google; listing a city we do not work from
-    // is a local-SEO risk and contradicts the honesty the brand trades on.
+    // `address` is a claim to be physically located somewhere, so it lists
+    // only where we actually operate from. `areaServed` is the correct
+    // property for the markets we serve, and lets us name cities and states
+    // we work with without asserting an office there — Google treats an
+    // address for a place you do not occupy as spammy structured markup.
     address: [
       { '@type': 'PostalAddress', addressLocality: 'Ahmedabad', addressRegion: 'Gujarat', addressCountry: 'IN' },
+    ],
+    areaServed: [
+      { '@type': 'City', name: 'Ahmedabad' },
+      { '@type': 'City', name: 'Mumbai' },
+      { '@type': 'State', name: 'Gujarat' },
+      { '@type': 'State', name: 'Maharashtra' },
+      { '@type': 'Country', name: 'India' },
+      'Worldwide',
     ],
     sameAs: [
       'https://www.instagram.com/click.n.likes/',
