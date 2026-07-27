@@ -26,6 +26,42 @@ export function abs(path: string): string {
   return SITE_ORIGIN + (path.startsWith('/') ? path : `/${path}`);
 }
 
+// Markets we serve, for the Organization schema's `areaServed`. This is the
+// property for where a business SELLS, as distinct from `address`, which
+// asserts where it is physically located — claiming an address somewhere we
+// do not occupy is the kind of misleading markup Google treats as spam.
+//
+// Deliberately a focused list of the high-income and upper-middle-income
+// markets we are actually set up to serve (they mirror the currencies the
+// pricing page quotes in), not an exhaustive dump of every country: Google's
+// guidelines warn against marking up irrelevant content, and `areaServed` is
+// a descriptive property rather than a ranking lever.
+const CITIES = [
+  // India
+  'Ahmedabad', 'Mumbai', 'Delhi', 'Bengaluru', 'Hyderabad', 'Chennai', 'Pune', 'Kolkata', 'Surat', 'Jaipur',
+  // International
+  'London', 'Manchester', 'New York', 'Los Angeles', 'Chicago', 'San Francisco', 'Toronto', 'Vancouver',
+  'Sydney', 'Melbourne', 'Auckland', 'Dubai', 'Abu Dhabi', 'Doha', 'Riyadh', 'Singapore',
+  'Dublin', 'Berlin', 'Amsterdam', 'Paris', 'Zurich', 'Stockholm', 'Copenhagen',
+];
+const STATES = [
+  'Gujarat', 'Maharashtra', 'Karnataka', 'Tamil Nadu', 'Telangana', 'West Bengal', 'Rajasthan', 'Delhi',
+  'California', 'New York', 'Texas', 'Ontario', 'British Columbia', 'New South Wales', 'Victoria',
+];
+const COUNTRIES = [
+  'India', 'United States', 'United Kingdom', 'Canada', 'Australia', 'New Zealand', 'Ireland',
+  'United Arab Emirates', 'Saudi Arabia', 'Qatar', 'Kuwait', 'Bahrain', 'Oman',
+  'Singapore', 'Japan', 'South Korea', 'Malaysia', 'Hong Kong',
+  'Germany', 'France', 'Netherlands', 'Belgium', 'Spain', 'Italy', 'Portugal', 'Austria', 'Switzerland',
+  'Sweden', 'Norway', 'Denmark', 'Finland', 'Poland', 'Czechia', 'Hungary', 'Romania',
+  'South Africa', 'Israel', 'Turkey', 'Mexico', 'Brazil', 'Chile',
+];
+export const AREA_SERVED = [
+  ...CITIES.map((name) => ({ '@type': 'City', name })),
+  ...STATES.map((name) => ({ '@type': 'State', name })),
+  ...COUNTRIES.map((name) => ({ '@type': 'Country', name })),
+];
+
 // Organization / brand identity. Emitted site-wide from the Base layout.
 export function organizationSchema() {
   return {
@@ -47,14 +83,7 @@ export function organizationSchema() {
     address: [
       { '@type': 'PostalAddress', addressLocality: 'Ahmedabad', addressRegion: 'Gujarat', addressCountry: 'IN' },
     ],
-    areaServed: [
-      { '@type': 'City', name: 'Ahmedabad' },
-      { '@type': 'City', name: 'Mumbai' },
-      { '@type': 'State', name: 'Gujarat' },
-      { '@type': 'State', name: 'Maharashtra' },
-      { '@type': 'Country', name: 'India' },
-      'Worldwide',
-    ],
+    areaServed: [...AREA_SERVED],
     sameAs: [
       'https://www.instagram.com/click.n.likes/',
       'https://www.linkedin.com/company/click-n-likes/',
