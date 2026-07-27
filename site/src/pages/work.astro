@@ -76,7 +76,7 @@ const formFields = [
           style={`--d:${i * 90}ms`}
         >
           <div class="flex items-center gap-3">
-            {cs.logo && <img src={withBase(cs.logo)} alt={`${cs.client} logo`} width="120" height="36" class="h-8 w-auto object-contain" loading="lazy" />}
+            {cs.logo && <img onerror="this.style.display='none'" src={withBase(cs.logo)} alt={`${cs.client} logo`} width="120" height="36" class="h-8 w-auto object-contain" loading="lazy" />}
             <span class="rounded-full bg-teal/10 px-3 py-1 text-xs font-semibold text-teal-dark">{cs.tag}</span>
           </div>
           <h3 class="mt-4 font-display text-lg leading-snug font-semibold text-navy">{cs.title}</h3>
