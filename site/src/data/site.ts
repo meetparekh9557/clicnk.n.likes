@@ -66,5 +66,5 @@ export const contact = {
   whatsappHref: 'https://wa.me/918469163322',
   instagram: 'https://www.instagram.com/click.n.likes/',
   linkedin: 'https://www.linkedin.com/company/click-n-likes/',
-  location: 'Ahmedabad & Mumbai · Worldwide',
+  location: 'Ahmedabad, India · Serving worldwide',
 };

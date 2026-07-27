@@ -40,9 +40,11 @@ export function organizationSchema() {
       'Full-stack organic growth agency for SaaS, manufacturers, legal and professional firms, D2C brands and local businesses worldwide. SEO, AI Search, Social, Content, Websites and Paid.',
     email: 'business@clicknlikes.com',
     areaServed: 'Worldwide',
+    // Only locations we actually operate from. A structured-data address is
+    // a machine-readable claim to Google; listing a city we do not work from
+    // is a local-SEO risk and contradicts the honesty the brand trades on.
     address: [
       { '@type': 'PostalAddress', addressLocality: 'Ahmedabad', addressRegion: 'Gujarat', addressCountry: 'IN' },
-      { '@type': 'PostalAddress', addressLocality: 'Mumbai', addressRegion: 'Maharashtra', addressCountry: 'IN' },
     ],
     sameAs: [
       'https://www.instagram.com/click.n.likes/',
