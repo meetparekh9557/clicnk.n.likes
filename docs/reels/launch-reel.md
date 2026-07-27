@@ -1,27 +1,24 @@
 # Website launch reel
 
-Two cuts of the same launch, both 1080×1920, 30fps, H.264, no audio track —
-Reels take their audio in the app.
+**The reel is the energetic cut.** `site/scripts/gen-reel-hype.mjs` — 18s,
+1080×1920, 30fps, H.264, no audio track (Reels take their audio in the app).
+That is the one to post.
 
-| | Cut A — energetic | Cut B — typographic |
-|---|---|---|
-| Script | `site/scripts/gen-reel-hype.mjs` | `site/scripts/gen-reel.mjs` |
-| Length | 18s | 20s |
-| Look | Real site scrolling in a phone, hard cuts, kinetic type | Kinetic type only, calm pacing |
-| Post it when | Announcing the launch — people believe a site they can see moving | Evergreen brand/positioning slot |
+The typographic cut (`gen-reel.mjs`) stays in the repo as a fallback for a
+quiet, evergreen slot, but it is not the launch post and is not being kept in
+step with the copy. Treat it as archived until there is a reason to run it.
 
 ```
-# Cut A needs real screens first: 430px-wide full-page captures named
-# home/pricing/tools/insights.png in one folder.
+# Needs the real screens first: home.png (full-page, 430px wide) plus the
+# element crops c-score, c-tiers, c-plan, c-tools, c-article — all in one folder.
 node scripts/gen-reel-hype.mjs --shots=/path/to/shots --out=../reel-hype.mp4
-node scripts/gen-reel.mjs --out=../reel.mp4
 
-# single frame, for checking or for a cover image
-node scripts/gen-reel-hype.mjs --shots=… --still=0.9 --out=cover.png
+# single frame, for checking or for the cover image
+node scripts/gen-reel-hype.mjs --shots=… --still=1.2 --out=cover.png
 ```
 
-Both need an ffmpeg with libx264. Playwright's bundled ffmpeg is VP8-only, so
-pass `--ffmpeg=` a full build (`npm i ffmpeg-static` gives one).
+Needs an ffmpeg with libx264. Playwright's bundled ffmpeg is VP8-only, so pass
+`--ffmpeg=` a full build (`npm i ffmpeg-static` gives one).
 
 ## Why this angle
 
@@ -30,7 +27,7 @@ are on the website. Everything else on the site is good work, but "we published
 our pricing" is a claim most agencies structurally cannot make, because their
 sales model depends on the number arriving after a discovery call.
 
-## Cut A — scenes
+## Scenes
 
 | Time | Phone shows | On screen |
 |---|---|---|
@@ -41,7 +38,7 @@ sales model depends on the number arriving after a discovery call.
 | 13.0–15.4 | insights | **Every number sourced.** · "Named, dated, and checkable." |
 | 15.4–18.0 | homepage | **clicknlikes.com** · Ahmedabad → worldwide |
 
-## Cut B — scenes
+## Scenes — archived typographic cut
 
 | Time | On screen |
 |---|---|
@@ -57,16 +54,16 @@ sales model depends on the number arriving after a discovery call.
 Nothing here is a round number someone liked the sound of.
 
 - **₹16,000 – ₹1,24,000 / mo** — the published Starter and Pro tiers in
-  `src/pages/pricing.astro`. If those tiers change, both reels are wrong and
-  have to be re-rendered.
+  `src/pages/pricing.astro`. If those tiers change, the reel is wrong and has
+  to be re-rendered — and the captures retaken.
 - **12 free checks** — the 5 tools in `src/data/tools.ts` plus the 7 per-service
   checks listed in `src/pages/tools/index.astro`, each of which renders a real
   `GatedTool` at `/services/<slug>/#tool`. It is 12, not 5: counting only the
   hub understates the product.
-- **11-signal on-page audit** (Cut B) — the Website Health Scan's own description.
+- **11 signals, checked live** — the Website Health Scan's own description.
 - **Ahmedabad → worldwide** — matches the structured data: `address` is
   Ahmedabad only, `areaServed` is the full market list.
-- **The screens in Cut A** are captures of the built site, so the reel cannot
+- **The screens** are captures of the built site, so the reel cannot
   show a version of the site that does not exist. Re-capture after any visual
   change to the home, pricing, tools or insights pages.
 
@@ -87,19 +84,18 @@ need them, and using them would need permission we do not have in writing.
 
 ## Hook variants (test these; the first 3 seconds decide the reel)
 
-1. "Most agencies won't show you their prices." *(Cut B)*
-2. "The new clicknlikes.com is live." *(Cut A — the site itself is the hook)*
+1. "The new clicknlikes.com is live." *(in the render — the site is the hook)*
+2. "Most agencies won't show you their prices."
 3. "Ask an agency what they charge. Watch them book a call instead."
 4. "We put our prices on the internet. Here's what happened to the enquiries."
    — only once there is a real answer to that; do not run it before then.
 
 ## Posting notes
 
-- Add audio in the app. Cut A can take a beat-driven track — the cuts land on
-  3.3s intervals, so anything around 109 BPM lines up. Cut B wants something
-  calm; a trending drop fights its register.
-- Covers: `--still=0.9` for Cut A, `--still=8.7` for Cut B.
-- Safe zone holds in both: no text below y≈1250, so Instagram's caption and
-  buttons cannot cover anything.
+- Add audio in the app. The cuts land roughly every 2.2s, so a track near
+  110 BPM sits on them.
+- Cover: `--still=1.2` (the logo slam).
+- Copy and artwork live in two fixed, clipped bands, so nothing can overlap and
+  nothing sits low enough for Instagram's caption or buttons to cover it.
 - Post to Reels and Facebook, and reuse the same file as a LinkedIn video post
   — LinkedIn accepts 9:16 and the audience there is closer to the buyer.
