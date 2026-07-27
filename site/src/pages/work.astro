@@ -73,15 +73,15 @@ const formFields = [
     <h2 class="reveal mt-3 max-w-2xl font-display text-[clamp(1.6rem,3vw,2.4rem)] leading-[1.12] font-bold text-navy" style="--d:80ms">
       Real engagements, reported as they happened.
     </h2>
-    <div class="reveal mt-8">
-      <CategoryFilter categories={csCats} total={caseStudies.length} scope="work" label="Filter by discipline" />
+    <div class="reveal mt-7">
+      <CategoryFilter categories={csCats} total={caseStudies.length} scope="work" label="Filter case studies by discipline" />
     </div>
-    <div class={`mt-6 grid gap-5 ${caseStudies.length > 1 ? "lg:grid-cols-2" : ""}`} data-filter-scope="work">
+    <div class="mt-6 grid gap-6 sm:grid-cols-2" data-filter-scope="work">
       {caseStudies.map((cs, i) => (
         <a
           href={withBase(`/work/${cs.slug}/`)}
-          class={`reveal group flex flex-col rounded-2xl border border-navy/10 bg-white p-6 transition-all duration-500 ease-out-quart hover:-translate-y-1 hover:border-teal/40 hover:shadow-[0_18px_44px_rgba(26,43,74,0.10)] ${caseStudies.length === 1 ? "sm:p-8" : ""}`}
-          style={`--d:${i * 90}ms`}
+          class="reveal group flex flex-col rounded-2xl border border-navy/10 bg-white p-6 transition-all duration-500 ease-out-quart hover:-translate-y-1 hover:border-teal/40 hover:shadow-[0_18px_44px_rgba(26,43,74,0.10)]"
+          style={`--d:${(i % 2) * 90}ms`}
           data-filter-item
           data-cats={cs.categories.join('|')}
         >
