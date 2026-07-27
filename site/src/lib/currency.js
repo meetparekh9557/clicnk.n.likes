@@ -25,10 +25,16 @@ export const CURRENCIES = {
 // pricing reads as intentional in every currency, not machine-converted. Any
 // currency NOT listed here falls back to a live-rate conversion (approx). The
 // contract is always billed in the INR base; local display is a convenience.
+// Keys MUST track the live tier ladder in pricing.astro and the per-service
+// tiers in the quote builder (16k / 33k / 50k / 75k / 1.24L). When they drift,
+// a tier with no curated row falls through to a machine conversion sitting
+// next to a curated one, which is what makes a price list look careless.
 export const CURATED = {
   16000:  { INR: '₹16,000',   USD: '$190',   EUR: '€179',   GBP: '£149',   AED: 'Dh 699',   CAD: 'CA$259',   AUD: 'A$289',   SGD: 'S$259' },
-  42000:  { INR: '₹42,000',   USD: '$500',   EUR: '€469',   GBP: '£399',   AED: 'Dh 1,899', CAD: 'CA$699',   AUD: 'A$769',   SGD: 'S$679' },
-  150000: { INR: '₹1,50,000', USD: '$1,790', EUR: '€1,649', GBP: '£1,399', AED: 'Dh 6,599', CAD: 'CA$2,449', AUD: 'A$2,699', SGD: 'S$2,399' },
+  33000:  { INR: '₹33,000',   USD: '$390',   EUR: '€369',   GBP: '£309',   AED: 'Dh 1,449', CAD: 'CA$549',   AUD: 'A$599',   SGD: 'S$539' },
+  50000:  { INR: '₹50,000',   USD: '$590',   EUR: '€559',   GBP: '£469',   AED: 'Dh 2,199', CAD: 'CA$819',   AUD: 'A$909',   SGD: 'S$809' },
+  75000:  { INR: '₹75,000',   USD: '$890',   EUR: '€839',   GBP: '£699',   AED: 'Dh 3,299', CAD: 'CA$1,229', AUD: 'A$1,359', SGD: 'S$1,209' },
+  124000: { INR: '₹1,24,000', USD: '$1,470', EUR: '€1,379', GBP: '£1,159', AED: 'Dh 5,449', CAD: 'CA$2,029', AUD: 'A$2,249', SGD: 'S$1,999' },
 };
 
 // The curated clean price string for a tier amount in a currency, or null if
@@ -36,6 +42,16 @@ export const CURATED = {
 export function curatedPrice(inr, cur) {
   const row = CURATED[inr];
   return row && row[cur] ? row[cur] : null;
+}
+
+// The currency a view may actually display. Curated strings cover the tier
+// amounts, but everything else on the page (add-ons, term totals) needs a live
+// rate, so without rates a foreign currency would render some figures
+// converted and the rest in rupees — a price list showing $190 beside ₹50,000.
+// One currency per view or rupees: never a mix.
+export function usableCurrency(cur, rates) {
+  if (!cur || cur === 'INR' || !CURRENCIES[cur]) return 'INR';
+  return rates && rates[cur] ? cur : 'INR';
 }
 
 const LS_CUR = 'cnl_currency';

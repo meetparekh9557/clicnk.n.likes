@@ -262,7 +262,7 @@ const jsonLd = [
   </section>
 
   <script>
-    import { CURRENCIES, curatedPrice, detectCurrency, getCurrency, setCurrency, loadRates, formatMoney, onCurrency } from '../lib/currency.js';
+    import { CURRENCIES, curatedPrice, detectCurrency, getCurrency, setCurrency, loadRates, formatMoney, onCurrency, usableCurrency } from '../lib/currency.js';
 
     function initCurrency() {
       const wrap = document.getElementById('cnlCurWrap');
@@ -295,7 +295,10 @@ const jsonLd = [
       };
 
       const apply = () => {
-        const cur = getCurrency();
+        // The chosen currency is only used if every figure can be shown in it;
+        // otherwise the whole page drops to INR rather than mixing symbols.
+        const chosen = getCurrency();
+        const cur = usableCurrency(chosen, fx.rates);
         if (label) label.textContent = shortOf(cur);
         opts.forEach((o) => o.setAttribute('aria-selected', String(o.getAttribute('data-cur') === cur)));
         document.querySelectorAll('.cnl-price').forEach((el) => {

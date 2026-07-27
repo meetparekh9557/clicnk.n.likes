@@ -9,7 +9,7 @@
 // shown in the visitor's currency; the emailed quote is documented in INR.
 import { useState, useEffect } from 'react';
 import { OWNER_EMAIL, autoEmailReady, sendFromClicknlikes, buildReportEmailHtml, fact } from '../../lib/engine';
-import { getCurrency, loadRates, onCurrency, formatMoney } from '../../lib/currency.js';
+import { getCurrency, loadRates, onCurrency, formatMoney, usableCurrency } from '../../lib/currency.js';
 import { useCountUp } from '../../lib/useCountUp.js';
 
 // 3 tiers + Custom (benchmarked to the market — see docs). Each sets the base
@@ -95,7 +95,10 @@ export default function QuoteCalculator({ preselect }) {
     loadRates().then((r) => setRates(r.rates));
     return onCurrency((c) => setCur(c || getCurrency()));
   }, []);
-  const money = (n) => formatMoney(n, cur, rates);
+  // One currency per view: without live rates this resolves to INR so a
+  // converted figure never sits beside a rupee one.
+  const shown = usableCurrency(cur, rates);
+  const money = (n) => formatMoney(n, shown, rates);
 
   const getTier = (s) => tierOf[s] ?? 'starter';
   // qty defaults to (and never drops below) the active tier's included baseline.
@@ -156,7 +159,7 @@ export default function QuoteCalculator({ preselect }) {
     if (multi) factors.push(fact('Multi-service discount', '15% off', 'self', 'applied'));
     factors.push(fact('Project duration', `${dur.m} month${dur.m > 1 ? 's' : ''}${freeMonths ? ` · pay ${dur.charged}, ${freeMonths} free` : ''}`, 'self', 'selected'));
     const totalLine = [monthlyForDuration > 0 ? money(monthlyForDuration) + ` for ${dur.m} month${dur.m > 1 ? 's' : ''}` : null, onetimeNet > 0 ? money(onetimeNet) + ' one-time' : null].filter(Boolean).join(' + ');
-    const curNote = cur !== 'INR' && rates && rates[cur] ? ` These figures are shown in ${cur} at today's exchange rate; your written proposal confirms the final amount in ${cur}.` : '';
+    const curNote = shown !== 'INR' ? ` These figures are shown in ${shown} at today's exchange rate; your written proposal confirms the final amount in ${shown}.` : '';
     const termLine = monthlyNet > 0 ? ` The term is invoiced once, up front, and works out to ${money(monthlyNet)} a month${freeMonths ? `, with ${freeMonths} month${freeMonths > 1 ? 's' : ''} free for committing to the full term` : ''}. If we part ways early, any month paid for but not delivered is refunded in full.` : '';
     const interpretation = `Based on the services, tiers and duration you selected, your indicative investment is ${totalLine || '—'}.${termLine} Each service starts at its tier base (strategy, management and reporting) plus the add-ons you dialled in.${curNote}`;
     const bodyText = `Hi,\n\nHere is your plan from Click.n.likes for ${business || 'your business'}:\n\n${interpretation}\n\nLine items:\n${lines.map((l) => `• ${l.label}${l.tier ? ` (${l.tier})` : ''}: ${l.custom ? 'Custom — quoted separately' : money(l.amt) + ' ' + l.unit}`).join('\n')}\n\nNotes:\n${notes.map((n) => `• ${n}`).join('\n')}\n\nReply to this email to turn this into a written proposal, or reach us at clicknlikes.com.\n\nBest,\nClick.n.likes\nbusiness@clicknlikes.com`;
@@ -309,7 +312,7 @@ export default function QuoteCalculator({ preselect }) {
           <ul className="mt-3 space-y-1.5 text-[11px] leading-relaxed text-navy/50">
             {notes.map((n, i) => <li key={i}>· {n}</li>)}
           </ul>
-          {cur !== 'INR' && <p className="mt-2 text-[11px] leading-relaxed text-navy/45">Shown in {cur} at today's exchange rate. Your quote is confirmed in {cur} in the written proposal.</p>}
+          {shown !== 'INR' && <p className="mt-2 text-[11px] leading-relaxed text-navy/45">Shown in {shown} at today's exchange rate. Your quote is confirmed in {shown} in the written proposal.</p>}
         </div>
 
         {sent ? (
