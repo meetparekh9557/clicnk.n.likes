@@ -6,14 +6,14 @@
 // never find. On narrow screens the row scrolls sideways rather than
 // wrapping into three stacked lines that push the content off the fold.
 //
-// An item can sit in several categories, so this filters rather than
-// partitions: picking two categories shows anything matching either, and the
-// counts always reflect the real number of items in each, which is why they
-// sum to more than the total.
+// One category at a time. "All" is the default; picking a category replaces
+// the selection rather than adding to it, and picking the selected one again
+// returns to All. An item still belongs to several categories, so it appears
+// under each of them — which is why the counts sum to more than the total.
 interface Props {
   /** [category, count] pairs, already ordered. */
   categories: [string, number][];
-  /** Total number of items, for the "All" row. */
+  /** Total number of items, for the "All" chip. */
   total: number;
   /** Matches the data-filter-scope on the grid this controls. */
   scope: string;
@@ -37,13 +37,8 @@ const { categories, total, scope, label = 'Filter by category' } = Astro.props;
     </div>
   </div>
 
-  <p class="cnl-filter-note mt-3 text-[12px] text-navy/45">
-    Pick more than one to widen the list. Counts add up to more than the total because a piece can belong to several
-    topics.
-  </p>
-
   <p class="cnl-filter-empty mt-5 hidden text-[15px] text-navy/60">
-    Nothing in that combination yet. <button type="button" class="cnl-filter-reset font-semibold text-teal-dark underline decoration-teal/40 underline-offset-2">Show everything</button>.
+    Nothing in that category yet. <button type="button" class="cnl-filter-reset font-semibold text-teal-dark underline decoration-teal/40 underline-offset-2">Show everything</button>.
   </p>
 </div>
 
@@ -94,11 +89,15 @@ const { categories, total, scope, label = 'Filter by category' } = Astro.props;
     font-variant-numeric: tabular-nums;
   }
 
-  /* Filtered-out cards collapse rather than vanish abruptly. */
-  [data-filter-item] { transition: opacity 220ms ease, transform 220ms ease; }
+  /* Cards fade back in when the filter changes rather than snapping. */
   [data-filter-item].is-hidden { display: none; }
+  [data-filter-item].is-entering { animation: cnl-filter-in 260ms ease-out both; }
+  @keyframes cnl-filter-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: none; }
+  }
   @media (prefers-reduced-motion: reduce) {
-    [data-filter-item] { transition: none; }
+    [data-filter-item].is-entering { animation: none; }
   }
 </style>
 
@@ -116,38 +115,40 @@ const { categories, total, scope, label = 'Filter by category' } = Astro.props;
       if (!grid) return;
 
       const items = Array.from(grid.querySelectorAll('[data-filter-item]'));
-      const active = new Set();
+      // '*' means All. One category at a time, never a set.
+      let active = '*';
 
-      const apply = () => {
+      const apply = (animate) => {
         let shown = 0;
         items.forEach((el) => {
           const cats = (el.getAttribute('data-cats') || '').split('|').filter(Boolean);
-          // No selection means show everything; otherwise match ANY selected
-          // category, so choosing two topics widens rather than narrows.
-          const match = active.size === 0 || cats.some((c) => active.has(c));
+          const match = active === '*' || cats.includes(active);
+          const was = !el.classList.contains('is-hidden');
           el.classList.toggle('is-hidden', !match);
+          el.classList.remove('is-entering');
+          if (match && animate && !was) {
+            // Restart the animation on cards that were hidden a moment ago.
+            void el.offsetWidth;
+            el.classList.add('is-entering');
+          }
           if (match) shown++;
         });
-        chips.forEach((c) => {
-          const cat = c.getAttribute('data-cat');
-          c.setAttribute('aria-pressed', String(cat === '*' ? active.size === 0 : active.has(cat)));
-        });
+        chips.forEach((c) => c.setAttribute('aria-pressed', String(c.getAttribute('data-cat') === active)));
         if (empty) empty.classList.toggle('hidden', shown !== 0);
       };
 
       chips.forEach((c) => {
         c.addEventListener('click', () => {
           const cat = c.getAttribute('data-cat');
-          if (cat === '*') active.clear();
-          else if (active.has(cat)) active.delete(cat);
-          else active.add(cat);
-          apply();
+          // Clicking the live category clears it rather than doing nothing.
+          active = cat === active ? '*' : cat;
+          apply(true);
         });
       });
 
-      if (reset) reset.addEventListener('click', () => { active.clear(); apply(); });
+      if (reset) reset.addEventListener('click', () => { active = '*'; apply(true); });
 
-      apply();
+      apply(false);
     });
   }
 

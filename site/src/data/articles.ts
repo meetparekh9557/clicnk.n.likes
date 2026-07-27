@@ -7,12 +7,22 @@
 
 export interface Article {
   slug: string;
-  /** The single badge shown on the card. */
+  /** Short badge used on the OG image and article header. */
   tag: string;
   /**
-   * Categories this piece belongs to, for filtering. An article can sit in
-   * more than one — most real topics do, and forcing a single bucket makes
-   * the filter lie about what the piece covers.
+   * Categories this piece belongs to. These are the badges on the card and
+   * the tabs in the filter, so they have to earn their place.
+   *
+   * Rule: assign the MOST SPECIFIC categories that apply, and do not stack a
+   * parent on top of a child. A Google Business Profile piece is "Local SEO",
+   * not "Local SEO" plus "SEO"; a piece on getting cited by assistants is
+   * "AI Search", not "AI Search" plus "SEO". "SEO" is for organic search work
+   * that none of the narrower buckets covers. Tagging everything "SEO" makes
+   * that tab return almost the whole list, which is the same as having no
+   * filter at all.
+   *
+   * More than one is fine when the piece genuinely spans them — it then shows
+   * every one of those badges and appears under each of those tabs.
    */
   categories: string[];
   title: string;
@@ -79,7 +89,7 @@ export const articles: Article[] = [
   {
     slug: "ai-search",
     tag: "AI SEO",
-    categories: ["AI Search", "SEO"],
+    categories: ["AI Search"],
     title: "Why your clinic needs to worry about ChatGPT, not just Google",
     excerpt: "AI answers name two or three businesses. Either you're in the answer, or you don't exist for that searcher.",
     author: "Click.n.likes team",
@@ -134,7 +144,7 @@ export const articles: Article[] = [
   {
     slug: "gbp-mistakes",
     tag: "Local SEO",
-    categories: ["Local SEO", "SEO"],
+    categories: ["Local SEO"],
     title: "The Google Business Profile mistakes costing you the local pack",
     excerpt: "Five fixable errors we find in almost every clinic and salon profile we audit.",
     author: "Click.n.likes team",
@@ -191,7 +201,7 @@ export const articles: Article[] = [
   {
     slug: "blog-that-ranks",
     tag: "Content",
-    categories: ["Content Marketing", "SEO", "AI Search"],
+    categories: ["Content Marketing", "AI Search"],
     title: "How to write one blog post that ranks and gets cited by AI",
     excerpt: "The structure we use for every client blog, built for humans and language models both.",
     author: "Click.n.likes team",
@@ -252,7 +262,7 @@ export const articles: Article[] = [
   {
     slug: "3-second-test",
     tag: "Websites",
-    categories: ["Websites & Conversion", "Strategy"],
+    categories: ["Websites & Conversion"],
     title: "Your website is losing bookings before anyone even calls",
     excerpt: "The three-second test we run on every client site before touching a line of code.",
     author: "Click.n.likes team",
