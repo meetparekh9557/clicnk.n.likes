@@ -2,9 +2,16 @@
 // Insights index: article grid + newsletter, ported from v1's blog page.
 import Base from '../../layouts/Base.astro';
 import NewsletterForm from '../../components/islands/NewsletterForm.jsx';
+import CategoryFilter from '../../components/CategoryFilter.astro';
 import { articles } from '../../data/articles';
 import { withBase } from '../../lib/url';
 import { abs, breadcrumbSchema } from '../../lib/seo';
+
+// Category counts, most-used first, so the filter reflects what we actually
+// publish rather than an aspirational taxonomy.
+const catCounts = new Map<string, number>();
+articles.forEach((a) => a.categories.forEach((c) => catCounts.set(c, (catCounts.get(c) ?? 0) + 1)));
+const cats: [string, number][] = [...catCounts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
 
 const jsonLd = [
   {
@@ -50,12 +57,17 @@ const jsonLd = [
   </section>
 
   <section class="mx-auto max-w-6xl px-[5vw] pb-16">
-    <div class="grid gap-6 sm:grid-cols-2">
+    <div class="reveal mb-8">
+      <CategoryFilter categories={cats} total={articles.length} scope="insights" label="Filter by topic" />
+    </div>
+    <div class="grid gap-6 sm:grid-cols-2" data-filter-scope="insights">
       {articles.map((a, i) => (
         <a
           href={withBase(`/insights/${a.slug}/`)}
           class="reveal group overflow-hidden rounded-2xl border border-navy/10 bg-white transition-all duration-500 ease-out-quart hover:-translate-y-1 hover:border-teal/40 hover:shadow-[0_18px_44px_rgba(26,43,74,0.10)]"
           style={`--d:${(i % 2) * 90}ms`}
+          data-filter-item
+          data-cats={a.categories.join('|')}
         >
           <img
             src={withBase(`/insights/${a.slug}.png`)}

@@ -7,7 +7,14 @@
 
 export interface Article {
   slug: string;
+  /** The single badge shown on the card. */
   tag: string;
+  /**
+   * Categories this piece belongs to, for filtering. An article can sit in
+   * more than one — most real topics do, and forcing a single bucket makes
+   * the filter lie about what the piece covers.
+   */
+  categories: string[];
   title: string;
   excerpt: string;
   author: string;
@@ -22,6 +29,7 @@ export const articles: Article[] = [
   {
     slug: "seo-or-ads-first",
     tag: "Paid",
+    categories: ["Paid Media", "SEO", "Strategy"],
     title: "Should you invest in SEO or Google Ads first?",
     excerpt: "The honest answer depends on three things: your timeline, your margins, and whether you can wait for compounding.",
     author: "Click.n.likes team",
@@ -71,6 +79,7 @@ export const articles: Article[] = [
   {
     slug: "ai-search",
     tag: "AI SEO",
+    categories: ["AI Search", "SEO"],
     title: "Why your clinic needs to worry about ChatGPT, not just Google",
     excerpt: "AI answers name two or three businesses. Either you're in the answer, or you don't exist for that searcher.",
     author: "Click.n.likes team",
@@ -125,6 +134,7 @@ export const articles: Article[] = [
   {
     slug: "gbp-mistakes",
     tag: "Local SEO",
+    categories: ["Local SEO", "SEO"],
     title: "The Google Business Profile mistakes costing you the local pack",
     excerpt: "Five fixable errors we find in almost every clinic and salon profile we audit.",
     author: "Click.n.likes team",
@@ -181,6 +191,7 @@ export const articles: Article[] = [
   {
     slug: "blog-that-ranks",
     tag: "Content",
+    categories: ["Content Marketing", "SEO", "AI Search"],
     title: "How to write one blog post that ranks and gets cited by AI",
     excerpt: "The structure we use for every client blog, built for humans and language models both.",
     author: "Click.n.likes team",
@@ -241,6 +252,7 @@ export const articles: Article[] = [
   {
     slug: "3-second-test",
     tag: "Websites",
+    categories: ["Websites & Conversion", "Strategy"],
     title: "Your website is losing bookings before anyone even calls",
     excerpt: "The three-second test we run on every client site before touching a line of code.",
     author: "Click.n.likes team",
