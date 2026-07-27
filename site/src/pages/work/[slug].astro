@@ -4,6 +4,7 @@
 // and the mid-engagement dip. The page carries the same no-prediction line
 // as clause 12.3 of our Master Services Agreement, so what we publish in
 // marketing and what we sign in a contract say the same thing.
+import { existsSync } from 'node:fs';
 import Base from '../../layouts/Base.astro';
 import Card from '../../components/Card.astro';
 import LeadChart from '../../components/LeadChart.astro';
@@ -17,6 +18,16 @@ export function getStaticPaths() {
   return caseStudies.map((c) => ({ params: { slug: c.slug }, props: { cs: c } }));
 }
 const { cs } = Astro.props;
+
+// Asset presence is detected at build time rather than tracked by a flag, so
+// dropping a file into public/work/ is all it takes to make it appear. A
+// missing screenshot or logo simply renders nothing instead of a broken
+// image, and no placeholder ever stands in for a real client's website.
+const asset = (p?: string) => (p && existsSync(new URL(`../../../public${p}`, import.meta.url)) ? p : undefined);
+const logo = asset(cs.logo);
+const shotBefore = asset(cs.shotBefore);
+const shotAfter = asset(cs.shotAfter);
+const hasShots = Boolean(shotBefore || shotAfter);
 
 const jsonLd = [
   breadcrumbSchema([
@@ -48,8 +59,8 @@ const lastTotal = cs.leads[cs.leads.length - 1].paid + cs.leads[cs.leads.length 
     <a href={withBase('/work/')} class="reveal text-sm font-semibold text-navy/55 transition-colors hover:text-teal-dark">← All work</a>
 
     <div class="reveal mt-6 flex flex-wrap items-center gap-4" style="--d:60ms">
-      {cs.logo && (
-        <img src={withBase(cs.logo)} alt={`${cs.client} logo`} width="180" height="56" class="h-11 w-auto object-contain" loading="eager" />
+      {logo && (
+        <img src={withBase(logo)} alt={`${cs.client} logo`} width="180" height="56" class="h-11 w-auto object-contain" loading="eager" />
       )}
       <span class="inline-flex items-center gap-2 rounded-full border border-teal/30 bg-teal/5 px-4 py-1.5 text-[13px] font-semibold text-navy">
         <span class="h-1.5 w-1.5 rounded-full bg-teal"></span> {cs.tag}
@@ -126,16 +137,20 @@ const lastTotal = cs.leads[cs.leads.length - 1].paid + cs.leads[cs.leads.length 
   <section class="mx-auto max-w-5xl px-[5vw] pt-12 pb-4">
     <h2 class="reveal font-display text-[clamp(1.4rem,2.5vw,1.9rem)] font-bold text-navy">The website, before and after</h2>
 
-    {cs.hasShots && (
+    {hasShots && (
       <div class="reveal mt-6 grid gap-5 lg:grid-cols-2" style="--d:80ms">
-        <figure>
-          <img src={withBase(cs.shotBefore)} alt={`${cs.client} website before the rebuild`} loading="lazy" class="w-full rounded-xl border border-navy/10 shadow-[0_10px_30px_rgba(26,43,74,0.08)]" />
-          <figcaption class="mt-2 text-[12.5px] font-semibold text-navy/50">Before · generic four-page template</figcaption>
-        </figure>
-        <figure>
-          <img src={withBase(cs.shotAfter)} alt={`${cs.client} website after the rebuild`} loading="lazy" class="w-full rounded-xl border border-teal/40 shadow-[0_10px_30px_rgba(26,43,74,0.10)]" />
-          <figcaption class="mt-2 text-[12.5px] font-semibold text-teal-dark">After · 25+ page conversion platform</figcaption>
-        </figure>
+        {shotBefore && (
+          <figure>
+            <img src={withBase(shotBefore)} alt={`${cs.client} website before the rebuild`} loading="lazy" class="w-full rounded-xl border border-navy/10 shadow-[0_10px_30px_rgba(26,43,74,0.08)]" />
+            <figcaption class="mt-2 text-[12.5px] font-semibold text-navy/50">Before · generic four-page template</figcaption>
+          </figure>
+        )}
+        {shotAfter && (
+          <figure>
+            <img src={withBase(shotAfter)} alt={`${cs.client} website after the rebuild`} loading="lazy" class="w-full rounded-xl border border-teal/40 shadow-[0_10px_30px_rgba(26,43,74,0.10)]" />
+            <figcaption class="mt-2 text-[12.5px] font-semibold text-teal-dark">After · 25+ page conversion platform</figcaption>
+          </figure>
+        )}
       </div>
     )}
 
