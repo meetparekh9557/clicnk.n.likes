@@ -132,7 +132,7 @@ h2 { font-family:'Space Grotesk'; font-weight:700; font-size:82px; line-height:1
     </div>
     <div class="row" data-d="0.35">
       <span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="#4ECDC4" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
-      <span><span class="txt">5 free tools</span><span class="sub">that run on your real site, not a demo</span></span>
+      <span><span class="txt">12 free checks</span><span class="sub">that run on your real site, not a demo</span></span>
     </div>
     <div class="row" data-d="0.55">
       <span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="#4ECDC4" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
