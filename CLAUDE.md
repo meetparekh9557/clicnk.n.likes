@@ -68,6 +68,14 @@ Rules:
    slang. Second person ("you/your") for the reader; the agency appears in
    third person or first-person plural sparingly.
 
+## SEO conventions
+
+- **Numerals, never words, in meta titles and descriptions.** Write "5 Profile
+  Mistakes", "3-Second Test", "2 or 3 businesses" — never "Five", "Three-Second".
+  Digits stop the eye in a search result and cost fewer characters. This applies
+  to every `title`/`description` passed to `Base.astro`, the `articleMeta` map,
+  and any article title that becomes a meta title by fallback.
+
 ## Engineering conventions
 
 - All tool scoring must be deterministic and honestly labelled: anything shown

@@ -19,22 +19,25 @@ const featuredPath = `/insights/${article.slug}.png`;
 
 // SEO meta per article, written in the founder's voice (the on-page
 // headline stays as-is). Titles in Title Case, descriptions ~155ch.
+// Numbers are always written as numerals ("5 Profile Mistakes", "3-Second
+// Test"), never spelled out: digits catch the eye in a search result and
+// cost fewer characters.
 const articleMeta: Record<string, { title: string; description: string }> = {
   'ai-search': {
     title: 'Why ChatGPT, Not Google, Now Decides Who Gets Found | Click.n.likes',
-    description: 'AI answers name two or three businesses, then stop. Here is how to structure your headings, facts and schema so the engines quote you when your customer asks, not your competitor.',
+    description: 'AI answers name 2 or 3 businesses, then stop. Here is how to structure your headings, facts and schema so the engines quote you when your customer asks, not your competitor.',
   },
   'gbp-mistakes': {
-    title: 'Five Profile Mistakes Losing You the Local Pack | Click.n.likes',
-    description: "The businesses missing from the map pack usually aren't worse, they are just making a handful of profile mistakes. Here are the five we find most often, and how to fix each one.",
+    title: '5 Profile Mistakes Losing You the Local Pack | Click.n.likes',
+    description: "The businesses missing from the map pack usually aren't worse, they are just making a handful of profile mistakes. Here are the 5 we find most often, and how to fix each one.",
   },
   'blog-that-ranks': {
-    title: 'How to Write One Blog Post That Actually Ranks | Click.n.likes',
+    title: 'How to Write 1 Blog Post That Actually Ranks | Click.n.likes',
     description: "Most business blogs fail twice: they don't rank, and when they are read, they don't convert. Here is the structure we use so a single post does both, for humans and AI alike.",
   },
   '3-second-test': {
-    title: 'The Three-Second Test Your Website Keeps Failing | Click.n.likes',
-    description: 'A first-time visitor gives your site about three seconds. Here is the test we run before touching a line of code, and the four quiet leaks that cost you bookings.',
+    title: 'The 3-Second Test Your Website Keeps Failing | Click.n.likes',
+    description: 'A first-time visitor gives your site about 3 seconds. Here is the test we run before touching a line of code, and the 4 quiet leaks that cost you bookings.',
   },
 };
 const meta = articleMeta[article.slug] ?? { title: `${article.title} | Click.n.likes Insights`, description: article.excerpt };
