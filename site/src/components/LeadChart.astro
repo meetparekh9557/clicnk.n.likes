@@ -106,6 +106,15 @@ const notes = leads.filter((d) => d.note);
         </g>
       ))}
 
+      <!-- end-of-series values: makes the split explicit, so the teal line
+           is never misread as organic alone -->
+      <g class="cnl-endlab">
+        <text x={x(leads[leads.length-1].m) - 6} y={y(leads[leads.length-1].paid) + 16} text-anchor="end"
+          font-size="12" font-weight="700" fill="#FF4757" font-family="DM Sans, sans-serif">{leads[leads.length-1].paid} paid</text>
+        <text x={x(leads[leads.length-1].m) - 6} y={y(leads[leads.length-1].paid + leads[leads.length-1].organic) - 8} text-anchor="end"
+          font-size="12" font-weight="700" fill="#2c8f88" font-family="DM Sans, sans-serif">+{leads[leads.length-1].organic} organic</text>
+      </g>
+
       <!-- annotations -->
       {notes.map((d) => (
         <g class="cnl-note">
@@ -122,17 +131,52 @@ const notes = leads.filter((d) => d.note);
           >{d.note}</text>
         </g>
       ))}
+      <!-- hover targets: one column per month -->
+      <g class="cnl-hit">
+        {leads.map((d) => (
+          <rect
+            x={x(d.m) - (iw / (leads.length - 1)) / 2}
+            y={PAD.t}
+            width={iw / (leads.length - 1)}
+            height={ih}
+            fill="transparent"
+            data-m={d.m}
+            data-paid={d.paid}
+            data-org={d.organic}
+            data-px={x(d.m)}
+            data-py={y(d.paid + d.organic)}
+          />
+        ))}
+      </g>
+      <line class="cnl-guide" x1="0" x2="0" y1={PAD.t} y2={PAD.t + ih} stroke="#1A2B4A" stroke-opacity="0.28" stroke-width="1" style="opacity:0" />
     </svg>
+    <div class="cnl-tip" role="status" aria-live="polite"></div>
   </div>
 
   <figcaption class="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2 text-[12.5px] text-navy/60">
     <span class="inline-flex items-center gap-2"><span class="h-2.5 w-2.5 rounded-full bg-coral"></span> Paid campaigns</span>
-    <span class="inline-flex items-center gap-2"><span class="h-2.5 w-2.5 rounded-full bg-teal"></span> Organic search</span>
-    <span class="text-navy/45">Monthly leads as reported during the engagement. The flat opening is the ad-platform learning phase; the mid-engagement dip is shown as it happened.</span>
+    <span class="inline-flex items-center gap-2"><span class="h-2.5 w-2.5 rounded-full bg-teal"></span> Organic search, stacked on top</span>
+    <span class="text-navy/45">The upper edge is total monthly leads; the teal band is organic’s share of it. Reported during the engagement. The flat opening is the ad-platform learning phase; the mid-engagement dip is shown as it happened.</span>
   </figcaption>
 </figure>
 
 <style>
+  figure .overflow-x-auto { position: relative; }
+  .cnl-tip {
+    position: absolute; pointer-events: none; opacity: 0; transform: translate(-50%, -115%);
+    background: #1A2B4A; color: #fff; border-radius: 10px; padding: 8px 11px;
+    font-size: 12px; line-height: 1.45; white-space: nowrap; z-index: 5;
+    box-shadow: 0 8px 22px rgba(26, 43, 74, 0.24); transition: opacity 140ms ease;
+  }
+  .cnl-tip b { font-weight: 700; }
+  .cnl-tip .p { color: #ff8f99; }
+  .cnl-tip .o { color: #7fe3db; }
+  .cnl-hit rect { cursor: crosshair; }
+  /* the guide follows the cursor, so it must never swallow the hover it
+     is responding to */
+  .cnl-guide { pointer-events: none; }
+  .cnl-leadchart .cnl-endlab { opacity: 0; }
+  .cnl-leadchart.in .cnl-endlab { animation: cnl-fade 600ms ease-out 1300ms forwards; }
   .cnl-leadchart .cnl-line { stroke-dasharray: 2400; stroke-dashoffset: 2400; }
   .cnl-leadchart .cnl-area,
   .cnl-leadchart .cnl-dot,
@@ -147,6 +191,7 @@ const notes = leads.filter((d) => d.note);
     .cnl-leadchart .cnl-line { stroke-dashoffset: 0; }
     .cnl-leadchart .cnl-area,
     .cnl-leadchart .cnl-dot,
+    .cnl-leadchart .cnl-endlab,
     .cnl-leadchart .cnl-note { opacity: 1; }
     .cnl-leadchart.in .cnl-line,
     .cnl-leadchart.in .cnl-area,
@@ -159,6 +204,46 @@ const notes = leads.filter((d) => d.note);
   function initLeadCharts() {
     const charts = document.querySelectorAll('.cnl-leadchart');
     if (!charts.length) return;
+
+    // Hover/focus readout. The teal line is the TOTAL, so the tooltip always
+    // names the split explicitly rather than leaving it to be inferred.
+    charts.forEach((svg) => {
+      if (svg.dataset.hoverBound) return;
+      svg.dataset.hoverBound = '1';
+      const wrap = svg.parentElement;
+      const tip = wrap && wrap.querySelector('.cnl-tip');
+      const guide = svg.querySelector('.cnl-guide');
+      if (!tip || !guide) return;
+      const show = (r) => {
+        const paid = +r.dataset.paid, org = +r.dataset.org;
+        tip.innerHTML = '<b>Month ' + r.dataset.m + '</b><br>'
+          + '<span class="p">\u25CF</span> Paid <b>' + paid + '</b><br>'
+          + '<span class="o">\u25CF</span> Organic <b>+' + org + '</b><br>'
+          + 'Total <b>' + (paid + org) + '</b>';
+        const box = svg.getBoundingClientRect();
+        const vb = svg.viewBox.baseVal;
+        const sx = box.width / vb.width, sy = box.height / vb.height;
+        // Clamp inside the wrapper so the tooltip never runs off an edge at
+        // the first or last month.
+        tip.style.opacity = '1';
+        const half = tip.offsetWidth / 2;
+        const raw = +r.dataset.px * sx;
+        tip.style.left = Math.min(Math.max(raw, half + 4), box.width - half - 4) + 'px';
+        tip.style.top = Math.max(+r.dataset.py * sy, tip.offsetHeight + 6) + 'px';
+        guide.setAttribute('x1', r.dataset.px);
+        guide.setAttribute('x2', r.dataset.px);
+        guide.style.opacity = '1';
+      };
+      const hide = () => { tip.style.opacity = '0'; guide.style.opacity = '0'; };
+      svg.querySelectorAll('.cnl-hit rect').forEach((r) => {
+        r.addEventListener('mouseenter', () => show(r));
+        r.addEventListener('focus', () => show(r));
+        r.setAttribute('tabindex', '0');
+      });
+      svg.addEventListener('mouseleave', hide);
+      svg.addEventListener('blur', hide, true);
+    });
+
     const io = new IntersectionObserver((entries) => {
       entries.forEach((e) => {
         if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
