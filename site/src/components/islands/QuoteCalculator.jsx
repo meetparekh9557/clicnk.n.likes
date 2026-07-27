@@ -185,6 +185,27 @@ export default function QuoteCalculator({ preselect }) {
           ))}
         </div>
 
+        {/* Duration — sits directly under the service chips, as pills that
+            match them, so the commitment is set before the detail below. */}
+        {sel.length > 0 && (
+          <div className="mt-5">
+            <p className="text-[13px] font-semibold text-navy">Project duration</p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {DURATIONS.map((d) => {
+                const free = d.m - d.charged;
+                return (
+                  <button key={d.m} type="button" onClick={() => setDuration(d.m)}
+                    className={`rounded-full border-[1.5px] px-4 py-2 text-[13px] font-semibold transition-colors ${duration === d.m ? 'border-teal-dark bg-teal-dark text-white' : 'border-navy/10 bg-teal/[0.06] text-navy/70 hover:border-teal'}`}>
+                    {d.m} month{d.m > 1 ? 's' : ''}
+                    {free > 0 && <span className={duration === d.m ? 'text-white/85' : 'text-teal-dark'}> · {free} free</span>}
+                  </button>
+                );
+              })}
+            </div>
+            <p className="mt-2 text-[11px] text-navy/45">Applies to the monthly services. A website build is one-time.</p>
+          </div>
+        )}
+
         <div className="mt-6 space-y-6">
           {sel.map((k) => {
             const activeTier = getTier(k);
@@ -243,26 +264,6 @@ export default function QuoteCalculator({ preselect }) {
           {sel.length === 0 && <p className="text-sm text-navy/50">Select at least one service to build your plan.</p>}
         </div>
 
-        {/* Duration — folded into the builder flow, directly below the
-            service accordion (not a separate step/section). */}
-        {sel.length > 0 && (
-          <div className="mt-4 rounded-xl border border-navy/10 p-4">
-            <p className="text-[13px] font-semibold text-navy">Project duration</p>
-            <div className="mt-3 grid grid-cols-4 gap-2">
-              {DURATIONS.map((d) => {
-                const free = d.m - d.charged;
-                return (
-                  <button key={d.m} type="button" onClick={() => setDuration(d.m)}
-                    className={`rounded-xl border-[1.5px] px-2 py-3 text-center text-[13px] font-semibold transition-colors ${duration === d.m ? 'border-navy bg-navy text-white' : 'border-navy/10 text-navy/70 hover:border-teal'}`}>
-                    {d.m} mo
-                    <span className={`mt-0.5 block text-[10.5px] font-semibold ${duration === d.m ? 'text-teal' : 'text-teal-dark'}`}>{free ? `${free} free` : ' '}</span>
-                  </button>
-                );
-              })}
-            </div>
-            <p className="mt-2 text-[11px] text-navy/45">Duration applies to the monthly services. A website build is one-time.</p>
-          </div>
-        )}
       </div>
 
       <div className="flex flex-col">
