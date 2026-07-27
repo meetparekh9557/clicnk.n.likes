@@ -1,0 +1,237 @@
+---
+// Draggable before/after comparison. The two screenshots are stacked and the
+// top one is clipped to the handle position, so dragging wipes between them
+// in place rather than asking the reader to compare two images side by side
+// and hold the difference in their head.
+//
+// It sweeps once on scroll-into-view to signal it is interactive, then hands
+// control over. Drag, click anywhere on the image, or focus the handle and
+// use the arrow keys. Under prefers-reduced-motion it simply opens at the
+// midpoint with no sweep.
+interface Props {
+  before: string;
+  after: string;
+  beforeLabel?: string;
+  afterLabel?: string;
+  alt: string;
+  id?: string;
+}
+const {
+  before,
+  after,
+  beforeLabel = 'Before',
+  afterLabel = 'After',
+  alt,
+  id = 'ba',
+} = Astro.props;
+---
+
+<figure class="cnl-ba not-prose" id={id} data-pos="50">
+  <div class="cnl-ba-frame">
+    <!-- After sits underneath, revealed as the wipe moves left -->
+    <img class="cnl-ba-img" src={after} alt={`${alt} after the rebuild`} loading="lazy" decoding="async" width="1364" height="853" />
+    <!-- Before is clipped from the right edge inward -->
+    <div class="cnl-ba-clip">
+      <img class="cnl-ba-img" src={before} alt={`${alt} before the rebuild`} loading="lazy" decoding="async" width="1364" height="853" />
+    </div>
+
+    <span class="cnl-ba-tag cnl-ba-tag-before">{beforeLabel}</span>
+    <span class="cnl-ba-tag cnl-ba-tag-after">{afterLabel}</span>
+
+    <div class="cnl-ba-line" aria-hidden="true"></div>
+    <button
+      type="button"
+      class="cnl-ba-handle"
+      role="slider"
+      aria-label={`Reveal ${beforeLabel} or ${afterLabel}`}
+      aria-valuemin="0"
+      aria-valuemax="100"
+      aria-valuenow="50"
+      aria-valuetext={`${beforeLabel} and ${afterLabel} shown equally`}
+    >
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true">
+        <path d="M9 6 3 12l6 6M15 6l6 6-6 6" />
+      </svg>
+    </button>
+  </div>
+  <figcaption class="mt-3 text-[12.5px] text-navy/55">
+    Drag the handle to compare. Same pages, rebuilt: redesigned, re-titled and rewritten around what buyers search.
+  </figcaption>
+</figure>
+
+<style>
+  .cnl-ba-frame {
+    position: relative;
+    overflow: hidden;
+    border-radius: 14px;
+    border: 1px solid rgba(26, 43, 74, 0.12);
+    box-shadow: 0 14px 36px rgba(26, 43, 74, 0.12);
+    user-select: none;
+    touch-action: pan-y;
+    cursor: ew-resize;
+    line-height: 0;
+    background: #fff;
+  }
+  .cnl-ba-img { display: block; width: 100%; height: auto; }
+  .cnl-ba-clip {
+    position: absolute;
+    inset: 0;
+    width: 50%;
+    overflow: hidden;
+    will-change: width;
+  }
+  /* The clipped copy must stay the width of the frame, not of its clip box,
+     or the "before" image squashes as the handle moves. */
+  .cnl-ba-clip .cnl-ba-img {
+    width: var(--frame-w, 100%);
+    max-width: none;
+  }
+  .cnl-ba-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 2px;
+    margin-left: -1px;
+    background: #fff;
+    box-shadow: 0 0 0 1px rgba(26, 43, 74, 0.18);
+    pointer-events: none;
+    will-change: left;
+  }
+  .cnl-ba-handle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 42px;
+    height: 42px;
+    margin: -21px 0 0 -21px;
+    display: grid;
+    place-items: center;
+    border: 0;
+    border-radius: 999px;
+    background: #1a2b4a;
+    color: #fff;
+    cursor: ew-resize;
+    box-shadow: 0 6px 18px rgba(26, 43, 74, 0.3);
+    will-change: left;
+    transition: transform 180ms ease, background 180ms ease;
+  }
+  .cnl-ba-handle:hover { transform: scale(1.06); background: #33a79f; }
+  .cnl-ba-handle:focus-visible { outline: 3px solid #4ecdc4; outline-offset: 3px; }
+  .cnl-ba-tag {
+    position: absolute;
+    top: 12px;
+    padding: 5px 11px;
+    border-radius: 999px;
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    line-height: 1.4;
+    pointer-events: none;
+    transition: opacity 200ms ease;
+  }
+  .cnl-ba-tag-before { left: 12px; background: rgba(26, 43, 74, 0.82); color: #fff; }
+  .cnl-ba-tag-after { right: 12px; background: #4ecdc4; color: #0c1c2e; }
+
+  /* The sweep that signals it can be dragged. */
+  .cnl-ba.sweep .cnl-ba-clip,
+  .cnl-ba.sweep .cnl-ba-line,
+  .cnl-ba.sweep .cnl-ba-handle { transition: all 1500ms cubic-bezier(0.4, 0, 0.2, 1); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cnl-ba.sweep .cnl-ba-clip,
+    .cnl-ba.sweep .cnl-ba-line,
+    .cnl-ba.sweep .cnl-ba-handle { transition: none; }
+    .cnl-ba-handle { transition: none; }
+  }
+</style>
+
+<script>
+  function initBeforeAfter() {
+    document.querySelectorAll('.cnl-ba').forEach((fig) => {
+      if (fig.dataset.baBound) return;
+      fig.dataset.baBound = '1';
+
+      const frame = fig.querySelector('.cnl-ba-frame');
+      const clip = fig.querySelector('.cnl-ba-clip');
+      const line = fig.querySelector('.cnl-ba-line');
+      const handle = fig.querySelector('.cnl-ba-handle');
+      const tagBefore = fig.querySelector('.cnl-ba-tag-before');
+      const tagAfter = fig.querySelector('.cnl-ba-tag-after');
+      if (!frame || !clip || !line || !handle) return;
+
+      // Keep the clipped image at the frame's full width so it never squashes.
+      const syncWidth = () => {
+        clip.style.setProperty('--frame-w', frame.clientWidth + 'px');
+      };
+      syncWidth();
+      new ResizeObserver(syncWidth).observe(frame);
+
+      let pos = 50;
+      const apply = (p) => {
+        pos = Math.min(100, Math.max(0, p));
+        clip.style.width = pos + '%';
+        line.style.left = pos + '%';
+        handle.style.left = pos + '%';
+        handle.setAttribute('aria-valuenow', String(Math.round(pos)));
+        handle.setAttribute(
+          'aria-valuetext',
+          pos > 85 ? 'Showing the site before the rebuild'
+            : pos < 15 ? 'Showing the site after the rebuild'
+            : 'Before on the left, after on the right'
+        );
+        if (tagBefore) tagBefore.style.opacity = pos < 12 ? '0' : '1';
+        if (tagAfter) tagAfter.style.opacity = pos > 88 ? '0' : '1';
+      };
+
+      const fromEvent = (e) => {
+        const rect = frame.getBoundingClientRect();
+        const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+        apply((x / rect.width) * 100);
+      };
+
+      let dragging = false;
+      const start = (e) => { dragging = true; fig.classList.remove('sweep'); fromEvent(e); };
+      const move = (e) => { if (dragging) { fromEvent(e); if (e.cancelable) e.preventDefault(); } };
+      const end = () => { dragging = false; };
+
+      frame.addEventListener('mousedown', start);
+      window.addEventListener('mousemove', move);
+      window.addEventListener('mouseup', end);
+      frame.addEventListener('touchstart', start, { passive: true });
+      window.addEventListener('touchmove', move, { passive: false });
+      window.addEventListener('touchend', end);
+
+      handle.addEventListener('keydown', (e) => {
+        const step = e.shiftKey ? 10 : 4;
+        if (e.key === 'ArrowLeft') { fig.classList.remove('sweep'); apply(pos - step); e.preventDefault(); }
+        if (e.key === 'ArrowRight') { fig.classList.remove('sweep'); apply(pos + step); e.preventDefault(); }
+        if (e.key === 'Home') { apply(100); e.preventDefault(); }
+        if (e.key === 'End') { apply(0); e.preventDefault(); }
+      });
+
+      apply(50);
+
+      // Sweep once when it scrolls into view: show the before, wipe to reveal
+      // the after, settle at the middle. Skipped under reduced motion.
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          io.unobserve(entry.target);
+          if (reduce) return;
+          apply(100);
+          fig.classList.add('sweep');
+          setTimeout(() => apply(18), 260);
+          setTimeout(() => apply(50), 1500);
+        });
+      }, { threshold: 0.35 });
+      io.observe(fig);
+    });
+  }
+
+  initBeforeAfter();
+  document.addEventListener('astro:page-load', initBeforeAfter);
+</script>

@@ -71,13 +71,13 @@ export const caseStudies: CaseStudy[] = [
     stats: [
       { value: '~10x', label: 'growth in paid leads', sub: 'from the learning-phase months' },
       { value: '0 → 40', label: 'organic leads a month', sub: 'a channel that did not exist' },
-      { value: '4 → 25+', label: 'pages on the website', sub: 'one per service, not per category' },
+      { value: 'Every page', label: 'redesigned and re-optimised', sub: 'metas and copy rewritten for search' },
       { value: '340–390', label: 'leads a month at close', sub: 'across both channels' },
     ],
     overview:
       'AidByLaw is a Pan-India legal and business consultation platform based in Faridabad, offering services across real estate documentation, business incorporation and compliance, individual legal matters such as name change, wills and marriage registration, and a dedicated track for NRIs managing Indian legal processes remotely. As a consultation-first business, its growth depends entirely on converting online visibility into calls, WhatsApp enquiries and form submissions.',
     challenge:
-      'When AidByLaw approached us they had a basic template website with no meaningful SEO and no paid presence. Their immediate need was leads, but they were clear-eyed about wanting more than a short-term fix: a paid channel that could generate volume quickly, and an organic channel built alongside it, so the business would not stay permanently dependent on ad spend to keep enquiries coming in.',
+      'When AidByLaw approached us they had a generic template website with no meaningful SEO and no paid presence. Their immediate need was leads, but they were clear-eyed about wanting more than a short-term fix: a paid channel that could generate volume quickly, and an organic channel built alongside it, so the business would not stay permanently dependent on ad spend to keep enquiries coming in.',
     approach: [
       {
         phase: 'Paid ads first',
@@ -92,19 +92,21 @@ export const caseStudies: CaseStudy[] = [
           'Within two months we began rebuilding the website and layering in SEO. That sequencing was deliberate: organic growth compounds slowly, so starting it early meant it was contributing real leads by the middle of the engagement rather than beginning from zero at the end of it.',
       },
       {
-        phase: 'A platform, not a brochure',
+        phase: 'Rebuilt around search',
         when: 'Months 2–5',
         body:
-          'The revamped site replaced a generic four-page template with a structured platform: more than 25 individual service landing pages, one per service rather than broad category pages, a homepage lead-capture form, a dedicated NRI section, verified Google reviews in place of stock testimonials, and the trust signals the original site had none of.',
+          'Rather than adding pages, we rebuilt the ones that existed. Every page was redesigned, its meta title and description rewritten around the queries buyers actually use, and its copy reworked to match that intent. On top of that: a homepage lead-capture form, a dedicated NRI section, verified Google reviews in place of stock testimonials, and the trust signals the original site had none of.',
       },
     ],
     siteCompare: [
-      { row: 'Navigation', before: '4 flat top-level links', after: 'Full mega-menu, 25+ dedicated service pages' },
+      { row: 'Design', before: 'Generic clip-art template', after: 'Custom, photography-led design' },
+      { row: 'Meta titles & descriptions', before: 'Generic and duplicated', after: 'Written per page around real search queries' },
+      { row: 'On-page content', before: 'Written for the business', after: 'Rewritten around what buyers actually search' },
+      { row: 'Navigation', before: '4 flat links, no sub-navigation', after: 'Grouped dropdowns by service area' },
       { row: 'Homepage lead capture', before: 'None, banner CTAs only', after: 'Embedded form above the fold' },
       { row: 'Trust signals', before: 'None', after: 'Client volume, guarantees, verified reviews' },
       { row: 'NRI audience', before: 'Not addressed', after: 'Dedicated section and enquiry form' },
       { row: 'Testimonials', before: 'Stock avatars', after: 'Verified Google reviews' },
-      { row: 'Design', before: 'Generic clip-art template', after: 'Custom, photography-led design' },
     ],
     shotBefore: '/work/aidbylaw-old.png',
     shotAfter: '/work/aidbylaw-new.png',
@@ -143,7 +145,7 @@ export const caseStudies: CaseStudy[] = [
     feedback:
       'AidByLaw’s published client reviews reflect the same experience their lead numbers suggest: reviewers point to fast turnaround, including same-day and ahead-of-schedule processing on name-change and Gazette matters, responsive communication throughout, and clients returning for additional services after a first interaction.',
     summary:
-      'AidByLaw came in dependent on the idea of ads for lead volume. Thirteen months later they had both a scaled paid channel and a genuinely new organic one built from zero, on top of a website rebuilt from a generic four-page template into a 25-page conversion-structured platform with trust infrastructure it never had. Durable volume from ads, compounding growth from search: that combination was the sequencing we set out to deliver at the start.',
+      'AidByLaw came in dependent on the idea of ads for lead volume. Thirteen months later they had both a scaled paid channel and a genuinely new organic one built from zero, on top of a website whose every page had been redesigned, re-titled and rewritten around what buyers actually search, with the trust infrastructure it never had. Durable volume from ads, compounding growth from search: that combination was the sequencing we set out to deliver at the start.',
   },
 ];
 

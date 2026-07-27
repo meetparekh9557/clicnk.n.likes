@@ -8,6 +8,7 @@ import { existsSync } from 'node:fs';
 import Base from '../../layouts/Base.astro';
 import Card from '../../components/Card.astro';
 import LeadChart from '../../components/LeadChart.astro';
+import BeforeAfter from '../../components/BeforeAfter.astro';
 import InlineCta from '../../components/InlineCta.astro';
 import { caseStudies } from '../../data/caseStudies';
 import { withBase } from '../../lib/url';
@@ -137,18 +138,27 @@ const lastTotal = cs.leads[cs.leads.length - 1].paid + cs.leads[cs.leads.length 
   <section class="mx-auto max-w-5xl px-[5vw] pt-12 pb-4">
     <h2 class="reveal font-display text-[clamp(1.4rem,2.5vw,1.9rem)] font-bold text-navy">The website, before and after</h2>
 
-    {hasShots && (
+    {shotBefore && shotAfter ? (
+      <div class="reveal mt-6" style="--d:80ms">
+        <BeforeAfter
+          before={withBase(shotBefore)}
+          after={withBase(shotAfter)}
+          alt={`${cs.client} website`}
+          id={`ba-${cs.slug}`}
+        />
+      </div>
+    ) : hasShots && (
       <div class="reveal mt-6 grid gap-5 lg:grid-cols-2" style="--d:80ms">
         {shotBefore && (
           <figure>
-            <img src={withBase(shotBefore)} alt={`${cs.client} website before the rebuild`} loading="lazy" class="w-full rounded-xl border border-navy/10 shadow-[0_10px_30px_rgba(26,43,74,0.08)]" />
-            <figcaption class="mt-2 text-[12.5px] font-semibold text-navy/50">Before · generic four-page template</figcaption>
+            <img src={withBase(shotBefore)} alt={`${cs.client} website before the rebuild`} loading="lazy" class="w-full rounded-xl border border-navy/10" />
+            <figcaption class="mt-2 text-[12.5px] font-semibold text-navy/50">Before</figcaption>
           </figure>
         )}
         {shotAfter && (
           <figure>
-            <img src={withBase(shotAfter)} alt={`${cs.client} website after the rebuild`} loading="lazy" class="w-full rounded-xl border border-teal/40 shadow-[0_10px_30px_rgba(26,43,74,0.10)]" />
-            <figcaption class="mt-2 text-[12.5px] font-semibold text-teal-dark">After · 25+ page conversion platform</figcaption>
+            <img src={withBase(shotAfter)} alt={`${cs.client} website after the rebuild`} loading="lazy" class="w-full rounded-xl border border-teal/40" />
+            <figcaption class="mt-2 text-[12.5px] font-semibold text-teal-dark">After</figcaption>
           </figure>
         )}
       </div>
