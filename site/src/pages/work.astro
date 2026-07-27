@@ -7,6 +7,7 @@
 import Base from '../layouts/Base.astro';
 import Card from '../components/Card.astro';
 import CategoryFilter from '../components/CategoryFilter.astro';
+import ProofCard from '../components/ProofCard.astro';
 import { caseStudies } from '../data/caseStudies';
 import ClientLogos from '../components/ClientLogos.astro';
 import InlineCta from '../components/InlineCta.astro';
@@ -17,6 +18,11 @@ import { breadcrumbSchema } from '../lib/seo';
 const csCounts = new Map<string, number>();
 caseStudies.forEach((c) => c.categories.forEach((k) => csCounts.set(k, (csCounts.get(k) ?? 0) + 1)));
 const csCats: [string, number][] = [...csCounts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+
+// The hero carries a proof card built from the most recent published study,
+// so the first screen shows a measured result rather than only claiming one.
+// With no case studies published it simply does not render.
+const latest = caseStudies[0];
 
 const jsonLd = breadcrumbSchema([
   ['Home', '/'],
@@ -53,18 +59,29 @@ const formFields = [
   jsonLd={jsonLd}
 >
   <section class="mx-auto max-w-6xl px-[5vw] pt-16 pb-10 lg:pt-20">
-    <p class="reveal inline-flex items-center gap-2 rounded-full border border-teal/30 bg-teal/5 px-4 py-1.5 text-[13px] font-semibold text-navy">
-      <span class="h-1.5 w-1.5 rounded-full bg-teal"></span> Results
-    </p>
-    <h1 class="reveal-mask mt-5 max-w-3xl font-display text-[clamp(2.1rem,4.4vw,3.4rem)] leading-[1.08] font-bold text-navy">
-      <span class="mask-line"><span>A result you can measure,</span></span>
-      <span class="mask-line" style="--d:120ms"><span>not a headline you have to trust.</span></span>
-    </h1>
-    <p class="reveal mt-5 max-w-2xl text-lg leading-relaxed text-navy/70" style="--d:160ms">
-      Every engagement is judged against the numbers we can genuinely stand behind: the leads, calls and enquiries the
-      work generated, and what each one cost to earn. Not rankings for their own sake, and never a revenue figure only
-      your own books can confirm.
-    </p>
+    <div class="grid items-center gap-10 lg:grid-cols-[1.25fr_0.75fr] lg:gap-14">
+      <div>
+        <p class="reveal inline-flex items-center gap-2 rounded-full border border-teal/30 bg-teal/5 px-4 py-1.5 text-[13px] font-semibold text-navy">
+          <span class="h-1.5 w-1.5 rounded-full bg-teal"></span> Results
+        </p>
+        <!-- Slightly tighter than the site's other h1s: the hero is two
+             columns here, so the full 3.4rem breaks the first line mid-phrase. -->
+        <h1 class="reveal-mask mt-5 font-display text-[clamp(2.1rem,3.9vw,2.9rem)] leading-[1.08] font-bold text-navy">
+          <span class="mask-line"><span>A result you can measure,</span></span>
+          <span class="mask-line" style="--d:120ms"><span>not a headline you have to trust.</span></span>
+        </h1>
+        <p class="reveal mt-5 max-w-2xl text-lg leading-relaxed text-navy/70" style="--d:160ms">
+          Every engagement is judged against the numbers we can genuinely stand behind: the leads, calls and enquiries
+          the work generated, and what each one cost to earn. Not rankings for their own sake, and never a revenue
+          figure only your own books can confirm.
+        </p>
+      </div>
+      {latest && (
+        <div class="reveal" style="--d:220ms">
+          <ProofCard cs={latest} />
+        </div>
+      )}
+    </div>
   </section>
 
   <!-- Case studies -->
