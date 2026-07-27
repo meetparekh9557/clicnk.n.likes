@@ -89,8 +89,15 @@ const { categories, total, scope, label = 'Filter by category' } = Astro.props;
     font-variant-numeric: tabular-nums;
   }
 
-  /* Cards fade back in when the filter changes rather than snapping. */
-  [data-filter-item].is-hidden { display: none; }
+</style>
+
+<!-- The filtered cards live in the PAGE, not in this component, so these rules
+     must not be scoped: Astro would compile them to
+     [data-astro-cid-…][data-filter-item].is-hidden, which matches nothing and
+     silently leaves every card on screen. The keyframes travel with them,
+     since scoped animation names get rewritten too. -->
+<style is:global>
+  [data-filter-item].is-hidden { display: none !important; }
   [data-filter-item].is-entering { animation: cnl-filter-in 260ms ease-out both; }
   @keyframes cnl-filter-in {
     from { opacity: 0; transform: translateY(6px); }
