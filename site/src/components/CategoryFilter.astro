@@ -1,18 +1,15 @@
 ---
-// Collapsible category filter, shared by Insights and Work.
+// Category filter for Insights and Work.
 //
-// Deliberately just the accordion: a compact pill that states what is
-// currently showing, not a full-width bar announcing "Filter by topic". The
-// funnel glyph carries the meaning a label would, the button's accessible
-// name carries it for screen readers, and the content keeps the width.
+// Always open, one row, no toggle: the categories are navigation, and
+// navigation that hides itself behind a click is navigation most readers
+// never find. On narrow screens the row scrolls sideways rather than
+// wrapping into three stacked lines that push the content off the fold.
 //
 // An item can sit in several categories, so this filters rather than
 // partitions: picking two categories shows anything matching either, and the
 // counts always reflect the real number of items in each, which is why they
 // sum to more than the total.
-//
-// Closed by default so it never pushes the actual content down the page, and
-// it filters in place with no navigation, so a reader never loses their spot.
 interface Props {
   /** [category, count] pairs, already ordered. */
   categories: [string, number][];
@@ -20,31 +17,15 @@ interface Props {
   total: number;
   /** Matches the data-filter-scope on the grid this controls. */
   scope: string;
-  /** Accessible name only — never rendered as visible text. */
+  /** Accessible name for the group. Never rendered as visible text. */
   label?: string;
 }
 const { categories, total, scope, label = 'Filter by category' } = Astro.props;
 ---
 
 <div class="cnl-filter" data-filter-for={scope}>
-  <button
-    type="button"
-    class="cnl-filter-toggle inline-flex items-center gap-2.5 rounded-full border-[1.5px] border-navy/10 bg-white py-2 pr-3.5 pl-4 text-left transition-colors hover:border-teal/45 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal"
-    aria-expanded="false"
-    aria-label={label}
-    aria-controls={`${scope}-filter-panel`}
-  >
-    <svg class="shrink-0 text-navy/40" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <path d="M3 5h18l-7 8v6l-4 2v-8Z" />
-    </svg>
-    <span class="cnl-filter-summary text-[13.5px] font-semibold text-navy/75">All {total}</span>
-    <svg class="cnl-filter-chev shrink-0 text-navy/40 transition-transform duration-300" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true">
-      <path d="m6 9 6 6 6-6" />
-    </svg>
-  </button>
-
-  <div id={`${scope}-filter-panel`} class="cnl-filter-panel hidden pt-3">
-    <div class="flex flex-wrap gap-2">
+  <div class="cnl-filter-rail" role="group" aria-label={label}>
+    <div class="cnl-filter-row">
       <button type="button" class="cnl-cat" data-cat="*" aria-pressed="true">
         All <span class="cnl-cat-n">{total}</span>
       </button>
@@ -54,11 +35,12 @@ const { categories, total, scope, label = 'Filter by category' } = Astro.props;
         </button>
       ))}
     </div>
-    <p class="mt-3 max-w-xl text-[12px] text-navy/45">
-      Pick more than one to widen the list. Counts add up to more than the total because a piece can belong to
-      several topics.
-    </p>
   </div>
+
+  <p class="cnl-filter-note mt-3 text-[12px] text-navy/45">
+    Pick more than one to widen the list. Counts add up to more than the total because a piece can belong to several
+    topics.
+  </p>
 
   <p class="cnl-filter-empty mt-5 hidden text-[15px] text-navy/60">
     Nothing in that combination yet. <button type="button" class="cnl-filter-reset font-semibold text-teal-dark underline decoration-teal/40 underline-offset-2">Show everything</button>.
@@ -66,10 +48,33 @@ const { categories, total, scope, label = 'Filter by category' } = Astro.props;
 </div>
 
 <style>
+  /* One line on narrow screens, scrolled rather than wrapped; free to wrap
+     once there is room for it. */
+  .cnl-filter-rail {
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    margin-inline: -5vw;
+    padding-inline: 5vw;
+  }
+  .cnl-filter-rail::-webkit-scrollbar { display: none; }
+  .cnl-filter-row {
+    display: flex;
+    gap: 8px;
+    width: max-content;
+    padding-block: 3px;
+  }
+  @media (min-width: 640px) {
+    .cnl-filter-rail { overflow-x: visible; margin-inline: 0; padding-inline: 0; }
+    .cnl-filter-row { flex-wrap: wrap; width: auto; }
+  }
+
   .cnl-cat {
     display: inline-flex;
     align-items: center;
     gap: 7px;
+    flex: none;
+    white-space: nowrap;
     border-radius: 999px;
     border: 1.5px solid rgba(26, 43, 74, 0.1);
     background: rgba(78, 205, 196, 0.06);
@@ -88,16 +93,6 @@ const { categories, total, scope, label = 'Filter by category' } = Astro.props;
     opacity: 0.62;
     font-variant-numeric: tabular-nums;
   }
-  .cnl-filter-toggle[aria-expanded='true'] { border-color: rgba(78, 205, 196, 0.55); }
-  .cnl-filter-toggle[aria-expanded='true'] .cnl-filter-chev { transform: rotate(180deg); }
-  /* The summary can grow long once several categories are picked; keep it on
-     one line so the pill never becomes a paragraph. */
-  .cnl-filter-summary {
-    max-width: 62vw;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
 
   /* Filtered-out cards collapse rather than vanish abruptly. */
   [data-filter-item] { transition: opacity 220ms ease, transform 220ms ease; }
@@ -115,13 +110,10 @@ const { categories, total, scope, label = 'Filter by category' } = Astro.props;
 
       const scope = root.getAttribute('data-filter-for');
       const grid = document.querySelector(`[data-filter-scope="${scope}"]`);
-      const toggle = root.querySelector('.cnl-filter-toggle');
-      const panel = root.querySelector('.cnl-filter-panel');
       const chips = Array.from(root.querySelectorAll('.cnl-cat'));
-      const summary = root.querySelector('.cnl-filter-summary');
       const empty = root.querySelector('.cnl-filter-empty');
       const reset = root.querySelector('.cnl-filter-reset');
-      if (!grid || !toggle || !panel) return;
+      if (!grid) return;
 
       const items = Array.from(grid.querySelectorAll('[data-filter-item]'));
       const active = new Set();
@@ -140,19 +132,8 @@ const { categories, total, scope, label = 'Filter by category' } = Astro.props;
           const cat = c.getAttribute('data-cat');
           c.setAttribute('aria-pressed', String(cat === '*' ? active.size === 0 : active.has(cat)));
         });
-        if (summary) {
-          summary.textContent = active.size === 0
-            ? `All ${items.length}`
-            : `${shown} of ${items.length} · ${Array.from(active).join(', ')}`;
-        }
         if (empty) empty.classList.toggle('hidden', shown !== 0);
       };
-
-      toggle.addEventListener('click', () => {
-        const open = toggle.getAttribute('aria-expanded') === 'true';
-        toggle.setAttribute('aria-expanded', String(!open));
-        panel.classList.toggle('hidden', open);
-      });
 
       chips.forEach((c) => {
         c.addEventListener('click', () => {
