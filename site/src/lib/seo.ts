@@ -9,6 +9,7 @@
 import { services } from '../data/site';
 import { serviceDetails } from '../data/services';
 import { articles } from '../data/articles';
+import { caseStudies } from '../data/caseStudies';
 import { toolPages } from '../data/tools';
 
 // Must match `site` in astro.config.mjs. Kept as a plain constant so the
@@ -192,6 +193,11 @@ export function sitemapEntries(): SitemapEntry[] {
     changefreq: 'monthly',
     priority: 0.6,
   }));
+  const caseStudyPages: SitemapEntry[] = caseStudies.map((c) => ({
+    path: `/work/${c.slug}/`,
+    changefreq: 'monthly',
+    priority: 0.8,
+  }));
   const toolDetailPages: SitemapEntry[] = toolPages.map((t) => ({
     path: `/tools/${t.slug}/`,
     changefreq: 'monthly',
@@ -200,5 +206,5 @@ export function sitemapEntries(): SitemapEntry[] {
   // services from site.ts and serviceDetails share slugs; use serviceDetails
   // (the render source) to stay 1:1 with generated pages.
   void services;
-  return [...staticPages, ...servicePages, ...articlePages, ...toolDetailPages];
+  return [...staticPages, ...servicePages, ...caseStudyPages, ...articlePages, ...toolDetailPages];
 }
