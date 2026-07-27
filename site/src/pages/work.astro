@@ -6,12 +6,17 @@
 // built from that material.
 import Base from '../layouts/Base.astro';
 import Card from '../components/Card.astro';
+import CategoryFilter from '../components/CategoryFilter.astro';
 import { caseStudies } from '../data/caseStudies';
 import ClientLogos from '../components/ClientLogos.astro';
 import InlineCta from '../components/InlineCta.astro';
 import SimpleForm from '../components/islands/SimpleForm.jsx';
 import { withBase } from '../lib/url';
 import { breadcrumbSchema } from '../lib/seo';
+
+const csCounts = new Map<string, number>();
+caseStudies.forEach((c) => c.categories.forEach((k) => csCounts.set(k, (csCounts.get(k) ?? 0) + 1)));
+const csCats: [string, number][] = [...csCounts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
 
 const jsonLd = breadcrumbSchema([
   ['Home', '/'],
@@ -68,12 +73,17 @@ const formFields = [
     <h2 class="reveal mt-3 max-w-2xl font-display text-[clamp(1.6rem,3vw,2.4rem)] leading-[1.12] font-bold text-navy" style="--d:80ms">
       Real engagements, reported as they happened.
     </h2>
-    <div class={`mt-8 grid gap-5 ${caseStudies.length > 1 ? "lg:grid-cols-2" : ""}`}>
+    <div class="reveal mt-8">
+      <CategoryFilter categories={csCats} total={caseStudies.length} scope="work" label="Filter by discipline" />
+    </div>
+    <div class={`mt-6 grid gap-5 ${caseStudies.length > 1 ? "lg:grid-cols-2" : ""}`} data-filter-scope="work">
       {caseStudies.map((cs, i) => (
         <a
           href={withBase(`/work/${cs.slug}/`)}
           class={`reveal group flex flex-col rounded-2xl border border-navy/10 bg-white p-6 transition-all duration-500 ease-out-quart hover:-translate-y-1 hover:border-teal/40 hover:shadow-[0_18px_44px_rgba(26,43,74,0.10)] ${caseStudies.length === 1 ? "sm:p-8" : ""}`}
           style={`--d:${i * 90}ms`}
+          data-filter-item
+          data-cats={cs.categories.join('|')}
         >
           <div class="flex items-center gap-3">
             {cs.logo && <img onerror="this.style.display='none'" src={withBase(cs.logo)} alt={`${cs.client} logo`} width="120" height="36" class="h-8 w-auto object-contain" loading="lazy" />}

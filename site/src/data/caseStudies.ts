@@ -22,6 +22,12 @@ export interface LeadPoint {
 export interface CaseStudy {
   slug: string;
   client: string;
+  /**
+   * Categories for filtering. A real engagement usually spans several
+   * disciplines, so this holds every one it genuinely covered rather than
+   * forcing a single label.
+   */
+  categories: string[];
   /** Client logo in /public/clients/. Omitted until we have permission. */
   logo?: string;
   tag: string;
@@ -58,6 +64,7 @@ export const caseStudies: CaseStudy[] = [
   {
     slug: 'aidbylaw',
     client: 'AidByLaw',
+    categories: ['Paid Media', 'SEO', 'Content Marketing', 'Websites & Conversion'],
     logo: '/clients/aidbylaw.png',
     tag: 'Legal & Consultation',
     title: 'From ads-dependent to a second channel that pays for itself',
