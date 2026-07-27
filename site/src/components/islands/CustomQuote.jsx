@@ -11,7 +11,7 @@
 // with scope/ambition: more work, more money, never with who is asking.
 import { useState, useEffect } from 'react';
 import { OWNER_EMAIL, autoEmailReady, sendFromClicknlikes, buildReportEmailHtml, fact, hashStr } from '../../lib/engine';
-import { getCurrency, loadRates, onCurrency, formatMoney } from '../../lib/currency.js';
+import { getCurrency, loadRates, onCurrency, formatMoney, usableCurrency } from '../../lib/currency.js';
 import { useCountUp } from '../../lib/useCountUp.js';
 
 const BASE_FEE = 16000;
@@ -71,7 +71,10 @@ export default function CustomQuote() {
   }, []);
   // Display in the visitor's currency; the emailed quote keeps INR, the
   // currency the work is actually billed in.
-  const money = (n) => formatMoney(n, cur, rates);
+  // One currency per view: without live rates this resolves to INR so a
+  // converted figure never sits beside a rupee one.
+  const shown = usableCurrency(cur, rates);
+  const money = (n) => formatMoney(n, shown, rates);
   // Count the revealed totals up from zero when the quote lands.
   const monthlyView = useCountUp(result?.monthly ?? 0);
   const onetimeView = useCountUp(result?.onetime ?? 0);
@@ -131,7 +134,7 @@ export default function CustomQuote() {
     if (discountPct > 0) factors.push(fact('Bundle discount', `${Math.round(discountPct * 100)}% off monthly`, 'self', 'applied'));
     if (goal.trim()) factors.push(fact('What success looks like', goal.trim(), 'self', 'noted'));
 
-    const curNote = cur !== 'INR' && rates && rates[cur] ? ` These figures are shown in ${cur} at today's exchange rate; your written proposal confirms the final amount in ${cur}.` : '';
+    const curNote = shown !== 'INR' ? ` These figures are shown in ${shown} at today's exchange rate; your written proposal confirms the final amount in ${shown}.` : '';
     const interpretation = `This is your personalised quote (reference ${ref}) for a ${AMBITION[ambition].label.toLowerCase()} push across ${svcLabels}. Every service includes a flat ${money(16000)} base and scales with the depth of work, never with your industry.${curNote} Reply with your reference and we build the written proposal around exactly this.`;
 
     const notes = [];
@@ -226,7 +229,7 @@ export default function CustomQuote() {
             <ul className="mt-4 space-y-1.5 border-t border-navy/10 pt-3 text-[12.5px] text-navy/65">
               {result.lines.map((l) => <li key={l.label} className="flex justify-between gap-2"><span>{l.label}</span><span className="tabular-nums whitespace-nowrap">{money(l.amt)} {l.unit}</span></li>)}
             </ul>
-            {cur !== 'INR' && <p className="mt-3 text-[11px] leading-relaxed text-navy/50">Shown in {cur} at today's exchange rate. Your quote is confirmed in {cur} in the written proposal.</p>}
+            {shown !== 'INR' && <p className="mt-3 text-[11px] leading-relaxed text-navy/50">Shown in {shown} at today's exchange rate. Your quote is confirmed in {shown} in the written proposal.</p>}
             <p className="mt-4 text-[12.5px] leading-relaxed text-navy/70">
               {autoEmailReady ? <>Sent to <b>{email}</b> with reference <b>{result.ref}</b>. Reply with that reference and we build the written proposal around exactly this scope.</> : <>Your details and reference <b>{result.ref}</b> are logged, and a strategist will follow up with the written proposal.</>}
             </p>

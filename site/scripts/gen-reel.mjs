@@ -46,6 +46,8 @@ const b64 = (p) => readFileSync(resolve(ROOT, p)).toString('base64');
 const grotesk = b64('node_modules/@fontsource/space-grotesk/files/space-grotesk-latin-700-normal.woff2');
 const dmsans = b64('node_modules/@fontsource/dm-sans/files/dm-sans-latin-500-normal.woff2');
 const dmsansBold = b64('node_modules/@fontsource/dm-sans/files/dm-sans-latin-700-normal.woff2');
+// The real mark, not a font impression of it.
+const logo = b64('public/logo-wordmark.png');
 
 const html = `<!doctype html><html><head><meta charset="utf-8"><style>
 @font-face { font-family:'Space Grotesk'; font-weight:700; src:url(data:font/woff2;base64,${grotesk}) format('woff2'); }
@@ -68,9 +70,8 @@ html, body { width:1080px; height:1920px; overflow:hidden; background:#0f1c33; }
 .dot { position:absolute; border-radius:50%; background:#4ECDC4; }
 .scene { position:absolute; inset:0; display:flex; flex-direction:column;
   justify-content:center; padding:0 96px; will-change:opacity, transform; }
-.wm { position:absolute; top:88px; left:96px; font-family:'Space Grotesk'; font-weight:700;
-  font-size:40px; letter-spacing:-0.6px; }
-.wm .t { color:#4ECDC4; }
+.wm { position:absolute; top:84px; left:96px; width:300px; display:block; }
+.logoBig { width:780px; display:block; margin-top:24px; }
 h1 { font-family:'Space Grotesk'; font-weight:700; font-size:104px; line-height:1.04; letter-spacing:-2.4px; }
 h2 { font-family:'Space Grotesk'; font-weight:700; font-size:82px; line-height:1.06; letter-spacing:-1.8px; }
 .teal { color:#4ECDC4; }
@@ -98,7 +99,7 @@ h2 { font-family:'Space Grotesk'; font-weight:700; font-size:82px; line-height:1
 <div id="stage">
   <div class="grid" id="grid"></div>
   <div id="dots"></div>
-  <div class="wm" id="wm">Click<span class="t">.n.</span>likes</div>
+  <img class="wm" id="wm" src="data:image/png;base64,${logo}">
 
   <!-- S1 hook -->
   <div class="scene" id="s1">
@@ -118,7 +119,7 @@ h2 { font-family:'Space Grotesk'; font-weight:700; font-size:82px; line-height:1
   <!-- S3 launch -->
   <div class="scene" id="s3" style="justify-content:center">
     <p class="muted" data-d="0" style="font-size:34px; letter-spacing:5px; text-transform:uppercase">Now live</p>
-    <div class="big" data-d="0.12" style="margin-top:26px; font-size:112px">clicknlikes<span class="teal">.com</span></div>
+    <img class="logoBig" data-d="0.12" src="data:image/png;base64,${logo}">
     <div class="rule" data-d="0.3" id="rule" style="width:0"></div>
     <p class="muted" data-d="0.45" style="margin-top:44px">Rebuilt from the ground up:<br>faster, clearer, and honest about the numbers.</p>
   </div>
@@ -201,7 +202,10 @@ window.setT = (t) => {
   });
 
   // Wordmark: fades up once, stays.
-  document.getElementById('wm').style.opacity = (0.28 + 0.5 * ramp(t, 0.2, 0.8)).toFixed(3);
+  // Corner mark steps aside while the big mark holds the launch scene.
+  const bigOn = t >= 6.9 && t < 10.6;
+  document.getElementById('wm').style.opacity =
+    (bigOn ? 0 : 0.28 + 0.5 * ramp(t, 0.2, 0.8)).toFixed(3);
 
   SCENES.forEach((s) => {
     const el = document.getElementById(s.id);
