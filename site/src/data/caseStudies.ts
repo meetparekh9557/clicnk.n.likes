@@ -22,7 +22,7 @@ export interface LeadPoint {
 export interface CaseStudy {
   slug: string;
   client: string;
-  /** Logo file in /public/work/. Omit until we have permission + the asset. */
+  /** Client logo in /public/clients/. Omitted until we have permission. */
   logo?: string;
   tag: string;
   title: string;
@@ -40,8 +40,12 @@ export interface CaseStudy {
   approach: { phase: string; when: string; body: string }[];
   /** Website before/after comparison rows. */
   siteCompare: { row: string; before: string; after: string }[];
-  /** Screenshots; set `hasShots` false until the images are in /public/work/. */
-  hasShots: boolean;
+  /**
+   * Before/after screenshots in /public/work/. Presence is detected at build
+   * time, so dropping the file in is all that is needed. Crop raws with
+   * scripts/crop-shot.mjs first: a full-page capture renders as an unreadable
+   * sliver, and both sides should share one ratio so the comparison is fair.
+   */
   shotBefore?: string;
   shotAfter?: string;
   leads: LeadPoint[];
@@ -54,7 +58,7 @@ export const caseStudies: CaseStudy[] = [
   {
     slug: 'aidbylaw',
     client: 'AidByLaw',
-    logo: '/work/aidbylaw-logo.png',
+    logo: '/clients/aidbylaw.png',
     tag: 'Legal & Consultation',
     title: 'From ads-dependent to a second channel that pays for itself',
     excerpt:
@@ -102,7 +106,6 @@ export const caseStudies: CaseStudy[] = [
       { row: 'Testimonials', before: 'Stock avatars', after: 'Verified Google reviews' },
       { row: 'Design', before: 'Generic clip-art template', after: 'Custom, photography-led design' },
     ],
-    hasShots: false,
     shotBefore: '/work/aidbylaw-old.png',
     shotAfter: '/work/aidbylaw-new.png',
     // Reported monthly lead volume across the engagement. The two flat months
