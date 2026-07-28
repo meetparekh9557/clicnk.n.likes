@@ -143,3 +143,42 @@ Three safe versions of the same reel:
 - **Reel 2** to Reels and TikTok, where the format's suspense does the work.
 - **The rendered launch reel** as the pinned profile video and a LinkedIn post.
   It is a credibility asset, not a reach play.
+
+---
+
+# How long the pricing angle lasts
+
+Checked July 2026, because the founder asked whether everyone publishes prices
+now. Short answer: not yet, but the gap is closing, and this angle has a shelf
+life.
+
+- The figure repeated across agency blogs is that **~88% of digital agencies
+  still quote custom rather than publish**. It traces back to agency marketing
+  posts, not to primary research, so it is usable for our own planning and
+  **must not be published on the site or in a reel** — it would fail our own
+  sourcing rule the moment anyone asked where it came from.
+- Large agencies increasingly do publish. WebFX runs public pricing pages and a
+  pricing calculator. At the top of the market, transparency already exists.
+- What a buyer experiences at our end of the market is still mostly "request a
+  quote", which is why the hook lands today.
+
+**The strategic point: a published price table is copyable in an afternoon.** It
+is a positioning signal, not a moat, and we should stop treating it as the whole
+story before a competitor makes that obvious for us.
+
+What is genuinely harder to copy, in rough order of durability:
+
+- **Self-serve to a real total.** Most published pricing is a static "from ₹X"
+  table. Ours configures services, term and add-ons and returns the number that
+  would appear on the invoice. That is software, not a page.
+- **12 free checks that run on the visitor's own URL.** A product with a
+  backend, not a claim.
+- **Published contract posture** — refunds by cause, the pause right, no
+  auto-renew trap. Almost nobody puts their MSA position on a public page.
+- **Sourced and dated statistics**, with verified-vs-self-reported labelling.
+- **Case studies with the dips left in**, once permission is in hand.
+
+So the hook to lean on as the price angle ages is not "we publish prices" but
+**"you can get to your number without talking to anyone"** — the buyer benefit
+rather than the disclosure, and provable by the plan builder rather than by a
+table any competitor can paste.
