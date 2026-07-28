@@ -4,12 +4,15 @@
 <meta charset="utf-8">
 <meta name="robots" content="noindex,nofollow">
 <!--
-  This is a fixture, not a real business — built on purpose for the free
+  This is a fixture, not a real business - built on purpose for the free
   Website Health Scan reel, so the scan has something honest to find.
   Never claimed to be, and never shown as, anyone's actual website.
-  Every fault below is deliberate: no <title>, no meta description, three
-  <h1> tags, no schema.org markup, no viewport tag, and an oversized,
-  unoptimised hero image to tank the performance score.
+  Every fault below is deliberate: a missing title element, no meta
+  description, three duplicate top-level headings, no schema dot org
+  markup, no viewport meta, and an oversized, unoptimised hero image to
+  tank the performance score. Deliberately no HTML tag syntax in this
+  comment: the real analyzer's heading regex does not strip comments
+  first, so literal angle brackets here would be misread as markup.
 -->
 <style>
   body { margin: 0; font-family: Georgia, serif; background: #f2f0ea; color: #2a2a2a; }
@@ -34,7 +37,7 @@
     <p>A wide range of services tailored to your needs. Reach out any time and we will
       be happy to help you find exactly what you are looking for.</p>
 
-    <img src="hero.jpg" width="2400" height="1600" alt="">
+    <img src="hero.jpg" width="2400" height="1600">
 
     <h1>Get in touch</h1>
     <p>Send us a message and someone from our team will respond as soon as possible.
