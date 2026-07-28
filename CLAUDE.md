@@ -36,6 +36,14 @@ practical about the next real step.
 - **Protect the basics without being told:** never commit secrets (public
   repo), keep the lead-capture email + tools working, test mobile for overflow
   before shipping UI.
+- **A missed schedule is recovered the same day, never carried forward.** If a
+  scheduled automation fails, fix the cause and re-fire it that day so the slot
+  is not lost. This only works if something notices, so every scheduled Routine
+  needs a way to be checked on the day it runs — the auto-blog has a watchdog
+  Routine three hours behind it that republishes if the post is missing. Test
+  automations on a COLD start: a Routine written and verified inside a warm
+  session will pass there and fail every real run (the auto-blog did exactly
+  this for a week — `npm ci` was missing and `node_modules` is gitignored).
 
 ## Brand voice (calibrated from the founder's own writing — follow for ALL copy)
 
