@@ -152,6 +152,12 @@ const itemCls = (active: boolean) =>
     const panel = document.getElementById('mobilePanel');
     const scrim = document.getElementById('navScrim');
     if (!topnav || !toggle || !panel || !scrim) return;
+    // Guard against double-binding: this script runs initNav() directly
+    // AND on astro:page-load, which fires on first load too (same trap
+    // documented in pricing.astro's currency dropdown). Two click handlers
+    // on the toggle would open then immediately close the panel again.
+    if (toggle.dataset.navBound) return;
+    toggle.dataset.navBound = '1';
 
     const onScroll = () => {
       topnav.classList.toggle('shadow-[0_10px_30px_rgba(26,43,74,0.08)]', window.scrollY > 8);

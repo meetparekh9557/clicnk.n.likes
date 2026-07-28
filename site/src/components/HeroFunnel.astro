@@ -99,10 +99,10 @@
     else setTimeout(kick, 600);
   }
 
-  initHeroFunnel();
-  document.addEventListener('astro:page-load', () => {
-    const c = document.getElementById('heroFunnel');
-    if (c) c.dataset.on = '';
-    initHeroFunnel();
-  });
+  // astro:page-load fires on the very first load too, and this component
+  // has no transition:persist anywhere on the site, so every navigation
+  // hands initHeroFunnel a fresh, unflagged canvas. A separate direct call
+  // here would double-fire on first load (two independent animation loops
+  // drawing on the same canvas) - see Nav.astro for the same trap.
+  document.addEventListener('astro:page-load', initHeroFunnel);
 </script>
