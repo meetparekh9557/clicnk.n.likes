@@ -1,10 +1,12 @@
-// Per-channel tool scorers, ported VERBATIM from v1's TOOL_LOGIC so the
-// numbers and copy are identical. Each takes the collected inputs (with
-// `_page` set to a live fetchPageFacts result when a URL was given) and
-// returns { score, indexLabel, liveNote, interpretation, bullets, gaps,
+// Per-channel tool scorers. The first seven are ported VERBATIM from v1's
+// TOOL_LOGIC so the numbers and copy are identical; later additions follow
+// the same shape. Each takes the collected inputs (with `_page` set to a
+// live fetchPageFacts result when a URL was given) and returns
+// { score, indexLabel, liveNote, interpretation, bullets, gaps,
 // factors, nextSteps, howToRead, pivotTitle, pivotText, statusLine }.
 // The v1 `seed` argument was never actually used, so it is dropped.
 import { fact, escapeHtml } from './engine';
+import { SCHEMA_RULES, hasProp } from './schemaRules';
 
 export const toolScorers = {
   // 1. Organic Authority Index
@@ -420,6 +422,214 @@ export const toolScorers = {
       howToRead: `Each checkbox you ticked maps to a real, named leak: sending traffic straight to your homepage instead of a dedicated landing page wastes roughly 35% of that spend. An unverified pixel wastes another 25%. A missing negative keyword list wastes 15%. These stack, then get multiplied by your actual monthly budget to get the rupee figure. All inputs are self-reported: we cannot see inside your ad account.`,
       pivotTitle: 'Full Ad Account Deep-Dive',
       pivotText: `Stop letting your ad budget bleed out. Request a formal Ad Account Deep-Dive from our performance strategists for ${inp.paid_industry || 'your industry'}.`,
+    };
+  },
+
+  // 8. Schema Validator & Score. Pasted JSON-LD is parsed and checked
+  // directly (verified: it is the exact code the visitor gave us this
+  // session), against Google's own documented required/recommended
+  // properties per type (schemaRules.js). A URL-only check can currently
+  // only confirm which @types are present on the live page (the analyzer
+  // extracts detected types, not the full parsed objects), so that path is
+  // honestly labelled as a coarser, partial check rather than a full pass.
+  schemavalidator(inp) {
+    const page = inp._page && inp._page.available ? inp._page : null;
+    const raw = String(inp.schemavalidator_content || '').trim();
+    const gaps = [];
+    const factors = [];
+    const nextSteps = [];
+
+    function extractBlocks(text) {
+      const blocks = [];
+      const scriptRe = /<script\b[^>]*type\s*=\s*["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi;
+      let m, found = false;
+      while ((m = scriptRe.exec(text)) !== null) { found = true; blocks.push(m[1]); }
+      if (!found) blocks.push(text);
+      const objs = [];
+      const errors = [];
+      blocks.forEach((b) => {
+        const t = b.trim();
+        if (!t) return;
+        try {
+          const parsed = JSON.parse(t);
+          const arr = Array.isArray(parsed) ? parsed : (parsed['@graph'] ? parsed['@graph'] : [parsed]);
+          arr.forEach((o) => { if (o && typeof o === 'object') objs.push(o); });
+        } catch (e) {
+          errors.push(e.message);
+        }
+      });
+      return { objs, errors };
+    }
+
+    function scoreObject(obj) {
+      const type = Array.isArray(obj['@type']) ? obj['@type'][0] : obj['@type'];
+      const rule = SCHEMA_RULES[type];
+      if (!rule) return { type: type || 'Unknown', known: false, pct: null, requiredMissing: [], recommendedMissing: [] };
+      const requiredMissing = rule.required.filter((p) => !hasProp(obj, p));
+      const oneOfOk = !rule.oneOf || rule.oneOf.some((p) => hasProp(obj, p));
+      const recommendedMissing = rule.recommended.filter((p) => !hasProp(obj, p));
+      const reqTotal = rule.required.length + (rule.oneOf ? 1 : 0);
+      const reqFound = (rule.required.length - requiredMissing.length) + (oneOfOk ? 1 : 0);
+      const recTotal = rule.recommended.length;
+      const recFound = recTotal - recommendedMissing.length;
+      const pct = Math.round((reqTotal ? (reqFound / reqTotal) * 70 : 70) + (recTotal ? (recFound / recTotal) * 30 : 30));
+      if (!oneOfOk) requiredMissing.push(`one of: ${rule.oneOf.join(', ')}`);
+      return { type, known: true, pct, requiredMissing, recommendedMissing };
+    }
+
+    let score;
+    let liveNote = null;
+
+    if (raw) {
+      const { objs, errors } = extractBlocks(raw);
+      if (!objs.length) {
+        score = 5;
+        gaps.push(`Could not parse this as valid JSON-LD${errors[0] ? `: ${errors[0]}` : ''}.`);
+        factors.push(fact('JSON syntax', 'Invalid or unparseable', 'verified', 'blocks all validation'));
+        nextSteps.push('Fix the JSON syntax first (a trailing comma or unescaped quote is the usual cause), or generate a guaranteed-valid block with our free Schema Generator.');
+      } else {
+        liveNote = 'Your pasted JSON-LD was parsed and checked directly, this session';
+        const results = objs.map(scoreObject);
+        score = Math.round(results.reduce((s, r) => s + (r.known ? r.pct : 60), 0) / results.length);
+        results.forEach((r) => {
+          if (!r.known) {
+            factors.push(fact(`${r.type} schema`, 'Valid JSON-LD, but not a type we have a required-property checklist for', 'verified', 'unscored'));
+            return;
+          }
+          factors.push(fact(`${r.type} schema`, r.requiredMissing.length ? `Missing: ${r.requiredMissing.join(', ')}` : 'All required properties present', 'verified', `${r.pct}%`));
+          if (r.requiredMissing.length) {
+            gaps.push(`${r.type}: missing required ${r.requiredMissing.join(', ')}`);
+            nextSteps.push(`Add the missing required ${r.requiredMissing.length > 1 ? 'properties' : 'property'} to your ${r.type} schema: ${r.requiredMissing.join(', ')}.`);
+          }
+          if (r.recommendedMissing.length) gaps.push(`${r.type}: missing recommended ${r.recommendedMissing.join(', ')}`);
+        });
+      }
+    } else if (page) {
+      liveNote = `Schema types detected live from ${page.finalUrl}`;
+      if (!page.hasSchema) {
+        score = 15;
+        gaps.push('No schema.org structured data detected on this page (verified)');
+        factors.push(fact('Structured data present', 'None found', 'verified', 'flagged'));
+        nextSteps.push('You have no schema at all: start with Organization or LocalBusiness, the highest-leverage type for most sites. Build it in under a minute with our free Schema Generator.');
+      } else {
+        score = 55;
+        factors.push(fact('Structured data present', `Detected: ${page.schemaTypes.slice(0, 5).join(', ')}`, 'verified', 'types confirmed live'));
+        gaps.push('Type presence confirmed, but required-property validation needs the actual JSON-LD: paste it above for a full pass/fail check');
+        nextSteps.push('Paste the JSON-LD itself (view source, copy the <script type="application/ld+json"> block) for a full required-property check: a live URL check can only confirm which types exist, not whether each one is complete.');
+      }
+    } else {
+      score = 5;
+    }
+
+    score = Math.max(5, Math.min(100, score));
+    const status = score < 50 ? 'Needs Work' : score < 85 ? 'Mostly Valid' : 'Strong';
+    nextSteps.push('Re-check with Google\'s own Rich Results Test after you publish the fix, it is the final word on rich-result eligibility.');
+
+    return {
+      score, indexLabel: 'Schema Validity',
+      liveNote,
+      interpretation: `${score}/100 (${status}). ${raw ? 'Checked directly against your pasted JSON-LD.' : page ? 'Checked from schema types detected on your live page.' : 'No schema given to check.'} ${score >= 85 ? 'Your markup meets the required properties Google looks for.' : score >= 50 ? 'The structure is there but missing pieces will keep you out of some rich results.' : 'This markup will not qualify for rich results in its current state.'}`,
+      bullets: [
+        `Schema Validity: ${score}/100 (${status}).`,
+        gaps[0] || 'No missing required properties found.',
+        raw ? 'Source: your pasted JSON-LD, checked directly.' : 'Source: schema types detected live from your URL.',
+      ],
+      gaps, factors, nextSteps: nextSteps.slice(0, 5),
+      howToRead: `We check your markup's @type against the required and recommended properties Google's own Search Central documentation lists for that type (e.g. Article needs headline, image, datePublished and author; Product needs at least one of offers, review or aggregateRating). Required properties are weighted 70% of the score, recommended ones 30%. Pasted JSON-LD is checked property-by-property; a URL alone can only confirm which types are present.`,
+      pivotTitle: 'Full Structured Data Rollout',
+      pivotText: 'A complete, validated schema strategy across every page type on your site, built and implemented for you.',
+    };
+  },
+
+  // 9. Content SEO Score. Scores ONE piece of content (paste or URL)
+  // against on-page SEO fundamentals, distinct from the Organic Authority
+  // Index (sitewide architecture) and Content Gap Snapshot (topic/publishing
+  // gaps versus competitors): this tool answers "is this specific page
+  // actually optimized," not "is my site" or "what am I missing."
+  contentscore(inp) {
+    const page = inp._page && inp._page.available ? inp._page : null;
+    const keyword = String(inp.contentscore_keyword || '').trim().toLowerCase();
+    const rawContent = String(inp.contentscore_content || '').trim();
+    const text = page ? (page.textSample || '') : rawContent;
+    const gaps = [];
+    const factors = [];
+    let score = 100;
+
+    const words = text.split(/\s+/).filter(Boolean);
+    const wordCount = page ? page.wordCount : words.length;
+    if (wordCount < 300) { score -= 20; gaps.push(`Thin content: only ${wordCount} words`); }
+    factors.push(fact('Content depth', `${wordCount} words`, 'verified', wordCount < 300 ? '−20 pts' : wordCount < 600 ? 'developing' : 'solid depth'));
+
+    const sentences = text.split(/[.!?]+/).map((s) => s.trim()).filter(Boolean);
+    const avgSentenceLen = sentences.length ? Math.round(words.length / sentences.length) : 0;
+    if (avgSentenceLen > 28) { score -= 10; gaps.push(`Dense sentences: averaging ${avgSentenceLen} words each`); }
+    factors.push(fact('Readability (avg sentence length)', avgSentenceLen ? `${avgSentenceLen} words/sentence` : 'Not enough text to measure', 'verified', avgSentenceLen > 28 ? '−10 pts' : 'reasonable'));
+
+    if (keyword) {
+      const lowerText = text.toLowerCase();
+      const occurrences = lowerText.split(keyword).length - 1;
+      const inFirst100 = words.slice(0, 100).join(' ').toLowerCase().includes(keyword);
+      if (occurrences === 0) { score -= 25; gaps.push(`Target keyword "${inp.contentscore_keyword}" does not appear in the content at all`); }
+      else if (!inFirst100) { score -= 10; gaps.push('Target keyword does not appear in the first 100 words'); }
+      factors.push(fact('Target keyword usage', occurrences === 0 ? 'Not found in the content' : `Appears ${occurrences}x${inFirst100 ? ', including early' : ', but not in the opening'}`, 'verified', occurrences === 0 ? '−25 pts' : !inFirst100 ? '−10 pts' : 'good placement'));
+      if (page && page.title) {
+        const inTitle = page.title.toLowerCase().includes(keyword);
+        if (!inTitle) { score -= 10; gaps.push('Target keyword missing from the title tag'); }
+        factors.push(fact('Keyword in title tag', inTitle ? 'Present' : 'Missing', 'verified', inTitle ? 'no issue' : '−10 pts'));
+      }
+      if (page && page.h1Text) {
+        const inH1 = page.h1Text.toLowerCase().includes(keyword);
+        if (!inH1) { score -= 8; gaps.push('Target keyword missing from the H1'); }
+        factors.push(fact('Keyword in H1', inH1 ? 'Present' : 'Missing', 'verified', inH1 ? 'no issue' : '−8 pts'));
+      }
+    }
+
+    if (page) {
+      if (page.h1Count === 0) { score -= 12; gaps.push('No H1 heading found (verified)'); }
+      else if (page.h1Count > 1) { score -= 8; gaps.push(`${page.h1Count} H1 headings found: should be exactly one (verified)`); }
+      factors.push(fact('H1 structure', page.h1Count === 1 ? 'Exactly one H1' : `${page.h1Count} H1 tags`, 'verified', page.h1Count === 1 ? 'no issue' : 'flagged'));
+
+      if (page.headingSkips > 0) { score -= 8; gaps.push(`${page.headingSkips} heading level(s) skipped, e.g. H2 straight to H4 (verified)`); }
+      factors.push(fact('Heading hierarchy', page.headingSkips > 0 ? `${page.headingSkips} level(s) skipped` : 'Clean, sequential structure', 'verified', page.headingSkips > 0 ? 'flagged' : 'no issue'));
+
+      const mdLen = page.metaDescriptionLength;
+      const mdOk = mdLen >= 50 && mdLen <= 160;
+      if (mdLen === 0) { score -= 10; gaps.push('Missing meta description (verified)'); }
+      else if (!mdOk) { score -= 5; gaps.push(`Meta description is ${mdLen} characters, outside the ~50-160 range that displays cleanly in search results (verified)`); }
+      factors.push(fact('Meta description', mdLen === 0 ? 'Missing' : `${mdLen} characters`, 'verified', mdLen === 0 ? '−10 pts' : mdOk ? 'no issue' : '−5 pts'));
+
+      if (!page.hasSchema) { score -= 8; gaps.push('No schema.org structured data on this page (verified)'); }
+      factors.push(fact('Structured data', page.hasSchema ? `Present: ${(page.schemaTypes || []).slice(0, 3).join(', ')}` : 'None found', 'verified', page.hasSchema ? 'no issue' : '−8 pts'));
+
+      if (page.internalLinks === 0) { score -= 7; gaps.push('No internal links found on this page (verified)'); }
+      factors.push(fact('Internal linking', `${page.internalLinks} internal link(s)`, 'verified', page.internalLinks === 0 ? '−7 pts' : 'no issue'));
+    }
+
+    score = Math.max(8, Math.round(score));
+    const status = score < 50 ? 'Underoptimized' : score < 75 ? 'Partially Optimized' : 'Well Optimized';
+
+    const nextSteps = [];
+    if (keyword && !text.toLowerCase().slice(0, 600).includes(keyword)) nextSteps.push(`Work "${inp.contentscore_keyword}" naturally into your opening paragraph: search engines and AI answer engines both weight early keyword placement heavily.`);
+    if (page && page.h1Count !== 1) nextSteps.push('Fix your H1 count to exactly one, matching the page topic.');
+    if (page && page.headingSkips > 0) nextSteps.push('Repair your heading hierarchy: no level should be skipped, it confuses both readers and crawlers.');
+    if (page && page.metaDescriptionLength === 0) nextSteps.push('Write a meta description between 120-158 characters that includes your target keyword and a reason to click.');
+    if (page && !page.hasSchema) nextSteps.push('Add schema markup for this content type (Article for a blog post, Product for a product page): generate it free with our Schema Generator.');
+    if (wordCount < 300) nextSteps.push('Expand this content: 300 words rarely gives a search engine or an AI answer engine enough substance to cite you as the authoritative source.');
+    if (nextSteps.length < 3) nextSteps.push('The fundamentals here are solid: the next gains come from earning links and mentions to this specific page, not more on-page changes.');
+
+    return {
+      score, indexLabel: 'Content SEO Score',
+      liveNote: page ? `On-page facts verified live from ${page.finalUrl}` : null,
+      interpretation: `${score}/100 (${status}). This scores the SEO fundamentals of this one piece of content${page ? ', verified live from your URL' : ''}${keyword ? `, targeting "${inp.contentscore_keyword}"` : ''}. ${score >= 75 ? 'This piece is doing its job: further gains will come from promotion and links, not more on-page edits.' : score >= 50 ? 'Fixable structural gaps below are capping how well this page can rank.' : 'Multiple fundamentals are missing: this page is unlikely to rank for its intended keyword as it stands.'}`,
+      bullets: [
+        `Content SEO Score: ${score}/100 (${status}).`,
+        `Depth: ${wordCount} words${keyword ? `, keyword "${inp.contentscore_keyword}" ${text.toLowerCase().includes(keyword) ? 'found' : 'not found'} in the copy` : ''}.`,
+        page ? `On-page structure verified live: ${page.h1Count} H1, ${page.headingSkips} heading skip(s), meta description ${page.metaDescriptionLength} chars.` : 'Add a URL next time to verify heading structure, meta description and schema directly.',
+      ],
+      gaps, factors, nextSteps: nextSteps.slice(0, 5),
+      howToRead: `This is a single piece of content's on-page score, not your whole site (that is the Organic Authority Index) and not a competitive topic-gap analysis (that is the Content Gap Snapshot). We start at 100 and deduct for thin content, dense sentences, missing or misplaced target keyword, broken heading structure, a missing or badly-sized meta description, no schema markup, and no internal links.`,
+      pivotTitle: 'Full Content Optimization Pass',
+      pivotText: `A page-by-page content rewrite and optimization plan, mapped to your real ranking targets for ${inp.contentscore_keyword || 'your core topics'}.`,
     };
   },
 };
