@@ -38,12 +38,21 @@ practical about the next real step.
   before shipping UI.
 - **A missed schedule is recovered the same day, never carried forward.** If a
   scheduled automation fails, fix the cause and re-fire it that day so the slot
-  is not lost. This only works if something notices, so every scheduled Routine
-  needs a way to be checked on the day it runs — the auto-blog has a watchdog
-  Routine three hours behind it that republishes if the post is missing. Test
-  automations on a COLD start: a Routine written and verified inside a warm
-  session will pass there and fail every real run (the auto-blog did exactly
-  this for a week — `npm ci` was missing and `node_modules` is gitignored).
+  is not lost. That only works if something notices, so every scheduled Routine
+  needs a check on the day it runs — the auto-blog has a watchdog Routine three
+  hours behind it that republishes if the post is missing.
+- **A Routine's fired session starts with NOTHING.** It does not inherit this
+  session's checkout: `/home/user` comes up empty, so every prompt must clone
+  the repo itself (`git clone https://github.com/meetparekh9557/clicnk.n.likes.git
+  ~/clicnk.n.likes`) and then install dependencies (`npm ci` — `node_modules` is
+  gitignored, and the featured-image generator reads its fonts from it). The
+  auto-blog failed silently for a week on exactly this.
+- **Diagnose from the failure's own words, not from a reproduction.** That week
+  was spent on two confident wrong theories, both built by reproducing a problem
+  locally rather than reading what the failing run actually said. The run itself
+  had the answer the whole time: the working directory was empty. Ask for the
+  error text first; a local repro can only ever confirm a bug you already
+  imagined.
 
 ## Brand voice (calibrated from the founder's own writing — follow for ALL copy)
 
