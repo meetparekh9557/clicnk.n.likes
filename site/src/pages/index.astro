@@ -287,12 +287,12 @@ const iconWrap = 'mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 t
       };
       setTimeout(roll, HOLD);
     }
-    initHeroRotate();
-    document.addEventListener('astro:page-load', () => {
-      const el = document.getElementById('heroRotate');
-      if (el) el.dataset.on = '';
-      initHeroRotate();
-    });
+    // astro:page-load fires on the very first load too, and this component
+    // has no transition:persist anywhere on the site, so every navigation
+    // hands initHeroRotate a fresh, unflagged node. A separate direct call
+    // here would double-fire on first load (two independent roll() timers
+    // racing on the same word) - see Nav.astro for the same trap.
+    document.addEventListener('astro:page-load', initHeroRotate);
   </script>
 
   <script>

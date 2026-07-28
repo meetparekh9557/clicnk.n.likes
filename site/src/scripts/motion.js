@@ -22,6 +22,11 @@ function initMotion() {
           if (!entry.isIntersecting) continue;
           const el = entry.target;
           countIo.unobserve(el);
+          // initMotion() runs on astro:page-load, which fires on the first
+          // load too, so a still-visible page's stat tiles would otherwise
+          // get a second independent count-up animation racing the first.
+          if (el.dataset.countBound) continue;
+          el.dataset.countBound = '1';
           const numEl = el.querySelector('.stat-count-num');
           const target = parseFloat(el.dataset.count);
           if (!numEl || !isFinite(target)) continue;
