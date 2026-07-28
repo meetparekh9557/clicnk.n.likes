@@ -10,7 +10,10 @@ import SpeedCheck from '../../components/islands/SpeedCheck.jsx';
 import SnapshotCheck from '../../components/islands/SnapshotCheck.jsx';
 import FunnelRoiCalculator from '../../components/islands/FunnelRoiCalculator.jsx';
 import CompetitorThreat from '../../components/islands/CompetitorThreat.jsx';
+import SchemaGenerator from '../../components/islands/SchemaGenerator.jsx';
+import GatedTool from '../../components/islands/GatedTool.jsx';
 import { tools, toolPages, toolHref } from '../../data/tools';
+import { toolConfigs } from '../../data/toolConfigs';
 import { withBase } from '../../lib/url';
 import { breadcrumbSchema } from '../../lib/seo';
 import Gauge from '@lucide/astro/icons/gauge';
@@ -18,10 +21,13 @@ import Eye from '@lucide/astro/icons/eye';
 import BarChart3 from '@lucide/astro/icons/chart-column-increasing';
 import Target from '@lucide/astro/icons/target';
 import Search from '@lucide/astro/icons/search';
+import Code2 from '@lucide/astro/icons/code';
+import ShieldCheck from '@lucide/astro/icons/shield-check';
+import FileSearch from '@lucide/astro/icons/file-search';
 import ArrowUpRight from '@lucide/astro/icons/arrow-up-right';
 import ArrowLeft from '@lucide/astro/icons/arrow-left';
 
-const ICONS = { Gauge, Eye, BarChart3, Target, Search };
+const ICONS = { Gauge, Eye, BarChart3, Target, Search, Code2, ShieldCheck, FileSearch };
 
 export function getStaticPaths() {
   const meta = {
@@ -53,6 +59,27 @@ export function getStaticPaths() {
       title: 'Free Competitor Threat Estimator | Click.n.likes',
       description: 'Score how much of a threat your main competitor really is, from a fixed weighted matrix. Free, honest, no scraping. Full breakdown emailed.',
     },
+    'schema-generator': {
+      eyebrow: 'Generator',
+      h1: 'Schema Markup Generator',
+      lede: 'Pick a type, fill in your details, get valid JSON-LD you can paste straight into your site, no developer required.',
+      title: 'Free Schema Markup (JSON-LD) Generator | Click.n.likes',
+      description: 'Generate valid schema.org JSON-LD for Organization, LocalBusiness, Article, Product, FAQ and HowTo pages. Free, with an implementation guide emailed.',
+    },
+    'schema-validator': {
+      eyebrow: 'Validator',
+      h1: 'Schema Validator & Score',
+      lede: 'Paste your JSON-LD or give us a URL. We check it against the exact required properties Google looks for, and score what is missing.',
+      title: 'Free Schema Markup Validator & Score | Click.n.likes',
+      description: 'Validate your schema.org JSON-LD against Google’s required and recommended properties. Free score, full checklist emailed, no call required.',
+    },
+    'content-score': {
+      eyebrow: 'Score',
+      h1: 'Content SEO Score',
+      lede: 'Paste one page of copy or its URL. We score that specific piece on the on-page fundamentals that actually move rankings.',
+      title: 'Free Content SEO Score Checker | Click.n.likes',
+      description: 'Score a single page of content on keyword placement, structure, readability, meta description and schema. Free, honest, full report emailed.',
+    },
   };
   return toolPages.map((t) => ({ params: { tool: t.slug }, props: { tool: t, meta: meta[t.slug] } }));
 }
@@ -79,6 +106,9 @@ const iconWrap = 'mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 t
       {tool.slug === 'first-impression' && <SnapshotCheck client:load toolsHref={withBase('/tools/')} />}
       {tool.slug === 'funnel-roi' && <FunnelRoiCalculator client:load />}
       {tool.slug === 'competitor-threat' && <CompetitorThreat client:load />}
+      {tool.slug === 'schema-generator' && <SchemaGenerator client:load />}
+      {tool.slug === 'schema-validator' && <GatedTool config={toolConfigs.schemavalidator} serviceLabel="Schema Validator & Score" client:load />}
+      {tool.slug === 'content-score' && <GatedTool config={toolConfigs.contentscore} serviceLabel="Content SEO Score" client:load />}
     </div>
   </section>
 

@@ -15,6 +15,9 @@ export const tools: ToolLink[] = [
   { slug: 'first-impression', name: 'First-Impression Snapshot', tagline: 'See your homepage the way a new visitor does.', icon: 'Eye' },
   { slug: 'funnel-roi', name: 'Funnel Leak & ROI', tagline: 'The revenue you leak below a healthy 3% conversion.', icon: 'BarChart3' },
   { slug: 'competitor-threat', name: 'Competitor Threat', tagline: 'Score how much of a threat your main rival really is.', icon: 'Target' },
+  { slug: 'schema-generator', name: 'Schema Markup Generator', tagline: 'Build valid JSON-LD schema for your business, in minutes.', icon: 'Code2' },
+  { slug: 'schema-validator', name: 'Schema Validator & Score', tagline: 'Check your schema against what Google actually requires.', icon: 'ShieldCheck' },
+  { slug: 'content-score', name: 'Content SEO Score', tagline: 'Score one page of content on real on-page SEO fundamentals.', icon: 'FileSearch' },
 ];
 
 // The path a tool links to ('' → the hub, otherwise its own page).

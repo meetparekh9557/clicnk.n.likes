@@ -73,8 +73,14 @@ export const toolConfigs = {
   },
   webdev: {
     scorer: 'webdev', urlField: 'webdev_url',
+    // The two weakest checkboxes below (CLS, mobile speed) are exactly what
+    // Google PageSpeed Insights measures directly. When a URL is given, fetch
+    // it live instead of asking the visitor to self-diagnose their own site's
+    // layout shift and load time — the same real check the standalone Speed
+    // Test runs, reused here rather than re-self-reported.
+    wantsPageSpeed: true,
     name: 'Infrastructure Health Check',
-    lead: 'A directional read on how much friction is costing you in mobile conversions.',
+    lead: 'A directional read on how much friction is costing you in mobile conversions. Add a URL for a live Core Web Vitals + on-page check.',
     fields: [
       { id: 'webdev_industry', type: 'text', label: 'Your industry', placeholder: 'e.g. hospitality' },
       { id: 'webdev_url', type: 'url', label: 'Your website URL', optional: true, placeholder: 'yourwebsite.com (optional, on-page facts checked live)' },
@@ -100,6 +106,27 @@ export const toolConfigs = {
       { id: 'paid_pixel', type: 'checkbox', label: 'Is your conversion tracking / pixel unverified?' },
       { id: 'paid_negkw', type: 'checkbox', label: 'Are you missing a negative keyword list?' },
       { id: 'paid_email', type: 'email', label: 'Email (for your full report)' },
+    ],
+  },
+  schemavalidator: {
+    scorer: 'schemavalidator', urlField: 'schemavalidator_url', requireOneOf: ['schemavalidator_content', 'schemavalidator_url'],
+    name: 'Schema Validator & Score',
+    lead: 'Paste your JSON-LD or give a page URL: we check it against the required properties Google actually looks for.',
+    fields: [
+      { id: 'schemavalidator_content', type: 'textarea', label: 'Paste your JSON-LD schema', optional: true, placeholder: '<script type="application/ld+json">{ "@context": "https://schema.org", ... }</script> (or just the JSON)' },
+      { id: 'schemavalidator_url', type: 'url', label: '...or your page URL', optional: true, placeholder: 'yourwebsite.com (checks which schema types are present)' },
+      { id: 'schemavalidator_email', type: 'email', label: 'Email (for your full report)' },
+    ],
+  },
+  contentscore: {
+    scorer: 'contentscore', urlField: 'contentscore_url', requireOneOf: ['contentscore_content', 'contentscore_url'],
+    name: 'Content SEO Score',
+    lead: 'Paste one page of copy or its URL: we score that specific piece on the on-page fundamentals that actually move rankings.',
+    fields: [
+      { id: 'contentscore_keyword', type: 'text', label: 'Target keyword or topic', placeholder: 'e.g. seamless bras for daily wear' },
+      { id: 'contentscore_content', type: 'textarea', label: 'Paste your content', optional: true, placeholder: 'Paste the full page copy you want scored...' },
+      { id: 'contentscore_url', type: 'url', label: '...or your page URL', optional: true, placeholder: 'yourwebsite.com/blog/... (optional, checked live)' },
+      { id: 'contentscore_email', type: 'email', label: 'Email (for your full report)' },
     ],
   },
 };
