@@ -80,7 +80,7 @@ const jsonLd = [
 
   <section class="mx-auto max-w-3xl px-[5vw] pb-16">
     <div class="reveal divide-y divide-navy/10 border-y border-navy/10">
-      {faqs.map((f) => (
+      {faqs.map((f, i) => (
         <details class="faq group">
           <summary class="flex cursor-pointer list-none items-center justify-between gap-4 py-5 text-left font-display text-[16px] font-semibold text-navy transition-colors hover:text-teal-dark [&::-webkit-details-marker]:hidden">
             {f.q}
@@ -88,7 +88,15 @@ const jsonLd = [
               <Plus size={15} stroke-width={2.4} aria-hidden="true" />
             </span>
           </summary>
-          <p class="-mt-1 pr-10 pb-5 text-[15px] leading-relaxed text-navy/70">{f.a}</p>
+          <p class="-mt-1 pr-10 pb-5 text-[15px] leading-relaxed text-navy/70">
+            {/* The JSON-LD below uses f.a verbatim (plain text, always INR - correct
+                for structured data, which has no visitor to localise for). Only this
+                visible paragraph swaps in the localised price, for the one answer
+                that states one (index 0: "How much does a project cost?"). */}
+            {i === 0 ? (
+              <>Projects start from <span class="cnl-price" data-inr="16000">₹16,000</span>. The exact number depends on the service, your market, and how much you need each month. Use the instant quote calculator on the Pricing page to get a real number in under a minute.</>
+            ) : f.a}
+          </p>
         </details>
       ))}
     </div>
@@ -115,4 +123,10 @@ const jsonLd = [
       </div>
     </div>
   </section>
+
+  <script>
+    import { applyPriceSpans } from '../lib/currency.js';
+    applyPriceSpans();
+    document.addEventListener('astro:page-load', () => applyPriceSpans());
+  </script>
 </Base>

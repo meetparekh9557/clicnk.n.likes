@@ -298,7 +298,7 @@ const jsonLd = [
         // The chosen currency is only used if every figure can be shown in it;
         // otherwise the whole page drops to INR rather than mixing symbols.
         const chosen = getCurrency();
-        const cur = usableCurrency(chosen, fx.rates);
+        const cur = usableCurrency(chosen);
         if (label) label.textContent = shortOf(cur);
         opts.forEach((o) => o.setAttribute('aria-selected', String(o.getAttribute('data-cur') === cur)));
         document.querySelectorAll('.cnl-price').forEach((el) => {
