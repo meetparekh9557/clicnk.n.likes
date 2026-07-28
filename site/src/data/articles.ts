@@ -37,6 +37,55 @@ export interface Article {
 
 export const articles: Article[] = [
   {
+    slug: "marketing-budget-small-business",
+    tag: "Content",
+    categories: ["Content Marketing"],
+    title: "How much should a small business actually spend on marketing?",
+    excerpt: "Three real benchmarks, from the SBA to Gartner, land between 7% and 9.4% of revenue, and the honest answer is which end of that range fits your stage.",
+    author: "Click.n.likes team",
+    readTime: "9 min read",
+    date: "2026-07-28",
+    body: `<p>In the past, a shopkeeper's marketing budget was the cost of a signboard and, if business was good, a few lines in the local paper. There was no benchmark to check it against because there was barely a decision to make. A modern business does not have that luxury: a founder now has to decide, in advance and in cold rupees, how much of this year's revenue goes toward being found at all, and unlike the signboard, there is no single obviously correct number to copy.</p>
+      <p>The honest answer is that "how much should I spend on marketing" has three real, checkable answers depending on who is being asked, and a founder who does not know which one applies to them will either overspend chasing an enterprise benchmark or underspend on the strength of a number meant for a business ten times their size.</p>
+      <h2>What do the actual benchmarks say?</h2>
+      <p>They say slightly different things, because they are measuring slightly different businesses. The <a href="https://www.sba.gov/" target="_blank" rel="noopener">U.S. Small Business Administration</a> recommends 7-8% of revenue for businesses under $5 million in annual revenue. Gartner's 2025 CMO Spend Survey put the average marketing budget at 7.7% of overall company revenue, but Gartner's sample is mostly enterprises with a median annual revenue above $1 billion. The Deloitte/Duke Fuqua CMO Survey, which samples a much broader mix of company sizes, found 9.4%, and Deloitte's own commentary on the gap is the useful part: smaller companies typically allocate a higher percentage of revenue to marketing than large ones, not a lower one, because a small business has no existing brand recognition to coast on.</p>
+      <p>Put plainly: the smaller the business, the higher the percentage tends to run, not the lower. A founder who assumes marketing is a luxury to be trimmed once the business is "big enough" has the relationship backwards.</p>
+      <h2>Why do smaller businesses spend a higher percentage, not a lower one?</h2>
+      <p>Because a large company is spending to defend market share it already has, while a small one is spending to create demand that does not yet exist for it by name. An engineer searching for a fabrication partner, a clinic owner comparing booking software, or a homeowner picking a renovation contractor is not typing a specific business's name into Google; they are typing the problem. A business with no visibility for that problem is invisible to the entire decision, no matter how good the work behind it is. That visibility has to be built before it can be defended, and building it costs proportionally more than maintaining it.</p>
+      <ul>
+        <li><strong>Early-stage or pre-revenue businesses:</strong> Often need to spend above the benchmark range temporarily, because there is no existing customer base or word-of-mouth to lean on while organic channels mature.</li>
+        <li><strong>Established local businesses with steady referrals:</strong> Can often sit at or below 7%, since some of the demand-creation work is already being done by existing customers.</li>
+        <li><strong>Businesses entering a new market or city:</strong> Should budget closer to the founding-stage number for that specific market, even if the business is mature elsewhere, because in that market they are starting from zero again.</li>
+      </ul>
+      <h2>Should the whole budget go to one channel?</h2>
+      <p>No, and this is where most first-time budgets go wrong: they get allocated as one lump sum to whichever channel a founder has heard of most recently, usually paid ads, rather than split deliberately across a channel that works immediately and one that compounds over time. <a href="/insights/seo-or-ads-first/">The right split between paid and organic</a> depends on timeline and margin, but the mistake to avoid is spending the entire figure on the channel that stops producing the moment the budget does, with nothing left building for the months after.</p>
+      <p>A sensible starting split for a business budgeting at the SBA's 7-8% mark is roughly half toward the channel that produces enquiries this quarter (typically paid search or paid social) and half toward the channel that compounds (SEO and content), adjusted as real numbers come in on which is actually converting for that specific business.</p>
+      <h2>What should the budget actually cover?</h2>
+      <p>The 7-9.4% figures above are total marketing spend, not media spend alone, and conflating the two is a second common mistake. A realistic small-business marketing budget covers:</p>
+      <ul>
+        <li><strong>Website and conversion infrastructure:</strong> The destination every other channel sends traffic to; a leaking website makes every other line item less efficient than it should be.</li>
+        <li><strong>Content and SEO:</strong> The compounding asset that reduces dependence on paid spend over time.</li>
+        <li><strong>Paid media:</strong> The channel that produces enquiries on a timeline, at a cost per click that has to be measured against what a converted lead is actually worth.</li>
+        <li><strong>Tools and reporting:</strong> Rarely budgeted for by a first-time founder, and usually the reason nobody can say with confidence which of the above is actually working.</li>
+      </ul>
+      <h2>Example in Action:</h2>
+      <p>A founder budgeting on a projected ₹80,00,000 annual revenue, applying the SBA's 7-8% guideline, arrives at roughly ₹5,60,000 to ₹6,40,000 for the year, or ₹47,000 to ₹53,000 a month. Split roughly evenly between a channel producing enquiries now and one compounding for later, that is a realistic, checkable number to hold an agency or an in-house effort accountable to, rather than an arbitrary figure picked because it felt affordable.</p>
+      <h2>Conclusion: A Range to Choose From, Not a Number to Copy</h2>
+      <p>There is no single correct marketing budget, but there is a real, sourced range: 7% at the conservative end, 9.4% at the end that better reflects how much a genuinely small business needs to spend to be found at all. The businesses that get this wrong are rarely the ones spending too much; they are almost always the ones who treated marketing as a discretionary expense to be decided after everything else, rather than the line item that determines whether the rest of the business ever gets found.</p>
+      <div class="article-cta">
+        <h4>Want a number built for your actual business, not a benchmark?</h4>
+        <p>Tell us your revenue stage and category, and we will map a realistic monthly figure and channel split for you, not a generic percentage.</p>
+        <a href="/pricing/" class="btn">See transparent pricing</a>
+      </div>`,
+    faqs: [
+      { q: "What percentage of revenue should a small business spend on marketing?", a: "The U.S. Small Business Administration recommends 7-8% of revenue for businesses under $5 million in annual revenue. The Deloitte/Duke Fuqua CMO Survey, which samples a broader mix of company sizes, found an average of 9.4%. Newer, pre-revenue or early-stage businesses often need to spend above this range temporarily to build initial visibility." },
+      { q: "Why do small businesses spend a higher percentage than large companies?", a: "A large company is largely defending market share it already has; a small business is creating demand for itself that does not yet exist by name. Building visibility from zero costs proportionally more than maintaining visibility a business already has." },
+      { q: "Should the marketing budget go entirely to paid ads?", a: "No. A sensible starting split puts roughly half toward a channel that produces enquiries immediately, such as paid search, and half toward a channel that compounds over time, such as SEO and content, adjusted as real conversion data comes in." },
+      { q: "Does the marketing budget include the website?", a: "It should. The published percentage benchmarks cover total marketing spend, not media spend alone. Website and conversion infrastructure, content and SEO, paid media, and tools and reporting all sit inside that figure." },
+      { q: "Is the marketing budget percentage different for a new market or city?", a: "Yes. A business entering a new market should budget closer to the founding-stage percentage for that specific market, even if it is well established elsewhere, because in that market it is starting from zero visibility again." },
+    ],
+  },
+  {
     slug: "seo-or-ads-first",
     tag: "Paid",
     categories: ["Paid Media", "SEO", "Strategy"],

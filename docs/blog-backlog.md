@@ -26,7 +26,7 @@ post in the founder's voice (see `/CLAUDE.md`), and ticks the box.
 ## Queue
 
 - [x] seo-or-ads-first — Should you invest in SEO or Google Ads first? (Paid → /services/paid-campaigns/)
-- [ ] marketing-budget-small-business — How much should a small business actually spend on marketing? (Content → /services/content-marketing/)
+- [x] marketing-budget-small-business — How much should a small business actually spend on marketing? (Content → /services/content-marketing/)
 - [ ] social-every-day — Does my business really need to post on social media every day? (Social → /services/social-media/)
 - [ ] which-social-platform — Which social platform is actually worth my time? (Social → /services/social-media/)
 - [ ] seo-timeline — How long does SEO really take to show results? (SEO → /services/seo/)
