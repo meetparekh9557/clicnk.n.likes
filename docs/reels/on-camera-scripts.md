@@ -6,7 +6,7 @@ other has suspense in it.
 
 ## A note on register
 
-`CLAUDE.md` sets an elevated, formal B2B voice for written customer-facing
+`AGENTS.md` sets an elevated, formal B2B voice for written customer-facing
 copy. **Spoken video is the exception.** Read those sentences aloud to a phone
 camera and it sounds like a man reading a brochure, which is exactly the thing
 the brand claims not to be. Spoken register is short, plain and direct — the

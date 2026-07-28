@@ -4,7 +4,7 @@ Queue of buyer-question article topics for the weekly auto-blog task
 (2 posts/week — Tuesday + Friday). Each topic is a **real question a buyer
 close to a decision would type**, mapped to the service page it supports.
 The weekly task picks the **next unchecked topic from the top**, writes the
-post in the founder's voice (see `/CLAUDE.md`), and ticks the box.
+post in the founder's voice (see `/AGENTS.md`), and ticks the box.
 
 ## How the queue works
 
