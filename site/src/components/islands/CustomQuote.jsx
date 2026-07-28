@@ -73,7 +73,7 @@ export default function CustomQuote() {
   // currency the work is actually billed in.
   // One currency per view: without live rates this resolves to INR so a
   // converted figure never sits beside a rupee one.
-  const shown = usableCurrency(cur, rates);
+  const shown = usableCurrency(cur);
   const money = (n) => formatMoney(n, shown, rates);
   // Count the revealed totals up from zero when the quote lands.
   const monthlyView = useCountUp(result?.monthly ?? 0);

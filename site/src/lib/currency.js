@@ -44,14 +44,24 @@ export function curatedPrice(inr, cur) {
   return row && row[cur] ? row[cur] : null;
 }
 
-// The currency a view may actually display. Curated strings cover the tier
-// amounts, but everything else on the page (add-ons, term totals) needs a live
-// rate, so without rates a foreign currency would render some figures
-// converted and the rest in rupees — a price list showing $190 beside ₹50,000.
-// One currency per view or rupees: never a mix.
-export function usableCurrency(cur, rates) {
-  if (!cur || cur === 'INR' || !CURRENCIES[cur]) return 'INR';
-  return rates && rates[cur] ? cur : 'INR';
+// Whether `cur` is a currency we know how to display at all. Deliberately
+// does NOT depend on live FX rates loading: every currently published price
+// (the five tier amounts) is curated, so it never needs a rate, and gating
+// the whole page on a third-party FX fetch meant localisation silently
+// vanished for any visitor whose network was slow, blocked the FX API, or
+// simply hadn't resolved it yet in the ~200ms before this ran - the majority
+// case, not an edge case. curatedPrice() needs no rate; formatMoney() already
+// falls back to INR per-value when a specific uncurated amount has no rate
+// available, which is the correct place for that fallback to live: a single
+// unmatched figure degrading to INR while everything else localises, not the
+// whole page degrading because one third-party fetch was slow. If a future
+// uncurated amount is ever added to a .cnl-price span directly (as opposed to
+// QuoteCalculator/CustomQuote, which run every figure through formatMoney
+// uniformly), it could show INR beside a curated $ figure — watch for that
+// specific case, but it does not exist in the current pricing model.
+export function usableCurrency(cur) {
+  if (!cur || !CURRENCIES[cur]) return 'INR';
+  return cur;
 }
 
 const LS_CUR = 'cnl_currency';
@@ -158,5 +168,52 @@ export function formatMoney(inr, cur, rates) {
     return new Intl.NumberFormat(c.locale, { style: 'currency', currency: cur, maximumFractionDigits: 0 }).format(Math.round(amt));
   } catch (e) {
     return cur + ' ' + Math.round(amt).toLocaleString('en-US');
+  }
+}
+
+// Relabels a number in the visitor's currency WITHOUT converting it — for
+// self-reported tool inputs (a visitor's own traffic, order value, revenue
+// gap) where the figure is theirs, not ours. Converting it would silently
+// invent an exchange rate for a number nobody asked us to convert; a US
+// visitor who types 3000 means $3,000, not ₹3,000 at today's rate. Contrast
+// with formatMoney(), which DOES convert, because that one is always our own
+// INR-denominated price being shown in a different currency.
+export function formatLocal(n, cur) {
+  const c = CURRENCIES[cur] || CURRENCIES.INR;
+  try {
+    return new Intl.NumberFormat(c.locale, { style: 'currency', currency: c.code, maximumFractionDigits: 0 }).format(Math.round(n));
+  } catch (e) {
+    return c.code + ' ' + Math.round(n).toLocaleString('en-US');
+  }
+}
+
+// Applies curated/converted pricing to every `.cnl-price[data-inr]` element on
+// the page and keeps it live as rates load and as the visitor's currency
+// changes elsewhere on the site. For pages that just need their prices to
+// localise themselves with no dropdown UI of their own (pricing.astro's own
+// script still owns its dropdown + note text and calls this same pattern
+// inline, so it is not duplicated here).
+export async function applyPriceSpans(selector = '.cnl-price') {
+  if (typeof document === 'undefined') return;
+  const els = () => Array.from(document.querySelectorAll(selector));
+  if (!els().length) return;
+  let fx = { rates: null, live: false };
+  const render = () => {
+    const cur = usableCurrency(getCurrency());
+    els().forEach((el) => {
+      const inr = parseInt(el.getAttribute('data-inr'), 10);
+      if (Number.isNaN(inr)) return;
+      el.textContent = curatedPrice(inr, cur) || formatMoney(inr, cur, fx.rates);
+    });
+  };
+  render();
+  fx = await loadRates();
+  render();
+  // Astro view transitions re-run page scripts without a full reload, so a
+  // page a visitor revisits would otherwise stack another 'cnl:currency'
+  // listener each time. One live listener per page is enough.
+  if (!document.__cnlPriceSpansBound) {
+    document.__cnlPriceSpansBound = true;
+    onCurrency(render);
   }
 }

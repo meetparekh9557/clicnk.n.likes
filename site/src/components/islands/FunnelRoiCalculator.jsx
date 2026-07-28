@@ -4,11 +4,10 @@
 // preview is visible as you drag (self-reported inputs, no external
 // fetch); an email unlocks the full report + CRO checklist, emailed via
 // the shared engine exactly like v1's runROIGate.
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { OWNER_EMAIL, autoEmailReady, sendFromClicknlikes, buildReportEmailHtml, fact } from '../../lib/engine';
 import { useCountUp } from '../../lib/useCountUp.js';
-
-const inr = (n) => '₹' + Math.round(n).toLocaleString('en-IN');
+import { CURRENCIES, detectCurrency, formatLocal, onCurrency } from '../../lib/currency.js';
 
 function compute(traffic, convRate, aov, marginPct) {
   const profitPerOrder = Math.round(aov * (marginPct / 100));
@@ -46,6 +45,18 @@ export default function FunnelRoiCalculator() {
   const [email, setEmail] = useState('');
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
+  const [cur, setCur] = useState('INR');
+  useEffect(() => {
+    setCur(detectCurrency());
+    return onCurrency((c) => setCur(c));
+  }, []);
+  // These figures are the VISITOR'S OWN numbers (their traffic, their order
+  // value), not our price, so they are relabelled to the visitor's currency
+  // symbol and never converted - converting would invent an exchange rate for
+  // a number nobody asked us to convert. A US visitor who types 3000 means
+  // $3,000, not ₹3,000 at today's rate.
+  const local = (n) => formatLocal(n, cur);
+  const curCode = (CURRENCIES[cur] || CURRENCIES.INR).code;
 
   const r = compute(traffic, convRate, aov, margin);
   // Count the revenue and profit figures up/down as the sliders move.
@@ -64,18 +75,18 @@ export default function FunnelRoiCalculator() {
     const isSurplus = r.isSurplus;
     const interpretation = isSurplus
       ? (gapAmount > 0
-          ? `You're converting ABOVE the 3% benchmark: this surplus is worth Rs.${gapAmount.toLocaleString('en-IN')}/month in revenue (Rs.${gapProfit.toLocaleString('en-IN')}/month in profit at your margin). Most businesses at this stage still have room to push further.`
+          ? `You're converting ABOVE the 3% benchmark: this surplus is worth ${local(gapAmount)}/month in revenue (${local(gapProfit)}/month in profit at your margin). Most businesses at this stage still have room to push further.`
           : `You're converting right at the 3% benchmark: no gap to close right now, and the checklist below is how you push past it.`)
-      : `At your traffic and order value, converting at ${convRate.toFixed(1)}% instead of the healthy 3% benchmark leaks Rs.${gapAmount.toLocaleString('en-IN')}/month in revenue: Rs.${gapProfit.toLocaleString('en-IN')}/month in actual profit. That profit number is the one that matters.`;
+      : `At your traffic and order value, converting at ${convRate.toFixed(1)}% instead of the healthy 3% benchmark leaks ${local(gapAmount)}/month in revenue: ${local(gapProfit)}/month in actual profit. That profit number is the one that matters.`;
 
     const factors = [
       fact('Monthly traffic', traffic.toLocaleString('en-IN') + ' visitors', 'self', 'input'),
       fact('Current conversion rate', convRate.toFixed(1) + '%', 'self', convRate < 3 ? 'below 3% benchmark' : 'at/above benchmark'),
-      fact('Average order value', 'Rs.' + aov.toLocaleString('en-IN'), 'self', 'input'),
-      fact('Profit margin per order', margin + '% (Rs.' + r.profitPerOrder.toLocaleString('en-IN') + '/order)', 'self', 'input'),
-      fact('Current monthly revenue', 'Rs.' + currentRevenue.toLocaleString('en-IN') + ' (Rs.' + r.currentProfit.toLocaleString('en-IN') + ' profit)', 'self', 'computed'),
-      fact('Benchmark revenue at 3%', 'Rs.' + benchmarkRevenue.toLocaleString('en-IN'), 'self', 'computed'),
-      fact(isSurplus ? 'Monthly surplus' : 'Monthly leak', 'Rs.' + gapAmount.toLocaleString('en-IN') + ' revenue / Rs.' + gapProfit.toLocaleString('en-IN') + ' profit', 'self', 'computed'),
+      fact('Average order value', local(aov), 'self', 'input'),
+      fact('Profit margin per order', margin + '% (' + local(r.profitPerOrder) + '/order)', 'self', 'input'),
+      fact('Current monthly revenue', local(currentRevenue) + ' (' + local(r.currentProfit) + ' profit)', 'self', 'computed'),
+      fact('Benchmark revenue at 3%', local(benchmarkRevenue), 'self', 'computed'),
+      fact(isSurplus ? 'Monthly surplus' : 'Monthly leak', local(gapAmount) + ' revenue / ' + local(gapProfit) + ' profit', 'self', 'computed'),
     ];
     const nextSteps = [
       "Fix your highest-traffic landing page's above-the-fold clarity: one headline stating the outcome, one visible CTA, no slider carousels.",
@@ -89,7 +100,7 @@ export default function FunnelRoiCalculator() {
     const bodyHtml = buildReportEmailHtml({
       toolLabel: 'Funnel Leak & ROI Calculator',
       forLine: `Prepared for ${business || 'your business'} · ${new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}`,
-      scoreDisplay: (isSurplus ? '+' : '−') + 'Rs.' + gapAmount.toLocaleString('en-IN') + '/mo',
+      scoreDisplay: (isSurplus ? '+' : '−') + local(gapAmount) + '/mo',
       indexLabel: isSurplus ? 'Revenue surplus vs. 3% benchmark' : 'Revenue leak vs. 3% benchmark',
       interpretation, liveNote: null, factors, nextSteps,
     });
@@ -97,7 +108,7 @@ export default function FunnelRoiCalculator() {
     sendFromClicknlikes({
       toEmail: OWNER_EMAIL, replyTo: email,
       subject: `New ROI Calculator lead: ${business || email}`,
-      bodyText: `New Funnel Leak & ROI Calculator lead:\n\nBusiness: ${business}\nEmail: ${email}\nTraffic: ${traffic.toLocaleString('en-IN')}/mo\nConversion rate: ${convRate.toFixed(1)}%\nAOV: Rs.${aov.toLocaleString('en-IN')}\nMargin: ${margin}%\nStatus: ${isSurplus ? 'ABOVE benchmark (surplus)' : 'BELOW benchmark (leaking)'}\nGap: Rs.${gapAmount.toLocaleString('en-IN')}/mo revenue, Rs.${gapProfit.toLocaleString('en-IN')}/mo profit`,
+      bodyText: `New Funnel Leak & ROI Calculator lead:\n\nBusiness: ${business}\nEmail: ${email}\nTraffic: ${traffic.toLocaleString('en-IN')}/mo\nConversion rate: ${convRate.toFixed(1)}%\nAOV: ${local(aov)} (self-reported in ${curCode})\nMargin: ${margin}%\nStatus: ${isSurplus ? 'ABOVE benchmark (surplus)' : 'BELOW benchmark (leaking)'}\nGap: ${local(gapAmount)}/mo revenue, ${local(gapProfit)}/mo profit`,
     });
     setSending(true);
     setTimeout(() => { setSending(false); setSent(true); }, 600);
@@ -109,7 +120,7 @@ export default function FunnelRoiCalculator() {
         <span className="inline-flex items-center gap-2 rounded-full bg-coral/10 px-3 py-1 text-xs font-semibold text-coral">Benchmark: 3% conversion</span>
         <Slider label="Monthly website traffic" min={500} max={100000} step={500} value={traffic} onChange={setTraffic} display={traffic.toLocaleString('en-IN')} />
         <Slider label="Current conversion rate (%)" min={0.2} max={10} step={0.1} value={convRate} onChange={setConvRate} display={convRate.toFixed(1) + '%'} />
-        <Slider label="Average order / deal value" min={500} max={100000} step={500} value={aov} onChange={setAov} display={inr(aov)} />
+        <Slider label="Average order / deal value" min={500} max={100000} step={500} value={aov} onChange={setAov} display={local(aov)} />
         <Slider label="Profit margin (%)" min={5} max={95} step={5} value={margin} onChange={setMargin} display={margin + '%'} />
         <p className="text-[12px] leading-relaxed text-navy/45">
           Leaked revenue = (traffic × 3% × order value) − (traffic × your rate × order value). Leaked profit = that gap × your margin. The 3% figure is a general benchmark and the margin is self-reported; neither is a guarantee for your business.
@@ -120,12 +131,12 @@ export default function FunnelRoiCalculator() {
         <div className={`rounded-xl border p-5 ${good ? 'border-teal/40 bg-teal/[0.06]' : 'border-coral/40 bg-coral/[0.05]'}`}>
           <p className={`text-[11px] font-bold tracking-[0.08em] uppercase ${good ? 'text-teal-dark' : 'text-coral'}`}>{tag}</p>
           <p className={`mt-1 font-display text-[clamp(1.8rem,4vw,2.6rem)] leading-none font-bold tabular-nums ${good ? 'text-teal-dark' : 'text-coral'}`}>
-            {r.amount === 0 ? 'At benchmark' : inr(amountView) + '/mo'}
+            {r.amount === 0 ? 'At benchmark' : local(amountView) + '/mo'}
           </p>
           <div className="mt-4 border-t border-navy/10 pt-4">
             <p className={`text-[11px] font-bold tracking-[0.08em] uppercase ${good ? 'text-teal-dark' : 'text-coral'}`}>{profitTag}</p>
             <p className={`mt-1 font-display text-[clamp(1.4rem,3vw,2rem)] leading-none font-bold tabular-nums ${good ? 'text-teal-dark' : 'text-coral'}`}>
-              {r.amount === 0 ? '₹0/mo' : inr(profitView) + '/mo'}
+              {r.amount === 0 ? local(0) + '/mo' : local(profitView) + '/mo'}
             </p>
           </div>
           <p className="mt-3 text-[12.5px] leading-relaxed text-navy/60">

@@ -97,7 +97,7 @@ export default function QuoteCalculator({ preselect }) {
   }, []);
   // One currency per view: without live rates this resolves to INR so a
   // converted figure never sits beside a rupee one.
-  const shown = usableCurrency(cur, rates);
+  const shown = usableCurrency(cur);
   const money = (n) => formatMoney(n, shown, rates);
 
   const getTier = (s) => tierOf[s] ?? 'starter';

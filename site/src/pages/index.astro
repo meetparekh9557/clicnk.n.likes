@@ -181,7 +181,7 @@ const iconWrap = 'mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 t
         <Card href="/pricing/" class="reveal" style="--d:0ms">
           <div class={iconWrap}><Eye size={22} stroke-width={2} aria-hidden="true" /></div>
           <h3 class="font-display text-lg font-semibold text-navy">Pricing you can see</h3>
-          <p class="mt-2 text-sm leading-relaxed text-navy/60">Most agencies hide pricing behind a sales call. Ours is published, tiered and starts at ₹16,000.</p>
+          <p class="mt-2 text-sm leading-relaxed text-navy/60">Most agencies hide pricing behind a sales call. Ours is published, tiered and starts at <span class="cnl-price" data-inr="16000">₹16,000</span>.</p>
         </Card>
         <Card href="/tools/" class="reveal" style="--d:90ms">
           <div class={iconWrap}><Zap size={22} stroke-width={2} aria-hidden="true" /></div>
@@ -293,5 +293,11 @@ const iconWrap = 'mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 t
       if (el) el.dataset.on = '';
       initHeroRotate();
     });
+  </script>
+
+  <script>
+    import { applyPriceSpans } from '../lib/currency.js';
+    applyPriceSpans();
+    document.addEventListener('astro:page-load', () => applyPriceSpans());
   </script>
 </Base>
