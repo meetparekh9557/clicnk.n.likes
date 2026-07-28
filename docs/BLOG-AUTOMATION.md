@@ -1,7 +1,7 @@
 # Auto-blogging (2 posts/week, Tuesday + Friday)
 
 The Insights blog publishes **two posts a week — one Tuesday, one Friday —
-fully automatically**, in the founder's calibrated voice (see `/CLAUDE.md`),
+fully automatically**, in the founder's calibrated voice (see `/AGENTS.md`),
 with an on-brand featured image, no human input required. Every published
 post still obeys the site's core rule: any number in it traces to a real,
 named, checkable source, or it isn't published as a fact.
@@ -42,7 +42,7 @@ automatically. A new post needs only the `articles` entry + the PNG.
 
 - **Sourced or nothing:** every stat traces to a named, checkable source, or
   is written as a principle/range — never a fabricated figure.
-- **Voice-locked:** the founder's register in `/CLAUDE.md` is followed exactly
+- **Voice-locked:** the founder's register in `/AGENTS.md` is followed exactly
   (elevated professional B2B, no slang, no fragments, no invented case metrics
   beyond the honest "Example in Action" pattern).
 - **Scope-locked:** the task adds one article + one image + a backlog tick per

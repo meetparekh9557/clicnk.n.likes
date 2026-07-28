@@ -1,7 +1,7 @@
 # Premium Rebuild — Working Plan & State
 
 **The roadmap of record. Any session continuing this work: read this file and
-`CLAUDE.md` (brand voice) first, then continue from the first unchecked item.
+`AGENTS.md` (brand voice) first, then continue from the first unchecked item.
 Update checkboxes in this file with every PR.**
 
 ## What we're building (agreed vision)
@@ -10,7 +10,7 @@ A multi-page Astro + Tailwind + React-islands site replacing the single-file
 v1 (`index.html`), which keeps serving until cutover. Premium through
 restraint and craft, built around the signature weapon: the site audits a
 prospect's website live (Apps Script analyzer, `apps-script.gs` — backend
-stays untouched). Founder's voice everywhere (rules in `CLAUDE.md`).
+stays untouched). Founder's voice everywhere (rules in `AGENTS.md`).
 Hard gates: Lighthouse ≥95/page, <2s mobile, zero horizontal overflow at
 360px, every tool behavior-identical to v1.
 

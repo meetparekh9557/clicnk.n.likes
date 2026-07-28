@@ -25,7 +25,7 @@ no voice.
 
 ## A note on register
 
-`CLAUDE.md` sets an elevated, formal B2B voice for written customer-facing copy.
+`AGENTS.md` sets an elevated, formal B2B voice for written customer-facing copy.
 **Spoken and on-screen video copy is the exception.** Read those sentences over
 a reel and it sounds like a brochure being read aloud, which undercuts the exact
 positioning it is meant to carry. Video register is short, plain and direct —
