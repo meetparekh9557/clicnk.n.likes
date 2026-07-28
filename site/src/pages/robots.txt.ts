@@ -9,7 +9,10 @@ export const GET: APIRoute = () => {
   const isPreview = import.meta.env.PUBLIC_PREVIEW === '1';
   const body = isPreview
     ? ['User-agent: *', 'Disallow: /', ''].join('\n')
-    : ['User-agent: *', 'Allow: /', '', `Sitemap: ${SITE_ORIGIN}/sitemap.xml`, ''].join('\n');
+    // /demo/ hosts a deliberately-broken fixture page used to record the
+    // free-tool reel — it must never be crawled or indexed, on top of its own
+    // noindex meta tag.
+    : ['User-agent: *', 'Allow: /', 'Disallow: /demo/', '', `Sitemap: ${SITE_ORIGIN}/sitemap.xml`, ''].join('\n');
   return new Response(body, {
     headers: { 'Content-Type': 'text/plain; charset=utf-8' },
   });
