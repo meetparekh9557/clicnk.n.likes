@@ -73,8 +73,14 @@ export const toolConfigs = {
   },
   webdev: {
     scorer: 'webdev', urlField: 'webdev_url',
+    // The two weakest checkboxes below (CLS, mobile speed) are exactly what
+    // Google PageSpeed Insights measures directly. When a URL is given, fetch
+    // it live instead of asking the visitor to self-diagnose their own site's
+    // layout shift and load time — the same real check the standalone Speed
+    // Test runs, reused here rather than re-self-reported.
+    wantsPageSpeed: true,
     name: 'Infrastructure Health Check',
-    lead: 'A directional read on how much friction is costing you in mobile conversions.',
+    lead: 'A directional read on how much friction is costing you in mobile conversions. Add a URL for a live Core Web Vitals + on-page check.',
     fields: [
       { id: 'webdev_industry', type: 'text', label: 'Your industry', placeholder: 'e.g. hospitality' },
       { id: 'webdev_url', type: 'url', label: 'Your website URL', optional: true, placeholder: 'yourwebsite.com (optional, on-page facts checked live)' },

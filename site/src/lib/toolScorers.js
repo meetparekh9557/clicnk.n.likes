@@ -292,20 +292,43 @@ export const toolScorers = {
     };
   },
 
-  // 6. Infrastructure Health (webdev; PageSpeed omitted, on-page facts + self-report)
+  // 6. Infrastructure Health (webdev; PageSpeed + on-page facts when a URL is given, self-report otherwise)
   webdev(inp) {
     const page = inp._page && inp._page.available ? inp._page : null;
-    const cls = !!inp.webdev_cls;
+    const psi = inp._psi && inp._psi.available ? inp._psi : null;
     const longForm = !!inp.webdev_longform;
-    const slow = !!inp.webdev_slow;
     const leads = Math.max(0, parseInt(inp.webdev_leads, 10) || 0);
     let score = 100;
     const gaps = [];
     const factors = [];
-    if (cls) { score -= 30; gaps.push('Layout shifts while loading (CLS symptom, self-reported)'); }
-    if (slow) { score -= 25; gaps.push('Takes over 3 seconds to become interactive on mobile (self-reported)'); }
-    factors.push(fact('Layout stability (CLS)', cls ? 'Layout shift reported while loading' : 'No layout shift reported', 'self', cls ? '−30 pts' : 'no deduction'));
-    factors.push(fact('Mobile load speed', slow ? 'Reported over 3 seconds to interactive' : 'Reported reasonably fast', 'self', slow ? '−25 pts' : 'no deduction'));
+    // Google's official Core Web Vitals thresholds (same bands as the
+    // standalone Speed Test). When PageSpeed Insights is reachable, these
+    // two weakest self-report questions (visible layout shift, slow to
+    // respond) get replaced with the real measurement instead of a guess.
+    const band = (v, good, poor) => (v == null ? 'na' : v <= good ? 'good' : v <= poor ? 'needs' : 'poor');
+    let cls, slow;
+    if (psi) {
+      const clsBand = band(psi.cls, 0.1, 0.25);
+      const tbtBand = band(psi.tbtMs, 200, 600);
+      cls = clsBand !== 'good';
+      slow = tbtBand !== 'good';
+      const clsPenalty = clsBand === 'poor' ? 30 : clsBand === 'needs' ? 15 : 0;
+      const slowPenalty = tbtBand === 'poor' ? 25 : tbtBand === 'needs' ? 12 : 0;
+      score -= clsPenalty;
+      score -= slowPenalty;
+      if (clsPenalty) gaps.push(`Layout shift measured live: CLS ${psi.clsText} (verified)`);
+      if (slowPenalty) gaps.push(`Slow to respond on mobile: ${psi.tbtText} blocking time (verified)`);
+      factors.push(fact('Layout stability (CLS)', `${psi.clsText} (${clsBand === 'good' ? 'stable' : clsBand === 'needs' ? 'some shift' : 'significant shift'})`, 'verified', clsPenalty ? `−${clsPenalty} pts` : 'no deduction'));
+      factors.push(fact('Mobile interactivity (blocking time)', `${psi.tbtText} (${tbtBand === 'good' ? 'responsive' : tbtBand === 'needs' ? 'some delay' : 'noticeably slow'})`, 'verified', slowPenalty ? `−${slowPenalty} pts` : 'no deduction'));
+      if (psi.lcpText) factors.push(fact('Main content load (LCP)', psi.lcpText, 'verified', band(psi.lcpMs, 2500, 4000) === 'good' ? 'no issue' : 'flagged'));
+    } else {
+      cls = !!inp.webdev_cls;
+      slow = !!inp.webdev_slow;
+      if (cls) { score -= 30; gaps.push('Layout shifts while loading (CLS symptom, self-reported)'); }
+      if (slow) { score -= 25; gaps.push('Takes over 3 seconds to become interactive on mobile (self-reported)'); }
+      factors.push(fact('Layout stability (CLS)', cls ? 'Layout shift reported while loading' : 'No layout shift reported', 'self', cls ? '−30 pts' : 'no deduction'));
+      factors.push(fact('Mobile load speed', slow ? 'Reported over 3 seconds to interactive' : 'Reported reasonably fast', 'self', slow ? '−25 pts' : 'no deduction'));
+    }
     if (longForm) { score -= 20; gaps.push('Lead form has more than 5 fields'); }
     factors.push(fact('Lead form length', longForm ? 'More than 5 fields: measurably suppresses completions' : '5 fields or fewer', 'self', longForm ? '−20 pts' : 'no deduction'));
     if (page) {
@@ -325,7 +348,7 @@ export const toolScorers = {
     const bullets = [
       `Infrastructure Health for "${escapeHtml(inp.webdev_industry || 'your industry')}": ${score}/100 (${status}).`,
       `Projected conversion drop-off from your long lead form: ${longForm ? `roughly ${dropoff.toLocaleString('en-IN')} enquiries/month lost, based on your ${leads.toLocaleString('en-IN')} current monthly leads.` : 'not a live issue: your form is a reasonable length.'}`,
-      `Mobile interactivity: ${slow ? 'self-reported as taking over 3 seconds to become interactive, most visitors bounce before that point.' : 'self-reported as reasonably fast on mobile.'}`,
+      `Mobile interactivity: ${psi ? `verified live — ${slow ? `${psi.tbtText} blocking time, noticeably slow to respond` : `${psi.tbtText} blocking time, responds quickly`}.` : slow ? 'self-reported as taking over 3 seconds to become interactive, most visitors bounce before that point.' : 'self-reported as reasonably fast on mobile.'}`,
     ];
     if (page && page.imgMissingAlt > 0) bullets.push(`Verified: ${page.imgMissingAlt} of ${page.imgCount} images on your page are missing alt text.`);
 
@@ -337,13 +360,17 @@ export const toolScorers = {
     if (page && page.imgMissingAlt > 0) nextSteps.push(`Add alt text to the ${page.imgMissingAlt} images missing it: accessibility, image SEO, and a Lighthouse score bump in one pass.`);
     if (nextSteps.length < 3) nextSteps.push('Your fundamentals look healthy: the next win is conversion polish, one clear primary CTA above the fold on every page, and trust signals near the point of decision.');
 
+    const liveParts = [];
+    if (psi) liveParts.push('Core Web Vitals verified live via Google PageSpeed Insights');
+    if (page) liveParts.push(`on-page facts verified live from ${page.finalUrl}`);
+
     return {
       score, indexLabel: 'Infrastructure Health',
-      liveNote: page ? `On-page facts verified live from ${page.finalUrl}` : null,
-      interpretation: `${score}/100 (${status}). Built from your self-reported answers${page ? ', plus on-page facts verified live from your URL' : ': add a URL next time and we verify the on-page facts directly'}. ${score >= 80 ? 'This site is not the bottleneck: your growth levers are elsewhere.' : score >= 60 ? 'Moderate friction: each flagged item below has a known conversion cost.' : 'High friction: this level of technical drag typically suppresses enquiries by double-digit percentages.'}`,
+      liveNote: liveParts.length ? liveParts.join(', plus ') : null,
+      interpretation: `${score}/100 (${status}). Built from your self-reported answers${liveParts.length ? `, plus ${liveParts.join(' and ')}` : ': add a URL next time and we verify the on-page facts and Core Web Vitals directly'}. ${score >= 80 ? 'This site is not the bottleneck: your growth levers are elsewhere.' : score >= 60 ? 'Moderate friction: each flagged item below has a known conversion cost.' : 'High friction: this level of technical drag typically suppresses enquiries by double-digit percentages.'}`,
       bullets,
       gaps, factors, nextSteps: nextSteps.slice(0, 5),
-      howToRead: `We start at 100 and apply real penalties: visible layout shift while loading costs 30 points, a lead form with more than 5 fields costs 20 (plus the conversion drop-off it causes), and a slow mobile load costs 25. ${page ? 'The on-page items (alt text, schema, meta description, viewport) WERE verified live from your page.' : 'These are self-reported here because no URL was given: enter one above next time and we verify the on-page facts directly.'}`,
+      howToRead: `We start at 100 and apply real penalties: visible layout shift while loading costs up to 30 points, a lead form with more than 5 fields costs 20 (plus the conversion drop-off it causes), and slow mobile responsiveness costs up to 25. ${psi ? 'Layout shift and mobile responsiveness above WERE measured live via Google PageSpeed Insights, the same engine behind our standalone Speed Test.' : 'Layout shift and mobile responsiveness are self-reported here because no URL was given: enter one above next time and we measure them directly.'} ${page ? 'The remaining on-page items (alt text, schema, meta description, viewport) WERE verified live from your page.' : ''}`,
       pivotTitle: 'Full UI/UX Redevelopment Proposal',
       pivotText: `Fixing Core Web Vitals and conversion friction requires specialised front-end engineering. Request a custom UI/UX proposal for ${inp.webdev_industry || 'your industry'}.`,
     };

@@ -7,7 +7,7 @@
 import { useState } from 'react';
 import {
   TOOL_SCAN_MIN_MS, OWNER_EMAIL, autoEmailReady,
-  fetchPageFacts, buildReportEmailHtml, sendFromClicknlikes,
+  fetchPageFacts, fetchPageSpeed, buildReportEmailHtml, sendFromClicknlikes,
 } from '../../lib/engine';
 import { toolScorers } from '../../lib/toolScorers';
 
@@ -45,8 +45,10 @@ export default function GatedTool({ config, serviceLabel }) {
     const urlVal = config.urlField ? String(vals[config.urlField] || '').trim() : '';
     const minDelay = new Promise((r) => setTimeout(r, TOOL_SCAN_MIN_MS));
     const pagePromise = urlVal ? fetchPageFacts(urlVal) : Promise.resolve(null);
-    const [, page] = await Promise.all([minDelay, pagePromise]);
+    const psiPromise = urlVal && config.wantsPageSpeed ? fetchPageSpeed(urlVal, 'mobile') : Promise.resolve(null);
+    const [, page, psi] = await Promise.all([minDelay, pagePromise, psiPromise]);
     if (page && page.available) inputs._page = page;
+    if (psi && psi.available) inputs._psi = psi;
 
     const r = toolScorers[config.scorer](inputs);
 
@@ -63,7 +65,7 @@ export default function GatedTool({ config, serviceLabel }) {
     sendFromClicknlikes({
       toEmail: OWNER_EMAIL, replyTo: email,
       subject: `New ${serviceLabel} tool lead: ${email}`,
-      bodyText: `New "${serviceLabel}" free-tool lead:\n\nEmail: ${email}\nScore: ${r.score}/100 (${r.indexLabel})\nData source: ${r.liveNote ? 'includes LIVE verified data' : 'self-reported only'}\nGaps:\n${(r.gaps || []).map((g) => '  - ' + g).join('\n') || '  (none)'}\n\nInputs:\n${Object.entries(inputs).filter(([k]) => k !== '_page').map(([k, v]) => `  ${k}: ${String(v).slice(0, 200)}`).join('\n')}`,
+      bodyText: `New "${serviceLabel}" free-tool lead:\n\nEmail: ${email}\nScore: ${r.score}/100 (${r.indexLabel})\nData source: ${r.liveNote ? 'includes LIVE verified data' : 'self-reported only'}\nGaps:\n${(r.gaps || []).map((g) => '  - ' + g).join('\n') || '  (none)'}\n\nInputs:\n${Object.entries(inputs).filter(([k]) => k !== '_page' && k !== '_psi').map(([k, v]) => `  ${k}: ${String(v).slice(0, 200)}`).join('\n')}`,
     });
 
     setResult(r);
