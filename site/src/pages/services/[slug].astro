@@ -5,13 +5,16 @@
 // gated tool island + quote calculator embed directly into the two
 // marked sections below, replacing the /tools/ and /contact/ links.
 import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import Button from '../../components/Button.astro';
 import Card from '../../components/Card.astro';
 import InlineCta from '../../components/InlineCta.astro';
+import RelatedReading from '../../components/RelatedReading.astro';
 import StatTile from '../../components/StatTile.astro';
 import FirstPageCliff from '../../components/islands/FirstPageCliff.jsx';
 import GatedTool from '../../components/islands/GatedTool.jsx';
-import { serviceDetails, serviceProof, serviceDeepDive } from '../../data/services';
+import { serviceDetails, serviceProof, serviceDeepDive, relatedServiceSlugs, categoryToServiceSlug } from '../../data/services';
+import { articles } from '../../data/articles';
 import { toolConfigs } from '../../data/toolConfigs';
 import { withBase } from '../../lib/url';
 import { breadcrumbSchema, serviceSchema } from '../../lib/seo';
@@ -96,15 +99,28 @@ const serviceMeta: Record<string, { title: string; description: string }> = {
   },
 };
 const meta = serviceMeta[service.slug] ?? { title: `${service.title} | Click.n.likes`, description: service.lead };
+const trail: [string, string][] = [
+  ['Home', '/'],
+  [service.title, servicePath],
+];
 const jsonLd = [
   serviceSchema({ name: service.title, description: service.lead, path: servicePath }),
-  breadcrumbSchema([
-    ['Home', '/'],
-    [service.title, servicePath],
-  ]),
+  breadcrumbSchema(trail),
 ];
 const iconWrap = 'mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 text-teal-dark';
 const HeroIcon = icons[service.cards[0].icon];
+
+// Internal-linking audit (task #11): every service page now links out to
+// its genuinely-related Insights articles and to the two or three services
+// it complements, instead of only being reachable top-down from Nav/Footer.
+const relatedArticles = articles
+  .filter((a) => a.categories.some((c) => categoryToServiceSlug[c] === service.slug))
+  .slice(0, 3)
+  .map((a) => ({ kicker: a.tag, title: a.title, text: a.excerpt, href: `/insights/${a.slug}/` }));
+const relatedServices = (relatedServiceSlugs[service.slug] ?? [])
+  .map((slug) => serviceDetails.find((s) => s.slug === slug))
+  .filter((s): s is (typeof serviceDetails)[number] => Boolean(s))
+  .map((s) => ({ title: s.title, text: s.lead, href: `/services/${s.slug}/` }));
 ---
 
 <Base
@@ -112,6 +128,7 @@ const HeroIcon = icons[service.cards[0].icon];
   description={meta.description}
   jsonLd={jsonLd}
 >
+  <Breadcrumbs trail={trail} />
   <!-- Hero -->
   <section class="relative overflow-hidden">
     <div class="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-teal/[0.07] via-transparent to-transparent"></div>
@@ -237,5 +254,8 @@ const HeroIcon = icons[service.cards[0].icon];
       </div>
     </div>
   </section>
+
+  <RelatedReading heading="Related reading" items={relatedArticles} />
+  <RelatedReading heading="Related services" items={relatedServices} class="pt-0" />
 
 </Base>

@@ -1,0 +1,28 @@
+---
+// Visible on-page breadcrumb trail. Every page already builds a
+// [name, path][] trail for breadcrumbSchema() (the JSON-LD BreadcrumbList) -
+// pass that same trail here so the visible nav and the structured data can
+// never drift apart. Previously this trail only ever reached bots; this is
+// the on-page half search engines and users both get.
+import { withBase } from '../lib/url';
+
+interface Props {
+  trail: [string, string][];
+}
+const { trail } = Astro.props;
+---
+
+<nav aria-label="Breadcrumb" class="mx-auto max-w-6xl px-[5vw] pt-6">
+  <ol class="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-[13px] text-navy/50">
+    {trail.map(([name, path], i) => (
+      <li class="flex items-center gap-1.5">
+        {i > 0 && <span aria-hidden="true" class="text-navy/25">/</span>}
+        {i === trail.length - 1 ? (
+          <span class="font-medium text-navy/75" aria-current="page">{name}</span>
+        ) : (
+          <a href={withBase(path)} class="transition-colors hover:text-teal-dark">{name}</a>
+        )}
+      </li>
+    ))}
+  </ol>
+</nav>

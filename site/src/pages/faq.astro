@@ -4,6 +4,7 @@
 // FAQPage JSON-LD block so the answers are eligible for rich results and
 // AI Overviews - which is literally a service we sell.
 import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
 import { withBase } from '../lib/url';
 import { breadcrumbSchema } from '../lib/seo';
 import Plus from '@lucide/astro/icons/plus';
@@ -43,6 +44,10 @@ const faqs = [
   },
 ];
 
+const trail: [string, string][] = [
+  ['Home', '/'],
+  ['FAQs', '/faq/'],
+];
 const jsonLd = [
   {
     '@context': 'https://schema.org',
@@ -53,10 +58,7 @@ const jsonLd = [
       acceptedAnswer: { '@type': 'Answer', text: f.a },
     })),
   },
-  breadcrumbSchema([
-    ['Home', '/'],
-    ['FAQs', '/faq/'],
-  ]),
+  breadcrumbSchema(trail),
 ];
 ---
 
@@ -65,6 +67,7 @@ const jsonLd = [
   description="Straight answers on pricing, timelines, ranking guarantees, paid ad spend and how our services work, the questions every business asks before they sign."
   jsonLd={jsonLd}
 >
+  <Breadcrumbs trail={trail} />
   <section class="mx-auto max-w-3xl px-[5vw] pt-16 pb-8 lg:pt-20">
     <p class="reveal inline-flex items-center gap-2 rounded-full border border-teal/30 bg-teal/5 px-4 py-1.5 text-[13px] font-semibold text-navy">
       <span class="h-1.5 w-1.5 rounded-full bg-teal"></span> FAQs

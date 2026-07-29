@@ -4,6 +4,7 @@
 // tools and the flagship scan. Meta + breadcrumb per tool. Slugs come from
 // the shared registry in data/tools.ts so the hub, nav and sitemap stay 1:1.
 import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import Card from '../../components/Card.astro';
 import CtaBand from '../../components/CtaBand.astro';
 import SpeedCheck from '../../components/islands/SpeedCheck.jsx';
@@ -86,11 +87,13 @@ export function getStaticPaths() {
 
 const { tool, meta } = Astro.props;
 const others = tools.filter((t) => t.slug !== tool.slug);
-const jsonLd = breadcrumbSchema([['Home', '/'], ['Free Tools', '/tools/'], [tool.name, toolHref(tool)]]);
+const trail: [string, string][] = [['Home', '/'], ['Free Tools', '/tools/'], [tool.name, toolHref(tool)]];
+const jsonLd = breadcrumbSchema(trail);
 const iconWrap = 'mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 text-teal-dark';
 ---
 
 <Base title={meta.title} description={meta.description} jsonLd={jsonLd} hideCta>
+  <Breadcrumbs trail={trail} />
   <section class="mx-auto max-w-3xl px-[5vw] pt-14 pb-8 text-center lg:pt-20">
     <a href={withBase('/tools/')} class="inline-flex items-center gap-1.5 text-[13px] font-semibold text-teal-dark transition-colors hover:text-navy">
       <ArrowLeft size={15} stroke-width={2.5} aria-hidden="true" /> All free tools

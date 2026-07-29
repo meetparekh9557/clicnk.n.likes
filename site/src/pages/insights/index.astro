@@ -1,6 +1,7 @@
 ---
 // Insights index: article grid + newsletter, ported from v1's blog page.
 import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import NewsletterForm from '../../components/islands/NewsletterForm.jsx';
 import CategoryFilter from '../../components/CategoryFilter.astro';
 import { articles } from '../../data/articles';
@@ -13,6 +14,10 @@ const catCounts = new Map<string, number>();
 articles.forEach((a) => a.categories.forEach((c) => catCounts.set(c, (catCounts.get(c) ?? 0) + 1)));
 const cats: [string, number][] = [...catCounts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
 
+const trail: [string, string][] = [
+  ['Home', '/'],
+  ['Insights', '/insights/'],
+];
 const jsonLd = [
   {
     '@context': 'https://schema.org',
@@ -30,10 +35,7 @@ const jsonLd = [
       author: { '@type': 'Organization', name: a.author },
     })),
   },
-  breadcrumbSchema([
-    ['Home', '/'],
-    ['Insights', '/insights/'],
-  ]),
+  breadcrumbSchema(trail),
 ];
 
 ---
@@ -43,6 +45,7 @@ const jsonLd = [
   description="Practical breakdowns on SEO, AI search, social and websites, written the way we'd explain it to a client over coffee."
   jsonLd={jsonLd}
 >
+  <Breadcrumbs trail={trail} />
   <section class="mx-auto max-w-6xl px-[5vw] pt-16 pb-10 lg:pt-20">
     <p class="reveal inline-flex items-center gap-2 rounded-full border border-teal/30 bg-teal/5 px-4 py-1.5 text-[13px] font-semibold text-navy">
       <span class="h-1.5 w-1.5 rounded-full bg-teal"></span> Insights

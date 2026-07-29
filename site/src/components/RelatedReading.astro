@@ -1,0 +1,39 @@
+---
+// Reusable "related content" grid - used for related articles on service
+// pages, related services on article pages, and related services on other
+// service pages. Renders nothing when there's nothing to show, so pages
+// with no genuine match (e.g. a service with no article written for it yet)
+// don't get a padded-out empty section.
+import Card from './Card.astro';
+
+interface Item {
+  kicker?: string;
+  title: string;
+  text: string;
+  href: string;
+}
+interface Props {
+  heading: string;
+  items: Item[];
+  maxWidth?: string;
+  class?: string;
+}
+const { heading, items, maxWidth = 'max-w-6xl', class: extra = '' } = Astro.props;
+---
+
+{items.length > 0 && (
+  <section class={`mx-auto ${maxWidth} px-[5vw] py-14 ${extra}`.trim()}>
+    <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">{heading}</p>
+    <div class="mt-6 grid gap-5 sm:grid-cols-2">
+      {items.map((item, i) => (
+        <Card href={item.href} class="reveal" style={`--d:${i * 70}ms`}>
+          {item.kicker && (
+            <p class="text-xs font-semibold tracking-wide text-teal-dark uppercase">{item.kicker}</p>
+          )}
+          <p class="mt-1.5 font-display text-lg leading-snug font-semibold text-navy">{item.title}</p>
+          <p class="mt-2 text-sm leading-relaxed text-navy/65">{item.text}</p>
+        </Card>
+      ))}
+    </div>
+  </section>
+)}

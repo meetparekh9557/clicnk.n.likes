@@ -5,6 +5,7 @@
 // Phase 4 replaces the "how we measure" framing with real case studies
 // built from that material.
 import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
 import Card from '../components/Card.astro';
 import CategoryFilter from '../components/CategoryFilter.astro';
 import ProofCard from '../components/ProofCard.astro';
@@ -24,10 +25,11 @@ const csCats: [string, number][] = [...csCounts.entries()].sort((a, b) => b[1] -
 // With no case studies published it simply does not render.
 const latest = caseStudies[0];
 
-const jsonLd = breadcrumbSchema([
+const trail: [string, string][] = [
   ['Home', '/'],
   ['Work', '/work/'],
-]);
+];
+const jsonLd = breadcrumbSchema(trail);
 
 // What a result actually means to us: the signals we can measure and
 // stand behind, never a client's private revenue.
@@ -58,6 +60,7 @@ const formFields = [
   description="How we define a real result: leads, calls, cost per lead and organic rankings, measured honestly and never vanity metrics, across SaaS, manufacturing, legal, D2C and local businesses."
   jsonLd={jsonLd}
 >
+  <Breadcrumbs trail={trail} />
   <section class="mx-auto max-w-6xl px-[5vw] pt-16 pb-10 lg:pt-20">
     <div class="grid items-center gap-10 lg:grid-cols-[1.25fr_0.75fr] lg:gap-14">
       <div>
