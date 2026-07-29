@@ -50,7 +50,7 @@ export const verticalStats: Vertical[] = [
     stats: [
       { value: '68%', label: 'of US Google searches now end without a single click as AI Overviews answer on the results page', source: 'SparkToro / Similarweb (2026)' },
       { value: '900M+', label: 'weekly active users on ChatGPT alone, a new front door for "who is the best…" questions', source: 'OpenAI (Feb 2026)' },
-      { value: '1B+', label: 'monthly active app users ChatGPT reached in June 2026, the fastest app in history to hit that mark', source: 'Sensor Tower / Reuters' },
+      { value: '120%', label: 'more organic clicks per impression for brands cited in AI Overviews, versus uncited brands on the same query', source: 'Seer Interactive (2.43B-impression study)' },
     ],
   },
   {
