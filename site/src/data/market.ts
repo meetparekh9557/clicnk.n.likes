@@ -36,9 +36,9 @@ export const ctrSource = 'Backlinko - analysis of 4 million Google search result
 // Headline market figures (stat tiles).
 export const marketStats: MarketStat[] = [
   {
-    value: '53%',
+    value: '53.3%',
     label: 'of all trackable website traffic starts with organic search - more than every other channel combined',
-    source: 'BrightEdge Research',
+    source: 'BrightEdge Research (2025)',
   },
   {
     value: '76%',

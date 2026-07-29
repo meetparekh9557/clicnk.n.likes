@@ -28,9 +28,9 @@ export const verticalStats: Vertical[] = [
     label: 'SEO',
     blurb: 'Organic search is still the largest single source of trackable web traffic.',
     stats: [
-      { value: '53%', label: 'of all trackable website traffic starts with organic search, more than every other channel combined', source: 'BrightEdge Research' },
+      { value: '53.3%', label: 'of all trackable website traffic starts with organic search, more than every other channel combined', source: 'BrightEdge Research (2025)' },
       { value: '27.6%', label: 'of clicks go to the very first organic Google result, more than positions two and three combined', source: 'Backlinko (4M-result study)' },
-      { value: '68%', label: 'of all online experiences begin with a search engine', source: 'BrightEdge Research' },
+      { value: '<1%', label: 'of website referral traffic currently comes from AI search engines, organic remains the dominant channel', source: 'BrightEdge Research (2025)' },
     ],
   },
   {
@@ -40,7 +40,7 @@ export const verticalStats: Vertical[] = [
     stats: [
       { value: '76%', label: 'of people who search for something nearby on a phone visit a business within a day', source: 'Google / Think with Google' },
       { value: '28%', label: 'of local searches for something nearby result in a purchase', source: 'Google / Think with Google' },
-      { value: '46%', label: 'of all Google searches are looking for local information', source: 'GoGulf / HubSpot' },
+      { value: '51%', label: 'of all Google searches now carry local intent, up from the long-cited 46% figure', source: 'BrightLocal (2026)' },
     ],
   },
   {
@@ -48,9 +48,9 @@ export const verticalStats: Vertical[] = [
     label: 'AI Search',
     blurb: 'Buyers increasingly ask an AI first, and never click through at all.',
     stats: [
-      { value: '~59%', label: 'of US Google searches now end without a single click as answers appear on the results page', source: 'SparkToro / Similarweb' },
-      { value: '25%', label: 'projected drop in traditional search-engine volume by 2026 as users shift to AI assistants', source: 'Gartner' },
-      { value: '200M+', label: 'weekly active users on ChatGPT alone, a new front door for "who is the best…" questions', source: 'OpenAI' },
+      { value: '68%', label: 'of US Google searches now end without a single click as AI Overviews answer on the results page', source: 'SparkToro / Similarweb (2026)' },
+      { value: '900M+', label: 'weekly active users on ChatGPT alone, a new front door for "who is the best…" questions', source: 'OpenAI (Feb 2026)' },
+      { value: '120%', label: 'more organic clicks per impression for brands cited in AI Overviews, versus uncited brands on the same query', source: 'Seer Interactive (2.43B-impression study)' },
     ],
   },
   {
@@ -58,7 +58,7 @@ export const verticalStats: Vertical[] = [
     label: 'Social',
     blurb: 'Social is where attention lives, and increasingly where buying starts.',
     stats: [
-      { value: '5.2B', label: 'people use social media worldwide, roughly 63% of the planet', source: 'DataReportal' },
+      { value: '5.79B', label: 'people use social media worldwide, roughly 70% of the planet', source: 'DataReportal (April 2026)' },
       { value: '2h 20m', label: 'the average person spends on social media every single day', source: 'DataReportal / GWI' },
       { value: '76%', label: 'of social media users have bought something they first saw on social', source: 'Curalate / Bazaarvoice' },
     ],
@@ -88,7 +88,7 @@ export const verticalStats: Vertical[] = [
     label: 'Paid',
     blurb: 'Ads work hardest when they support, not replace, the organic engine.',
     stats: [
-      { value: '$2', label: 'in revenue, on average, for every $1 a business spends on Google Ads', source: 'Google Economic Impact' },
+      { value: '$8', label: 'in business profit, on average, for every $1 a business spends on Google Ads', source: 'Google Economic Impact' },
       { value: '65%', label: 'of clicks from high-intent, ready-to-buy searches go to the paid ads', source: 'WordStream' },
       { value: '50%', label: 'more likely to purchase: paid-search visitors versus organic visitors', source: 'Unbounce' },
     ],
