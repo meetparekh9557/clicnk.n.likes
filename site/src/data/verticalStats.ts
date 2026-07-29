@@ -28,9 +28,9 @@ export const verticalStats: Vertical[] = [
     label: 'SEO',
     blurb: 'Organic search is still the largest single source of trackable web traffic.',
     stats: [
-      { value: '53%', label: 'of all trackable website traffic starts with organic search, more than every other channel combined', source: 'BrightEdge Research' },
+      { value: '53.3%', label: 'of all trackable website traffic starts with organic search, more than every other channel combined', source: 'BrightEdge Research (2025)' },
       { value: '27.6%', label: 'of clicks go to the very first organic Google result, more than positions two and three combined', source: 'Backlinko (4M-result study)' },
-      { value: '68%', label: 'of all online experiences begin with a search engine', source: 'BrightEdge Research' },
+      { value: '<1%', label: 'of website referral traffic currently comes from AI search engines, organic remains the dominant channel', source: 'BrightEdge Research (2025)' },
     ],
   },
   {

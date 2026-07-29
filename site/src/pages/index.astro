@@ -11,6 +11,7 @@ import AuditDemo from '../components/islands/AuditDemo.jsx';
 import HeroFunnel from '../components/HeroFunnel.astro';
 import ClientLogos from '../components/ClientLogos.astro';
 import { services } from '../data/site';
+import { marketStats } from '../data/market';
 import { withBase } from '../lib/url';
 import Search from '@lucide/astro/icons/search';
 import MapPin from '@lucide/astro/icons/map-pin';
@@ -45,6 +46,16 @@ const marqueeItems = [
 ];
 
 const iconWrap = 'mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 text-teal-dark';
+
+// Trust-row values pulled from the single source of truth (data/market.ts)
+// so the monthly stats-refresh keeps this row in sync automatically, instead
+// of drifting from a second hardcoded copy of the same figures.
+const statValue = (source: string) => marketStats.find((s) => s.source.includes(source))?.value ?? '';
+const trustRow = [
+  { value: statValue('BrightEdge Research'), caption: 'of web traffic is organic search' },
+  { value: statValue('Google / Think with Google'), caption: 'of "near me" searches visit within a day' },
+  { value: statValue('Google Search Central').replace('months', 'mo'), caption: 'honest timeline for SEO to compound' },
+];
 ---
 
 <Base
@@ -88,9 +99,9 @@ const iconWrap = 'mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 t
 
       <!-- Trust row spanning the hero -->
       <div class="reveal mt-14 flex flex-wrap items-center gap-x-10 gap-y-6 border-t border-navy/10 pt-8" style="--d:560ms">
-        <div><b class="block font-display text-3xl font-bold text-navy">53%</b><span class="text-sm text-navy/55">of web traffic is organic search</span></div>
-        <div><b class="block font-display text-3xl font-bold text-navy">76%</b><span class="text-sm text-navy/55">of "near me" searches visit within a day</span></div>
-        <div><b class="block font-display text-3xl font-bold text-navy">4-6 mo</b><span class="text-sm text-navy/55">honest timeline for SEO to compound</span></div>
+        {trustRow.map((t) => (
+          <div><b class="block font-display text-3xl font-bold text-navy">{t.value}</b><span class="text-sm text-navy/55">{t.caption}</span></div>
+        ))}
         <div><b class="block font-display text-3xl font-bold text-navy">₹16K</b><span class="text-sm text-navy/55">projects start from</span></div>
       </div>
     </div>
