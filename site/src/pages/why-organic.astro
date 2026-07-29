@@ -6,16 +6,18 @@
 // automatically on a schedule (docs/STATS-REFRESH.md) - every number keeps a
 // named, checkable source and nothing is ever invented.
 import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
 import StatTile from '../components/StatTile.astro';
 import FirstPageCliff from '../components/islands/FirstPageCliff.jsx';
 import { verticalStats, statsLastUpdated } from '../data/verticalStats';
 import { breadcrumbSchema } from '../lib/seo';
 import { withBase } from '../lib/url';
 
-const jsonLd = breadcrumbSchema([
+const trail: [string, string][] = [
   ['Home', '/'],
   ['Why Organic', '/why-organic/'],
-]);
+];
+const jsonLd = breadcrumbSchema(trail);
 const updatedLabel = new Date(statsLastUpdated + '-01').toLocaleDateString('en-IN', { month: 'long', year: 'numeric' });
 ---
 
@@ -24,6 +26,7 @@ const updatedLabel = new Date(statsLastUpdated + '-01').toLocaleDateString('en-I
   description="The industry data behind organic growth, by channel: SEO, Local, AI search, social, content, websites and paid. Every figure named and sourced, plus the first-page click cliff."
   jsonLd={jsonLd}
 >
+  <Breadcrumbs trail={trail} />
   <!-- Intro -->
   <section class="mx-auto max-w-4xl px-[5vw] pt-16 pb-4 text-center lg:pt-20">
     <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">The data</p>

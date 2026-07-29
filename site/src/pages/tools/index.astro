@@ -7,6 +7,7 @@
 // the First-Page-Cliff lens (moved off the homepage), the per-channel
 // readiness checks (each routes to its service page's live check), and a CTA.
 import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import Card from '../../components/Card.astro';
 import InlineCta from '../../components/InlineCta.astro';
 import HeroScan from '../../components/islands/HeroScan.jsx';
@@ -43,10 +44,11 @@ const checks = [
   { id: 'paid', name: 'Ad Budget Waste Simulator', icon: Megaphone, service: '/services/paid-campaigns/', desc: 'An estimate of how much of a monthly ad budget is likely leaking to poor targeting and weak landing pages, and what tightening it would return.' },
 ];
 
-const jsonLd = breadcrumbSchema([
+const trail: [string, string][] = [
   ['Home', '/'],
   ['Free Tools', '/tools/'],
-]);
+];
+const jsonLd = breadcrumbSchema(trail);
 const iconWrap = 'mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 text-teal-dark';
 ---
 
@@ -55,6 +57,7 @@ const iconWrap = 'mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 t
   description="Free tools that run for real: a live Website Health Scan, a Core Web Vitals speed test, a first-impression snapshot, an ROI calculator and a competitor estimator. Honest scores, no sales call."
   jsonLd={jsonLd}
 >
+  <Breadcrumbs trail={trail} />
   <!-- Hero + flagship live scan -->
   <section class="mx-auto max-w-4xl px-[5vw] pt-16 pb-12 text-center lg:pt-20">
     <p class="reveal mx-auto inline-flex items-center gap-2 rounded-full border border-teal/30 bg-teal/5 px-4 py-1.5 text-[13px] font-semibold text-navy">

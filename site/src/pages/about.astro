@@ -5,6 +5,7 @@
 // and true to the source; the card names the founder and links their
 // LinkedIn instead of carrying a photo.
 import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
 import Card from '../components/Card.astro';
 import ClientLogos from '../components/ClientLogos.astro';
 import InlineCta from '../components/InlineCta.astro';
@@ -23,10 +24,11 @@ const formFields = [
   { name: 'message', label: "What's the one thing holding your growth back right now?", type: 'textarea', placeholder: "Tell us honestly, we'll be honest back" },
 ];
 
-const jsonLd = breadcrumbSchema([
+const trail: [string, string][] = [
   ['Home', '/'],
   ['About', '/about/'],
-]);
+];
+const jsonLd = breadcrumbSchema(trail);
 ---
 
 <Base
@@ -34,6 +36,7 @@ const jsonLd = breadcrumbSchema([
   description="Nine years of building organic growth systems for businesses across industries - SEO and content that keep generating leads long after the spend stops. Built on fundamentals, not the algorithm update of the month."
   jsonLd={jsonLd}
 >
+  <Breadcrumbs trail={trail} />
   <!-- Hero -->
   <section class="relative overflow-hidden">
     <div class="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-teal/[0.07] via-transparent to-transparent"></div>

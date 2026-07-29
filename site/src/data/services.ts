@@ -416,3 +416,30 @@ export const serviceDeepDive: Record<string, ServiceDeepDive> = {
     },
   },
 };
+
+// Curated cross-links between services (internal-linking audit, task #11).
+// Hand-picked rather than derived, so every service page links out to the
+// two or three others it genuinely complements - and so social-media-growth
+// (no article is tagged for it yet) still gets real inbound links instead
+// of sitting as an orphan reachable only from Nav/Footer.
+export const relatedServiceSlugs: Record<string, string[]> = {
+  seo: ['local-seo', 'ai-seo', 'content-marketing'],
+  'local-seo': ['seo', 'social-media-growth', 'ai-seo'],
+  'ai-seo': ['seo', 'content-marketing', 'local-seo'],
+  'social-media-growth': ['content-marketing', 'local-seo', 'paid-campaigns'],
+  'content-marketing': ['seo', 'ai-seo', 'social-media-growth'],
+  'website-development': ['seo', 'paid-campaigns', 'ai-seo'],
+  'paid-campaigns': ['website-development', 'social-media-growth', 'local-seo'],
+};
+
+// Maps an Insights article category (data/articles.ts `categories`) to the
+// service page it should link to. "Strategy" has no single-service home by
+// design - those pieces span the whole engine, not one channel.
+export const categoryToServiceSlug: Record<string, string> = {
+  SEO: 'seo',
+  'Local SEO': 'local-seo',
+  'AI Search': 'ai-seo',
+  'Content Marketing': 'content-marketing',
+  'Websites & Conversion': 'website-development',
+  'Paid Media': 'paid-campaigns',
+};

@@ -6,6 +6,7 @@
 // marketing and what we sign in a contract say the same thing.
 import { existsSync } from 'node:fs';
 import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import Card from '../../components/Card.astro';
 import LeadChart from '../../components/LeadChart.astro';
 import BeforeAfter from '../../components/BeforeAfter.astro';
@@ -30,12 +31,13 @@ const shotBefore = asset(cs.shotBefore);
 const shotAfter = asset(cs.shotAfter);
 const hasShots = Boolean(shotBefore || shotAfter);
 
+const trail: [string, string][] = [
+  ['Home', '/'],
+  ['Work', '/work/'],
+  [cs.client, `/work/${cs.slug}/`],
+];
 const jsonLd = [
-  breadcrumbSchema([
-    ['Home', '/'],
-    ['Work', '/work/'],
-    [cs.client, `/work/${cs.slug}/`],
-  ]),
+  breadcrumbSchema(trail),
   {
     '@context': 'https://schema.org',
     '@type': 'Article',
@@ -55,6 +57,7 @@ const lastTotal = cs.leads[cs.leads.length - 1].paid + cs.leads[cs.leads.length 
   description={cs.excerpt}
   jsonLd={jsonLd}
 >
+  <Breadcrumbs trail={trail} />
   <!-- Hero -->
   <section class="mx-auto max-w-5xl px-[5vw] pt-14 pb-8 lg:pt-18">
     <a href={withBase('/work/')} class="reveal text-sm font-semibold text-navy/55 transition-colors hover:text-teal-dark">← All work</a>

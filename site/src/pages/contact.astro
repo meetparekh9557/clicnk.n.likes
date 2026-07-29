@@ -4,16 +4,18 @@
 // cards with icons and a live-scan nudge. hideCta because this page IS
 // the conversion surface - a second CTA band would be noise.
 import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
 import Card from '../components/Card.astro';
 import SimpleForm from '../components/islands/SimpleForm.jsx';
 import { contact } from '../data/site';
 import { withBase } from '../lib/url';
 import { breadcrumbSchema } from '../lib/seo';
 
-const jsonLd = breadcrumbSchema([
+const trail: [string, string][] = [
   ['Home', '/'],
   ['Contact', '/contact/'],
-]);
+];
+const jsonLd = breadcrumbSchema(trail);
 
 const formFields = [
   { name: 'name', label: 'Full name', placeholder: 'Your name' },
@@ -54,6 +56,7 @@ const channels = [
   hideCta
   jsonLd={jsonLd}
 >
+  <Breadcrumbs trail={trail} />
   <section class="mx-auto max-w-6xl px-[5vw] pt-16 pb-10 lg:pt-20">
     <p class="reveal inline-flex items-center gap-2 rounded-full border border-teal/30 bg-teal/5 px-4 py-1.5 text-[13px] font-semibold text-navy">
       <span class="h-1.5 w-1.5 rounded-full bg-teal"></span> Contact

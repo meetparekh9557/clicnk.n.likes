@@ -3,8 +3,11 @@
 // v1 (data/articles.ts) with root-relative internal links, rebased
 // through withBase() so they work at / and /preview/.
 import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import InlineCta from '../../components/InlineCta.astro';
+import RelatedReading from '../../components/RelatedReading.astro';
 import { articles } from '../../data/articles';
+import { serviceDetails, categoryToServiceSlug } from '../../data/services';
 import { withBase } from '../../lib/url';
 import { abs, articleSchema, breadcrumbSchema } from '../../lib/seo';
 
@@ -41,6 +44,11 @@ const articleMeta: Record<string, { title: string; description: string }> = {
   },
 };
 const meta = articleMeta[article.slug] ?? { title: `${article.title} | Click.n.likes Insights`, description: article.excerpt };
+const trail: [string, string][] = [
+  ['Home', '/'],
+  ['Insights', '/insights/'],
+  [article.title, articlePath],
+];
 const jsonLd = [
   articleSchema({
     title: article.title,
@@ -49,11 +57,7 @@ const jsonLd = [
     author: article.author,
     datePublished: article.date,
   }),
-  breadcrumbSchema([
-    ['Home', '/'],
-    ['Insights', '/insights/'],
-    [article.title, articlePath],
-  ]),
+  breadcrumbSchema(trail),
   {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
@@ -76,9 +80,24 @@ const canSplit = paras.length >= 5;
 const mid = Math.ceil(paras.length / 2);
 const bodyTop = canSplit ? paras.slice(0, mid).join('</p>') + '</p>' : body;
 const bodyRest = canSplit ? paras.slice(mid).join('</p>') : '';
+
+// Internal-linking audit (task #11): every article now links to sibling
+// articles that share a category, and to the service page(s) its topic
+// maps to - so authority flows both sideways (article to article) and
+// down (article to the page that sells).
+const relatedArticles = articles
+  .filter((a) => a.slug !== article.slug && a.categories.some((c) => article.categories.includes(c)))
+  .slice(0, 3)
+  .map((a) => ({ kicker: a.tag, title: a.title, text: a.excerpt, href: `/insights/${a.slug}/` }));
+const relatedServiceSlugsForArticle = [...new Set(article.categories.map((c) => categoryToServiceSlug[c]).filter(Boolean))];
+const relatedServices = relatedServiceSlugsForArticle
+  .map((slug) => serviceDetails.find((s) => s.slug === slug))
+  .filter((s): s is (typeof serviceDetails)[number] => Boolean(s))
+  .map((s) => ({ title: s.title, text: s.lead, href: `/services/${s.slug}/` }));
 ---
 
 <Base title={meta.title} description={meta.description} ogType="article" ogImage={abs(featuredPath)} jsonLd={jsonLd}>
+  <Breadcrumbs trail={trail} />
   <section class="mx-auto max-w-3xl px-[5vw] pt-14 pb-6 lg:pt-18">
     <a href={withBase('/insights/')} class="reveal text-sm font-semibold text-navy/55 transition-colors hover:text-teal-dark">← All insights</a>
     <p class="reveal mt-5 inline-flex items-center gap-2 rounded-full border border-teal/30 bg-teal/5 px-4 py-1.5 text-[13px] font-semibold text-navy" style="--d:60ms">
@@ -135,4 +154,7 @@ const bodyRest = canSplit ? paras.slice(mid).join('</p>') : '';
       ))}
     </div>
   </section>
+
+  <RelatedReading heading="Keep reading" items={relatedArticles} maxWidth="max-w-3xl" />
+  <RelatedReading heading="The service this connects to" items={relatedServices} maxWidth="max-w-3xl" class="pt-0" />
 </Base>
