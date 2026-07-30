@@ -179,6 +179,44 @@ export const caseStudies: CaseStudy[] = [
     summary:
       'AidByLaw came in dependent on the idea of ads for lead volume. Thirteen months later they had both a scaled paid channel and a genuinely new organic one built from zero, on top of a website whose every page had been redesigned, re-titled and rewritten around what buyers actually search, with the trust infrastructure it never had. Durable volume from ads, compounding growth from search: that combination was the sequencing we set out to deliver at the start.',
   },
+  {
+    slug: 'adamas-films',
+    client: 'Adamas Films',
+    categories: ['Websites & Conversion'],
+    logo: '/clients/adamas-films.png',
+    tag: 'Film & Media',
+    title: 'A dark, cinematic home for a reel that already speaks for itself',
+    excerpt:
+      'A Mumbai production house that shoots for Disney, Viacom18, Star and Zee needed a website with the same restraint as its work. We built one from scratch.',
+    lengthLabel: 'Website design & build',
+    services: ['Website Design & Build'],
+    sector: 'Film, television and brand production',
+    location: 'Mumbai, India',
+    overview:
+      'Adamas Films is a Mumbai-based production house founded by Aditya S. Chopra, producing television commercials, brand films, promotional campaigns and show packaging for entertainment networks and corporate clients. Its reel already carries names like Disney, Viacom18, Star, Zee and Discovery: work built for audiences who judge a production house in the first three seconds of a video, not a paragraph of copy.',
+    challenge:
+      "A production house's real case study is the work itself: a 55-second promo, a stop-motion TVC, a brand film. The website's only real job was to get out of the way of that footage while still proving, instantly, that the studio behind it plays in the same league as the broadcasters and brands on its client list. That is a narrower brief than it sounds: most portfolio sites either bury the reel under agency-speak, or strip out enough context that the work loses its frame.",
+    approach: [
+      {
+        phase: 'Structure first',
+        when: 'Information architecture',
+        body: 'Before any visual design, we mapped how a producer or brand manager actually evaluates a shop like this: reel, then range, then who else trusts them. That became the spine of the site: a featured-work grid on the homepage, dedicated Shoot and Graphics sections for the full body of work, and a Services & Clients page as the credibility layer.',
+      },
+      {
+        phase: 'A frame that disappears',
+        when: 'Visual design',
+        body: 'Full-bleed black, restrained typography, no colour competing with the footage. Every design decision kept attention on the thumbnail and the video player, not on the website around it: the opposite instinct from most agency sites, and the right one for a portfolio whose entire value is the work itself.',
+      },
+      {
+        phase: 'One page per project',
+        when: 'Build',
+        body: 'Every commercial, brand film and show package got its own page: embedded video, one paragraph of real context, nothing else competing for attention. The client wall does the trust-building the copy does not have to.',
+      },
+    ],
+    shot: '/work/adamas-films.png',
+    summary:
+      'Adamas Films did not need a website that argued for the studio; the client roster and the reel already do that. What it needed was a site with the same discipline as the work: full-bleed, unhurried, letting a 55-second cut do what no paragraph of agency copy could. That is what got built.',
+  },
 ];
 
 export const caseStudyBySlug = (slug: string) => caseStudies.find((c) => c.slug === slug);
