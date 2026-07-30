@@ -33,30 +33,55 @@ export interface CaseStudy {
   tag: string;
   title: string;
   excerpt: string;
-  /** Engagement window, e.g. 'April 2025 – May 2026'. */
-  period: string;
+  /**
+   * Engagement window, e.g. 'April 2025 – May 2026'. Omit entirely (rather
+   * than guessing) when the client hasn't given dates to publish; the page
+   * falls back to showing only lengthLabel.
+   */
+  period?: string;
   lengthLabel: string;
   services: string[];
   sector: string;
   location: string;
-  /** Headline numbers for the stat row. */
-  stats: { value: string; label: string; sub?: string }[];
+  /**
+   * Headline numbers for the stat row. Omit for engagements with no
+   * permissioned performance figures (e.g. a website-only build) rather than
+   * inventing a metric — the page skips the stat row entirely when absent.
+   */
+  stats?: { value: string; label: string; sub?: string }[];
   overview: string;
   challenge: string;
   approach: { phase: string; when: string; body: string }[];
-  /** Website before/after comparison rows. */
-  siteCompare: { row: string; before: string; after: string }[];
+  /**
+   * Website before/after comparison rows. Only meaningful for a redesign of
+   * an existing site; omit for a from-scratch build.
+   */
+  siteCompare?: { row: string; before: string; after: string }[];
   /**
    * Before/after screenshots in /public/work/. Presence is detected at build
    * time, so dropping the file in is all that is needed. Crop raws with
    * scripts/crop-shot.mjs first: a full-page capture renders as an unreadable
    * sliver, and both sides should share one ratio so the comparison is fair.
+   * Only for a redesign of an existing site — see siteCompare above.
    */
   shotBefore?: string;
   shotAfter?: string;
-  leads: LeadPoint[];
-  results: { h: string; p: string }[];
-  feedback: string;
+  /**
+   * A single screenshot of the finished site, for a from-scratch build with
+   * no prior site to compare against. Renders instead of the before/after
+   * slider; leave shotBefore/shotAfter/siteCompare unset when using this.
+   */
+  shot?: string;
+  /** Month-by-month reported lead volume. Omit when there's no ad/SEO retainer to report on (e.g. a website-only build) — the page skips the chart entirely. */
+  leads?: LeadPoint[];
+  /** Omit alongside `leads` for a website-only build with no performance figures to report. */
+  results?: { h: string; p: string }[];
+  /**
+   * A real client quote or paraphrase, given with permission — never invent
+   * one, even a plausible-sounding one, and attribute it to a named business.
+   * Omit entirely if nothing real is on hand yet.
+   */
+  feedback?: string;
   summary: string;
 }
 
@@ -153,6 +178,44 @@ export const caseStudies: CaseStudy[] = [
       'AidByLaw’s published client reviews reflect the same experience their lead numbers suggest: reviewers point to fast turnaround, including same-day and ahead-of-schedule processing on name-change and Gazette matters, responsive communication throughout, and clients returning for additional services after a first interaction.',
     summary:
       'AidByLaw came in dependent on the idea of ads for lead volume. Thirteen months later they had both a scaled paid channel and a genuinely new organic one built from zero, on top of a website whose every page had been redesigned, re-titled and rewritten around what buyers actually search, with the trust infrastructure it never had. Durable volume from ads, compounding growth from search: that combination was the sequencing we set out to deliver at the start.',
+  },
+  {
+    slug: 'adamas-films',
+    client: 'Adamas Films',
+    categories: ['Websites & Conversion'],
+    logo: '/clients/adamas-films.png',
+    tag: 'Film & Media',
+    title: 'A dark, cinematic home for a reel that already speaks for itself',
+    excerpt:
+      'A Mumbai production house that shoots for Disney, Viacom18, Star and Zee needed a website with the same restraint as its work. We built one from scratch.',
+    lengthLabel: 'Website design & build',
+    services: ['Website Design & Build'],
+    sector: 'Film, television and brand production',
+    location: 'Mumbai, India',
+    overview:
+      'Adamas Films is a Mumbai-based production house founded by Aditya S. Chopra, producing television commercials, brand films, promotional campaigns and show packaging for entertainment networks and corporate clients. Its reel already carries names like Disney, Viacom18, Star, Zee and Discovery: work built for audiences who judge a production house in the first three seconds of a video, not a paragraph of copy.',
+    challenge:
+      "A production house's real case study is the work itself: a 55-second promo, a stop-motion TVC, a brand film. The website's only real job was to get out of the way of that footage while still proving, instantly, that the studio behind it plays in the same league as the broadcasters and brands on its client list. That is a narrower brief than it sounds: most portfolio sites either bury the reel under agency-speak, or strip out enough context that the work loses its frame.",
+    approach: [
+      {
+        phase: 'Structure first',
+        when: 'Information architecture',
+        body: 'Before any visual design, we mapped how a producer or brand manager actually evaluates a shop like this: reel, then range, then who else trusts them. That became the spine of the site: a featured-work grid on the homepage, dedicated Shoot and Graphics sections for the full body of work, and a Services & Clients page as the credibility layer.',
+      },
+      {
+        phase: 'A frame that disappears',
+        when: 'Visual design',
+        body: "Founder Aditya Chopra's brief was direct: an all-black aesthetic. We built the visual language around that, sleek and sophisticated, with a clean typeface chosen to complement the studio's personality rather than compete with it. Every decision kept attention on the thumbnail and the video player, not the website around it: subtle rather than loud, so visitors engage with each project instead of the site's own design.",
+      },
+      {
+        phase: 'One page per project',
+        when: 'Build',
+        body: 'Every commercial, brand film and show package got its own page: embedded video, one paragraph of real context, nothing else competing for attention. The client wall does the trust-building the copy does not have to.',
+      },
+    ],
+    shot: '/work/adamas-films.png',
+    summary:
+      'Adamas Films did not need a website that argued for the studio; the client roster and the reel already do that. What it needed was a site with the same discipline as the work: full-bleed, unhurried, letting a 55-second cut do what no paragraph of agency copy could. That is what got built.',
   },
 ];
 

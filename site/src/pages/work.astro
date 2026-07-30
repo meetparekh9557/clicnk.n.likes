@@ -20,10 +20,11 @@ const csCounts = new Map<string, number>();
 caseStudies.forEach((c) => c.categories.forEach((k) => csCounts.set(k, (csCounts.get(k) ?? 0) + 1)));
 const csCats: [string, number][] = [...csCounts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
 
-// The hero carries a proof card built from the most recent published study,
-// so the first screen shows a measured result rather than only claiming one.
-// With no case studies published it simply does not render.
-const latest = caseStudies[0];
+// The hero carries a proof card built from the most recent published study
+// that has a leads sparkline to show — a website-only build has nothing to
+// chart, so it's skipped for this slot rather than rendered broken.
+// With no qualifying case study published it simply does not render.
+const latest = caseStudies.find((c) => c.leads && c.leads.length > 0);
 
 const trail: [string, string][] = [
   ['Home', '/'],
@@ -118,13 +119,15 @@ const formFields = [
           </div>
           <h3 class="mt-3 font-display text-lg leading-snug font-semibold text-navy">{cs.title}</h3>
           <p class="mt-2 flex-1 text-[14.5px] leading-relaxed text-navy/65">{cs.excerpt}</p>
-          <div class="mt-5 flex flex-wrap gap-x-6 gap-y-2 border-t border-navy/10 pt-4">
-            {cs.stats.slice(0, 3).map((st) => (
-              <span class="text-[13px] text-navy/60">
-                <b class="font-display text-[15px] font-bold text-teal-dark tabular-nums">{st.value}</b> {st.label}
-              </span>
-            ))}
-          </div>
+          {cs.stats && cs.stats.length > 0 && (
+            <div class="mt-5 flex flex-wrap gap-x-6 gap-y-2 border-t border-navy/10 pt-4">
+              {cs.stats.slice(0, 3).map((st) => (
+                <span class="text-[13px] text-navy/60">
+                  <b class="font-display text-[15px] font-bold text-teal-dark tabular-nums">{st.value}</b> {st.label}
+                </span>
+              ))}
+            </div>
+          )}
           <p class="mt-4 text-sm font-semibold text-teal-dark transition-transform duration-300 group-hover:translate-x-0.5">Read the case study →</p>
         </a>
       ))}

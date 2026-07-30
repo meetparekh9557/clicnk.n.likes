@@ -29,6 +29,7 @@ const asset = (p?: string) => (p && existsSync(new URL(`../../../public${p}`, im
 const logo = asset(cs.logo);
 const shotBefore = asset(cs.shotBefore);
 const shotAfter = asset(cs.shotAfter);
+const shot = asset(cs.shot);
 const hasShots = Boolean(shotBefore || shotAfter);
 
 const trail: [string, string][] = [
@@ -48,12 +49,13 @@ const jsonLd = [
     publisher: { '@id': 'https://clicknlikes.com/#organization' },
   },
 ];
-const firstTotal = cs.leads[0].paid + cs.leads[0].organic;
-const lastTotal = cs.leads[cs.leads.length - 1].paid + cs.leads[cs.leads.length - 1].organic;
+const hasLeads = Boolean(cs.leads && cs.leads.length > 0);
+const firstTotal = hasLeads ? cs.leads![0].paid + cs.leads![0].organic : 0;
+const lastTotal = hasLeads ? cs.leads![cs.leads.length - 1].paid + cs.leads![cs.leads.length - 1].organic : 0;
 ---
 
 <Base
-  title={`${cs.client} Case Study: 10x Paid Leads + a New Organic Channel | Click.n.likes`}
+  title={`${cs.client} Case Study: ${cs.title} | Click.n.likes`}
   description={cs.excerpt}
   jsonLd={jsonLd}
 >
@@ -78,40 +80,44 @@ const lastTotal = cs.leads[cs.leads.length - 1].paid + cs.leads[cs.leads.length 
 
     <dl class="reveal mt-8 grid gap-x-8 gap-y-4 border-t border-navy/10 pt-6 sm:grid-cols-2 lg:grid-cols-4" style="--d:240ms">
       <div><dt class="text-[11.5px] font-semibold tracking-[0.1em] text-navy/45 uppercase">Client</dt><dd class="mt-1 text-[15px] font-semibold text-navy">{cs.client}</dd></div>
-      <div><dt class="text-[11.5px] font-semibold tracking-[0.1em] text-navy/45 uppercase">Engagement</dt><dd class="mt-1 text-[15px] text-navy/75">{cs.period}<span class="block text-[13px] text-navy/50">{cs.lengthLabel}</span></dd></div>
+      <div><dt class="text-[11.5px] font-semibold tracking-[0.1em] text-navy/45 uppercase">Engagement</dt><dd class="mt-1 text-[15px] text-navy/75">{cs.period ? <>{cs.period}<span class="block text-[13px] text-navy/50">{cs.lengthLabel}</span></> : cs.lengthLabel}</dd></div>
       <div><dt class="text-[11.5px] font-semibold tracking-[0.1em] text-navy/45 uppercase">Sector</dt><dd class="mt-1 text-[15px] text-navy/75">{cs.sector}</dd></div>
       <div><dt class="text-[11.5px] font-semibold tracking-[0.1em] text-navy/45 uppercase">Services</dt><dd class="mt-1 text-[15px] text-navy/75">{cs.services.join(', ')}</dd></div>
     </dl>
   </section>
 
   <!-- Headline stats -->
-  <section class="mx-auto max-w-5xl px-[5vw] pb-4">
-    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-      {cs.stats.map((s, i) => (
-        <div class="reveal rounded-2xl border border-navy/10 bg-white p-5" style={`--d:${i * 70}ms`}>
-          <p class="font-display text-[clamp(1.6rem,3vw,2.1rem)] leading-none font-bold text-teal-dark tabular-nums">{s.value}</p>
-          <p class="mt-2 text-[14px] font-semibold text-navy">{s.label}</p>
-          {s.sub && <p class="mt-1 text-[12.5px] leading-snug text-navy/55">{s.sub}</p>}
-        </div>
-      ))}
-    </div>
-  </section>
+  {cs.stats && cs.stats.length > 0 && (
+    <section class="mx-auto max-w-5xl px-[5vw] pb-4">
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {cs.stats.map((s, i) => (
+          <div class="reveal rounded-2xl border border-navy/10 bg-white p-5" style={`--d:${i * 70}ms`}>
+            <p class="font-display text-[clamp(1.6rem,3vw,2.1rem)] leading-none font-bold text-teal-dark tabular-nums">{s.value}</p>
+            <p class="mt-2 text-[14px] font-semibold text-navy">{s.label}</p>
+            {s.sub && <p class="mt-1 text-[12.5px] leading-snug text-navy/55">{s.sub}</p>}
+          </div>
+        ))}
+      </div>
+    </section>
+  )}
 
   <!-- The chart -->
-  <section class="mx-auto max-w-5xl px-[5vw] pt-12 pb-4">
-    <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">Leads, month by month</p>
-    <h2 class="reveal mt-3 max-w-3xl font-display text-[clamp(1.5rem,2.8vw,2.2rem)] leading-[1.15] font-bold text-navy" style="--d:80ms">
-      {firstTotal} leads a month at the start. {lastTotal} at the close.
-    </h2>
-    <p class="reveal mt-3 max-w-2xl text-[15.5px] leading-relaxed text-navy/65" style="--d:140ms">
-      Shown exactly as it happened, including the two flat months while the ad platforms learned the account and the
-      dip mid-engagement before further optimisation. Growth that only ever goes up is not what running live campaigns
-      looks like.
-    </p>
-    <div class="reveal mt-7 rounded-2xl border border-navy/10 bg-white p-5 sm:p-7" style="--d:200ms">
-      <LeadChart leads={cs.leads} id={`lc-${cs.slug}`} />
-    </div>
-  </section>
+  {hasLeads && (
+    <section class="mx-auto max-w-5xl px-[5vw] pt-12 pb-4">
+      <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">Leads, month by month</p>
+      <h2 class="reveal mt-3 max-w-3xl font-display text-[clamp(1.5rem,2.8vw,2.2rem)] leading-[1.15] font-bold text-navy" style="--d:80ms">
+        {firstTotal} leads a month at the start. {lastTotal} at the close.
+      </h2>
+      <p class="reveal mt-3 max-w-2xl text-[15.5px] leading-relaxed text-navy/65" style="--d:140ms">
+        Shown exactly as it happened, including the two flat months while the ad platforms learned the account and the
+        dip mid-engagement before further optimisation. Growth that only ever goes up is not what running live campaigns
+        looks like.
+      </p>
+      <div class="reveal mt-7 rounded-2xl border border-navy/10 bg-white p-5 sm:p-7" style="--d:200ms">
+        <LeadChart leads={cs.leads} id={`lc-${cs.slug}`} />
+      </div>
+    </section>
+  )}
 
   <!-- Narrative -->
   <section class="mx-auto max-w-3xl px-[5vw] pt-12 pb-4">
@@ -137,87 +143,106 @@ const lastTotal = cs.leads[cs.leads.length - 1].paid + cs.leads[cs.leads.length 
     </div>
   </section>
 
-  <!-- Website before / after -->
-  <section class="mx-auto max-w-5xl px-[5vw] pt-12 pb-4">
-    <h2 class="reveal font-display text-[clamp(1.4rem,2.5vw,1.9rem)] font-bold text-navy">The website, before and after</h2>
+  <!-- Website before / after, or a single shot for a from-scratch build -->
+  {(shotBefore && shotAfter) || hasShots ? (
+    <section class="mx-auto max-w-5xl px-[5vw] pt-12 pb-4">
+      <h2 class="reveal font-display text-[clamp(1.4rem,2.5vw,1.9rem)] font-bold text-navy">The website, before and after</h2>
 
-    {shotBefore && shotAfter ? (
-      <div class="reveal mt-6" style="--d:80ms">
-        <BeforeAfter
-          before={withBase(shotBefore)}
-          after={withBase(shotAfter)}
-          alt={`${cs.client} website`}
-          id={`ba-${cs.slug}`}
-        />
-      </div>
-    ) : hasShots && (
-      <div class="reveal mt-6 grid gap-5 lg:grid-cols-2" style="--d:80ms">
-        {shotBefore && (
-          <figure>
-            <img src={withBase(shotBefore)} alt={`${cs.client} website before the rebuild`} loading="lazy" class="w-full rounded-xl border border-navy/10" />
-            <figcaption class="mt-2 text-[12.5px] font-semibold text-navy/50">Before</figcaption>
-          </figure>
-        )}
-        {shotAfter && (
-          <figure>
-            <img src={withBase(shotAfter)} alt={`${cs.client} website after the rebuild`} loading="lazy" class="w-full rounded-xl border border-teal/40" />
-            <figcaption class="mt-2 text-[12.5px] font-semibold text-teal-dark">After</figcaption>
-          </figure>
-        )}
-      </div>
-    )}
+      {shotBefore && shotAfter ? (
+        <div class="reveal mt-6" style="--d:80ms">
+          <BeforeAfter
+            before={withBase(shotBefore)}
+            after={withBase(shotAfter)}
+            alt={`${cs.client} website`}
+            id={`ba-${cs.slug}`}
+          />
+        </div>
+      ) : (
+        <div class="reveal mt-6 grid gap-5 lg:grid-cols-2" style="--d:80ms">
+          {shotBefore && (
+            <figure>
+              <img src={withBase(shotBefore)} alt={`${cs.client} website before the rebuild`} loading="lazy" class="w-full rounded-xl border border-navy/10" />
+              <figcaption class="mt-2 text-[12.5px] font-semibold text-navy/50">Before</figcaption>
+            </figure>
+          )}
+          {shotAfter && (
+            <figure>
+              <img src={withBase(shotAfter)} alt={`${cs.client} website after the rebuild`} loading="lazy" class="w-full rounded-xl border border-teal/40" />
+              <figcaption class="mt-2 text-[12.5px] font-semibold text-teal-dark">After</figcaption>
+            </figure>
+          )}
+        </div>
+      )}
 
-    <div class="reveal mt-6 overflow-x-auto rounded-2xl border border-navy/10" style="--d:120ms">
-      <table class="w-full min-w-[560px] border-collapse text-left text-[14.5px]">
-        <thead>
-          <tr class="bg-navy text-white">
-            <th class="px-5 py-3 font-semibold"></th>
-            <th class="px-5 py-3 font-semibold">Before</th>
-            <th class="px-5 py-3 font-semibold">After</th>
-          </tr>
-        </thead>
-        <tbody>
-          {cs.siteCompare.map((r, i) => (
-            <tr class={i % 2 ? 'bg-off/60' : 'bg-white'}>
-              <th scope="row" class="px-5 py-3 font-semibold text-navy">{r.row}</th>
-              <td class="px-5 py-3 text-navy/60">{r.before}</td>
-              <td class="px-5 py-3 font-medium text-navy">
-                <span class="inline-flex items-start gap-2">
-                  <span class="mt-0.5 grid h-[17px] w-[17px] shrink-0 place-items-center rounded-full bg-teal/15 text-teal-dark"><Check size={11} stroke-width={3} aria-hidden="true" /></span>
-                  {r.after}
-                </span>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  </section>
+      {cs.siteCompare && cs.siteCompare.length > 0 && (
+        <div class="reveal mt-6 overflow-x-auto rounded-2xl border border-navy/10" style="--d:120ms">
+          <table class="w-full min-w-[560px] border-collapse text-left text-[14.5px]">
+            <thead>
+              <tr class="bg-navy text-white">
+                <th class="px-5 py-3 font-semibold"></th>
+                <th class="px-5 py-3 font-semibold">Before</th>
+                <th class="px-5 py-3 font-semibold">After</th>
+              </tr>
+            </thead>
+            <tbody>
+              {cs.siteCompare.map((r, i) => (
+                <tr class={i % 2 ? 'bg-off/60' : 'bg-white'}>
+                  <th scope="row" class="px-5 py-3 font-semibold text-navy">{r.row}</th>
+                  <td class="px-5 py-3 text-navy/60">{r.before}</td>
+                  <td class="px-5 py-3 font-medium text-navy">
+                    <span class="inline-flex items-start gap-2">
+                      <span class="mt-0.5 grid h-[17px] w-[17px] shrink-0 place-items-center rounded-full bg-teal/15 text-teal-dark"><Check size={11} stroke-width={3} aria-hidden="true" /></span>
+                      {r.after}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </section>
+  ) : shot && (
+    <section class="mx-auto max-w-5xl px-[5vw] pt-12 pb-4">
+      <h2 class="reveal font-display text-[clamp(1.4rem,2.5vw,1.9rem)] font-bold text-navy">The website</h2>
+      <figure class="reveal mt-6" style="--d:80ms">
+        <img src={withBase(shot)} alt={`${cs.client} website`} loading="lazy" class="w-full rounded-xl border border-navy/10" />
+      </figure>
+    </section>
+  )}
 
   <!-- Results -->
   <section class="mx-auto max-w-3xl px-[5vw] pt-12 pb-4">
-    <h2 class="reveal font-display text-[clamp(1.4rem,2.5vw,1.9rem)] font-bold text-navy">What actually happened</h2>
-    {cs.results.map((r, i) => (
-      <div class="reveal mt-7" style={`--d:${i * 70}ms`}>
-        <h3 class="font-display text-lg font-semibold text-navy">{r.h}</h3>
-        <p class="mt-2 text-[16.5px] leading-relaxed text-navy/75">{r.p}</p>
-      </div>
-    ))}
+    {cs.results && cs.results.length > 0 && (
+      <>
+        <h2 class="reveal font-display text-[clamp(1.4rem,2.5vw,1.9rem)] font-bold text-navy">What actually happened</h2>
+        {cs.results.map((r, i) => (
+          <div class="reveal mt-7" style={`--d:${i * 70}ms`}>
+            <h3 class="font-display text-lg font-semibold text-navy">{r.h}</h3>
+            <p class="mt-2 text-[16.5px] leading-relaxed text-navy/75">{r.p}</p>
+          </div>
+        ))}
+      </>
+    )}
 
-    <div class="reveal mt-9 rounded-2xl border-l-[3px] border-teal bg-teal/[0.06] p-6" style="--d:80ms">
-      <p class="text-xs font-semibold tracking-[0.12em] text-teal-dark uppercase">In their world</p>
-      <p class="mt-2 text-[15.5px] leading-relaxed text-navy/75">{cs.feedback}</p>
-    </div>
+    {cs.feedback && (
+      <div class="reveal mt-9 rounded-2xl border-l-[3px] border-teal bg-teal/[0.06] p-6" style="--d:80ms">
+        <p class="text-xs font-semibold tracking-[0.12em] text-teal-dark uppercase">In their world</p>
+        <p class="mt-2 text-[15.5px] leading-relaxed text-navy/75">{cs.feedback}</p>
+      </div>
+    )}
 
     <h2 class="reveal mt-11 font-display text-[clamp(1.4rem,2.5vw,1.9rem)] font-bold text-navy">In summary</h2>
     <p class="reveal mt-3 text-[16.5px] leading-relaxed text-navy/75" style="--d:60ms">{cs.summary}</p>
 
-    <p class="reveal mt-8 rounded-xl border border-navy/10 bg-off px-5 py-4 text-[13px] leading-relaxed text-navy/55" style="--d:120ms">
-      These figures describe this engagement only. They are reported from the campaign and analytics reporting for this
-      account, and they are not a prediction or promise of comparable results. What any business achieves depends on its
-      market, offer, pricing and competition, and no agency controls the search and advertising platforms these results
-      run on.
-    </p>
+    {cs.results && cs.results.length > 0 && (
+      <p class="reveal mt-8 rounded-xl border border-navy/10 bg-off px-5 py-4 text-[13px] leading-relaxed text-navy/55" style="--d:120ms">
+        These figures describe this engagement only. They are reported from the campaign and analytics reporting for this
+        account, and they are not a prediction or promise of comparable results. What any business achieves depends on its
+        market, offer, pricing and competition, and no agency controls the search and advertising platforms these results
+        run on.
+      </p>
+    )}
   </section>
 
   <section class="mx-auto max-w-5xl px-[5vw] py-14">
