@@ -33,30 +33,55 @@ export interface CaseStudy {
   tag: string;
   title: string;
   excerpt: string;
-  /** Engagement window, e.g. 'April 2025 – May 2026'. */
-  period: string;
+  /**
+   * Engagement window, e.g. 'April 2025 – May 2026'. Omit entirely (rather
+   * than guessing) when the client hasn't given dates to publish; the page
+   * falls back to showing only lengthLabel.
+   */
+  period?: string;
   lengthLabel: string;
   services: string[];
   sector: string;
   location: string;
-  /** Headline numbers for the stat row. */
-  stats: { value: string; label: string; sub?: string }[];
+  /**
+   * Headline numbers for the stat row. Omit for engagements with no
+   * permissioned performance figures (e.g. a website-only build) rather than
+   * inventing a metric — the page skips the stat row entirely when absent.
+   */
+  stats?: { value: string; label: string; sub?: string }[];
   overview: string;
   challenge: string;
   approach: { phase: string; when: string; body: string }[];
-  /** Website before/after comparison rows. */
-  siteCompare: { row: string; before: string; after: string }[];
+  /**
+   * Website before/after comparison rows. Only meaningful for a redesign of
+   * an existing site; omit for a from-scratch build.
+   */
+  siteCompare?: { row: string; before: string; after: string }[];
   /**
    * Before/after screenshots in /public/work/. Presence is detected at build
    * time, so dropping the file in is all that is needed. Crop raws with
    * scripts/crop-shot.mjs first: a full-page capture renders as an unreadable
    * sliver, and both sides should share one ratio so the comparison is fair.
+   * Only for a redesign of an existing site — see siteCompare above.
    */
   shotBefore?: string;
   shotAfter?: string;
-  leads: LeadPoint[];
-  results: { h: string; p: string }[];
-  feedback: string;
+  /**
+   * A single screenshot of the finished site, for a from-scratch build with
+   * no prior site to compare against. Renders instead of the before/after
+   * slider; leave shotBefore/shotAfter/siteCompare unset when using this.
+   */
+  shot?: string;
+  /** Month-by-month reported lead volume. Omit when there's no ad/SEO retainer to report on (e.g. a website-only build) — the page skips the chart entirely. */
+  leads?: LeadPoint[];
+  /** Omit alongside `leads` for a website-only build with no performance figures to report. */
+  results?: { h: string; p: string }[];
+  /**
+   * A real client quote or paraphrase, given with permission — never invent
+   * one, even a plausible-sounding one, and attribute it to a named business.
+   * Omit entirely if nothing real is on hand yet.
+   */
+  feedback?: string;
   summary: string;
 }
 
