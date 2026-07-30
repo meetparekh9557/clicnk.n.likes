@@ -30,6 +30,7 @@ const logo = asset(cs.logo);
 const shotBefore = asset(cs.shotBefore);
 const shotAfter = asset(cs.shotAfter);
 const shot = asset(cs.shot);
+const gallery = (cs.gallery ?? []).filter((g) => asset(g.src));
 const hasShots = Boolean(shotBefore || shotAfter);
 
 const trail: [string, string][] = [
@@ -201,6 +202,18 @@ const lastTotal = hasLeads ? cs.leads![cs.leads.length - 1].paid + cs.leads![cs.
           </table>
         </div>
       )}
+    </section>
+  ) : gallery.length > 0 ? (
+    <section class="mx-auto max-w-5xl px-[5vw] pt-12 pb-4">
+      <h2 class="reveal font-display text-[clamp(1.4rem,2.5vw,1.9rem)] font-bold text-navy">The website</h2>
+      <div class="mt-6 grid gap-5 sm:grid-cols-2">
+        {gallery.map((g, i) => (
+          <figure class="reveal" style={`--d:${i * 80}ms`}>
+            <img src={withBase(g.src)} alt={g.caption ?? `${cs.client} website`} loading="lazy" class="w-full rounded-xl border border-navy/10" />
+            {g.caption && <figcaption class="mt-2 text-[12.5px] text-navy/50">{g.caption}</figcaption>}
+          </figure>
+        ))}
+      </div>
     </section>
   ) : shot && (
     <section class="mx-auto max-w-5xl px-[5vw] pt-12 pb-4">

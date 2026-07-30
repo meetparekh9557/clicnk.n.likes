@@ -70,8 +70,16 @@ export interface CaseStudy {
    * A single screenshot of the finished site, for a from-scratch build with
    * no prior site to compare against. Renders instead of the before/after
    * slider; leave shotBefore/shotAfter/siteCompare unset when using this.
+   * If `gallery` is also set, `gallery` takes over the section instead.
    */
   shot?: string;
+  /**
+   * Multiple screenshots of the finished site (homepage, a work grid, a
+   * client wall, etc.) for a from-scratch build with more than one page
+   * worth showing. Each optionally captioned. Takes over from `shot` when
+   * present.
+   */
+  gallery?: { src: string; caption?: string }[];
   /** Month-by-month reported lead volume. Omit when there's no ad/SEO retainer to report on (e.g. a website-only build) — the page skips the chart entirely. */
   leads?: LeadPoint[];
   /** Omit alongside `leads` for a website-only build with no performance figures to report. */
@@ -193,7 +201,7 @@ export const caseStudies: CaseStudy[] = [
     sector: 'Film, television and brand production',
     location: 'Mumbai, India',
     overview:
-      'Adamas Films is a Mumbai-based production house founded by Aditya S. Chopra, producing television commercials, brand films, promotional campaigns and show packaging for entertainment networks and corporate clients. Its reel already carries names like Disney, Viacom18, Star, Zee and Discovery: work built for audiences who judge a production house in the first three seconds of a video, not a paragraph of copy.',
+      "Adamas Films is a Mumbai-based production house founded by Aditya S. Chopra, producing television commercials, brand films, promotional campaigns and show packaging for entertainment networks and corporate clients. Its client list spans Disney, Viacom18, Discovery, Star and the full Zee network (Zee Café, Zee5, Zee Cinema, Zee Zest), alongside &flix, &privé HD, FashionTV and corporate clients like Prescon: work built for audiences who judge a production house in the first three seconds of a video, not a paragraph of copy.",
     challenge:
       "A production house's real case study is the work itself: a 55-second promo, a stop-motion TVC, a brand film. The website's only real job was to get out of the way of that footage while still proving, instantly, that the studio behind it plays in the same league as the broadcasters and brands on its client list. That is a narrower brief than it sounds: most portfolio sites either bury the reel under agency-speak, or strip out enough context that the work loses its frame.",
     approach: [
@@ -213,7 +221,11 @@ export const caseStudies: CaseStudy[] = [
         body: 'Every commercial, brand film and show package got its own page: embedded video, one paragraph of real context, nothing else competing for attention. The client wall does the trust-building the copy does not have to.',
       },
     ],
-    shot: '/work/adamas-films.png',
+    gallery: [
+      { src: '/work/adamas-films.png', caption: 'Homepage: about, then straight into featured work' },
+      { src: '/work/adamas-films-work.png', caption: 'The Shoot section, one thumbnail per commercial and brand film' },
+      { src: '/work/adamas-films-clients.png', caption: 'Services & Clients: the trust layer, in logos instead of copy' },
+    ],
     summary:
       'Adamas Films did not need a website that argued for the studio; the client roster and the reel already do that. What it needed was a site with the same discipline as the work: full-bleed, unhurried, letting a 55-second cut do what no paragraph of agency copy could. That is what got built.',
   },
