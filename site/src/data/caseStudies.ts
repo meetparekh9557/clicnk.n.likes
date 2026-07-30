@@ -205,7 +205,7 @@ export const caseStudies: CaseStudy[] = [
       {
         phase: 'A frame that disappears',
         when: 'Visual design',
-        body: 'Full-bleed black, restrained typography, no colour competing with the footage. Every design decision kept attention on the thumbnail and the video player, not on the website around it: the opposite instinct from most agency sites, and the right one for a portfolio whose entire value is the work itself.',
+        body: "Founder Aditya Chopra's brief was direct: an all-black aesthetic. We built the visual language around that, sleek and sophisticated, with a clean typeface chosen to complement the studio's personality rather than compete with it. Every decision kept attention on the thumbnail and the video player, not the website around it: subtle rather than loud, so visitors engage with each project instead of the site's own design.",
       },
       {
         phase: 'One page per project',
