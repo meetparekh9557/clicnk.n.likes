@@ -34,6 +34,30 @@ this environment twice a week and:
 5. Builds the site (`cd site && npm run build`) to confirm no errors, commits,
    and pushes to `main` so the deploy workflow republishes.
 
+## Push authentication (`GH_TOKEN`)
+
+A Routine's fired session starts with a fresh clone and no guaranteed push
+access — the ambient git credential in this environment is reliable for
+reading/cloning a public repo but was never confirmed to cover pushing. Both
+auto-blog Routines (the weekly post and its watchdog) now push with an
+explicit credential instead of assuming that works:
+
+- `GH_TOKEN` = a GitHub **fine-grained personal access token**, scoped to
+  only `clicnk.n.likes` (not "All repositories"), with **Contents: Read and
+  write** permission and nothing else.
+- Give the automation the token without committing it: set `GH_TOKEN` as an
+  **environment variable in the Claude Code environment** both Routines run
+  in. They read it from `process.env`; if it's absent, the push step falls
+  back to a plain `git push origin HEAD:main`.
+- The token is never printed, never embedded in the remote URL, and never
+  committed — it's injected per-push via a transient `git -c
+  http.extraheader=...` flag so it can't leak through `git remote -v`, a
+  committed config file, or echoed error text.
+- If the token expires or is revoked, the push step falls back to the plain
+  (unauthenticated-beyond-ambient) push, which may fail — the watchdog
+  Routine three hours behind the weekly post exists exactly to catch that and
+  retry the same day.
+
 No `articleMeta` entry is required — `insights/[slug].astro` falls back to the
 article's title + excerpt for SEO meta, and the sitemap picks up new articles
 automatically. A new post needs only the `articles` entry + the PNG.
