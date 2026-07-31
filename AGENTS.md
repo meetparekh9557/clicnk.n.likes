@@ -148,3 +148,14 @@ Rules:
 The premium rebuild's live plan, state, design decisions and protocols are in
 `docs/REBUILD-PLAN.md`. Read it before any rebuild work; continue from the
 first unchecked milestone; update its checkboxes in every PR.
+
+## The agency's own growth roadmap — kept private, not in this repo
+
+There is a standing internal roadmap governing how Click.n.likes itself
+grows (not client work) — staged, with an explicit trigger for when to move
+between stages. It is binding on the founder and on every future hire. It
+is deliberately **not stored in this repository, because this repo is
+public** and the roadmap references the agency's actual revenue stage.
+Ask the founder for current access before recommending internal process,
+tooling, or hiring changes for the agency itself — do not guess the stage
+or recreate the document's contents here.
