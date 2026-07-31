@@ -24,6 +24,11 @@ this environment twice a week and:
      named personas; an **"Example in Action:"** callout; a titled
      **"Conclusion:"**; and a closing `.article-cta` block. 2–4 in-content
      links to the most relevant service page and sibling articles. 5 FAQs.
+   - **Money-keyword linking:** wherever it fits the post's actual topic
+     without reading forced, "organic growth agency" / "organic growth
+     services" links once to `/`, and "SEO agency" / "SEO services" links
+     once to `/services/seo/`. Never all four crammed into one post just to
+     hit this rule — a post only uses the phrase(s) a real sentence calls for.
 3. Generates the featured image:
    `node site/scripts/gen-featured.mjs --slug=<slug> --tag="<Tag>"
    --title="<line1>|<line2>"` → writes `site/public/insights/<slug>.png`
@@ -80,7 +85,11 @@ automatically. A new post needs only the `articles` entry + the PNG.
   Ask Claude to "pause the auto-blog" or manage it from the Routines list.
 - **Change topics:** edit `docs/blog-backlog.md` — reorder, add, or remove
   topics. The task always takes the top unchecked one.
-- **Change cadence:** the schedule is `0 5 * * 2,5` (UTC) = Tuesday & Friday,
-  05:00 UTC (10:30 AM IST). Edit the Routine's cron to change it.
+- **Change cadence:** the schedule is `30 5 * * 2,5` (UTC) = Tuesday & Friday,
+  05:30 UTC (11:00 AM IST), plus a randomized 1–51 minute delay before the
+  Routine commits — so the live publish time lands somewhere in the
+  11:00 AM–12:00 PM IST window each run rather than the identical minute
+  twice a week forever. Edit the Routine's cron to change the start time; the
+  watchdog's cron should stay ~3 hours behind it.
 - **Write one by hand:** add an entry to `articles.ts`, run the image
   generator, and push. The format is plain and self-evident.
