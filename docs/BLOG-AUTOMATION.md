@@ -86,10 +86,18 @@ automatically. A new post needs only the `articles` entry + the PNG.
 - **Change topics:** edit `docs/blog-backlog.md` — reorder, add, or remove
   topics. The task always takes the top unchecked one.
 - **Change cadence:** the schedule is `30 5 * * 2,5` (UTC) = Tuesday & Friday,
-  05:30 UTC (11:00 AM IST), plus a randomized 1–51 minute delay before the
-  Routine commits — so the live publish time lands somewhere in the
-  11:00 AM–12:00 PM IST window each run rather than the identical minute
-  twice a week forever. Edit the Routine's cron to change the start time; the
-  watchdog's cron should stay ~3 hours behind it.
+  05:30 UTC (11:00 AM IST). The commit's author/committer timestamp is
+  randomized to 1-59 minutes after that (via `GIT_AUTHOR_DATE`/
+  `GIT_COMMITTER_DATE`), so it doesn't show the identical minute twice a week
+  forever — this is metadata on the commit, not a real-time delay. Edit the
+  Routine's cron to change the start time; the watchdog's cron should stay
+  ~3 hours behind it.
+  - **Do not reintroduce a real-time sleep for this.** An earlier version
+    slept 1–51 minutes before doing any work, which silently killed an entire
+    run: the Bash tool's per-call timeout (120s default, 600s hard max) can't
+    survive most of that range, and the timeout can tear down the whole
+    session with no error, not just the one command. The commit-timestamp
+    trick above gets the same "doesn't look robotic" effect with zero
+    wall-clock risk.
 - **Write one by hand:** add an entry to `articles.ts`, run the image
   generator, and push. The format is plain and self-evident.
