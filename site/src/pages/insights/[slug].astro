@@ -20,6 +20,28 @@ const body = article.body.replace(/href="(\/[^"]*)"/g, (_m, p) => `href="${withB
 const articlePath = `/insights/${article.slug}/`;
 const featuredPath = `/insights/${article.slug}.png`;
 
+// Auto-generated table of contents: every h2/h3 in the body gets a stable
+// id and a TOC entry, so the on-page nav can never drift out of sync with
+// the actual headings the way a hand-maintained list eventually would.
+function extractToc(html: string) {
+  const toc: { id: string; text: string; level: number }[] = [];
+  const used = new Set<string>();
+  const withIds = html.replace(/<h([23])>(.*?)<\/h\1>/g, (_m, level, text) => {
+    const plain = text.replace(/<[^>]+>/g, '');
+    let id = plain.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+    if (used.has(id)) {
+      let i = 2;
+      while (used.has(`${id}-${i}`)) i++;
+      id = `${id}-${i}`;
+    }
+    used.add(id);
+    toc.push({ id, text: plain, level: Number(level) });
+    return `<h${level} id="${id}">${text}</h${level}>`;
+  });
+  return { toc, html: withIds };
+}
+const { toc, html: bodyWithIds } = extractToc(body);
+
 // SEO meta per article, written in the founder's voice (the on-page
 // headline stays as-is). Titles in Title Case, descriptions ~155ch.
 // Numbers are always written as numerals ("5 Profile Mistakes", "3-Second
@@ -75,10 +97,10 @@ const displayDate = new Date(article.date + 'T00:00:00Z').toLocaleDateString('en
 // Split the article at a paragraph boundary near the middle so a CTA can
 // sit inside the read, not only at the top and bottom. Cutting only at
 // </p> keeps every block intact.
-const paras = body.split('</p>');
+const paras = bodyWithIds.split('</p>');
 const canSplit = paras.length >= 5;
 const mid = Math.ceil(paras.length / 2);
-const bodyTop = canSplit ? paras.slice(0, mid).join('</p>') + '</p>' : body;
+const bodyTop = canSplit ? paras.slice(0, mid).join('</p>') + '</p>' : bodyWithIds;
 const bodyRest = canSplit ? paras.slice(mid).join('</p>') : '';
 
 // Internal-linking audit (task #11): every article now links to sibling
@@ -121,6 +143,21 @@ const relatedServices = relatedServiceSlugsForArticle
       style="--d:180ms"
     />
   </div>
+
+  {toc.length > 0 && (
+    <div class="mx-auto max-w-3xl px-[5vw]">
+      <nav class="reveal mt-8 rounded-2xl border border-navy/10 bg-off/60 p-5" aria-label="Table of contents" style="--d:220ms">
+        <p class="text-xs font-semibold tracking-[0.12em] text-navy/50 uppercase">On this page</p>
+        <ul class="mt-3 space-y-2 text-[14.5px]">
+          {toc.map((item) => (
+            <li class={item.level === 3 ? 'pl-4' : ''}>
+              <a href={`#${item.id}`} class="text-navy/70 transition-colors hover:text-teal-dark">{item.text}</a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </div>
+  )}
 
   <section class="mx-auto max-w-3xl px-[5vw] pt-10 pb-12">
     <div class="article-body reveal" style="--d:200ms" set:html={bodyTop} />
