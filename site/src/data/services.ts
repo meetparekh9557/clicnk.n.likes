@@ -442,4 +442,5 @@ export const categoryToServiceSlug: Record<string, string> = {
   'Content Marketing': 'content-marketing',
   'Websites & Conversion': 'website-development',
   'Paid Media': 'paid-campaigns',
+  'Social Media Growth': 'social-media-growth',
 };

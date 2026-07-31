@@ -37,6 +37,46 @@ export interface Article {
 
 export const articles: Article[] = [
   {
+    slug: "social-every-day",
+    tag: "Social",
+    categories: ["Social Media Growth"],
+    title: "Does my business really need to post on social media every day?",
+    excerpt: "Platforms rewarded raw volume for years; the research behind 2026's algorithms favours 2 to 4 consistent posts a week over a daily habit that burns out by month two.",
+    author: "Click.n.likes team",
+    readTime: "9 min read",
+    date: "2026-07-31",
+    body: `<p>In the past, a shopkeeper's presence in a customer's mind was rebuilt every time that customer walked past the storefront, so showing up daily was simply what being in business meant. A feed works on the opposite logic: it does not reward the business that shows up most often, it rewards the post the algorithm decides is worth showing to someone else, and those are not the same thing. That gap is exactly why "post every day" became gospel advice for small businesses that never actually checked whether it was still true.</p>
+      <p>It was true, once. Early platform algorithms weighted raw posting frequency heavily, so volume itself was a growth lever. That is not how the major platforms rank content anymore, and a founder or marketing lead still budgeting time and creative energy against the old rule is very often burning both on a habit the algorithm stopped rewarding years ago.</p>
+      <h2>Where did the "post every day" rule actually come from?</h2>
+      <p>It came from a real, if outdated, mechanic: in the early 2010s, feed algorithms leaned heavily on posting frequency and recency as ranking signals, so a business that posted more often simply appeared more often. Agencies and consultants built entire content calendars around that mechanic, and the advice outlived the mechanic it was built on, the way a lot of marketing folklore does.</p>
+      <h2>What do 2026's algorithms actually reward instead?</h2>
+      <p>Consistency and depth of engagement, not volume. According to <a href="https://buffer.com/resources/social-media-frequency-guide/" target="_blank" rel="noopener">Buffer's 2026 social media frequency research</a>, current platform algorithms prioritise meaningful engagement, saves, shares and watch time, over sheer posting count, and a sustainable cadence a business can actually maintain for six months outperforms an aggressive daily schedule that collapses after a few weeks. That is a meaningfully different brief than "post every day," and it changes what a realistic content calendar should look like for a clinic, a boutique, or a B2B service provider with no in-house content team.</p>
+      <ul>
+        <li><strong>Instagram:</strong> Roughly 3 to 5 feed posts a week is a realistic, research-backed cadence, with Reels treated as a separate, higher-frequency lane if the team has the capacity for it.</li>
+        <li><strong>LinkedIn:</strong> 2 to 5 posts a week, which suits B2B service providers and consultants whose actual buyers are not scrolling daily in the first place.</li>
+        <li><strong>Facebook:</strong> 1 to 2 posts a day at most is the upper bound most current guidance supports, and fewer, better posts consistently outperform a higher-volume feed of filler.</li>
+      </ul>
+      <h2>What actually happens when a business forces a daily posting habit?</h2>
+      <p>Quality erodes first, and engagement follows it down. A founder or the one team member handed "social media" as an extra duty runs out of genuinely useful things to say long before a month is up, and the feed fills with reposted quotes, generic stock imagery and captions written in five minutes between other tasks. Followers notice a thin feed faster than they notice a quiet one, and a platform's own engagement-based ranking then suppresses exactly the content a burned-out daily habit produces, so the business ends up posting more and reaching fewer people than a business posting a third as often with real thought behind each post.</p>
+      <h2>So what cadence should an actual business commit to?</h2>
+      <p>Whichever one it can sustain past the six-month mark without burning out the person responsible for it. That number is different for a solo founder, a two-person clinic front desk, and a business with a dedicated marketing hire, and the honest answer is to pick the lower, sustainable number over the ambitious one that quietly stops in October. Social is also rarely worth running as an isolated metric: a full-stack <a href="/">organic growth agency</a> treats it as one input feeding the same funnel as search and content, not a separate scoreboard measured in post count.</p>
+      <p><strong>Example in Action:</strong> A boutique clinic came to us posting daily, mostly reposted stock content, with a content calendar nobody enjoyed maintaining. We cut the cadence to 3 posts a week, each built around a real patient question with proper creative direction, and within two months average engagement per post had risen even though total posts had fallen by more than half, because the feed was no longer competing against itself for attention.</p>
+      <h2>Conclusion: Consistency Beats Volume</h2>
+      <p>"Post every day" was sound advice for an algorithm that no longer exists. The current one rewards a business that shows up on a schedule it can actually hold, with content worth the engagement it is asking for, over one performing daily volume for its own sake. Get the cadence right for your actual capacity, and treat <a href="/services/content-marketing/">the calendar</a> and <a href="/services/social-media-growth/">the creative direction</a> behind each post as the two things actually worth spending effort on, not the number of times a week you show up.</p>
+      <div class="article-cta">
+        <h4>Want a cadence and calendar built for your actual team, not a generic rule?</h4>
+        <p>We will map a realistic weekly rhythm and content pillars around what your business can actually sustain, aimed at DMs and bookings, not just a full feed.</p>
+        <a class="btn btn-teal magnetic" href="/services/social-media-growth/">See Social Media Growth</a>
+      </div>`,
+    faqs: [
+      { q: "Do I really need to post on social media every day?", a: "No. Current platform algorithms reward consistent engagement over raw posting volume. Research from Buffer's 2026 frequency guide points to roughly 2 to 5 posts a week, depending on the platform, as a more sustainable and often better-performing cadence than a daily schedule." },
+      { q: "Why did 'post every day' become common advice in the first place?", a: "Early-2010s feed algorithms weighted posting frequency and recency heavily, so more frequent posting genuinely produced more reach at the time. Platforms have since shifted their ranking toward engagement quality (saves, shares, watch time), but the advice outlived the mechanic it was built on." },
+      { q: "What happens if a business forces a daily posting habit it can't sustain?", a: "Content quality typically drops first as the person responsible runs out of genuinely useful things to say, and engagement-based ranking then suppresses that lower-quality content, so the business often ends up posting more while reaching fewer people." },
+      { q: "How many times a week should I post on Instagram or LinkedIn?", a: "Current guidance suggests roughly 3 to 5 feed posts a week on Instagram and 2 to 5 posts a week on LinkedIn, with the right number depending on how much genuinely useful content the team can sustainably produce past the six-month mark." },
+      { q: "Should social media be measured separately from the rest of my marketing?", a: "Not in isolation. Social performs best as one input feeding the same funnel as search, content and paid campaigns, rather than a channel judged purely on its own post count or follower growth." },
+    ],
+  },
+  {
     slug: "marketing-budget-small-business",
     tag: "Content",
     categories: ["Content Marketing"],
