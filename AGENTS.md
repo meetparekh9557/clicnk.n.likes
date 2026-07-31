@@ -142,6 +142,10 @@ Rules:
   for horizontal overflow on every page touched.
 - The premium rebuild scope (4 phases) is the roadmap of record; Phase 2 is an
   Astro + Tailwind + React-islands rebuild with real per-page URLs.
+- A cheap executor subagent lives at `.claude/agents/executor.md` (Haiku model),
+  for implementation-only work: write the plan yourself first, hand it to the
+  executor via the Agent tool, then review the result against the plan before
+  treating anything as done.
 
 ## Continuing the rebuild
 
