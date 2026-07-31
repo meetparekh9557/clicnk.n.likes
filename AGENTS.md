@@ -7,6 +7,33 @@ that logs leads to a Google Sheet, sends branded email via Gmail
 (business@clicknlikes.com alias), and serves the single-page analyzer used by
 the free tools. Never commit API keys: the repo is public.
 
+## Email infrastructure — read before any outbound-email task
+
+`business@clicknlikes.com` is **Hostinger-hosted mail, not Gmail** — the
+founder does not send or receive it through Gmail, and this is true
+regardless of what `apps-script.gs` does internally (that script's Gmail
+alias only powers the site's automated lead-notification emails; it is not a
+general-purpose send-as-this-address API and should not be reused for
+unrelated outbound email like cold prospecting).
+
+Direct SMTP to Hostinger from a Claude Code Remote session (this one or any
+Routine) is **blocked by the environment's network policy** — confirmed by
+testing `smtp.hostinger.com:587` directly, same restriction that blocks
+arbitrary web fetches. There is currently no working path to send real email
+as `business@clicknlikes.com` from inside this environment: not Gmail (not
+how the address is actually used), not raw SMTP (network-blocked), and no
+transactional relay (UniOne, SMTP2GO, etc.) is set up. Setting one up would
+need real infrastructure work (domain verification, DNS records) agreed with
+the founder first, not assumed mid-task.
+
+**Hunter.io is connected via Composio** (session-scoped OAuth-style
+connection, not a stored env var) and works fine for prospect research —
+domain search, company discovery, email finding/verification — because it
+runs through Composio's own infrastructure, not this sandbox's restricted
+network. Same for any other Composio-connected toolkit. The distinction that
+matters: **research/lookup tools via Composio work; direct outbound sending
+to a non-Composio-supported channel does not.**
+
 ## How the AI agent works here (operating style)
 
 Meet runs Click.n.likes **solo — no team.** The AI agent is that team: a
