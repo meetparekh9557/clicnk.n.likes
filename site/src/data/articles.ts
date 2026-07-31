@@ -56,6 +56,55 @@ export const articles: Article[] = [
         <li><strong>LinkedIn:</strong> 2 to 5 posts a week, which suits B2B service providers and consultants whose actual buyers are not scrolling daily in the first place.</li>
         <li><strong>Facebook:</strong> 1 to 2 posts a day at most is the upper bound most current guidance supports, and fewer, better posts consistently outperform a higher-volume feed of filler.</li>
       </ul>
+      <h2>What could a sample weekly timetable actually look like?</h2>
+      <p>A starting template, built from the ranges above, not a formula to copy blindly. Treat each as a first draft to adjust once your own analytics tell you when your specific audience is actually online.</p>
+      <h3>Instagram (3 to 5 feed posts a week, Reels as a separate lane)</h3>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Day</th><th>Suggested post</th></tr></thead>
+          <tbody>
+            <tr><td>Monday</td><td>Feed post</td></tr>
+            <tr><td>Tuesday</td><td>Reel</td></tr>
+            <tr><td>Wednesday</td><td>Rest</td></tr>
+            <tr><td>Thursday</td><td>Feed post</td></tr>
+            <tr><td>Friday</td><td>Reel</td></tr>
+            <tr><td>Saturday</td><td>Feed post</td></tr>
+            <tr><td>Sunday</td><td>Rest</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="table-note">Disclaimer: this is a general, research-based starting cadence, not a personalised plan. Your actual best days and times depend on your audience size, niche and time zone, which only your own Instagram Insights can tell you.</p>
+      <h3>LinkedIn (2 to 5 posts a week, weekday-heavy)</h3>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Day</th><th>Suggested post</th></tr></thead>
+          <tbody>
+            <tr><td>Monday</td><td>Post</td></tr>
+            <tr><td>Tuesday</td><td>Rest</td></tr>
+            <tr><td>Wednesday</td><td>Post</td></tr>
+            <tr><td>Thursday</td><td>Rest</td></tr>
+            <tr><td>Friday</td><td>Post</td></tr>
+            <tr><td>Saturday–Sunday</td><td>Optional</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="table-note">Disclaimer: LinkedIn's B2B audience is overwhelmingly active on weekdays, so weekends are marked optional rather than wasted. Confirm your own audience's active hours in LinkedIn's analytics before locking in a schedule.</p>
+      <h3>Facebook (upper bound of 1 to 2 posts a day; most small businesses need far less)</h3>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Day</th><th>Suggested post</th></tr></thead>
+          <tbody>
+            <tr><td>Monday</td><td>Post</td></tr>
+            <tr><td>Tuesday</td><td>Rest</td></tr>
+            <tr><td>Wednesday</td><td>Post</td></tr>
+            <tr><td>Thursday</td><td>Rest</td></tr>
+            <tr><td>Friday</td><td>Post</td></tr>
+            <tr><td>Saturday</td><td>Rest</td></tr>
+            <tr><td>Sunday</td><td>Post</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="table-note">Disclaimer: 1 to 2 times a day is Facebook's upper bound for brands with a dedicated content team, not a target. Most small businesses see stronger engagement per post at 3 to 4 times a week than at a daily minimum that risks becoming filler.</p>
       <h2>What actually happens when a business forces a daily posting habit?</h2>
       <p>Quality erodes first, and engagement follows it down. A founder or the one team member handed "social media" as an extra duty runs out of genuinely useful things to say long before a month is up, and the feed fills with reposted quotes, generic stock imagery and captions written in five minutes between other tasks. Followers notice a thin feed faster than they notice a quiet one, and a platform's own engagement-based ranking then suppresses exactly the content a burned-out daily habit produces, so the business ends up posting more and reaching fewer people than a business posting a third as often with real thought behind each post.</p>
       <h2>So what cadence should an actual business commit to?</h2>
