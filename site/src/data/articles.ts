@@ -37,6 +37,132 @@ export interface Article {
 
 export const articles: Article[] = [
   {
+    slug: "paid-ads-budget",
+    tag: "Paid",
+    categories: ["Paid Media"],
+    title: "How much should I actually budget for Google Ads?",
+    excerpt: "Not a fixed number, a formula: what a realistic starting budget looks like once you know your industry's typical cost per click and your own conversion rate.",
+    author: "Click.n.likes team",
+    readTime: "8 min read",
+    date: "2026-08-02",
+    body: `<p>In the past, buying visibility meant buying a billboard or a page in the newspaper, a flat fee paid regardless of how many people actually acted on what they saw. Paid search inverted that arrangement entirely: you pay only when someone interested enough to click actually does, which sounds efficient right up until the moment you try to set a first-month budget and realise nobody gave you a number to start from.</p>
+      <p>Most small businesses either guess, picking a round figure that feels safe, or copy whatever a competitor is rumoured to be spending. Both are the wrong inputs. A realistic Google Ads budget is not a feeling, it is arithmetic built from two things you can actually know: what a click costs in your industry, and what your own site does with the clicks it gets.</p>
+      <h2>What does a click on Google Ads actually cost?</h2>
+      <p>It depends heavily on your industry, and swings wider than most first-time advertisers expect. According to <a href="https://www.wordstream.com/blog/ws/2023/08/07/google-ads-benchmarks" target="_blank" rel="noopener">WordStream's Google Ads Benchmarks report</a>, average search cost-per-click across industries typically ranges from roughly $2 to $4, but categories with high-value customers and heavy competition, legal services and certain B2B software segments among them, routinely see costs several times that. There is no industry-agnostic "correct" budget; there is only your industry's real cost per click, multiplied by how many clicks you need.</p>
+      <h2>How do you turn a cost-per-click into an actual monthly budget?</h2>
+      <p>Work backwards from the enquiries you need, not forwards from a number that feels comfortable.</p>
+      <ul>
+        <li><strong>Start with your target enquiry count:</strong> Decide how many qualified enquiries a month would genuinely move your business, not an arbitrary round number.</li>
+        <li><strong>Apply a realistic conversion rate:</strong> A healthy landing page typically converts somewhere around 3% of visitors into a lead or enquiry; a page that has never been optimised for conversion often does considerably worse.</li>
+        <li><strong>Back into the click count you need:</strong> Enquiries needed, divided by your conversion rate, gives you the clicks required. Fifteen enquiries at a 3% conversion rate means roughly 500 clicks.</li>
+        <li><strong>Multiply by your industry's cost-per-click:</strong> 500 clicks at an average $3 CPC is a $1,500 monthly budget, before any adjustment for competition or seasonality.</li>
+      </ul>
+      <h2>What happens if the budget from that formula feels too high?</h2>
+      <p>It usually means the fix is not a smaller budget, it is a smaller keyword footprint. Narrowing to the specific, high-intent searches your actual buyers use, and adding negative keywords to filter out the browsers and the bargain-hunters, brings the required click volume, and therefore the budget, down without touching your enquiry target. A campaign spending less by targeting fewer, better-matched searches usually outperforms one spending more on a broad net.</p>
+      <h2>Should the budget stay fixed once you've picked a number?</h2>
+      <p>No. The number above is a starting hypothesis, not a permanent setting. Google itself recommends monitoring performance and reallocating budget toward the keywords and campaigns that actually convert, rather than spreading spend evenly and hoping. A first month is for learning what your real cost-per-lead is; the second and third months are for moving the budget toward what that first month proved works.</p>
+      <h2>Is paid search a substitute for organic growth, or does it work alongside it?</h2>
+      <p>Alongside it, and it performs best when it does. Paid buys you visibility on the exact day you turn the campaign on; it does not build the durable rankings, reviews and content authority that keep earning enquiries long after you stop paying for the click. The businesses that get the most from a paid budget are usually the ones already investing in <a href="/services/seo/">SEO</a> and content, because paid then amplifies a site that already converts well, rather than papering over a page nobody would choose to click twice. This is the honest answer we give in every <a href="/">organic growth agency</a> engagement that includes a paid component: paid campaigns work best as an amplifier, never as a replacement for the organic foundation.</p>
+      <p><strong>Example in Action:</strong> A manufacturing client came to us spending on a broad, unfiltered keyword set with a cost-per-lead they could not explain. Narrowing the keyword list to genuinely high-intent buyer searches and adding a negative-keyword list cut their monthly spend by roughly a third while holding their enquiry volume steady, because the budget was no longer paying for clicks that were never going to convert.</p>
+      <h2>Conclusion: Budget From the Enquiry Backward, Never From a Guess Forward</h2>
+      <p>A Google Ads budget set by feel is really just a hope with a dollar sign attached. Set from your target enquiry count, a realistic conversion rate and your industry's actual cost-per-click, it becomes a number you can defend, adjust and hold your campaign accountable to. Ad spend stays separate from the organic engine that keeps compounding after you stop paying for it, which is exactly why we run <a href="/services/paid-campaigns/">paid campaigns</a> as an amplifier to organic growth, not a substitute for it.</p>
+      <div class="article-cta">
+        <h4>Want a realistic paid budget mapped to your actual numbers?</h4>
+        <p>We will build your budget from your real conversion rate and industry cost-per-click, not a guess, and show you exactly where organic should be doing the heavier lifting.</p>
+        <a class="btn btn-teal magnetic" href="/services/paid-campaigns/">See Paid Campaigns</a>
+      </div>`,
+    faqs: [
+      { q: "How much should a small business spend on Google Ads per month?", a: "There is no universal number. A realistic budget is your target enquiry count, divided by a realistic conversion rate (often around 3%), multiplied by your industry's average cost-per-click, which per WordStream's Google Ads Benchmarks report typically runs $2 to $4 though it varies significantly by industry." },
+      { q: "Why does cost-per-click vary so much between industries?", a: "It reflects competition and customer value. Industries where a single new customer is worth a lot, certain legal and B2B software categories among them, see far higher costs per click than lower-value, less competitive categories." },
+      { q: "Should I lower my budget if the formula gives a number that feels too high?", a: "Usually the better fix is narrowing your keyword targeting and adding negative keywords rather than cutting the budget outright. A smaller, better-matched click volume often lowers the required budget while protecting your enquiry target." },
+      { q: "Does a bigger Google Ads budget mean better results?", a: "Not automatically. A budget spent on broad, poorly matched keywords can underperform a smaller budget spent on tightly targeted, high-intent searches. Where the budget is aimed matters more than its size." },
+      { q: "Should paid ads replace SEO for a small business?", a: "No. Paid buys visibility for as long as you keep paying for it; organic SEO and content build rankings and trust that keep earning enquiries after you stop. Paid performs best as an amplifier on top of a site that already converts well organically." },
+    ],
+  },
+  {
+    slug: "cheap-website-cost",
+    tag: "Websites",
+    categories: ["Websites & Conversion"],
+    title: "Why does a good website cost more than the cheap quote I was given?",
+    excerpt: "The gap is rarely the design. It is almost always in what happens after launch: speed, structure and whether the site is actually built to rank.",
+    author: "Click.n.likes team",
+    readTime: "8 min read",
+    date: "2026-08-02",
+    body: `<p>A factory once proved its worth through the machinery on its floor: heavier equipment, visibly, meant a more serious operation. A website offers no such visible tell. Two homepages can look almost identical in a screenshot, built from the same template, in the same color palette, and yet one converts visitors into enquiries while the other quietly leaks every visitor it earns. The difference rarely shows up in the price on the invoice, which is exactly why the cheap quote is so easy to accept and so expensive to live with.</p>
+      <p>The honest answer to "why does a good website cost more" is not "better designers" or "nicer fonts." It is that a properly built site solves problems a cheap build never touches at all: how fast it loads, whether it is structured for search engines to understand, and whether anything on it is actually built to convert a stranger into a lead.</p>
+      <h2>What is the cheap quote actually leaving out?</h2>
+      <p>Almost always, everything that happens after the page visually loads. A cheap build optimises for looking finished in a client review call, not for performing once real visitors, on real phones, on real networks, actually arrive. That gap shows up in three places specifically.</p>
+      <ul>
+        <li><strong>Speed:</strong> A templated site stacked with unnecessary plugins and unoptimised images often loads several seconds slower than a properly built one, and per Google and SOASTA Research's mobile speed benchmark, cited in Think with Google, 53% of mobile visitors abandon a page that takes longer than 3 seconds to load. A slow site is not a minor inconvenience, it is a majority of your paid and organic traffic leaving before they see anything.</li>
+        <li><strong>Structure:</strong> A cheap build rarely accounts for the technical foundations, clean headings, valid schema markup, a logical URL structure, that search engines and AI systems actually read. The site can look complete while being functionally invisible to the systems that would otherwise send it customers for free.</li>
+        <li><strong>Conversion design:</strong> A homepage without a clear next step, an obvious call, quote or contact action above the fold, converts the same volume of traffic into far fewer actual enquiries, no matter how attractive the layout is.</li>
+      </ul>
+      <h2>Does page speed really affect revenue, not just user experience?</h2>
+      <p>Directly, and the relationship has been measured. Portent's widely cited analysis of ecommerce site performance found that conversion rates drop by an average of 4.42% with each additional second of load time, across the first five seconds. A site that loads in five seconds instead of two is not merely "a bit slower," it is measurably converting a smaller share of the same traffic, on every single visit, for as long as it stays that slow.</p>
+      <h2>Is a cheap website ever the right call?</h2>
+      <p>For a genuinely temporary placeholder, sometimes. For a business that intends the site to actually generate leads, rarely. The economics run the other way: a properly built site that converts and ranks pays for the gap in its price within a handful of the enquiries it earns that a slow, unstructured site never would have. The cheap quote is not actually cheaper, it is a cost deferred to every month the site underperforms after launch.</p>
+      <h2>What should you actually check before accepting any website quote?</h2>
+      <p>Ask specifically what the quote includes for speed optimisation, schema markup, and mobile performance, not just "responsive design," which by now is table stakes rather than a differentiator. A quote that cannot answer those three questions specifically is a quote for a page that looks like a website, not one built to behave like a growth asset. It is also worth checking whether you would own the build outright or be locked into a proprietary platform that makes leaving expensive later.</p>
+      <p><strong>Example in Action:</strong> A retail client came to us with a site built on a cheap template, technically live but averaging over five seconds to load on mobile with no structured data at all. We rebuilt it for speed and schema without changing their brand identity, and their organic enquiry volume roughly doubled within the following quarter, not because the new site looked more polished, but because it was finally fast enough and structured well enough for both visitors and search engines to actually act on it.</p>
+      <h2>Conclusion: A Website Is an Asset or a Liability, Rarely Something in Between</h2>
+      <p>The price gap between a cheap website and a properly built one is really the price of everything that happens after the page finishes loading, or fails to load fast enough to matter. A site built for speed, structure and conversion transforms from a line-item expense into your most powerful 24/7 lead generation asset; a cheap one quietly costs you the enquiries it was never built to earn.</p>
+      <div class="article-cta">
+        <h4>Not sure which one your current site actually is?</h4>
+        <p>Run a free Website Health Score, a real fetch of your live page against the same speed and structure signals covered here, full report emailed, no call required.</p>
+        <a class="btn btn-teal magnetic" href="/services/website-development/">See Website Development</a>
+      </div>`,
+    faqs: [
+      { q: "Why do website quotes vary so much for what looks like the same site?", a: "The visible design is rarely where the difference lies. A properly built site also solves for load speed, technical structure and schema markup, and conversion design, all of which are invisible in a screenshot but directly affect how many visitors actually become leads." },
+      { q: "Does website speed really affect how many leads I get?", a: "Yes, measurably. Portent's analysis of ecommerce performance found conversion rates drop by an average of 4.42% with each additional second of load time across the first five seconds, and Google/SOASTA Research found 53% of mobile visitors abandon a page that takes longer than 3 seconds to load." },
+      { q: "Is a cheap website ever a reasonable choice?", a: "For a short-term placeholder, sometimes. For a business relying on the site to generate leads, a cheap build's missing speed and structure usually costs more in lost enquiries over time than the gap in the original quote." },
+      { q: "What should I ask before accepting a website quote?", a: "Ask specifically what is included for speed optimisation, schema markup and mobile performance, not just 'responsive design.' A quote that cannot answer those three questions is a quote for a page that looks finished, not one built to convert or rank." },
+      { q: "Will I own my website outright, or could I be locked into a platform?", a: "This varies by provider and is worth confirming before you sign. Some cheap builds run on proprietary platforms that make switching providers later difficult and expensive; a properly scoped build should make ownership and portability clear upfront." },
+    ],
+  },
+  {
+    slug: "reviews-that-convert",
+    tag: "Local SEO",
+    categories: ["Local SEO"],
+    title: "How do I get more Google reviews without begging for them?",
+    excerpt: "Review count is one of the most consistently weighted local-pack signals in the industry's own ranking-factor research. Here is the ask that actually works.",
+    author: "Click.n.likes team",
+    readTime: "8 min read",
+    date: "2026-08-02",
+    body: `<p>A shopkeeper once earned trust the slow way, one satisfied customer telling the next one in person, over months and years. Google reviews compress that same word-of-mouth mechanism into a public, permanent, searchable record, and a business that has not learned to ask for it is trying to compete on the modern high street with none of the trust signal its neighbours have quietly been building for years.</p>
+      <p>Most owners already know reviews matter. Few have turned asking for them into an actual system, which is why the same handful of businesses in any given city seem to accumulate reviews effortlessly while everyone else stalls at a dozen. The difference is rarely the quality of the work; it is almost always the ask.</p>
+      <h2>Do reviews actually affect local ranking, or is that assumed?</h2>
+      <p>They are one of the most consistently weighted factors in the industry's own research. Whitespark's annual Local Search Ranking Factors survey, which polls experienced local SEO practitioners each year, has repeatedly placed review signals, count, recency and quality of response, among the top-rated factors behind local-pack rankings. This is not a guess passed around in marketing forums; it is a recurring finding from people who track local rankings for a living.</p>
+      <h2>Why does asking for a review feel like begging, and how do you avoid that?</h2>
+      <p>It feels like begging when the ask is generic, delayed, and repeated. It stops feeling that way the moment it is specific, timely and asked exactly once per customer.</p>
+      <ul>
+        <li><strong>Ask at the moment of peak satisfaction:</strong> The best moment is immediately after the outcome is delivered, when gratitude is genuine, not a follow-up email sent a week later when the feeling has faded.</li>
+        <li><strong>Make it a single click, not a task:</strong> Send the direct review link, not a request to "search us on Google," which asks the customer to do work they will usually postpone indefinitely.</li>
+        <li><strong>Personalise the request:</strong> A message referencing the actual service delivered converts far better than a generic mass text, because it reads as a genuine thank-you, not a marketing sequence.</li>
+        <li><strong>Ask once, never twice:</strong> A single well-timed ask respects the relationship. A repeated nudge reads as pressure and can cost you the review entirely.</li>
+      </ul>
+      <h2>Does responding to reviews actually make a measurable difference?</h2>
+      <p>Google's own Business Profile guidance states plainly that responding to reviews can improve your business's visibility and helps build customer trust, and it is one of the few ranking-adjacent actions that costs nothing but time. A response rate close to 100%, on both positive and negative reviews, signals an actively managed business to the algorithm and to every prospective customer reading the thread before deciding whether to call.</p>
+      <h2>What if a customer leaves a bad review?</h2>
+      <p>Respond calmly, factually, and without defensiveness, then move on. A profile with a small number of critical reviews, each answered professionally, reads as more credible than a suspiciously flawless five-star average, because real businesses occasionally have an off day and a reader trusts the profile that proves it can handle one. Per BrightLocal's Local Consumer Review Survey, the overwhelming majority of consumers, cited at 98%, read online reviews before choosing a local business, and how you handle criticism in public is itself part of what they are reading.</p>
+      <h2>Is there a "right" number of reviews to have before you stop worrying about it?</h2>
+      <p>Not really, because the number that matters is relative, not absolute: the gap between your count and the businesses currently outranking you in your specific city and category. A steady cadence of two or three genuine reviews a week, sustained for a quarter, closes that gap far more reliably than a one-time push for fifty reviews in a single week, which platforms sometimes flag as suspicious activity in any case.</p>
+      <p><strong>Example in Action:</strong> A salon client we work with had excellent service but fewer than fifteen reviews after two years in business, entirely because nobody had a process for asking. We built a simple post-appointment text with a direct review link, sent once per client at checkout, and their count passed a hundred within four months, with a visible corresponding move into their city's local pack for their core service terms.</p>
+      <h2>Conclusion: Reviews Are a System, Not a Stroke of Luck</h2>
+      <p>The businesses winning the local pack are not luckier or more liked than their competitors; they simply built a habit of asking at the right moment, in the right way, every time. Pair that habit with a profile that is otherwise in good order and you have built one of the most durable local ranking advantages available, one that keeps compounding long after any single review was written.</p>
+      <div class="article-cta">
+        <h4>Want your local visibility scored against real competitors?</h4>
+        <p>Our free Local SEO check measures your review gap, profile freshness and effective radius against the businesses actually outranking you.</p>
+        <a class="btn btn-teal magnetic" href="/services/local-seo/">Run the free local check</a>
+      </div>`,
+    faqs: [
+      { q: "Do Google reviews actually affect local pack ranking?", a: "Yes. Whitespark's annual Local Search Ranking Factors survey, which polls experienced local SEO practitioners, has repeatedly rated review signals, count, recency and response rate, among the top factors behind local-pack rankings." },
+      { q: "What's the best time to ask a customer for a review?", a: "Immediately after the outcome is delivered, when satisfaction and gratitude are at their peak, with a direct one-click link rather than a general request to 'find us on Google.'" },
+      { q: "Should I ask a customer for a review more than once?", a: "No. A single well-timed ask respects the relationship; a repeated nudge tends to read as pressure and can cost you the review entirely." },
+      { q: "Does responding to reviews actually help my ranking?", a: "Google's own Business Profile guidance states that responding to reviews can improve visibility and helps build customer trust. A high response rate on both positive and negative reviews signals an actively managed business." },
+      { q: "How should I handle a negative review?", a: "Respond calmly and factually, without defensiveness, then move on. A small number of critical reviews, answered professionally, often reads as more credible than a suspiciously flawless rating, since it shows how you handle a real problem." },
+    ],
+  },
+  {
     slug: "social-every-day",
     tag: "Social",
     categories: ["Social Media Growth"],
