@@ -92,6 +92,21 @@ export function organizationSchema() {
   };
 }
 
+// Founder identity, tied to the Organization node. Emitted on /about/ only -
+// the one page that actually establishes who Meet Parekh is and why that
+// matters, rather than repeating it on every page.
+export function founderSchema() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: 'Meet Parekh',
+    jobTitle: 'Founder',
+    worksFor: { '@id': `${SITE_ORIGIN}/#organization` },
+    url: `${SITE_ORIGIN}/about/`,
+    sameAs: ['https://www.linkedin.com/in/meetparekh21/'],
+  };
+}
+
 // Site-level WebSite node. Emitted site-wide from the Base layout.
 export function webSiteSchema() {
   return {

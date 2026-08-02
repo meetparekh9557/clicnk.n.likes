@@ -9,6 +9,7 @@ import Base from '../layouts/Base.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
 import StatTile from '../components/StatTile.astro';
 import FirstPageCliff from '../components/islands/FirstPageCliff.jsx';
+import CliffTable from '../components/CliffTable.astro';
 import { verticalStats, statsLastUpdated } from '../data/verticalStats';
 import { breadcrumbSchema } from '../lib/seo';
 import { withBase } from '../lib/url';
@@ -93,6 +94,7 @@ const updatedLabel = new Date(statsLastUpdated + '-01').toLocaleDateString('en-I
       </div>
       <div class="reveal mt-10" style="--d:180ms">
         <FirstPageCliff client:visible />
+        <CliffTable />
       </div>
     </div>
   </section>

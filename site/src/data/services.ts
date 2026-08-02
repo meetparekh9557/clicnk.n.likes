@@ -14,6 +14,8 @@ export interface ServiceDetail {
   tool: { name: string; lead: string };
   quote: { name: string; lead: string };
   crossLink?: { text: string; label: string; href: string };
+  /** Optional FAQ block, rendered on the service page with FAQPage schema. Not every service has one yet. */
+  faqs?: { q: string; a: string }[];
 }
 
 // "Why it matters" band per service. Cited hard numbers appear ONLY
@@ -162,6 +164,13 @@ export const serviceDetails: ServiceDetail[] = [
       label: 'See Content Marketing →',
       href: '/services/content-marketing/',
     },
+    faqs: [
+      { q: 'What is AI SEO or AEO?', a: 'AI SEO (also called AEO, GEO or LLMO) is the practice of structuring your content, schema and entity signals so AI engines like ChatGPT, Gemini, Perplexity and Google AI Overviews can extract and cite your business directly in their answers, not just rank your page in a list of blue links.' },
+      { q: 'How is AI SEO different from regular SEO?', a: 'Regular SEO earns you a position in a list of ten results a searcher can scroll through. An AI answer typically names only two or three sources and stops there, so the goal shifts from ranking to being trusted enough to quote. Content built for extraction (clear structure, quotable facts, consistent entity signals) tends to work for both at once.' },
+      { q: 'How do you know if an AI engine is already citing us?', a: 'We track citation appearances across the major engines directly, rather than guessing from ranking position alone, so you see where your business is actually being named and where a competitor is being cited instead.' },
+      { q: 'Does schema markup actually matter for AI citations?', a: 'Yes. Structured data makes your entity (who you are, what you offer, where you operate) unambiguous to a crawler, which is exactly the kind of clean, checkable signal an AI system favours when deciding who to quote confidently.' },
+      { q: 'Can a small or local business realistically get cited by AI engines?', a: 'Often more easily than by a large competitor, if the content is specific and quotable. AI answers reward clear, concrete facts (a real price range, a named process, a specific service area) over broad marketing language, which favours a business willing to be precise rather than the biggest budget in the category.' },
+    ],
   },
   {
     slug: 'social-media-growth',

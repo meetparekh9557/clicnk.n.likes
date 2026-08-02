@@ -1,0 +1,41 @@
+---
+// Static, crawlable table version of the data behind FirstPageCliff.jsx.
+// The interactive chart is a client-rendered React island, so a crawler or
+// AI engine that doesn't execute JS sees none of its numbers - this table
+// carries the same figures in plain, static markup right underneath it.
+// Keep this DATA array in sync with FirstPageCliff.jsx's DATA by hand; both
+// are small and change together only if Backlinko publishes a new analysis.
+const DATA = [
+  { pos: 1, ctr: 27.6 },
+  { pos: 2, ctr: 15.8 },
+  { pos: 3, ctr: 11.0 },
+  { pos: 4, ctr: 8.4 },
+  { pos: 5, ctr: 6.3 },
+  { pos: 6, ctr: 4.6 },
+  { pos: 7, ctr: 3.6 },
+  { pos: 8, ctr: 2.8 },
+  { pos: 9, ctr: 2.4 },
+  { pos: 10, ctr: 2.1 },
+];
+---
+
+<div class="mt-4 overflow-x-auto rounded-xl border border-navy/10">
+  <table class="w-full min-w-[420px] border-collapse text-left text-[13.5px]">
+    <caption class="sr-only">Google organic click-through rate by search result position</caption>
+    <thead>
+      <tr class="bg-navy text-white">
+        <th scope="col" class="px-4 py-2.5 font-semibold">Google position</th>
+        <th scope="col" class="px-4 py-2.5 font-semibold">Share of clicks</th>
+      </tr>
+    </thead>
+    <tbody>
+      {DATA.map((d, i) => (
+        <tr class={i % 2 ? 'bg-off/60' : 'bg-white'}>
+          <th scope="row" class="px-4 py-2 font-semibold text-navy tabular-nums">#{d.pos}</th>
+          <td class="px-4 py-2 text-navy/70 tabular-nums">{d.ctr}%</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+  <p class="px-4 py-2.5 text-[12px] text-navy/45">Source: Backlinko analysis of 4 million Google search results.</p>
+</div>

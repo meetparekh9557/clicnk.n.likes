@@ -11,7 +11,7 @@ import ClientLogos from '../components/ClientLogos.astro';
 import InlineCta from '../components/InlineCta.astro';
 import SimpleForm from '../components/islands/SimpleForm.jsx';
 import { withBase } from '../lib/url';
-import { breadcrumbSchema } from '../lib/seo';
+import { breadcrumbSchema, founderSchema } from '../lib/seo';
 import Clock from '@lucide/astro/icons/clock';
 import MessageSquare from '@lucide/astro/icons/message-square';
 import Layers from '@lucide/astro/icons/layers';
@@ -28,7 +28,7 @@ const trail: [string, string][] = [
   ['Home', '/'],
   ['About', '/about/'],
 ];
-const jsonLd = breadcrumbSchema(trail);
+const jsonLd = [breadcrumbSchema(trail), founderSchema()];
 ---
 
 <Base
