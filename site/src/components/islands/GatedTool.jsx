@@ -163,7 +163,7 @@ export default function GatedTool({ config, serviceLabel }) {
           </button>
         </div>
         {error && <p className="mt-2 text-sm font-medium text-coral">{error}</p>}
-        <p className="mt-2 text-[11px] text-navy/45">Directional overview on screen; the full factor-by-factor report is emailed. Where you give a URL, we fetch the page live and label those rows verified.</p>
+        <p className="mt-2 text-[11px] text-navy/45">{config.resultNote || 'Directional overview on screen; the full factor-by-factor report is emailed.'} Where you give a URL, we fetch the page live and label those rows verified.</p>
       </div>
     </form>
   );

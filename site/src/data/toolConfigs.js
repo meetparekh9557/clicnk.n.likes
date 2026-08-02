@@ -7,6 +7,7 @@ export const toolConfigs = {
     scorer: 'seo', urlField: 'seo_url',
     name: 'Organic Authority Index',
     lead: 'A directional read on your site architecture and keyword footing. Add a URL for a live on-page check.',
+    resultNote: 'Your directional score appears on screen; the full page-by-page ranking opportunity breakdown is emailed.',
     fields: [
       { id: 'seo_industry', type: 'text', label: 'Your industry', placeholder: 'e.g. legal, manufacturing, dental' },
       { id: 'seo_url', type: 'url', label: 'Your page URL', optional: true, placeholder: 'yourwebsite.com (optional, checked live)' },
@@ -21,6 +22,7 @@ export const toolConfigs = {
     scorer: 'localseo',
     name: 'Local Visibility Radius Checker',
     lead: 'A directional read on how visible your business is on Google Maps right now.',
+    resultNote: 'Your visibility radius appears on screen; the full profile and review-gap breakdown is emailed.',
     fields: [
       { id: 'localseo_industry', type: 'text', label: 'Your category', placeholder: 'e.g. dental clinic, salon' },
       { id: 'localseo_radius', type: 'select', label: 'Target radius', default: '5km', options: [{ v: '1km', l: '1 km' }, { v: '5km', l: '5 km' }, { v: '10km', l: '10 km' }] },
@@ -35,6 +37,7 @@ export const toolConfigs = {
     scorer: 'aiseo', urlField: 'aiseo_url', requireOneOf: ['aiseo_content', 'aiseo_url'],
     name: 'AI Readability Index',
     lead: 'Paste your copy or give a URL: we scan how ready it is to be pulled into AI answers.',
+    resultNote: 'Your AI-readiness score appears on screen; the full citation-readiness breakdown is emailed.',
     fields: [
       { id: 'aiseo_industry', type: 'text', label: 'Your industry', placeholder: 'e.g. dermatology, SaaS' },
       { id: 'aiseo_content', type: 'textarea', label: 'Paste your page copy', optional: true, placeholder: 'Paste the copy you want scanned (or use the URL below)...' },
@@ -47,6 +50,7 @@ export const toolConfigs = {
     scorer: 'social',
     name: 'Reach Efficiency Checker',
     lead: 'A directional read on whether algorithmic suppression is capping your reach.',
+    resultNote: 'Your reach efficiency score appears on screen; the full platform-by-platform breakdown is emailed.',
     fields: [
       { id: 'social_industry', type: 'text', label: 'Your industry', placeholder: 'e.g. D2C skincare' },
       { id: 'social_platform', type: 'select', label: 'Main platform', default: 'Instagram', options: [{ v: 'Instagram', l: 'Instagram' }, { v: 'Meta', l: 'Meta (Facebook)' }, { v: 'LinkedIn', l: 'LinkedIn' }] },
@@ -61,6 +65,7 @@ export const toolConfigs = {
     scorer: 'content', urlField: 'content_url',
     name: 'Content Gap Snapshot',
     lead: 'A directional read on the content opportunity you are leaving on the table.',
+    resultNote: 'Your content gap score appears on screen; the full topic-by-topic opportunity list is emailed.',
     fields: [
       { id: 'content_industry', type: 'text', label: 'Your industry', placeholder: 'e.g. apparel manufacturing' },
       { id: 'content_topic', type: 'text', label: 'Core service / topic', placeholder: 'e.g. seamless bras' },
@@ -81,6 +86,7 @@ export const toolConfigs = {
     wantsPageSpeed: true,
     name: 'Infrastructure Health Check',
     lead: 'A directional read on how much friction is costing you in mobile conversions. Add a URL for a live Core Web Vitals + on-page check.',
+    resultNote: 'Your live Core Web Vitals appear on screen; the full LCP, CLS and blocking-time breakdown is emailed.',
     fields: [
       { id: 'webdev_industry', type: 'text', label: 'Your industry', placeholder: 'e.g. hospitality' },
       { id: 'webdev_url', type: 'url', label: 'Your website URL', optional: true, placeholder: 'yourwebsite.com (optional, on-page facts checked live)' },
@@ -95,6 +101,7 @@ export const toolConfigs = {
     scorer: 'paid',
     name: 'Ad Budget Waste Simulator',
     lead: 'A directional read on how much of your ad budget is leaking to preventable waste.',
+    resultNote: 'Your budget-waste estimate appears on screen; the full platform-by-platform leak breakdown is emailed.',
     fields: [
       { id: 'paid_industry', type: 'text', label: 'Your industry', placeholder: 'e.g. real estate' },
       { id: 'paid_budget', type: 'number', label: 'Monthly ad budget (₹)', placeholder: 'e.g. 25000' },
@@ -112,6 +119,7 @@ export const toolConfigs = {
     scorer: 'schemavalidator', urlField: 'schemavalidator_url', requireOneOf: ['schemavalidator_content', 'schemavalidator_url'],
     name: 'Schema Validator & Score',
     lead: 'Paste your JSON-LD or give a page URL: we check it against the required properties Google actually looks for.',
+    resultNote: 'Your validation score appears on screen; the full required-vs-missing property list is emailed.',
     fields: [
       { id: 'schemavalidator_content', type: 'textarea', label: 'Paste your JSON-LD schema', optional: true, placeholder: '<script type="application/ld+json">{ "@context": "https://schema.org", ... }</script> (or just the JSON)' },
       { id: 'schemavalidator_url', type: 'url', label: '...or your page URL', optional: true, placeholder: 'yourwebsite.com (checks which schema types are present)' },
@@ -122,6 +130,7 @@ export const toolConfigs = {
     scorer: 'contentscore', urlField: 'contentscore_url', requireOneOf: ['contentscore_content', 'contentscore_url'],
     name: 'Content SEO Score',
     lead: 'Paste one page of copy or its URL: we score that specific piece on the on-page fundamentals that actually move rankings.',
+    resultNote: 'Your score appears on screen; the full on-page fundamentals breakdown is emailed.',
     fields: [
       { id: 'contentscore_keyword', type: 'text', label: 'Target keyword or topic', placeholder: 'e.g. seamless bras for daily wear' },
       { id: 'contentscore_content', type: 'textarea', label: 'Paste your content', optional: true, placeholder: 'Paste the full page copy you want scored...' },
