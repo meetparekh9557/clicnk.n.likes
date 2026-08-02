@@ -92,6 +92,30 @@ export function organizationSchema() {
   };
 }
 
+// LocalBusiness identity, for /contact/ specifically - the page that most
+// directly answers "where and how do I reach this business." Distinct from
+// organizationSchema (emitted site-wide) because LocalBusiness is the type
+// search engines look for when surfacing local-pack/contact-style results,
+// and re-declaring the org as a ProfessionalService here is the documented
+// way to get that without duplicating the site-wide Organization node.
+export function localBusinessSchema() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'ProfessionalService',
+    '@id': `${SITE_ORIGIN}/contact/#localbusiness`,
+    name: ORG_NAME,
+    url: `${SITE_ORIGIN}/contact/`,
+    image: OG_DEFAULT,
+    email: 'business@clicknlikes.com',
+    address: { '@type': 'PostalAddress', addressLocality: 'Ahmedabad', addressRegion: 'Gujarat', addressCountry: 'IN' },
+    areaServed: [...AREA_SERVED],
+    sameAs: [
+      'https://www.instagram.com/click.n.likes/',
+      'https://www.linkedin.com/company/click-n-likes/',
+    ],
+  };
+}
+
 // Founder identity, tied to the Organization node. Emitted on /about/ only -
 // the one page that actually establishes who Meet Parekh is and why that
 // matters, rather than repeating it on every page.

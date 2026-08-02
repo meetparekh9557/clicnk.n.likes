@@ -9,13 +9,13 @@ import Card from '../components/Card.astro';
 import SimpleForm from '../components/islands/SimpleForm.jsx';
 import { contact } from '../data/site';
 import { withBase } from '../lib/url';
-import { breadcrumbSchema } from '../lib/seo';
+import { breadcrumbSchema, localBusinessSchema } from '../lib/seo';
 
 const trail: [string, string][] = [
   ['Home', '/'],
   ['Contact', '/contact/'],
 ];
-const jsonLd = breadcrumbSchema(trail);
+const jsonLd = [breadcrumbSchema(trail), localBusinessSchema()];
 
 const formFields = [
   { name: 'name', label: 'Full name', placeholder: 'Your name' },
