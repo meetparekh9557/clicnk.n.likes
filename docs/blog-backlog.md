@@ -3,35 +3,76 @@
 Queue of buyer-question article topics for the weekly auto-blog task
 (2 posts/week — Tuesday + Friday). Each topic is a **real question a buyer
 close to a decision would type**, mapped to the service page it supports.
-The weekly task picks the **next unchecked topic from the top**, writes the
-post in the founder's voice (see `/AGENTS.md`), and ticks the box.
+The weekly task picks the **next unchecked topic from the top of whichever
+section it's rotating into**, writes the post in the founder's voice (see
+`/AGENTS.md`), and ticks the box.
 
 ## How the queue works
 
-- **Top-down:** the task takes the first unchecked topic, writes it, checks it.
-- **Rotate verticals:** don't publish two posts on the same vertical
-  back-to-back. If the next unchecked topic repeats the vertical just
-  published, skip to the next one that doesn't, then come back.
-- **Never invent stats:** every number in a post must trace to a named,
-  checkable source, or be phrased as a range/principle, not a fabricated
-  figure. When in doubt, leave the number out.
-- **Refill:** when fewer than 6 topics remain unchecked, the task appends
-  fresh buyer-question topics (from sales-call themes, "people also ask",
-  and the service pages) before it runs dry.
+- **Topic clusters, not a flat list.** Each of the four services flagged as
+  under-served (Local SEO, Social Media Growth, Website Development, Paid
+  Campaigns) has its own cluster below: one **hub** (the service page) and
+  several **spoke** Insights posts. SEO, Content Marketing and AI Search stay
+  in the general queue at the bottom until they earn their own cluster.
+- **Internal linking follows the hub/spoke split in `/AGENTS.md`:** every
+  spoke links up to its hub using the hub's own **transactional** keyword
+  (e.g. "local SEO services"), and sideways to sibling spokes using each
+  sibling's own **informational** keyword (its actual buyer question) —
+  never "click here", never a different phrase for the same target on two
+  different pages.
+- **Check for cannibalization before writing.** A companion angle on an
+  already-published question is fine (e.g. "why reviews matter" vs. "how
+  many reviews you need"); a second post chasing the *same* question the
+  site already answers is not — retitle, merge into the existing post, or
+  drop it.
+- **Top-down within a cluster; rotate clusters.** Don't publish two posts
+  from the same cluster back-to-back. If the next unchecked topic repeats
+  the cluster just published, skip to the next cluster that doesn't, then
+  come back.
+- **Never invent stats.** Every number in a post must trace to a named,
+  checkable source, or a real, agency-verified client figure, or be phrased
+  as a range/principle — never a fabricated figure. A topic marked
+  `[NEEDS REAL DATA: ...]` is a **hold point**: do not publish it until that
+  note is resolved, either by the founder supplying the real figure or by
+  finding a genuine named third-party source. When in doubt, leave the
+  number out and write the point as a principle instead.
+- **Refill:** when fewer than 6 topics remain unchecked across all clusters,
+  the task appends fresh buyer-question topics (from sales-call themes,
+  "people also ask", and the service pages) before it runs dry.
 
 ## Column key
 
-`[ ] slug — Title question (Tag → /service/)`
+`[ ] slug — Title question — internal links: hub / siblings — notes`
 
-## Queue
+## Local SEO cluster — hub: `/services/local-seo/`
 
-- [x] seo-or-ads-first — Should you invest in SEO or Google Ads first? (Paid → /services/paid-campaigns/)
-- [x] marketing-budget-small-business — How much should a small business actually spend on marketing? (Content → /services/content-marketing/)
-- [x] social-every-day — Does my business really need to post on social media every day? (Social → /services/social-media-growth/)
-- [x] paid-ads-budget — How much should I actually budget for Google Ads? (Paid → /services/paid-campaigns/)
-- [x] cheap-website-cost — Why does a good website cost more than the cheap quote I was given? (Websites → /services/website-development/)
-- [x] reviews-that-convert — How do I get more Google reviews without begging for them? (Local SEO → /services/local-seo/)
-- [ ] which-social-platform — Which social platform is actually worth my time? (Social → /services/social-media-growth/)
+- [x] gbp-mistakes — The Google Business Profile mistakes costing you the local pack
+- [x] reviews-that-convert — How do I get more Google reviews without begging for them?
+- [ ] review-count-threshold — How many reviews do I actually need to rank in the local pack? — links: hub (local SEO services), sibling `gbp-mistakes` (review cadence) — `[NEEDS REAL DATA: a named third-party study or a real agency client example correlating review count vs. rating with local-pack rank — do not publish the "40 reviews at 4.6 beats 90 at 4.1" framing until one is found/confirmed]`
+- [ ] service-area-vs-storefront — Service-area business vs. storefront: does local SEO work differently? — links: hub (local SEO services), sibling `gbp-mistakes` (expand its service-area paragraph rather than repeat it) — client example optional, can ship without one
+
+## Social Media Growth cluster — hub: `/services/social-media-growth/`
+
+- [x] social-every-day — Does my business really need to post on social media every day?
+- [ ] social-growth-timeline — What's a realistic timeline to grow a following that actually converts? — links: hub (social media growth), sibling `social-every-day` (posting cadence) — `[BLOCKED: needs a real client's engagement-growth timeline (the brief suggests something in the shape of the AidByLaw case study's month-by-month numbers). If no shareable client timeline exists, write the month-by-month arc as a general staged principle with no specific numbers attached, per the "leave the number out" rule.]`
+- [ ] instagram-vs-linkedin-b2b — Instagram vs. LinkedIn: where should a B2B service business actually post? — links: hub (social media growth), sibling `social-every-day` (reuse its cadence numbers rather than re-deriving them) — `[BLOCKED: confirm whether "the majority of effort toward LinkedIn" reflects actual agency practice, and get a real split if one exists, before publishing any specific ratio]` — replaces the older, vaguer `which-social-platform` topic below
+
+## Website Development cluster — hub: `/services/website-development/`
+
+- [x] 3-second-test — The 3-second test your website keeps failing
+- [x] cheap-website-cost — Why does a good website cost more than the cheap quote I was given?
+- [ ] website-cost-checklist — What should a website cost, and what should be included? — links: hub (website development), sibling `cheap-website-cost` (that post argues *why*; this one is the concrete included-vs-extra checklist it doesn't yet have) — `[BLOCKED: needs the agency's own real typical project price range — check whether /pricing/'s published figures already cover project-based builds before asking for a new number]`
+- [ ] slow-speed-costing-leads — How do I know if my site's slow load speed is actually costing me leads? — links: hub (website development), sibling `3-second-test` (reuse its "four leaks" framework for consistency), and `/tools/website-speed/` — ready to write now: reuses the already-sourced Google/SOASTA mobile-speed stat, no new data needed
+
+## Paid Campaigns cluster — hub: `/services/paid-campaigns/`
+
+- [x] seo-or-ads-first — Should you invest in SEO or Google Ads first?
+- [x] paid-ads-budget — How much should I actually budget for Google Ads?
+- [ ] google-ads-learning-phase — Why does my first month of Google Ads look worse than month four? — links: hub (paid campaigns), sibling `paid-ads-budget` (that post gives the budgeting formula; this one covers the learning-phase timing the formula doesn't), and `/work/aidbylaw/` — ready to write now using AidByLaw's real, already-published numbers: ₹50,000–₹1,50,000/month budget, 20–30 leads/month during the two-month platform learning phase, climbing to 150+ by mid-engagement. Retitled from the brief's original ("How much should I budget for Google Ads in month one?") specifically to avoid duplicating `paid-ads-budget`'s question.
+- [ ] cost-per-lead-benchmark — What's a good cost-per-lead benchmark for [category]? — links: hub (paid campaigns), `/tools/funnel-roi/`, sibling `seo-or-ads-first` — `[NEEDS REAL DATA: a named third-party cost-per-lead benchmark by category (e.g. a WordStream-style report), or the agency's own client averages by category — do not publish a single CPL number without one]`
+
+## General queue (SEO, Content, AI Search — not yet clustered)
+
 - [ ] seo-timeline — How long does SEO really take to show results? (SEO → /services/seo/)
 - [ ] content-vs-ads-manufacturer — Should a manufacturer invest in content or trade-show leads? (Content → /services/content-marketing/)
 - [ ] rank-on-maps — Why does my competitor outrank me on Google Maps when I'm closer? (Local SEO → /services/local-seo/)

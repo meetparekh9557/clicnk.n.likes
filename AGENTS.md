@@ -132,6 +132,31 @@ Rules:
   to every `title`/`description` passed to `Base.astro`, the `articleMeta` map,
   and any article title that becomes a meta title by fallback.
 
+- **Internal linking is split by page type, on purpose, and applied
+  uniformly — never added vaguely.**
+  - **Service pages (`/services/*/`) link out on transactional keywords** —
+    the exact commercial phrasing a ready-to-hire buyer searches ("SEO
+    agency", "local SEO services", "website development company"), because
+    these pages exist to capture and reinforce purchase intent.
+  - **Insights posts link out on informational keywords** — the exact
+    question/topic phrasing a researching reader searches ("how many Google
+    reviews do I need", "is a website redesign worth it"), because blog
+    content sits earlier in the funnel and should hand authority down to the
+    transactional pages through natural anchor text, not commercial phrasing
+    forced into an informational sentence.
+  - **Every post is part of a topic cluster, not a standalone.** Each
+    underserved-service cluster has one service page as the hub and its
+    Insights posts as spokes: spokes link up to the hub using the hub's own
+    transactional keyword, and sideways to sibling spokes using each
+    sibling's own informational keyword — never "click here", never a
+    different random phrase for the same target on different pages. The
+    live cluster map (hub → spokes) is tracked in `docs/blog-backlog.md`.
+  - Before adding a brand-new topic, check it isn't a near-duplicate of a
+    published post targeting the same buyer question — a companion angle is
+    fine (e.g. "why reviews matter" vs "how to ask for reviews"), a second
+    post chasing the identical question is keyword cannibalization, not
+    content depth.
+
 ## Engineering conventions
 
 - All tool scoring must be deterministic and honestly labelled: anything shown
