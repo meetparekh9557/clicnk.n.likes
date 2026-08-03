@@ -37,6 +37,163 @@ export interface Article {
 
 export const articles: Article[] = [
   {
+    slug: "website-cost-checklist",
+    tag: "Websites",
+    categories: ["Websites & Conversion"],
+    title: "What should a website cost, and what should be included?",
+    excerpt: "Real 2026 India pricing, freelancer through agency, plus the checklist of what a proper build should never bill you as an extra.",
+    author: "Click.n.likes team",
+    readTime: "9 min read",
+    date: "2026-08-02",
+    body: `<p>A factory once proved its price was fair by letting a buyer walk the floor and see the machinery, the labour, the material. A website quote offers no such tour: two numbers can sit side by side on a spreadsheet with no way to tell, from the figure alone, which one is a fair price for a real build and which one is a number picked to win the deal and worry about delivery later. The only way to actually compare website quotes is to know two things: what a proper build costs in the real market, and exactly what should be included in that price rather than billed back to you afterward.</p>
+      <p>Both of those are answerable with real numbers, not vague reassurance, so this is written as a reference you can hold a quote against rather than another argument for why quality costs more.</p>
+      <h2>Why do website quotes vary so widely?</h2>
+      <p>Because "a website" is not one product, it is a bundle of separate decisions, design, page count, content writing, technical structure and post-launch support, and a quote can include all five or quietly none beyond the first. A number with no scope attached to it is not comparable to anything, which is why the checklist below matters more than the headline price.</p>
+      <h2>What should always be included in a professional build?</h2>
+      <p>A proper build treats these as the job, not as optional add-ons priced separately once you have already committed.</p>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Included in a proper build</th><th>Often quoted as an extra, watch for this</th></tr></thead>
+          <tbody>
+            <tr><td>Mobile-first, sub-two-second load speed</td><td>"Speed optimisation" as a separate line item</td></tr>
+            <tr><td>Schema markup and clean technical SEO structure</td><td>"SEO setup" billed after the site is already live</td></tr>
+            <tr><td>Conversion-focused layout with one clear call to action per page</td><td>Generic template pages with no engineered next step</td></tr>
+            <tr><td>Domain, hosting and CMS bought in your own name</td><td>Domain/hosting held in the agency's account, creating lock-in</td></tr>
+            <tr><td>A working contact form wired to a real inbox</td><td>Form "integration" charged separately from the build</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="table-note">This is a general checklist for what a professional build should include, not a quote for any specific project; always confirm inclusions in writing before signing.</p>
+      <h2>What do freelancers, agencies and a build like ours actually charge?</h2>
+      <p>In the Indian market specifically, the spread is wide enough that "a website" as a category tells you almost nothing. Freelancers typically charge <a href="https://www.infotechwayout.com/blog/how-much-do-freelancers-charge-for-a-website-in-india/" target="_blank" rel="noopener">₹15,000 to ₹80,000</a> for a typical small-business site, often excluding design, content or post-launch support from that figure. Agencies typically run <a href="https://zethic.com/website-development-cost-in-india-2026-full-price-breakdown/" target="_blank" rel="noopener">₹80,000 to ₹3,00,000</a> for the same scope, with a structured process, multiple specialists and post-launch accountability built in, and a solid 5 to 15 page CMS site with mobile responsiveness and basic SEO typically lands around <a href="https://www.godaddy.com/resources/in/skills/cost-to-build-a-website-in-india" target="_blank" rel="noopener">₹80,000 to ₹1,50,000</a> from a reliable agency.</p>
+      <p>Our own <a href="/services/website-development/">website development</a> pricing is published, not quoted in private: a Starter build is ₹16,000 one-time and includes 5 pages, Growth is ₹50,000 and includes 12 pages, and Pro is ₹1,24,000 and includes 20 pages, with additional pages beyond a tier's baseline at ₹4,500 each. Every tier includes the checklist above as standard, not as an upsell, and you can build your own exact number on our <a href="/pricing/">pricing page</a> before ever getting on a call.</p>
+      <h2>What are common hidden costs businesses don't budget for?</h2>
+      <p>The ongoing costs after launch, not just the build itself. Hosting, security, backups and basic marketing tools typically add a genuine annual cost on top of any build, regardless of who builds the site, and a quote that never mentions these is not necessarily cheaper, it has simply moved the real cost to a month after you have already signed.</p>
+      <ul>
+        <li><strong>Hosting and domain renewal:</strong> A recurring annual fee that exists whether the site was built by a freelancer, an agency, or in-house.</li>
+        <li><strong>SSL and security maintenance:</strong> Non-negotiable for a business site; confirm whether it is included or billed separately.</li>
+        <li><strong>Content updates after launch:</strong> Adding a new service page or updating pricing later is either included in your agreement or charged per change, and you should know which before you need it.</li>
+      </ul>
+      <h2>How does a one-time project fee compare to a monthly retainer?</h2>
+      <p>They solve different problems, and treating one as a cheaper version of the other is where most confusion starts. A one-time project fee builds the asset; it does not include the ongoing SEO, content and optimisation work that makes that asset actually earn enquiries over time. A business that pays only the one-time fee and expects the site to keep generating leads on its own the way a maintained one would is comparing a car's purchase price to another car's purchase-plus-fuel-and-servicing, and concluding the wrong one is expensive.</p>
+      <p><strong>Example in Action:</strong> A prospective client once brought us a freelancer quote roughly a third of our Starter price, for what looked like the same 5-page brief on paper. The freelancer's scope excluded schema markup, mobile speed optimisation and any post-launch support, all three of which sat inside our number by default. Once we itemised what the cheaper quote actually left out, the comparison was no longer "expensive versus cheap", it was "complete versus partial" for two different products wearing the same label.</p>
+      <h2>Conclusion: Compare the Checklist, Not Just the Number</h2>
+      <p>A website quote is only as good as what it actually includes, and the fastest way to protect yourself is to hold every quote against the same checklist rather than against each other's headline price. Built properly, a website stops being a one-time expense you hope pays off and becomes the 24/7 lead generation asset the rest of your <a href="/">organic growth agency</a> work is designed to fill with visitors worth converting.</p>
+      <div class="article-cta">
+        <h4>Want to see exactly what a proper build costs for your scope?</h4>
+        <p>Build your own instant, itemised quote, with every checklist item above included as standard, not billed back to you later.</p>
+        <a class="btn btn-teal magnetic" href="/pricing/#quote">Build my instant quote</a>
+      </div>`,
+    faqs: [
+      { q: "How much does a small business website cost in India?", a: "Freelancers typically charge ₹15,000 to ₹80,000, often excluding design, content or post-launch support. Agencies typically run ₹80,000 to ₹3,00,000 for a fuller, structured build. A solid 5 to 15 page site with mobile responsiveness and basic SEO from a reliable agency typically lands around ₹80,000 to ₹1,50,000." },
+      { q: "What should be included in a website build vs. billed separately?", a: "Mobile-first speed, schema and technical SEO structure, a conversion-focused layout, a working contact form, and domain/hosting/CMS purchased in your own name should all be included as standard. Watch for quotes that bill any of these back to you as a separate line item after the fact." },
+      { q: "Is a monthly website retainer better than a one-time project fee?", a: "They solve different problems. A one-time fee builds the asset; ongoing SEO and content work is what makes that asset keep earning enquiries over time. Comparing only the one-time fees without accounting for that ongoing work is not an apples-to-apples comparison." },
+      { q: "What hidden costs do businesses often forget to budget for?", a: "Ongoing hosting and domain renewal, SSL and security maintenance, and content updates after launch. These recur annually regardless of who builds the site, and a quote that omits them has not made the project cheaper, only deferred the real cost." },
+      { q: "How much does Click.n.likes charge for a website?", a: "Our pricing is published, not quoted privately: Starter is ₹16,000 one-time for 5 pages, Growth is ₹50,000 for 12 pages, and Pro is ₹1,24,000 for 20 pages, with extra pages at ₹4,500 each. Every tier includes speed, schema and conversion-focused design as standard." },
+    ],
+  },
+  {
+    slug: "social-growth-timeline",
+    tag: "Social",
+    categories: ["Social Media Growth"],
+    title: "What's a realistic timeline to grow a following that actually converts?",
+    excerpt: "Followers move first and fastest; enquiries lag behind them by design, and knowing the real shape of that gap stops a working strategy from being cancelled too early.",
+    author: "Click.n.likes team",
+    readTime: "8 min read",
+    date: "2026-08-02",
+    body: `<p>A shopfront earns trust the moment it opens: a passer-by can see the fittings, the stock, the staff, and decide in seconds whether to walk in. A social media account earns trust on a slower, less visible clock, and a founder who expects a shopfront's instant read from a following that is only a few weeks old is measuring the wrong thing at the wrong time, then concluding the whole effort failed.</p>
+      <p>There is a real, predictable shape to how social growth actually converts into enquiries, and knowing it in advance is what stops a business from cancelling a strategy in month two that was always going to start paying back in month five.</p>
+      <h2>Why does follower growth outpace enquiry growth at first?</h2>
+      <p>Because a follow costs a viewer almost nothing, while an enquiry costs them trust they have not built yet. Following an account is a one-tap, low-commitment action a scrolling stranger takes on a whim; messaging a business or booking a call is a considered decision that usually waits until that stranger has seen enough consistent, credible content to believe the business is real and good at what it does. The two numbers were never going to move at the same speed, and expecting them to is the single most common reason a genuinely working strategy gets judged as failing too early.</p>
+      <h2>What's a realistic month-by-month arc for a small business account?</h2>
+      <p>A staged arc, not a straight line, and each stage does different work than the one before it.</p>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Stage</th><th>What's actually happening</th></tr></thead>
+          <tbody>
+            <tr><td>Months 1–2: Foundation</td><td>Content pillars, visual identity and posting cadence are established; follower growth is the main visible signal, enquiries are rare and not yet the goal.</td></tr>
+            <tr><td>Months 3–4: Engagement lift</td><td>Saves, shares, comments and DMs start climbing faster than raw follower count, as the audience narrows toward people who are actually the right fit.</td></tr>
+            <tr><td>Months 5–6: First real enquiries</td><td>A track record of consistent, credible content has accumulated enough trust that DMs and bookings begin arriving on their own, without every post needing a hard sell.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="table-note">This is a general staged principle for a typical small-business account, not a guarantee or a specific client's tracked results; actual timing varies by industry, starting audience and how consistently the plan is actually run.</p>
+      <h2>What's the difference between vanity growth and conversion-ready growth?</h2>
+      <p>Vanity growth adds followers who will never buy; conversion-ready growth adds the smaller number of followers who actually match the business's real customer. A follower count climbing while engagement stays flat is usually a sign of the first, often from broad reach tactics or follow-for-follow behaviour, while a smaller but steadily more engaged audience is the second, and it is the second that eventually produces enquiries, not the first.</p>
+      <ul>
+        <li><strong>Watch engagement rate, not follower count alone:</strong> A shrinking engagement rate against a growing follower count is a warning sign, not a milestone.</li>
+        <li><strong>Watch who is engaging:</strong> Comments and saves from people who match your real customer profile matter more than volume from an audience that will never buy.</li>
+        <li><strong>Watch DMs and saves specifically:</strong> Both are stronger buying-intent signals than likes, and typically appear before a booking does.</li>
+      </ul>
+      <h2>When should you expect the first real DM or booking?</h2>
+      <p>Usually somewhere in the months 5–6 range of consistent, on-strategy posting, though a business with an unusually strong starting reputation or referral network can see it sooner, and one starting from zero brand recognition can take longer. The honest signal to watch is not the calendar date, it is whether engagement quality has been climbing steadily through months 3 and 4; if it has, the enquiries are a matter of when, not if.</p>
+      <p><strong>A realistic example:</strong> consider a boutique fitness studio starting from a small, mostly-friends-and-family following. Months 1–2 go into establishing a consistent content pillar around real client transformations and class previews. By months 3–4, saves and shares on class-preview content start outpacing the account's follower growth, a sign the content is reaching people who are actually considering joining, not just scrolling past. By month 5, DMs asking about trial classes begin arriving without a discount code attached, the marker that the account has crossed from being watched to being trusted. This is an illustrative shape of how the stages typically unfold, not a specific client's audited numbers.</p>
+      <h2>Conclusion: Judge the Stage You're Actually In</h2>
+      <p>Cancelling a social strategy in month two because it "isn't producing leads yet" is judging a foundation-stage account by a conversion-stage standard. Match your expectations to the stage the account is actually in, keep the content and cadence consistent past the point most businesses quit, and the same audience that started as followers becomes the enquiries the account was always built to earn. Consistency is the whole mechanism, which is exactly why a real <a href="/services/social-media-growth/">social media growth</a> strategy is planned in stages from day one, not judged against a single month's numbers.</p>
+      <div class="article-cta">
+        <h4>Want a staged growth plan built around your actual starting point?</h4>
+        <p>We will map the realistic month-by-month arc for your specific audience and industry, not a generic promise of overnight results.</p>
+        <a class="btn btn-teal magnetic" href="/services/social-media-growth/">See Social Media Growth</a>
+      </div>`,
+    faqs: [
+      { q: "How long before social media brings in real leads?", a: "Typically somewhere in the months 5–6 range of consistent, on-strategy posting for a small business starting from a modest audience, though this varies by industry and starting reputation. Follower growth is usually visible first, with engagement quality climbing in months 3–4 ahead of actual enquiries." },
+      { q: "Should I expect DMs before follower growth?", a: "No, it typically runs the other way. Following an account is a low-commitment action a stranger takes quickly; messaging or booking requires more trust, which usually only builds after a track record of consistent content." },
+      { q: "Is slow follower growth actually a bad sign?", a: "Not necessarily. A smaller but steadily more engaged audience that matches your real customer profile is more likely to convert than a larger, faster-growing one made up of followers who were never going to buy." },
+      { q: "What should I actually track if not just follower count?", a: "Engagement rate, saves, shares and DMs are stronger signals of buying intent than raw follower count or likes, and they typically climb before bookings or enquiries do." },
+      { q: "When should I consider a social strategy not working?", a: "Only after judging it against the stage it's actually in. A foundation-stage account (months 1–2) showing no enquiries yet is expected; the same result past month 6, with engagement quality also flat, is the real signal to revisit the strategy." },
+    ],
+  },
+  {
+    slug: "instagram-vs-linkedin-b2b",
+    tag: "Social",
+    categories: ["Social Media Growth"],
+    title: "Instagram vs. LinkedIn: where should a B2B service business actually post?",
+    excerpt: "Roughly 4 out of every 5 B2B social leads come from one platform, which should settle where a small team's limited time actually goes.",
+    author: "Click.n.likes team",
+    readTime: "8 min read",
+    date: "2026-08-02",
+    body: `<p>A consultant once earned trust through a referral passed quietly between two people who already knew each other's judgement. Social media replaced that whisper network with a public one, but not evenly: a B2B buyer researching who to hire is reading a different platform, in a different mindset, than the same person scrolling on their own time, and a small team with limited hours has to choose where those hours actually go rather than spreading them thin across both.</p>
+      <p>The honest answer is not "be everywhere." It is that the two platforms serve different buyer moments, and one of them carries most of the weight for a B2B service business specifically.</p>
+      <h2>What does each platform's audience actually expect from a B2B account?</h2>
+      <p>Instagram's audience is in a browsing mindset, primed for visual, personality-led content; LinkedIn's audience is in a research mindset, actively evaluating who to trust with a business decision. A consultancy posting the same polished-brand content style on both is answering a question neither audience actually asked: the Instagram viewer wanted to feel something, the LinkedIn viewer wanted evidence.</p>
+      <h2>Where do B2B buyers actually spend research time?</h2>
+      <p>Overwhelmingly on LinkedIn. Industry research consistently finds that roughly <a href="https://sproutsocial.com/insights/linkedin-statistics/" target="_blank" rel="noopener">75 to 85% of all B2B social media leads come from LinkedIn</a>, commonly summarised as 4 out of every 5 B2B social leads, with every other platform combined accounting for the rest. That is not a marginal preference, it is the platform where a B2B buyer is already looking when they are close to a decision, which should settle most of the "where do we focus" debate before a single post is planned.</p>
+      <h2>Can a small team realistically run both well?</h2>
+      <p>Rarely to the same standard, and trying usually means both suffer. A specialist consultant or small agency is far more likely to be researched on LinkedIn before a call than discovered on Instagram, which is the practical case for weighting the larger share of a limited team's time toward LinkedIn specifically, reserving Instagram for a lighter, more personality-driven presence rather than matching LinkedIn's effort post for post.</p>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th></th><th>Instagram</th><th>LinkedIn</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Audience mindset</th><td>Browsing, visual, personality-led</td><td>Researching, evaluating credibility</td></tr>
+            <tr><th scope="row">Best content style</th><td>Behind-the-scenes, team culture, visual proof of work</td><td>Case studies, insights, direct commentary on the buyer's problem</td></tr>
+            <tr><th scope="row">Realistic cadence</th><td>3 to 5 feed posts a week</td><td>2 to 5 posts a week</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="table-note">Cadence figures reuse the same research-backed ranges published in our <a href="/insights/social-every-day/">social posting frequency</a> guide, not a separate estimate for this post.</p>
+      <h2>What's the honest minimum viable presence on each?</h2>
+      <p>On LinkedIn, a genuine minimum is 2 posts a week of real commentary or case-study material, not reposted articles with no added perspective. On Instagram, a lighter but consistent presence, a few posts a week showing the team and the work, is enough to keep the account from reading as abandoned without demanding equal investment. Neither platform benefits from a burst of activity followed by silence; the same "consistency beats volume" principle that governs posting frequency generally applies just as much to how effort is split between the two.</p>
+      <ul>
+        <li><strong>LinkedIn gets the majority share of effort:</strong> Because it is where B2B buyers are actually researching, per the 75–85% figure above.</li>
+        <li><strong>Instagram gets a lighter, sustainable presence:</strong> Enough to humanise the brand, not matched post-for-post with LinkedIn.</li>
+        <li><strong>Neither gets abandoned:</strong> A dormant profile on either platform is worse than a smaller, consistent one.</li>
+      </ul>
+      <h2>Conclusion: Weight Your Effort to Where the Buyer Actually Is</h2>
+      <p>For a B2B service business with limited hours, the data settles the split before instinct gets a vote: the large majority of B2B social leads come from LinkedIn, so the large majority of the effort should follow. Instagram still earns a place as a lighter, humanising presence, just not an equal one. Getting the ratio right is exactly the kind of decision a real <a href="/services/social-media-growth/">social media growth</a> strategy makes deliberately, rather than splitting time evenly out of habit.</p>
+      <div class="article-cta">
+        <h4>Not sure where your own limited hours should actually go?</h4>
+        <p>We will map a platform split and content plan built around where your actual buyers research, not a generic "post everywhere" template.</p>
+        <a class="btn btn-teal magnetic" href="/services/social-media-growth/">See Social Media Growth</a>
+      </div>`,
+    faqs: [
+      { q: "Should a B2B business skip Instagram entirely?", a: "Not necessarily, but it shouldn't get equal effort to LinkedIn. A lighter, consistent Instagram presence can humanise the brand, while the majority of effort should go to LinkedIn, where research consistently shows 75 to 85% of B2B social leads originate." },
+      { q: "Is LinkedIn worth it for a small consultancy?", a: "Yes, and it's typically the higher-priority platform for B2B specifically. LinkedIn's audience is in a research mindset actively evaluating who to trust with a business decision, which matches exactly how a consultancy is chosen." },
+      { q: "Can one person run both platforms well?", a: "Rarely to an equal standard. A more realistic approach for a small team is weighting the majority of effort toward LinkedIn and running a lighter, sustainable presence on Instagram rather than splitting time evenly." },
+      { q: "What's a realistic LinkedIn posting cadence for a B2B business?", a: "Roughly 2 to 5 posts a week of genuine commentary or case-study material, the same research-backed range that applies to posting frequency generally, reused here rather than re-derived." },
+      { q: "What percentage of B2B leads actually come from LinkedIn?", a: "Industry research consistently puts it at roughly 75 to 85% of all B2B social media leads, often summarised as 4 out of every 5, with every other social platform combined accounting for the remainder." },
+    ],
+  },
+  {
     slug: "paid-ads-budget",
     tag: "Paid",
     categories: ["Paid Media"],

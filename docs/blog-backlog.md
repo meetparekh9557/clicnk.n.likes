@@ -54,14 +54,14 @@ section it's rotating into**, writes the post in the founder's voice (see
 ## Social Media Growth cluster — hub: `/services/social-media-growth/`
 
 - [x] social-every-day — Does my business really need to post on social media every day?
-- [ ] social-growth-timeline — What's a realistic timeline to grow a following that actually converts? — links: hub (social media growth), sibling `social-every-day` (posting cadence) — `[BLOCKED: needs a real client's engagement-growth timeline (the brief suggests something in the shape of the AidByLaw case study's month-by-month numbers). If no shareable client timeline exists, write the month-by-month arc as a general staged principle with no specific numbers attached, per the "leave the number out" rule.]`
-- [ ] instagram-vs-linkedin-b2b — Instagram vs. LinkedIn: where should a B2B service business actually post? — links: hub (social media growth), sibling `social-every-day` (reuse its cadence numbers rather than re-deriving them) — `[BLOCKED: confirm whether "the majority of effort toward LinkedIn" reflects actual agency practice, and get a real split if one exists, before publishing any specific ratio]` — replaces the older, vaguer `which-social-platform` topic below
+- [x] social-growth-timeline — What's a realistic timeline to grow a following that actually converts? (written as a staged principle with one clearly-labeled illustrative example, no invented client figures)
+- [x] instagram-vs-linkedin-b2b — Instagram vs. LinkedIn: where should a B2B service business actually post? (uses the real, sourced 75–85% B2B-leads-from-LinkedIn figure instead of an invented internal ratio) — replaces the older, vaguer `which-social-platform` topic below
 
 ## Website Development cluster — hub: `/services/website-development/`
 
 - [x] 3-second-test — The 3-second test your website keeps failing
 - [x] cheap-website-cost — Why does a good website cost more than the cheap quote I was given?
-- [ ] website-cost-checklist — What should a website cost, and what should be included? — links: hub (website development), sibling `cheap-website-cost` (that post argues *why*; this one is the concrete included-vs-extra checklist it doesn't yet have) — `[BLOCKED: needs the agency's own real typical project price range — check whether /pricing/'s published figures already cover project-based builds before asking for a new number]`
+- [x] website-cost-checklist — What should a website cost, and what should be included? (uses the real, published one-time pricing already live in the Quote Calculator: Starter ₹16,000/5 pages, Growth ₹50,000/12 pages, Pro ₹1,24,000/20 pages, ₹4,500/extra page — this was already public, just not yet written up as its own post)
 - [ ] slow-speed-costing-leads — How do I know if my site's slow load speed is actually costing me leads? — links: hub (website development), sibling `3-second-test` (reuse its "four leaks" framework for consistency), and `/tools/website-speed/` — ready to write now: reuses the already-sourced Google/SOASTA mobile-speed stat, no new data needed
 
 ## Paid Campaigns cluster — hub: `/services/paid-campaigns/`
