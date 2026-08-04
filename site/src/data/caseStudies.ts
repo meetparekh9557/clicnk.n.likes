@@ -50,6 +50,14 @@ export interface CaseStudy {
    */
   stats?: { value: string; label: string; sub?: string }[];
   overview: string;
+  /**
+   * Optional trusted-HTML version of `overview`, rendered in place of the
+   * plain-text version when present. Exists so a case study can carry a real
+   * outbound link to the client's own site (e.g. a dofollow mention on their
+   * business description) without turning every case study's body copy into
+   * raw HTML. Content here is founder-authored static data, never user input.
+   */
+  overviewHtml?: string;
   challenge: string;
   approach: { phase: string; when: string; body: string }[];
   /**
@@ -228,6 +236,69 @@ export const caseStudies: CaseStudy[] = [
     ],
     summary:
       'Adamas Films did not need a website that argued for the studio; the client roster and the reel already do that. What it needed was a site with the same discipline as the work: full-bleed, unhurried, letting a 55-second cut do what no paragraph of agency copy could. That is what got built.',
+  },
+  {
+    slug: 'kopa-seamless',
+    client: 'Kopa Seamless',
+    categories: ['SEO'],
+    logo: '/clients/kopa-seamless.png',
+    tag: 'Apparel Manufacturing',
+    title: 'One self-built page, and organic search became the lead engine',
+    excerpt:
+      'A Mumbai apparel manufacturer built their own one-page site and asked us for SEO only. It now drives most of their new leads.',
+    lengthLabel: 'Ongoing SEO retainer, started September 2025',
+    services: ['SEO'],
+    sector: 'Apparel manufacturing — seamless bonded intimate apparel, OEM & private label',
+    location: 'Mumbai, India',
+    stats: [
+      { value: '71%', label: 'of new leads from organic search', sub: 'Oct 2025 – Jul 2026, GA4' },
+      { value: '12x', label: 'growth in monthly organic clicks', sub: '6/mo in Sep 2025 to 71/mo by Jun 2026, Search Console' },
+      { value: '#6–8', label: 'ranking on core category terms', sub: '"bra manufacturer(s) in india", Search Console' },
+      { value: '1+/day', label: 'direct inquiries since March 2026', sub: 'WhatsApp, calls & email — client-reported' },
+    ],
+    overview:
+      'Kopa Seamless is a Mumbai-based seamless bra manufacturer, producing bonded, seamless-knit intimate apparel as an OEM and private-label partner for fashion brands. The business built and launched its own one-page website in September 2025, and came to us for SEO specifically, not a website rebuild, to get that new site found by the brands and buyers already searching for a bra manufacturer in India.',
+    overviewHtml:
+      'Kopa Seamless is a Mumbai-based <a href="https://www.kopaseamless.com/" target="_blank" rel="noopener">seamless bra manufacturer</a>, producing bonded, seamless-knit intimate apparel as an OEM and private-label partner for fashion brands. The business built and launched its own one-page website in September 2025, and came to us for SEO specifically, not a website rebuild, to get that new site found by the brands and buyers already searching for a <a href="https://www.kopaseamless.com/" target="_blank" rel="noopener">bra manufacturer</a> in India.',
+    challenge:
+      'A brand-new, self-built one-page site had no search history and no content depth to lean on, just a single page competing against manufacturers who had been ranking for years. The brief was narrow because the site itself was staying as it was: get that one page found for the terms real buyers actually search, without waiting on a redesign or a content library to make it happen.',
+    approach: [
+      {
+        phase: 'Keyword & content strategy',
+        when: 'Month 1',
+        body: 'Before touching the page, we mapped out exactly which terms a real buyer types when sourcing a manufacturer, category phrases like "bra manufacturer in india" that carry genuine sourcing intent, not just casual traffic, and that mapping drove every decision after it.',
+      },
+      {
+        phase: 'On-page and local optimisation',
+        when: 'Month 1 onward',
+        body: 'Every meta title, heading and paragraph on the single page was rewritten around those terms, alongside optimising their Google Business Profile and local listings so the business showed up consistently everywhere a buyer might look, not just in organic results.',
+      },
+      {
+        phase: 'Building off-site authority',
+        when: 'Ongoing',
+        body: 'A single page has a ceiling on how much on-page work alone can do, so the work has continued with backlinks pointing back to the site to build domain authority, including the link this case study itself carries.',
+      },
+    ],
+    results: [
+      {
+        h: 'Organic search leads',
+        p: '34 of the 48 new leads recorded in GA4 between October 2025 and July 2026 came from organic search, 71% of all new leads in that window, ahead of direct, AI-assistant referrals, and every other channel combined.',
+      },
+      {
+        h: 'Search visibility',
+        p: 'Search Console shows monthly organic clicks growing from 6 in September 2025 to a peak of 71 in June 2026, roughly a twelvefold increase, with impressions climbing from 46 to 751 a month over the same stretch. The page now ranks in the 6th-to-8th position for genuine category searches like "bra manufacturers in india" and "bra manufacturer in india."',
+      },
+      {
+        h: 'Beyond what analytics can see',
+        p: 'Since March 2026, Kopa Seamless has reported at least one direct inquiry a day through channels analytics cannot capture, WhatsApp messages, phone calls and direct email, on top of the organic leads tracked in GA4.',
+      },
+      {
+        h: 'AI search visibility',
+        p: 'Also surfaces as the top-named manufacturer in AI-generated search answers for niche buyer queries matching their positioning, tested live in August 2026.',
+      },
+    ],
+    summary:
+      'Kopa Seamless came to us with a one-page site they had built themselves and one job for us: get it found. It now supplies the majority of the business’s new leads, ranks on page one for the exact category terms a buyer sourcing a bra manufacturer would type in, and is generating daily inbound interest through channels no dashboard tracks, all from optimising the single page that already existed rather than building a new one.',
   },
 ];
 

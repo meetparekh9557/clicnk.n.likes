@@ -123,7 +123,11 @@ const lastTotal = hasLeads ? cs.leads![cs.leads.length - 1].paid + cs.leads![cs.
   <!-- Narrative -->
   <section class="mx-auto max-w-3xl px-[5vw] pt-12 pb-4">
     <h2 class="reveal font-display text-[clamp(1.4rem,2.5vw,1.9rem)] font-bold text-navy">The client</h2>
-    <p class="reveal mt-3 text-[16.5px] leading-relaxed text-navy/75" style="--d:60ms">{cs.overview}</p>
+    {cs.overviewHtml ? (
+      <p class="reveal mt-3 text-[16.5px] leading-relaxed text-navy/75 [&_a]:font-semibold [&_a]:text-teal-dark [&_a]:underline [&_a]:underline-offset-2" style="--d:60ms" set:html={cs.overviewHtml} />
+    ) : (
+      <p class="reveal mt-3 text-[16.5px] leading-relaxed text-navy/75" style="--d:60ms">{cs.overview}</p>
+    )}
 
     <h2 class="reveal mt-10 font-display text-[clamp(1.4rem,2.5vw,1.9rem)] font-bold text-navy">The challenge</h2>
     <p class="reveal mt-3 text-[16.5px] leading-relaxed text-navy/75" style="--d:60ms">{cs.challenge}</p>
