@@ -248,13 +248,13 @@ export const caseStudies: CaseStudy[] = [
       'A Mumbai apparel manufacturer built their own one-page site and asked us for SEO only. It now drives most of their new leads.',
     lengthLabel: 'Ongoing SEO retainer, started September 2025',
     services: ['SEO'],
-    sector: 'Apparel manufacturing — seamless bonded intimate apparel, OEM & private label',
+    sector: 'Apparel manufacturing (seamless bonded intimate apparel, OEM & private label)',
     location: 'Mumbai, India',
     stats: [
       { value: '71%', label: 'of new leads from organic search', sub: 'Oct 2025 – Jul 2026, GA4' },
       { value: '12x', label: 'growth in monthly organic clicks', sub: '6/mo in Sep 2025 to 71/mo by Jun 2026, Search Console' },
       { value: '#1–8', label: 'ranking across their core business keywords', sub: 'Search Console + live-verified, August 2026' },
-      { value: '1+/day', label: 'direct inquiries since March 2026', sub: 'WhatsApp, calls & email — client-reported' },
+      { value: '1+/day', label: 'direct inquiries since March 2026', sub: 'WhatsApp, calls & email (client-reported)' },
     ],
     overview:
       'Kopa Seamless is a Mumbai-based seamless bra manufacturer, producing bonded, seamless-knit intimate apparel as an OEM and private-label partner for fashion brands. The business built and launched its own one-page website in September 2025, and came to us for SEO specifically, not a website rebuild, to get that new site found by the brands and buyers already searching for a bra manufacturer in India.',
