@@ -264,14 +264,19 @@ export const caseStudies: CaseStudy[] = [
       'A brand-new, self-built one-page site had no search history and no content depth to lean on, just a single page competing against manufacturers who had been ranking for years. The brief was narrow because the site itself was staying as it was: get that one page found for the terms real buyers actually search, without waiting on a redesign or a content library to make it happen.',
     approach: [
       {
-        phase: 'Targeting buyer-intent terms',
-        when: 'Ongoing',
-        body: 'Category terms like "bra manufacturer in india" carry real sourcing intent from brands actually looking to place orders, not just casual searchers, so ranking for those specifically mattered more than chasing broad traffic.',
+        phase: 'Keyword & content strategy',
+        when: 'Month 1',
+        body: 'Before touching the page, we mapped out exactly which terms a real buyer types when sourcing a manufacturer, category phrases like "bra manufacturer in india" that carry genuine sourcing intent, not just casual traffic, and that mapping drove every decision after it.',
       },
       {
-        phase: 'Refine, don’t rebuild',
-        when: 'Month 6 onward',
-        body: 'As rankings and impressions grew, the existing page kept getting refined rather than replaced or expanded, the bet being that a well-optimised single page can out-rank sites with far more pages behind them.',
+        phase: 'On-page and local optimisation',
+        when: 'Month 1 onward',
+        body: 'Every meta title, heading and paragraph on the single page was rewritten around those terms, alongside optimising their Google Business Profile and local listings so the business showed up consistently everywhere a buyer might look, not just in organic results.',
+      },
+      {
+        phase: 'Building off-site authority',
+        when: 'Ongoing',
+        body: 'A single page has a ceiling on how much on-page work alone can do, so the work has continued with backlinks pointing back to the site to build domain authority, including the link this case study itself carries.',
       },
     ],
     results: [
