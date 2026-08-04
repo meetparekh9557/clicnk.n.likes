@@ -253,7 +253,7 @@ export const caseStudies: CaseStudy[] = [
     stats: [
       { value: '71%', label: 'of new leads from organic search', sub: 'Oct 2025 – Jul 2026, GA4' },
       { value: '12x', label: 'growth in monthly organic clicks', sub: '6/mo in Sep 2025 to 71/mo by Jun 2026, Search Console' },
-      { value: '#1', label: 'ranking for "seamless bonded bra manufacturers"', sub: 'verified live, August 2026' },
+      { value: '#1–8', label: 'ranking across their core business keywords', sub: 'Search Console + live-verified, August 2026' },
       { value: '1+/day', label: 'direct inquiries since March 2026', sub: 'WhatsApp, calls & email — client-reported' },
     ],
     overview:
@@ -286,7 +286,7 @@ export const caseStudies: CaseStudy[] = [
       },
       {
         h: 'Search visibility',
-        p: 'Search Console shows monthly organic clicks growing from 6 in September 2025 to a peak of 71 in June 2026, roughly a twelvefold increase, with impressions climbing from 46 to 751 a month over the same stretch. The page ranks 1st for "seamless bonded bra manufacturers," their most exact-match positioning term, and in the 3rd-to-8th position for broader category searches like "top bra manufacturers in india" and "bra manufacturer in india."',
+        p: 'Search Console shows monthly organic clicks growing from 6 in September 2025 to a peak of 71 in June 2026, roughly a twelvefold increase, with impressions climbing from 46 to 751 a month over the same stretch. The keywords driving the large majority of those clicks now rank between position 1 and 8, including outright #1 placement on their most exact-match positioning terms, confirmed both in Search Console and live search checks.',
       },
       {
         h: 'Beyond what analytics can see',
