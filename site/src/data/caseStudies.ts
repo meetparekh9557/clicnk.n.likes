@@ -264,11 +264,6 @@ export const caseStudies: CaseStudy[] = [
       'A brand-new, self-built one-page site had no search history and no content depth to lean on, just a single page competing against manufacturers who had been ranking for years. The brief was narrow because the site itself was staying as it was: get that one page found for the terms real buyers actually search, without waiting on a redesign or a content library to make it happen.',
     approach: [
       {
-        phase: 'Technical & on-page foundation',
-        when: 'Month 1',
-        body: 'With a single page to work with, the priority was making sure every part of it, meta titles, headings, on-page content, was built around the exact terms a manufacturer search actually uses rather than generic brand language.',
-      },
-      {
         phase: 'Targeting buyer-intent terms',
         when: 'Ongoing',
         body: 'Category terms like "bra manufacturer in india" carry real sourcing intent from brands actually looking to place orders, not just casual searchers, so ranking for those specifically mattered more than chasing broad traffic.',
@@ -291,6 +286,10 @@ export const caseStudies: CaseStudy[] = [
       {
         h: 'Beyond what analytics can see',
         p: 'Since March 2026, Kopa Seamless has reported at least one direct inquiry a day through channels analytics cannot capture, WhatsApp messages, phone calls and direct email, on top of the organic leads tracked in GA4.',
+      },
+      {
+        h: 'AI search visibility',
+        p: 'Also surfaces as the top-named manufacturer in AI-generated search answers for niche buyer queries matching their positioning, tested live in August 2026.',
       },
     ],
     summary:
