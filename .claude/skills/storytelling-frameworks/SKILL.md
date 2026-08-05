@@ -1,5 +1,5 @@
 ---
-name: clicknlikes-storytelling
+name: storytelling-frameworks
 description: Selects the right storytelling framework before writing ANY content for Click.n.likes (the organic growth agency this repository belongs to) — cold outreach emails, case studies for /work/ pages, website copy (homepage, About, service pages), LinkedIn posts (personal posts for founder Meet, or company posts), social media posts, Reels/short-form video scripts, Google/Meta ad copy, Insights blog posts, or sales-call and pitch framing. Use this whenever asked to write, draft, improve, or brainstorm any of these content types for Click.n.likes, even if the request doesn't mention "framework," "storytelling," or this skill by name — e.g. "write a LinkedIn post," "draft the next case study," "script a reel," "write ad copy for the Google campaign," "help me pitch this on the call," "improve this service page." Not for unrelated projects or generic writing requests with no connection to Click.n.likes.
 ---
 
