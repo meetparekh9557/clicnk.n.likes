@@ -62,7 +62,7 @@ section it's rotating into**, writes the post in the founder's voice (see
 - [x] 3-second-test — The 3-second test your website keeps failing
 - [x] cheap-website-cost — Why does a good website cost more than the cheap quote I was given?
 - [x] website-cost-checklist — What should a website cost, and what should be included? (uses the real, published one-time pricing already live in the Quote Calculator: Starter ₹16,000/5 pages, Growth ₹50,000/12 pages, Pro ₹1,24,000/20 pages, ₹4,500/extra page — this was already public, just not yet written up as its own post)
-- [ ] slow-speed-costing-leads — How do I know if my site's slow load speed is actually costing me leads? — links: hub (website development), sibling `3-second-test` (reuse its "four leaks" framework for consistency), and `/tools/website-speed/` — ready to write now: reuses the already-sourced Google/SOASTA mobile-speed stat, no new data needed
+- [x] slow-speed-costing-leads — How do I know if my site's slow load speed is actually costing me leads? — links: hub (website development), sibling `3-second-test` (reuse its "four leaks" framework for consistency), and `/tools/website-speed/` — ready to write now: reuses the already-sourced Google/SOASTA mobile-speed stat, no new data needed
 
 ## Paid Campaigns cluster — hub: `/services/paid-campaigns/`
 

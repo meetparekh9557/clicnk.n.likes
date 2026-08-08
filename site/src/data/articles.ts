@@ -37,6 +37,53 @@ export interface Article {
 
 export const articles: Article[] = [
   {
+    slug: "slow-speed-costing-leads",
+    tag: "Websites",
+    categories: ["Websites & Conversion"],
+    title: "How do I know if my site's slow load speed is actually costing me leads?",
+    excerpt: "Speed loss is invisible by nature, nobody who leaves in three seconds ever writes to tell you why, but it is measurable if you know where to look.",
+    author: "Click.n.likes team",
+    readTime: "9 min read",
+    date: "2026-08-08",
+    body: `<p>A shopkeeper who watched customers walk in, glance around, and walk straight back out would know within a week that something about the entrance was wrong. A website owner never gets that view. The visitor who gives up while your page is still loading leaves no trace, no complaint, no abandoned form, just a blank line in your analytics where an enquiry should have been. Slow speed is one of the few marketing problems that actively hides its own evidence.</p>
+      <p>That is precisely why it is worth measuring deliberately rather than trusting a gut feeling. The good news is that, unlike most invisible problems, this one has a precise, well-documented cost.</p>
+      <h2>How do I know if slow speed is actually costing me leads?</h2>
+      <p>You know by the numbers, not the feeling, because a slow site rarely feels slow to the people who built it. Per Google and SOASTA Research's mobile speed benchmark, cited in Think with Google, 53% of mobile visitors abandon a page that takes longer than three seconds to load, and Portent's analysis of ecommerce performance found conversion rates drop by an average of 4.42% with each additional second of load time across the first five seconds. If half of your mobile traffic never sees the page at all, that is not a rounding error in your lead numbers, it is very possibly the largest single lever you are not pulling.</p>
+      <p>The honest test is simple: load your own <a href="/services/website-development/">website development</a> project on a real phone, on mobile data rather than office WiFi, and time it with a stopwatch, not a memory of how fast it felt the day it launched.</p>
+      <h2>What exactly counts as "slow" in 2026?</h2>
+      <p>Google now judges this with three specific, named metrics called Core Web Vitals, and treats them as a direct ranking signal, not just a user-experience nicety. Largest Contentful Paint, how long the biggest visible element takes to render, has a "good" threshold of 2.5 seconds. Beyond that line, both your visitors and Google's own ranking algorithm start treating your page as underperforming, quietly, without any warning email arriving in your inbox.</p>
+      <h2>Where does the leak actually happen?</h2>
+      <p>We have written before about the four leaks that account for most lost bookings, an unclear headline, competing calls-to-action, forms that interrogate, and speed. This post is a deep dive into that fourth leak specifically, because "make it faster" is not a task, it is a diagnosis that hides several different, separately fixable causes:</p>
+      <ul>
+        <li><strong>Unoptimised Images:</strong> A single unresized product photo straight off a phone camera can weigh several megabytes; the same image, properly compressed and served in a modern format, weighs a fraction of that with no visible quality loss. This is the single most common cause we find on client sites, and usually the cheapest to fix.</li>
+        <li><strong>Third-Party Scripts You Forgot You Added:</strong> Chat widgets, old analytics snippets, marketing pixels installed for a campaign that ended a year ago, each one is a separate network request your visitor's phone has to wait on before the page is usable, whether or not the tool is still in use.</li>
+        <li><strong>Render-Blocking Code:</strong> Fonts, stylesheets and scripts that must fully load before the browser will paint anything at all turn a fast connection into a blank white screen for several seconds, which reads to an impatient visitor as a broken site rather than a loading one.</li>
+        <li><strong>Cheap or Distant Hosting:</strong> A server physically far from your actual customers, or a shared hosting plan straining under other sites' traffic, adds delay before your page has sent a single byte, no amount of front-end optimisation can fix a slow starting gun.</li>
+      </ul>
+      <h2>Example in Action: the six-second homepage</h2>
+      <p><strong>Example in Action:</strong> picture a clinic whose homepage takes six seconds to become usable on mobile, three unoptimised hero photographs, a chat widget from a trial they never activated, and a booking form that only appears after everything else has finished loading. Applying Portent's per-second conversion figures, the gap between a six-second load and a two-second one is not a marginal improvement, it is the difference between roughly a fifth of visitors bouncing before the page even finishes rendering and the large majority actually reaching the booking form. Nothing about the clinic's service changed in that comparison, only whether visitors survived long enough to see it.</p>
+      <h2>How do you actually test your own site's speed?</h2>
+      <p>With a tool that loads your real, live page the way a phone on a real connection does, not a guess based on how fast it feels from your office desk. Our own <a href="/tools/website-speed/">free live speed test</a> reports the same Core Web Vitals metrics Google's PageSpeed Insights and Search Console use, translated out of jargon and into a plain list of what to fix first, in about twenty seconds, no call required.</p>
+      <h2>Does fixing speed require a full rebuild?</h2>
+      <p>Usually not. The four causes above are independently fixable: compressing and correctly sizing images, removing dead third-party scripts, deferring non-critical fonts and code until after the first paint, and, if hosting is the bottleneck, moving to a faster provider. Most sites see a meaningful improvement from image compression and script cleanup alone, work measured in hours, not a redesign measured in months.</p>
+      <h2>How does speed compound with the marketing you're already paying for?</h2>
+      <p>It multiplies every other channel's return rather than sitting apart from them. Every visitor your <a href="/services/seo/">SEO services</a> earn, and every click your paid ads buy, lands on the same page, so a slow page taxes the return on both simultaneously, quietly, without ever showing up as a separate line item. Fixing the page is frequently the highest-leverage change available precisely because it improves every acquisition channel at once, rather than requiring a new campaign to see a lift.</p>
+      <h2>Conclusion: Speed is a revenue number wearing a technical disguise</h2>
+      <p>The visitors a slow site loses never write in to explain why they left, which is exactly what makes this the easiest leak to keep ignoring. It is not a technical vanity metric, it is a measurable share of leads quietly not arriving, and unlike most marketing problems, it can be diagnosed precisely and fixed without waiting on a new campaign or a bigger budget. The businesses that treat load speed as a revenue question, not an engineering afterthought, are the ones keeping the leads a slow competitor is still losing.</p>
+      <div class="article-cta">
+        <h4>See your real mobile speed in 20 seconds</h4>
+        <p>Our free live speed test loads your actual page and reports the same Core Web Vitals metrics Google uses to judge you, translated into what to fix first, no call required.</p>
+        <a class="btn btn-teal magnetic" href="/tools/website-speed/">Run the free speed test</a>
+      </div>`,
+    faqs: [
+      { q: "How much does slow load speed actually cost in leads?", a: "Per Google and SOASTA Research's mobile speed benchmark, 53% of mobile visitors abandon a page that takes longer than three seconds to load, and Portent's analysis found conversion rates drop by an average of 4.42% for each additional second of load time across the first five seconds." },
+      { q: "What is a good Core Web Vitals score?", a: "Google's threshold for Largest Contentful Paint, how long the biggest visible element takes to render, is 2.5 seconds or under for a 'good' rating. Beyond that, both visitors and Google's ranking algorithm start treating the page as underperforming." },
+      { q: "What usually causes a slow website?", a: "Most commonly: unoptimised, oversized images, leftover third-party scripts from tools that are no longer in use, render-blocking fonts or code that delay the first paint, and distant or overloaded hosting." },
+      { q: "Does fixing site speed require a full website rebuild?", a: "Usually not. Image compression, removing dead scripts, and deferring non-critical code are independently fixable in hours, not months, and often account for most of the improvement on their own." },
+      { q: "How can I check my own website's speed for free?", a: "Use a live tool that loads your actual page on a simulated mobile connection and reports Core Web Vitals, such as Click.n.likes' free live speed test, which explains the results in plain language rather than raw metrics." },
+    ],
+  },
+  {
     slug: "service-area-vs-storefront",
     tag: "Local SEO",
     categories: ["Local SEO"],
