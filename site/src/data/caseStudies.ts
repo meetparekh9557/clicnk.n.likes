@@ -230,9 +230,9 @@ export const caseStudies: CaseStudy[] = [
       },
     ],
     gallery: [
-      { src: '/work/adamas-films.png', caption: 'Homepage: about, then straight into featured work' },
-      { src: '/work/adamas-films-work.png', caption: 'The Shoot section, one thumbnail per commercial and brand film' },
-      { src: '/work/adamas-films-clients.png', caption: 'Services & Clients: the trust layer, in logos instead of copy' },
+      { src: '/work/adamas-films.webp', caption: 'Homepage: about, then straight into featured work' },
+      { src: '/work/adamas-films-work.webp', caption: 'The Shoot section, one thumbnail per commercial and brand film' },
+      { src: '/work/adamas-films-clients.webp', caption: 'Services & Clients: the trust layer, in logos instead of copy' },
     ],
     summary:
       'Adamas Films did not need a website that argued for the studio; the client roster and the reel already do that. What it needed was a site with the same discipline as the work: full-bleed, unhurried, letting a 55-second cut do what no paragraph of agency copy could. That is what got built.',
