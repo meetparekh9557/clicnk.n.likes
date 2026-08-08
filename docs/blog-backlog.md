@@ -49,7 +49,7 @@ section it's rotating into**, writes the post in the founder's voice (see
 - [x] gbp-mistakes — The Google Business Profile mistakes costing you the local pack
 - [x] reviews-that-convert — How do I get more Google reviews without begging for them?
 - [ ] review-count-threshold — How many reviews do I actually need to rank in the local pack? — links: hub (local SEO services), sibling `gbp-mistakes` (review cadence) — `[NEEDS REAL DATA: a named third-party study or a real agency client example correlating review count vs. rating with local-pack rank — do not publish the "40 reviews at 4.6 beats 90 at 4.1" framing until one is found/confirmed]`
-- [ ] service-area-vs-storefront — Service-area business vs. storefront: does local SEO work differently? — links: hub (local SEO services), sibling `gbp-mistakes` (expand its service-area paragraph rather than repeat it) — client example optional, can ship without one
+- [x] service-area-vs-storefront — Service-area business vs. storefront: does local SEO work differently? — links: hub (local SEO services), sibling `gbp-mistakes` (expand its service-area paragraph rather than repeat it) — client example optional, can ship without one
 
 ## Social Media Growth cluster — hub: `/services/social-media-growth/`
 
