@@ -297,6 +297,8 @@ export const caseStudies: CaseStudy[] = [
         p: 'Also surfaces as the top-named manufacturer in AI-generated search answers for niche buyer queries matching their positioning, tested live in August 2026.',
       },
     ],
+    feedback:
+      '“We’re not an easy business to market. Kopa Seamless is an OEM and private-label manufacturer in a genuinely niche category, seamless bonded bras, and most agencies either don’t understand B2B manufacturing or just chase traffic that never turns into real enquiries. Click.n.likes was different from the first conversation. They took the time to understand who we actually need to reach: private-label brands and importers in markets like the UAE, UK and Saudi Arabia, not casual browsers. The SEO work was built around that buyer, not vanity metrics. They got the fundamentals right, the technical health of the site, the on-page structure, the content that speaks to serious buyers, and they were transparent about what they were doing and why at every step. No black box, no jargon to hide behind. If you run a business that’s hard to explain in a single line, these are the people I’d trust with it.” — Jay, Founder, Kopa Seamless',
     summary:
       'Kopa Seamless came to us with a one-page site they had built themselves and one job for us: get it found. It now supplies the majority of the business’s new leads, ranks on page one for the exact category terms a buyer sourcing a bra manufacturer would type in, and is generating daily inbound interest through channels no dashboard tracks, all from optimising the single page that already existed rather than building a new one.',
   },
