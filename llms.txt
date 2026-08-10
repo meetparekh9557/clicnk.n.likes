@@ -1,0 +1,65 @@
+# Click.n.likes
+
+> Full-stack organic growth agency for SaaS, manufacturers, legal and professional firms, D2C brands and local businesses worldwide. SEO, AI Search, Social, Content, Websites and Paid.
+
+Based in Ahmedabad, India, working with clients worldwide. Every score our free tools show is either a live, verifiable measurement (labelled "verified") or a self-reported answer (labelled as such) - never blended or presented as more certain than it is. Pricing is published on the site, not gated behind a sales call.
+
+## Services
+
+- [SEO (Organic & On-Page)](https://clicknlikes.com/services/seo/): Keyword strategy, on-page optimization, technical fixes and supporting blog content, built around how your category actually gets searched on Google: separate from Google Maps/Local, which we treat as its own discipline.
+- [Local SEO & Google Business](https://clicknlikes.com/services/local-seo/): Google Business Profile optimization, review strategy and local link building: the Google Maps / "local pack" discipline, run separately from organic SEO because it's won with a different set of signals.
+- [AI SEO & AI Overviews](https://clicknlikes.com/services/ai-seo/): Search is splitting into two tracks: blue links and AI answers. We structure your content, schema and entity signals so AI engines cite you, not your competitor.
+- [Social Media Growth](https://clicknlikes.com/services/social-media-growth/): Strategy, calendars, captions and creative direction for Instagram and LinkedIn, aimed at DMs and bookings, not just likes.
+- [Content Marketing](https://clicknlikes.com/services/content-marketing/): Blogs, guides, landing page copy and case studies, written to a structure that both search engines and AI models can actually extract answers from.
+- [Website Development](https://clicknlikes.com/services/website-development/): Fast, mobile-first websites built on top of the same SEO and content strategy that drives your traffic, so the site is never a separate project from your growth.
+- [Paid Campaigns](https://clicknlikes.com/services/paid-campaigns/): Meta and Google campaigns layered on top of SEO and content that's already working, so every rupee of ad spend compounds instead of disappearing the day you stop paying.
+
+## Free Tools
+
+Live, real scans - not lead-gen quizzes. Each shows a score on screen for free; the full breakdown is emailed.
+
+- [Website Health Scan](https://clicknlikes.com/tools/): A live 11-signal on-page SEO audit of your page.
+- [Website Speed Test](https://clicknlikes.com/tools/website-speed/): Your real mobile load speed, in plain English.
+- [First-Impression Snapshot](https://clicknlikes.com/tools/first-impression/): See your homepage the way a new visitor does.
+- [Funnel Leak & ROI](https://clicknlikes.com/tools/funnel-roi/): The revenue you leak below a healthy 3% conversion.
+- [Competitor Threat](https://clicknlikes.com/tools/competitor-threat/): Score how much of a threat your main rival really is.
+- [Schema Markup Generator & Checker](https://clicknlikes.com/tools/schema-generator/): Score what you have, then generate what is missing, pre-filled from your page.
+- [Schema Validator & Score](https://clicknlikes.com/tools/schema-validator/): Score your schema, see what each gap costs you, generate the fix.
+- [Content SEO Score](https://clicknlikes.com/tools/content-score/): Score one page of content on real on-page SEO fundamentals.
+
+## Work
+
+- [AidByLaw: From ads-dependent to a second channel that pays for itself](https://clicknlikes.com/work/aidbylaw/): A Pan-India legal consultation platform came to us wanting leads. Thirteen months later they had a scaled paid channel and an organic one built from zero.
+- [Adamas Films: A dark, cinematic home for a reel that already speaks for itself](https://clicknlikes.com/work/adamas-films/): A Mumbai production house that shoots for Disney, Viacom18, Star and Zee needed a website with the same restraint as its work. We built one from scratch.
+- [Kopa Seamless: One self-built page, and organic search became the lead engine](https://clicknlikes.com/work/kopa-seamless/): A Mumbai apparel manufacturer built their own one-page site and asked us for SEO only. It now drives most of their new leads.
+
+## Insights
+
+- [How do I know if my site's slow load speed is actually costing me leads?](https://clicknlikes.com/insights/slow-speed-costing-leads/): Speed loss is invisible by nature, nobody who leaves in three seconds ever writes to tell you why, but it is measurable if you know where to look.
+- [Service-area business vs. storefront: does local SEO work differently?](https://clicknlikes.com/insights/service-area-vs-storefront/): Plumbers, electricians and consultants who visit the customer play a different local SEO game than a clinic with a front door, and treating them the same costs both.
+- [What should a website cost, and what should be included?](https://clicknlikes.com/insights/website-cost-checklist/): Real 2026 India pricing, freelancer through agency, plus the checklist of what a proper build should never bill you as an extra.
+- [What's a realistic timeline to grow a following that actually converts?](https://clicknlikes.com/insights/social-growth-timeline/): Followers move first and fastest; enquiries lag behind them by design, and knowing the real shape of that gap stops a working strategy from being cancelled too early.
+- [Instagram vs. LinkedIn: where should a B2B service business actually post?](https://clicknlikes.com/insights/instagram-vs-linkedin-b2b/): Roughly 4 out of every 5 B2B social leads come from one platform, which should settle where a small team's limited time actually goes.
+- [How much should I actually budget for Google Ads?](https://clicknlikes.com/insights/paid-ads-budget/): Not a fixed number, a formula: what a realistic starting budget looks like once you know your industry's typical cost per click and your own conversion rate.
+- [Why does a good website cost more than the cheap quote I was given?](https://clicknlikes.com/insights/cheap-website-cost/): The gap is rarely the design. It is almost always in what happens after launch: speed, structure and whether the site is actually built to rank.
+- [How do I get more Google reviews without begging for them?](https://clicknlikes.com/insights/reviews-that-convert/): Review count is one of the most consistently weighted local-pack signals in the industry's own ranking-factor research. Here is the ask that actually works.
+- [Does my business really need to post on social media every day?](https://clicknlikes.com/insights/social-every-day/): Platforms rewarded raw volume for years; the research behind 2026's algorithms favours 2 to 4 consistent posts a week over a daily habit that burns out by month two.
+- [How much should a small business actually spend on marketing?](https://clicknlikes.com/insights/marketing-budget-small-business/): Three real benchmarks, from the SBA to Gartner, land between 7% and 9.4% of revenue, and the honest answer is which end of that range fits your stage.
+- [Should you invest in SEO or Google Ads first?](https://clicknlikes.com/insights/seo-or-ads-first/): The honest answer depends on three things: your timeline, your margins, and whether you can wait for compounding.
+- [Why your clinic needs to worry about ChatGPT, not just Google](https://clicknlikes.com/insights/ai-search/): AI answers name two or three businesses. Either you're in the answer, or you don't exist for that searcher.
+- [The Google Business Profile mistakes costing you the local pack](https://clicknlikes.com/insights/gbp-mistakes/): Five fixable errors we find in almost every clinic and salon profile we audit.
+- [How to write one blog post that ranks and gets cited by AI](https://clicknlikes.com/insights/blog-that-ranks/): The structure we use for every client blog, built for humans and language models both.
+- [Your website is losing bookings before anyone even calls](https://clicknlikes.com/insights/3-second-test/): The three-second test we run on every client site before touching a line of code.
+
+## Company
+
+- [About](https://clicknlikes.com/about/)
+- [Pricing](https://clicknlikes.com/pricing/)
+- [Why Organic (vs. paid ads)](https://clicknlikes.com/why-organic/)
+- [FAQ](https://clicknlikes.com/faq/)
+- [Contact](https://clicknlikes.com/contact/)
+
+## Optional
+
+- [Privacy Policy](https://clicknlikes.com/privacy/)
+- [Terms](https://clicknlikes.com/terms/)
