@@ -11,57 +11,62 @@ import { SCHEMA_TYPES, buildJsonLd } from '../../lib/schemaRules';
 const fieldCls = 'w-full rounded-[10px] border-[1.5px] border-navy/10 bg-white px-4 py-3 text-sm text-navy outline-none focus:border-teal';
 const labelCls = 'mb-1.5 block text-[12.5px] font-semibold text-navy';
 
+// `advanced: true` fields are real and still generated into the final JSON-LD,
+// they just start collapsed behind "Show more" so the default form only shows
+// what a given schema type actually requires (per schemaRules.js) plus the
+// one or two fields that make the result genuinely useful. Fewer visible
+// fields before the email gate, same capability for anyone who wants it.
 const FIELD_DEFS = {
   Organization: [
     { id: 'name', label: 'Organization name', required: true },
     { id: 'url', label: 'Website URL', required: true, placeholder: 'https://yourwebsite.com' },
-    { id: 'logo', label: 'Logo URL', placeholder: 'https://yourwebsite.com/logo.png' },
-    { id: 'description', label: 'Short description', kind: 'textarea' },
-    { id: 'phone', label: 'Phone' },
-    { id: 'email', label: 'Contact email' },
-    { id: 'sameAs', label: 'Social profile URLs (comma-separated)', placeholder: 'https://linkedin.com/company/..., https://instagram.com/...' },
+    { id: 'logo', label: 'Logo URL', placeholder: 'https://yourwebsite.com/logo.png', advanced: true },
+    { id: 'description', label: 'Short description', kind: 'textarea', advanced: true },
+    { id: 'phone', label: 'Phone', advanced: true },
+    { id: 'email', label: 'Contact email', advanced: true },
+    { id: 'sameAs', label: 'Social profile URLs (comma-separated)', placeholder: 'https://linkedin.com/company/..., https://instagram.com/...', advanced: true },
   ],
   LocalBusiness: [
     { id: 'name', label: 'Business name', required: true },
-    { id: 'url', label: 'Website URL' },
-    { id: 'image', label: 'Photo URL' },
-    { id: 'description', label: 'Short description', kind: 'textarea' },
-    { id: 'phone', label: 'Phone' },
     { id: 'street', label: 'Street address', required: true },
     { id: 'city', label: 'City', required: true },
-    { id: 'region', label: 'State / region' },
-    { id: 'postalCode', label: 'Postal code' },
-    { id: 'country', label: 'Country code', placeholder: 'IN' },
-    { id: 'priceRange', label: 'Price range', placeholder: '₹₹' },
-    { id: 'hours', label: 'Opening hours (comma-separated)', placeholder: 'Mon-Fri 10:00-19:00, Sat 10:00-14:00' },
-    { id: 'sameAs', label: 'Social profile URLs (comma-separated)' },
+    { id: 'url', label: 'Website URL', advanced: true },
+    { id: 'image', label: 'Photo URL', advanced: true },
+    { id: 'description', label: 'Short description', kind: 'textarea', advanced: true },
+    { id: 'phone', label: 'Phone', advanced: true },
+    { id: 'region', label: 'State / region', advanced: true },
+    { id: 'postalCode', label: 'Postal code', advanced: true },
+    { id: 'country', label: 'Country code', placeholder: 'IN', advanced: true },
+    { id: 'priceRange', label: 'Price range', placeholder: '₹₹', advanced: true },
+    { id: 'hours', label: 'Opening hours (comma-separated)', placeholder: 'Mon-Fri 10:00-19:00, Sat 10:00-14:00', advanced: true },
+    { id: 'sameAs', label: 'Social profile URLs (comma-separated)', advanced: true },
   ],
   Article: [
     { id: 'headline', label: 'Headline', required: true },
     { id: 'image', label: 'Featured image URL', required: true },
     { id: 'datePublished', label: 'Date published', kind: 'date', required: true },
-    { id: 'dateModified', label: 'Date modified', kind: 'date' },
     { id: 'authorName', label: 'Author name', required: true },
-    { id: 'publisherName', label: 'Publisher / business name' },
-    { id: 'publisherLogo', label: 'Publisher logo URL' },
-    { id: 'description', label: 'Short description', kind: 'textarea' },
+    { id: 'dateModified', label: 'Date modified', kind: 'date', advanced: true },
+    { id: 'publisherName', label: 'Publisher / business name', advanced: true },
+    { id: 'publisherLogo', label: 'Publisher logo URL', advanced: true },
+    { id: 'description', label: 'Short description', kind: 'textarea', advanced: true },
   ],
   Product: [
     { id: 'name', label: 'Product name', required: true },
     { id: 'image', label: 'Product image URL' },
-    { id: 'description', label: 'Short description', kind: 'textarea' },
-    { id: 'brand', label: 'Brand name' },
-    { id: 'sku', label: 'SKU' },
     { id: 'price', label: 'Price' },
-    { id: 'priceCurrency', label: 'Currency code', placeholder: 'INR' },
     { id: 'availability', label: 'Availability', kind: 'select', options: ['InStock', 'OutOfStock', 'PreOrder'] },
-    { id: 'ratingValue', label: 'Average rating (optional)', placeholder: 'e.g. 4.5' },
-    { id: 'reviewCount', label: 'Number of reviews (optional)', placeholder: 'e.g. 128' },
+    { id: 'description', label: 'Short description', kind: 'textarea', advanced: true },
+    { id: 'brand', label: 'Brand name', advanced: true },
+    { id: 'sku', label: 'SKU', advanced: true },
+    { id: 'priceCurrency', label: 'Currency code', placeholder: 'INR', advanced: true },
+    { id: 'ratingValue', label: 'Average rating (optional)', placeholder: 'e.g. 4.5', advanced: true },
+    { id: 'reviewCount', label: 'Number of reviews (optional)', placeholder: 'e.g. 128', advanced: true },
   ],
   HowTo: [
     { id: 'name', label: 'How-to title', required: true },
     { id: 'description', label: 'Short description', kind: 'textarea' },
-    { id: 'totalTime', label: 'Total time (ISO 8601, optional)', placeholder: 'PT30M = 30 minutes' },
+    { id: 'totalTime', label: 'Total time (ISO 8601, optional)', placeholder: 'PT30M = 30 minutes', advanced: true },
   ],
 };
 
@@ -94,13 +99,17 @@ export default function SchemaGenerator() {
   const [phase, setPhase] = useState('idle'); // idle | done
   const [result, setResult] = useState(null);
   const [copied, setCopied] = useState(false);
+  const [showAdvanced, setShowAdvanced] = useState(false);
 
   const set = (id, v) => setFields((p) => ({ ...p, [id]: v }));
   const defs = FIELD_DEFS[type] || [];
+  const primaryDefs = defs.filter((f) => !f.advanced);
+  const advancedDefs = defs.filter((f) => f.advanced);
 
   function switchType(t) {
     setType(t);
     setFields({});
+    setShowAdvanced(false);
     setError('');
     setPhase('idle');
     setResult(null);
@@ -184,7 +193,23 @@ export default function SchemaGenerator() {
 
       <form onSubmit={submit} className="mt-6 space-y-5">
         {type !== 'FAQPage' && (
-          <div className="grid gap-4 sm:grid-cols-2">{defs.map(renderField)}</div>
+          <>
+            <div className="grid gap-4 sm:grid-cols-2">{primaryDefs.map(renderField)}</div>
+            {advancedDefs.length > 0 && (
+              <div>
+                <button
+                  type="button"
+                  onClick={() => setShowAdvanced((v) => !v)}
+                  className="text-sm font-semibold text-teal-dark hover:text-navy"
+                >
+                  {showAdvanced ? '− Hide optional fields' : `+ Add ${advancedDefs.length} more optional field${advancedDefs.length === 1 ? '' : 's'}`}
+                </button>
+                {showAdvanced && (
+                  <div className="mt-4 grid gap-4 rounded-xl border border-navy/10 bg-off p-4 sm:grid-cols-2">{advancedDefs.map(renderField)}</div>
+                )}
+              </div>
+            )}
+          </>
         )}
 
         {type === 'FAQPage' && (
