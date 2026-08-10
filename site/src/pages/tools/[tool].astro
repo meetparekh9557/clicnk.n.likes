@@ -160,7 +160,7 @@ const iconWrap = 'mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 t
 
 <Base title={meta.title} description={meta.description} jsonLd={jsonLd} hideCta>
   <Breadcrumbs trail={trail} />
-  <section class="mx-auto max-w-3xl px-[5vw] pt-14 pb-8 text-center lg:pt-20">
+  <section class="mx-auto max-w-5xl px-[5vw] pt-14 pb-8 text-center lg:pt-20">
     <a href={withBase('/tools/')} class="inline-flex items-center gap-1.5 text-[13px] font-semibold text-teal-dark transition-colors hover:text-navy">
       <ArrowLeft size={15} stroke-width={2.5} aria-hidden="true" /> All free tools
     </a>
@@ -169,7 +169,7 @@ const iconWrap = 'mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 t
     <p class="reveal mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-navy/70" style="--d:120ms">{meta.lede}</p>
   </section>
 
-  <section class="mx-auto max-w-3xl px-[5vw] pb-16">
+  <section class="mx-auto max-w-5xl px-[5vw] pb-16">
     <div class="reveal">
       {tool.slug === 'website-speed' && <SpeedCheck client:load toolsHref={withBase('/tools/')} />}
       {tool.slug === 'first-impression' && <SnapshotCheck client:load toolsHref={withBase('/tools/')} />}
@@ -182,10 +182,10 @@ const iconWrap = 'mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 t
 
   <!-- Real explanatory content: what the check measures and why it matters -->
   {meta.body && (
-    <section class="mx-auto max-w-3xl px-[5vw] pb-16">
+    <section class="mx-auto max-w-5xl px-[5vw] pb-16">
       <div class="reveal rounded-2xl border border-navy/10 bg-off/60 p-6 sm:p-8">
         <h2 class="font-display text-xl font-bold text-navy">What this check actually measures</h2>
-        <p class="mt-3 text-[15px] leading-relaxed text-navy/70">{meta.body.intro}</p>
+        <p class="mt-3 max-w-3xl text-[15px] leading-relaxed text-navy/70">{meta.body.intro}</p>
         <ul class="mt-5 space-y-3">
           {meta.body.checks.map((c) => (
             <li class="text-[14.5px] leading-relaxed text-navy/70">
