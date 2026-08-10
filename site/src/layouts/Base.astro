@@ -10,6 +10,12 @@ import { ClientRouter } from 'astro:transitions';
 import { withBase } from '../lib/url';
 import { OG_DEFAULT, ORG_NAME, organizationSchema, webSiteSchema } from '../lib/seo';
 import '../styles/global.css';
+// Preloaded so the browser starts fetching these the moment it sees <head>,
+// instead of waiting to parse global.css and discover the @font-face rules.
+// These two weights are on every page (body text + headings); the rest
+// still load on-demand via font-display: swap.
+import dmSans400 from '@fontsource/dm-sans/files/dm-sans-latin-400-normal.woff2?url';
+import spaceGrotesk700 from '@fontsource/space-grotesk/files/space-grotesk-latin-700-normal.woff2?url';
 
 interface Props {
   title: string;
@@ -45,6 +51,8 @@ const structuredData = [
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preload" as="font" type="font/woff2" href={dmSans400} crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href={spaceGrotesk700} crossorigin />
     <!-- Google Search Console domain verification. Harmless on preview
          (noindex), needed on production so the property stays verified. -->
     <meta name="google-site-verification" content="CbG8y7rYgHT9oBtl6n8ptMmvLdN_G0rkvGfyp5SlrnQ" />
