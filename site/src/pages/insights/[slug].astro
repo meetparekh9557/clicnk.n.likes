@@ -132,14 +132,22 @@ const relatedArticles = articles
     <div class="lg:grid lg:grid-cols-[1fr_260px] lg:gap-12">
       <!-- Main content column: image, TOC (mobile only), body, FAQ -->
       <div class="min-w-0">
-        <img
-          src={withBase(featuredPath)}
-          width="1200"
-          height="630"
-          alt={article.title}
-          class="reveal w-full rounded-2xl border border-navy/10 shadow-[0_18px_44px_rgba(26,43,74,0.10)]"
-          style="--d:180ms"
-        />
+        <picture>
+          <source
+            type="image/webp"
+            srcset={[480, 800, 1200].map((w) => `${withBase(`/insights/${article.slug}-${w}.webp`)} ${w}w`).join(', ')}
+            sizes="(min-width: 1024px) 800px, 100vw"
+          />
+          <img
+            src={withBase(featuredPath)}
+            width="1200"
+            height="630"
+            alt={article.title}
+            fetchpriority="high"
+            class="reveal w-full rounded-2xl border border-navy/10 shadow-[0_18px_44px_rgba(26,43,74,0.10)]"
+            style="--d:180ms"
+          />
+        </picture>
 
         {toc.length > 0 && (
           <nav class="reveal mt-8 rounded-2xl border border-navy/10 bg-off/60 p-5 lg:hidden" aria-label="Table of contents" style="--d:220ms">

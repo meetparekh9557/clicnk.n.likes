@@ -72,14 +72,21 @@ const jsonLd = [
           data-filter-item
           data-cats={a.categories.join('|')}
         >
-          <img
-            src={withBase(`/insights/${a.slug}.png`)}
-            width="1200"
-            height="630"
-            alt={a.title}
-            loading="lazy"
-            class="block aspect-[1200/630] w-full object-cover"
-          />
+          <picture>
+            <source
+              type="image/webp"
+              srcset={[480, 800, 1200].map((w) => `${withBase(`/insights/${a.slug}-${w}.webp`)} ${w}w`).join(', ')}
+              sizes="(min-width: 640px) 50vw, 100vw"
+            />
+            <img
+              src={withBase(`/insights/${a.slug}.png`)}
+              width="1200"
+              height="630"
+              alt={a.title}
+              loading="lazy"
+              class="block aspect-[1200/630] w-full object-cover"
+            />
+          </picture>
           <div class="p-6">
             <!-- Every category the piece sits in, so the card explains why it
                  turns up under more than one tab in the filter. -->

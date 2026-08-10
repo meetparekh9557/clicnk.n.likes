@@ -12,6 +12,14 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
+import sharp from 'sharp';
+
+// On-page <img>/<picture> tags never load the raw 1200x630 PNG (300-360KB) -
+// they load one of these WebP variants sized to the slot they actually
+// render in (see insights/index.astro and insights/[slug].astro). The PNG
+// stays the OG/share image (platforms fetch that from the <meta> tag, not
+// from page markup), so it's still written at full size below.
+const RESPONSIVE_WIDTHS = [480, 800, 1200];
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, '..'); // site/
@@ -96,6 +104,15 @@ const page = await browser.newPage({ viewport: { width: 1200, height: 630 }, dev
 await page.setContent(html, { waitUntil: 'networkidle' });
 await page.waitForTimeout(150);
 const out = resolve(ROOT, 'public/insights', `${slug}.png`);
-await page.locator('.card').screenshot({ path: out });
+const pngBuffer = await page.locator('.card').screenshot();
 await browser.close();
+
+const { writeFileSync } = await import('node:fs');
+writeFileSync(out, pngBuffer);
 console.log('wrote', out);
+
+for (const width of RESPONSIVE_WIDTHS) {
+  const webpOut = resolve(ROOT, 'public/insights', `${slug}-${width}.webp`);
+  await sharp(pngBuffer).resize({ width }).webp({ quality: 82 }).toFile(webpOut);
+  console.log('wrote', webpOut);
+}
