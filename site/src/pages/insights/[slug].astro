@@ -7,7 +7,6 @@ import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import InlineCta from '../../components/InlineCta.astro';
 import RelatedReading from '../../components/RelatedReading.astro';
 import { articles } from '../../data/articles';
-import { serviceDetails, categoryToServiceSlug } from '../../data/services';
 import { withBase } from '../../lib/url';
 import { abs, articleSchema, breadcrumbSchema } from '../../lib/seo';
 
@@ -103,19 +102,15 @@ const mid = Math.ceil(paras.length / 2);
 const bodyTop = canSplit ? paras.slice(0, mid).join('</p>') + '</p>' : bodyWithIds;
 const bodyRest = canSplit ? paras.slice(mid).join('</p>') : '';
 
-// Internal-linking audit (task #11): every article now links to sibling
-// articles that share a category, and to the service page(s) its topic
-// maps to - so authority flows both sideways (article to article) and
-// down (article to the page that sells).
+// Internal-linking audit (task #11): every article links to sibling
+// articles that share a category, so authority flows sideways (article to
+// article). The down-link (article to the service page it sells) lives
+// inline in the body copy on the hub's own transactional keyword instead
+// of a separate card - see the internal-linking convention in /AGENTS.md.
 const relatedArticles = articles
   .filter((a) => a.slug !== article.slug && a.categories.some((c) => article.categories.includes(c)))
   .slice(0, 3)
   .map((a) => ({ kicker: a.tag, title: a.title, text: a.excerpt, href: `/insights/${a.slug}/` }));
-const relatedServiceSlugsForArticle = [...new Set(article.categories.map((c) => categoryToServiceSlug[c]).filter(Boolean))];
-const relatedServices = relatedServiceSlugsForArticle
-  .map((slug) => serviceDetails.find((s) => s.slug === slug))
-  .filter((s): s is (typeof serviceDetails)[number] => Boolean(s))
-  .map((s) => ({ title: s.title, text: s.lead, href: `/services/${s.slug}/` }));
 ---
 
 <Base title={meta.title} description={meta.description} ogType="article" ogImage={abs(featuredPath)} jsonLd={jsonLd}>
@@ -196,7 +191,7 @@ const relatedServices = relatedServiceSlugsForArticle
       <!-- Sidebar: sticky TOC + sibling posts, desktop only. The narrow
            reading column stays narrow for line-length; this is what the
            freed-up side space does instead of sitting empty. -->
-      {(toc.length > 0 || relatedArticles.length > 0 || relatedServices.length > 0) && (
+      {(toc.length > 0 || relatedArticles.length > 0) && (
         <aside class="hidden lg:block">
           <div class="sticky top-24 space-y-5">
             {toc.length > 0 && (
@@ -226,30 +221,17 @@ const relatedServices = relatedServiceSlugsForArticle
                 </ul>
               </div>
             )}
-            {relatedServices.length > 0 && (
-              <div class="reveal rounded-2xl border border-teal/30 bg-teal/[0.06] p-5" style="--d:300ms">
-                <p class="text-xs font-semibold tracking-[0.12em] text-teal-dark uppercase">The service this connects to</p>
-                <ul class="mt-3 space-y-4">
-                  {relatedServices.map((s) => (
-                    <li>
-                      <a href={withBase(s.href)} class="group block">
-                        <p class="font-display text-[14.5px] leading-snug font-semibold text-navy transition-colors group-hover:text-teal-dark">{s.title}</p>
-                        <p class="mt-1 text-[13px] leading-snug text-navy/60">{s.text}</p>
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
           </div>
         </aside>
       )}
     </div>
   </div>
 
-  <!-- Desktop has these in the sticky sidebar already; mobile has no
-       sidebar (hidden lg:block), so it needs its own copy here or these
-       links vanish entirely below the lg breakpoint. -->
+  <!-- Desktop has this in the sticky sidebar already; mobile has no
+       sidebar (hidden lg:block), so it needs its own copy here or this
+       link vanishes entirely below the lg breakpoint. No separate service
+       card: every article already links to its hub service inline, in the
+       body copy, using the hub's own transactional keyword - that's the
+       real internal link, this card was just repeating it. -->
   <RelatedReading heading="Keep reading" items={relatedArticles} class="lg:hidden" />
-  <RelatedReading heading="The service this connects to" items={relatedServices} class="pt-0 lg:hidden" />
 </Base>
