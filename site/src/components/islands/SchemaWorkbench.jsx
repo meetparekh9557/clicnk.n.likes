@@ -369,6 +369,9 @@ export default function SchemaWorkbench() {
             <span className="text-sm text-navy/55">/100</span>
           </div>
           {!analysis.hasAny && <p className="mt-2 text-sm text-navy/70">No schema markup found at all yet, so there's nothing pulling extra weight in your search results right now.</p>}
+          {analysis.hasAny && analysis.missingTypes.length > 0 && (
+            <p className="mt-2 text-[13px] leading-snug text-navy/55">This scores the one URL you gave us. Different schema types belong on different pages, Local Business on a contact or location page, Article on a blog post, not necessarily here, so "not present" below means not on this page, not a gap across your whole site.</p>
+          )}
 
           <div className="mt-5 space-y-3">
             {analysis.results.filter((r) => r.known).map((r) => (

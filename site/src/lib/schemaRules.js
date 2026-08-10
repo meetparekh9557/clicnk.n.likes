@@ -88,7 +88,7 @@ export function scoreSchemaObject(obj) {
   const oneOfOk = !rule.oneOf || rule.oneOf.some((p) => hasProp(obj, p));
   const recommendedMissing = rule.recommended.filter((p) => !hasProp(obj, p));
   const reqTotal = rule.required.length + (rule.oneOf ? 1 : 0);
-  const reqFound = (rule.required.length - requiredMissing.length) + (oneOfOk ? 1 : 0);
+  const reqFound = (rule.required.length - requiredMissing.length) + (rule.oneOf ? (oneOfOk ? 1 : 0) : 0);
   const recTotal = rule.recommended.length;
   const recFound = recTotal - recommendedMissing.length;
   const pct = Math.round((reqTotal ? (reqFound / reqTotal) * 70 : 70) + (recTotal ? (recFound / recTotal) * 30 : 30));
