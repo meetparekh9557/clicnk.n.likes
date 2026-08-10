@@ -1,11 +1,11 @@
-// Live Speed & Core Web Vitals check. URL + email in, a real Google
-// PageSpeed Insights run out: Lighthouse lab metrics (LCP, CLS, Total
-// Blocking Time, FCP) plus CrUX real-user field data when Google has
-// enough traffic for the URL. Every number here is measured live this
-// session, so it is labelled verified; if PSI can't be reached (or the
-// check isn't switched on yet in the backend) the fallback is honest and
-// points to the on-page Website Health scan. Same email gate and report
-// flow as every other tool.
+// Live Speed & Core Web Vitals check. URL in, a real Google PageSpeed
+// Insights run out: Lighthouse lab metrics (LCP, CLS, Total Blocking Time,
+// FCP) plus CrUX real-user field data when Google has enough traffic for
+// the URL. Every number here is measured live this session, so it is
+// labelled verified. The score itself runs free, no email required; email
+// unlocks the full metric-by-metric breakdown, same pattern as every other
+// tool - HubSpot's Website Grader is the canonical version of this: score
+// first, email unlocks the detail.
 import { useState } from 'react';
 import {
   OWNER_EMAIL,
@@ -40,7 +40,7 @@ const plainField = (c) => ({ FAST: 'fast', AVERAGE: 'average', SLOW: 'slow' }[c]
 export default function SpeedCheck({ toolsHref }) {
   const [url, setUrl] = useState('');
   const [email, setEmail] = useState('');
-  const [phase, setPhase] = useState('idle'); // idle | scanning | done | failed | soon
+  const [phase, setPhase] = useState('idle'); // idle | scanning | scored | sending | done | failed | soon
   const [step, setStep] = useState(0);
   const [result, setResult] = useState(null);
 
@@ -58,12 +58,6 @@ export default function SpeedCheck({ toolsHref }) {
       // hasn't been redeployed with the pagespeed action yet. Both mean the
       // live check isn't switched on, so show the honest "coming" state.
       if (psi.reason === 'not_configured' || psi.reason === 'bad_request') { setPhase('soon'); return; }
-      sendFromClicknlikes({
-        toEmail: OWNER_EMAIL,
-        replyTo: email,
-        subject: `🔔 New Speed check lead: ${email}`,
-        bodyText: `New Live Speed & Core Web Vitals lead:\n\nEmail: ${email}\nURL: ${url}\nResult: live PSI measurement FAILED (${psi.reason}); pointed to the on-page Website Health scan.`,
-      });
       setPhase('failed');
       return;
     }
@@ -78,15 +72,8 @@ export default function SpeedCheck({ toolsHref }) {
       { label: 'The first thing shows up', tech: 'fcp', v: psi.fcpText, b: band(psi.fcpMs, 1800, 3000), sub: 'When the very first piece of your page paints, the end of the blank-screen wait.' },
     ].filter((r) => r.v);
 
-    // Keep the emailed table cells short so it never overflows a phone: the
-    // value goes in "what we found", a one-word verdict in "impact". The
-    // fuller "why it matters" lives on-screen and in the next steps below.
-    const factors = rows.map((r) => fact(r.label, r.v, 'verified', BAND[r.b].label));
-    if (psi.hasField) {
-      factors.push(fact('Real visitors’ experience', `Rated ${plainField(psi.fieldOverall)}`, 'verified', 'field data'));
-    }
     const worst = rows.filter((r) => r.b === 'poor' || r.b === 'needs').sort((a, b) => (a.b === 'poor' ? -1 : 1))[0];
-    const interpretation = `${psi.score}/100. ${
+    const interpretation = `${
       psi.score >= 90
         ? 'Your site loads fast on mobile — speed is not what is costing you visitors.'
         : psi.score >= 50
@@ -94,6 +81,23 @@ export default function SpeedCheck({ toolsHref }) {
           : `Your page is slow enough to lose visitors and rankings before anyone even sees it${worst ? `. Start with “${worst.label.toLowerCase()}” (${worst.v})` : ''}.`
     }`;
 
+    setResult({ psi, rows, score: psi.score, interpretation });
+    setPhase('scored');
+  }
+
+  function sendReport(evt) {
+    evt.preventDefault();
+    if (!email.trim()) return;
+    setPhase('sending');
+
+    const { psi, rows, score, interpretation } = result;
+    // Keep the emailed table cells short so it never overflows a phone: the
+    // value goes in "what we found", a one-word verdict in "impact". The
+    // fuller "why it matters" lives on-screen and in the next steps below.
+    const factors = rows.map((r) => fact(r.label, r.v, 'verified', BAND[r.b].label));
+    if (psi.hasField) {
+      factors.push(fact('Real visitors’ experience', `Rated ${plainField(psi.fieldOverall)}`, 'verified', 'field data'));
+    }
     const nextSteps = [];
     rows.forEach((r) => {
       if (r.b === 'good') return;
@@ -104,30 +108,30 @@ export default function SpeedCheck({ toolsHref }) {
     });
     if (!nextSteps.length) nextSteps.push('Your speed is healthy: keep it that way by watching image sizes and third-party scripts as the site grows.');
 
-    const bodyText = `Hi,\n\nYour Live Core Web Vitals report for ${psi.finalUrl} (mobile), measured just now by Google PageSpeed Insights:\n\nPerformance score: ${psi.score}/100\n${interpretation}\n\nWhat we measured:\n${factors.map((f) => `• ${f.name}: ${f.found} [VERIFIED LIVE]`).join('\n')}\n\nYour next steps:\n${nextSteps.map((s, i) => `${i + 1}. ${s}`).join('\n')}\n\nReply to this email or grab a quote at clicknlikes.com for a full performance rebuild plan.\n\nBest,\nClick.n.likes\nbusiness@clicknlikes.com`;
+    const bodyText = `Hi,\n\nYour Live Core Web Vitals report for ${psi.finalUrl} (mobile), measured just now by Google PageSpeed Insights:\n\nPerformance score: ${score}/100\n${interpretation}\n\nWhat we measured:\n${factors.map((f) => `• ${f.name}: ${f.found} [VERIFIED LIVE]`).join('\n')}\n\nYour next steps:\n${nextSteps.map((s, i) => `${i + 1}. ${s}`).join('\n')}\n\nReply to this email or grab a quote at clicknlikes.com for a full performance rebuild plan.\n\nBest,\nClick.n.likes\nbusiness@clicknlikes.com`;
     const bodyHtml = buildReportEmailHtml({
       toolLabel: 'Live Speed & Core Web Vitals',
       forLine: `Measured live for ${psi.finalUrl} (mobile) · ${new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}`,
-      scoreDisplay: `${psi.score}/100`,
+      scoreDisplay: `${score}/100`,
       indexLabel: 'Mobile performance score',
       interpretation,
       liveNote: `Measured live from ${psi.finalUrl} via Google PageSpeed Insights just now`,
       factors,
       nextSteps,
     });
-    sendFromClicknlikes({ toEmail: email, subject: `Your Core Web Vitals report: ${psi.score}/100`, bodyText, bodyHtml });
+    sendFromClicknlikes({ toEmail: email, subject: `Your Core Web Vitals report: ${score}/100`, bodyText, bodyHtml });
     sendFromClicknlikes({
       toEmail: OWNER_EMAIL,
       replyTo: email,
-      subject: `🔔 New Speed check lead: ${email} (${psi.score}/100)`,
-      bodyText: `New Live Speed & Core Web Vitals lead:\n\nEmail: ${email}\nURL: ${psi.finalUrl}\nScore: ${psi.score}/100 (mobile)\nData source: LIVE PageSpeed Insights\nLCP ${psi.lcpText} | CLS ${psi.clsText} | TBT ${psi.tbtText} | FCP ${psi.fcpText} | field ${psi.hasField ? psi.fieldOverall : 'none'}`,
+      subject: `🔔 New Speed check lead: ${email} (${score}/100)`,
+      bodyText: `New Live Speed & Core Web Vitals lead:\n\nEmail: ${email}\nURL: ${psi.finalUrl}\nScore: ${score}/100 (mobile)\nData source: LIVE PageSpeed Insights\nLCP ${psi.lcpText} | CLS ${psi.clsText} | TBT ${psi.tbtText} | FCP ${psi.fcpText} | field ${psi.hasField ? psi.fieldOverall : 'none'}`,
     });
-    setResult({ psi, rows, score: psi.score });
     setPhase('done');
   }
 
-  if (phase === 'done' && result) {
-    const { psi, rows, score } = result;
+  if ((phase === 'scored' || phase === 'sending' || phase === 'done') && result) {
+    const { psi, rows, score, interpretation } = result;
+    const done = phase === 'done';
     return (
       <div className="rounded-2xl border border-teal/40 bg-white p-6 shadow-[0_18px_44px_rgba(26,43,74,0.10)] sm:p-8">
         <span className="rounded-full bg-teal/10 px-3 py-1 text-xs font-semibold text-teal-dark">✅ Measured live just now · mobile</span>
@@ -140,30 +144,56 @@ export default function SpeedCheck({ toolsHref }) {
             <p className="mt-1 text-sm font-semibold" style={{ color: scoreColor(score) }}>{verdictWord(score)}</p>
           </div>
         </div>
-        <ul className="mt-5 space-y-3.5">
-          {rows.map((r) => (
-            <li key={r.label} className="flex items-start gap-3 border-b border-navy/5 pb-3.5">
-              <div className="min-w-0">
-                <p className="text-sm font-semibold text-navy">{r.label}</p>
-                <p className="mt-0.5 text-xs leading-relaxed text-navy/55">{r.sub}</p>
-              </div>
-              <div className="ml-auto shrink-0 pl-2 text-right">
-                <div className="font-display text-sm font-bold tabular-nums text-navy">{r.v}</div>
-                <div className="text-xs font-semibold" style={{ color: BAND[r.b].fg }}>{BAND[r.b].label}</div>
-              </div>
-            </li>
-          ))}
-        </ul>
-        {psi.hasField && (
-          <p className="mt-4 rounded-lg bg-teal/[0.06] px-3 py-2 text-xs text-navy/70">
-            And this isn’t just a lab test: real people loading your page right now experience it as <b className="text-teal-dark">{plainField(psi.fieldOverall)}</b>.
-          </p>
+        <p className="mt-3 text-sm leading-relaxed text-navy/75">{interpretation}</p>
+
+        {!done && (
+          <form onSubmit={sendReport} className="mt-5 border-t border-navy/10 pt-5">
+            <label className="mb-1.5 block text-[12.5px] font-semibold text-navy">Email (for the full LCP/CLS/blocking-time breakdown + next steps)</label>
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <input
+                type="email" required value={email} onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@business.com"
+                className="w-full rounded-full border-[1.5px] border-navy/15 bg-white px-5 py-3.5 text-sm text-navy outline-none transition-colors focus:border-teal sm:flex-1"
+              />
+              <button
+                type="submit" disabled={phase === 'sending'}
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-navy px-6 py-3.5 text-sm font-semibold whitespace-nowrap text-white transition-all duration-300 hover:bg-coral disabled:opacity-60"
+              >
+                {phase === 'sending' ? <><span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />Sending…</> : 'Get my full report'}
+              </button>
+            </div>
+            <p className="mt-2 text-[11px] text-navy/45">Every metric behind this score, why it matters, and your next steps, emailed and shown here.</p>
+          </form>
         )}
-        <p className="mt-4 text-xs text-teal-dark">✓ Your full report was emailed to {email}.</p>
-        <p className="mt-1 text-xs text-navy/55">
-          Measured live on your real page, nothing self-reported.{' '}
-          <a href={toolsHref} className="text-teal-dark underline">Run the on-page health scan too →</a>
-        </p>
+
+        {done && (
+          <>
+            <ul className="mt-5 space-y-3.5">
+              {rows.map((r) => (
+                <li key={r.label} className="flex items-start gap-3 border-b border-navy/5 pb-3.5">
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold text-navy">{r.label}</p>
+                    <p className="mt-0.5 text-xs leading-relaxed text-navy/55">{r.sub}</p>
+                  </div>
+                  <div className="ml-auto shrink-0 pl-2 text-right">
+                    <div className="font-display text-sm font-bold tabular-nums text-navy">{r.v}</div>
+                    <div className="text-xs font-semibold" style={{ color: BAND[r.b].fg }}>{BAND[r.b].label}</div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+            {psi.hasField && (
+              <p className="mt-4 rounded-lg bg-teal/[0.06] px-3 py-2 text-xs text-navy/70">
+                And this isn’t just a lab test: real people loading your page right now experience it as <b className="text-teal-dark">{plainField(psi.fieldOverall)}</b>.
+              </p>
+            )}
+            <p className="mt-4 text-xs text-teal-dark">✓ Your full report was emailed to {email}.</p>
+            <p className="mt-1 text-xs text-navy/55">
+              Measured live on your real page, nothing self-reported.{' '}
+              <a href={toolsHref} className="text-teal-dark underline">Run the on-page health scan too →</a>
+            </p>
+          </>
+        )}
       </div>
     );
   }
@@ -175,11 +205,6 @@ export default function SpeedCheck({ toolsHref }) {
           type="text" required value={url} onChange={(e) => setUrl(e.target.value)}
           placeholder="yourwebsite.com" aria-label="Your website URL"
           className="w-full rounded-full border-[1.5px] border-teal/40 bg-teal/5 px-5 py-3.5 text-sm text-navy outline-none transition-colors focus:border-teal sm:flex-1"
-        />
-        <input
-          type="email" required value={email} onChange={(e) => setEmail(e.target.value)}
-          placeholder="you@business.com" aria-label="Your email (your full report is sent here)"
-          className="w-full rounded-full border-[1.5px] border-navy/15 bg-white px-5 py-3.5 text-sm text-navy outline-none transition-colors focus:border-teal sm:flex-1"
         />
         <button
           type="submit" disabled={phase === 'scanning'}
@@ -211,7 +236,7 @@ export default function SpeedCheck({ toolsHref }) {
       )}
       {phase !== 'scanning' && phase !== 'failed' && phase !== 'soon' && (
         <p className="mt-3 text-xs text-navy/60">
-          A real Google PageSpeed Insights measurement of your live page: LCP, layout shift, blocking time and real-user data, emailed in full. No call required.
+          A real Google PageSpeed Insights measurement of your live page, score shown immediately, no email required. Full LCP/CLS/blocking-time breakdown unlocked by email.
         </p>
       )}
     </form>

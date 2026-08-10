@@ -15,7 +15,6 @@ export const toolConfigs = {
       { id: 'seo_linking', type: 'checkbox', label: 'Is your blog updated with multi-layered internal linking?' },
       { id: 'seo_page23', type: 'checkbox', label: 'Are your target keywords ranking on page 2 or 3 instead of page 1?' },
       { id: 'seo_monthly', type: 'checkbox', label: 'Do you publish new content at least monthly?' },
-      { id: 'seo_email', type: 'email', label: 'Email (for your full report)' },
     ],
   },
   localseo: {
@@ -30,7 +29,6 @@ export const toolConfigs = {
       { id: 'localseo_reviews_competitor', type: 'number', label: "Top competitor's 5-star reviews", placeholder: 'e.g. 50' },
       { id: 'localseo_nap', type: 'checkbox', label: 'Is your NAP (Name, Address, Phone) exactly identical across the web?' },
       { id: 'localseo_weekly', type: 'checkbox', label: 'Are you publishing weekly updates to your Google profile?' },
-      { id: 'localseo_email', type: 'email', label: 'Email (for your full report)' },
     ],
   },
   aiseo: {
@@ -43,7 +41,6 @@ export const toolConfigs = {
       { id: 'aiseo_content', type: 'textarea', label: 'Paste your page copy', optional: true, placeholder: 'Paste the copy you want scanned (or use the URL below)...' },
       { id: 'aiseo_url', type: 'url', label: '...or your page URL', optional: true, placeholder: 'yourwebsite.com' },
       { id: 'aiseo_faq', type: 'checkbox', label: 'Does your site have an FAQ section answering real customer questions?' },
-      { id: 'aiseo_email', type: 'email', label: 'Email (for your full report)' },
     ],
   },
   social: {
@@ -58,7 +55,6 @@ export const toolConfigs = {
       { id: 'social_engagement', type: 'number', label: 'Avg engagements per post', placeholder: 'e.g. 80' },
       { id: 'social_freq', type: 'range', label: 'Posts per week', min: 0, max: 14, step: 1, default: 3 },
       { id: 'social_shoot', type: 'select', label: 'Do you need a shoot?', default: 'none', options: [{ v: 'none', l: 'No, I have assets' }, { v: 'photo', l: 'Photo shoot' }, { v: 'video', l: 'Video shoot' }, { v: 'both', l: 'Both photo & video' }] },
-      { id: 'social_email', type: 'email', label: 'Email (for your full report)' },
     ],
   },
   content: {
@@ -73,7 +69,6 @@ export const toolConfigs = {
       { id: 'content_freq', type: 'select', label: 'How often do you publish?', default: 'rarely', options: [{ v: 'weekly', l: 'Weekly or more' }, { v: 'fewmonth', l: 'A few times a month' }, { v: 'monthly', l: 'About once a month' }, { v: 'rarely', l: 'Rarely or never' }] },
       { id: 'content_pillars', type: 'checkbox', label: 'Every core service/topic has its own dedicated page' },
       { id: 'content_refresh', type: 'checkbox', label: 'You have refreshed old posts in the last 6 months' },
-      { id: 'content_email', type: 'email', label: 'Email (for your full report)' },
     ],
   },
   webdev: {
@@ -94,7 +89,6 @@ export const toolConfigs = {
       { id: 'webdev_cls', type: 'checkbox', label: 'Do images or text blocks shift while loading? (CLS symptom)' },
       { id: 'webdev_longform', type: 'checkbox', label: 'Does your main lead form have more than 5 fields?' },
       { id: 'webdev_slow', type: 'checkbox', label: 'Does your site take over 3 seconds to become interactive on mobile?' },
-      { id: 'webdev_email', type: 'email', label: 'Email (for your full report)' },
     ],
   },
   paid: {
@@ -112,7 +106,6 @@ export const toolConfigs = {
       { id: 'paid_homepage', type: 'checkbox', label: 'Are you sending ad traffic directly to your homepage?' },
       { id: 'paid_pixel', type: 'checkbox', label: 'Is your conversion tracking / pixel unverified?' },
       { id: 'paid_negkw', type: 'checkbox', label: 'Are you missing a negative keyword list?' },
-      { id: 'paid_email', type: 'email', label: 'Email (for your full report)' },
     ],
   },
   contentscore: {
@@ -124,7 +117,6 @@ export const toolConfigs = {
       { id: 'contentscore_keyword', type: 'text', label: 'Target keyword or topic', placeholder: 'e.g. seamless bras for daily wear' },
       { id: 'contentscore_content', type: 'textarea', label: 'Paste your content', optional: true, placeholder: 'Paste the full page copy you want scored...' },
       { id: 'contentscore_url', type: 'url', label: '...or your page URL', optional: true, placeholder: 'yourwebsite.com/blog/... (optional, checked live)' },
-      { id: 'contentscore_email', type: 'email', label: 'Email (for your full report)' },
     ],
   },
 };

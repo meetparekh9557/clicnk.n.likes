@@ -1,12 +1,14 @@
 // Generic per-channel gated tool. Renders a form from a config
 // (data/toolConfigs.js), optionally fetches live page facts when a URL is
-// given, scores with the matching verbatim scorer (lib/toolScorers.js),
-// shows the partial overview on screen and emails the full report - the
-// same "screen = overview, email = full deliverable" split as v1, with
-// email required before results and honest verified/self-reported labels.
+// given, scores with the matching verbatim scorer (lib/toolScorers.js).
+// The score itself runs and shows free, no email required - matching how
+// free "site grader" tools actually convert (HubSpot's Website Grader is
+// the canonical example: score first, email unlocks the full breakdown).
+// Email is required only to unlock the factor-by-factor detail, which is
+// then shown on screen AND emailed as the deliverable.
 import { useState } from 'react';
 import {
-  TOOL_SCAN_MIN_MS, OWNER_EMAIL, autoEmailReady,
+  TOOL_SCAN_MIN_MS, OWNER_EMAIL,
   fetchPageFacts, fetchPageSpeed, buildReportEmailHtml, sendFromClicknlikes,
 } from '../../lib/engine';
 import { toolScorers } from '../../lib/toolScorers';
@@ -22,18 +24,17 @@ export default function GatedTool({ config, serviceLabel }) {
     else defaults[f.id] = '';
   });
   const [vals, setVals] = useState(defaults);
-  const [phase, setPhase] = useState('idle'); // idle | scanning | done
+  const [phase, setPhase] = useState('idle'); // idle | scanning | scored | sending | done
   const [error, setError] = useState('');
   const [result, setResult] = useState(null);
   const [emailedTo, setEmailedTo] = useState('');
+  const [inputsSnapshot, setInputsSnapshot] = useState(null);
+  const [email, setEmail] = useState('');
 
   const set = (id, v) => setVals((p) => ({ ...p, [id]: v }));
-  const emailField = config.fields.find((f) => f.type === 'email');
 
-  async function submit(evt) {
+  async function scan(evt) {
     evt.preventDefault();
-    const email = vals[emailField.id];
-    if (!email) { setError('Enter your email: your full report is sent there.'); return; }
     if (config.requireOneOf && !config.requireOneOf.some((k) => String(vals[k] || '').trim())) {
       setError('Give us something to scan: paste your copy, or enter your page URL.');
       return;
@@ -51,8 +52,19 @@ export default function GatedTool({ config, serviceLabel }) {
     if (psi && psi.available) inputs._psi = psi;
 
     const r = toolScorers[config.scorer](inputs);
+    setResult(r);
+    setInputsSnapshot(inputs);
+    setPhase('scored');
+  }
 
-    // Full report by email (the deliverable); overview stays on screen.
+  function sendReport(evt) {
+    evt.preventDefault();
+    if (!email.trim()) { setError('Enter your email: your full report is sent there.'); return; }
+    setError('');
+    setPhase('sending');
+
+    const r = result;
+    const inputs = inputsSnapshot;
     const stepsText = (r.nextSteps || []).map((s, i) => `${i + 1}. ${s}`).join('\n');
     const bodyText = `Hi,\n\nYour full ${serviceLabel} report from Click.n.likes:\n\n${r.indexLabel}: ${r.score}/100\n${r.interpretation || ''}\n\nData source: ${r.liveNote || 'self-reported answers only'}\n\nWhat we checked:\n${(r.factors || []).map((f) => `• ${f.name}: ${f.found} [${f.source === 'verified' ? 'VERIFIED LIVE' : 'self-reported'}] (${f.impact})`).join('\n')}\n\nYour next steps:\n${stepsText}\n\nReply to this email or grab an instant quote at clicknlikes.com and we'll build the fix plan with you.\n\nBest,\nClick.n.likes\nbusiness@clicknlikes.com`;
     const bodyHtml = buildReportEmailHtml({
@@ -68,13 +80,12 @@ export default function GatedTool({ config, serviceLabel }) {
       bodyText: `New "${serviceLabel}" free-tool lead:\n\nEmail: ${email}\nScore: ${r.score}/100 (${r.indexLabel})\nData source: ${r.liveNote ? 'includes LIVE verified data' : 'self-reported only'}\nGaps:\n${(r.gaps || []).map((g) => '  - ' + g).join('\n') || '  (none)'}\n\nInputs:\n${Object.entries(inputs).filter(([k]) => k !== '_page' && k !== '_psi').map(([k, v]) => `  ${k}: ${String(v).slice(0, 200)}`).join('\n')}`,
     });
 
-    setResult(r);
     setEmailedTo(email);
     setPhase('done');
   }
 
   function renderField(f) {
-    if (f.type === 'email') return null; // rendered in the gate row
+    if (f.type === 'email') return null; // no longer rendered in the scan form
     if (f.type === 'heading') return <p key={f.id} className="pt-1 text-[12.5px] font-semibold text-navy">{f.label}</p>;
     if (f.type === 'checkbox') {
       return (
@@ -118,8 +129,9 @@ export default function GatedTool({ config, serviceLabel }) {
     );
   }
 
-  if (phase === 'done' && result) {
+  const scoreCard = result && (() => {
     const verified = !!result.liveNote;
+    const done = phase === 'done';
     return (
       <div className="rounded-2xl border border-teal/40 bg-white p-6 shadow-[0_18px_44px_rgba(26,43,74,0.10)] sm:p-8">
         <div className="flex flex-wrap items-center gap-3">
@@ -131,39 +143,58 @@ export default function GatedTool({ config, serviceLabel }) {
           <span className="text-sm text-navy/55">/100</span>
         </div>
         <p className="mt-3 text-[15px] leading-relaxed text-navy/75">{result.interpretation}</p>
-        <ul className="mt-4 space-y-2">
-          {result.bullets.map((b, i) => <li key={i} className="flex items-start gap-2 text-sm text-navy/80"><span className="text-teal-dark">▸</span><span>{b}</span></li>)}
-        </ul>
-        <p className={`mt-4 text-xs ${verified ? 'text-teal-dark' : 'text-navy/50'}`}>
-          {verified ? `✓ Data source: ${result.liveNote}. Self-reported answers are labelled separately in your emailed report.` : 'Data source: self-reported answers only, no live check ran on this result.'}
-        </p>
-        {result.howToRead && <div className="mt-4 rounded-xl border border-navy/10 bg-off p-4 text-[13px] leading-relaxed text-navy/70"><b className="text-navy">How to read this:</b> {result.howToRead}</div>}
-        <p className="mt-4 text-xs text-teal-dark">✓ Your full report (every factor + next steps) was emailed to {emailedTo}.</p>
-        <div className="mt-5 rounded-xl border border-teal/30 bg-teal/[0.06] p-5">
-          <p className="font-display text-base font-semibold text-navy">{result.pivotTitle}</p>
-          <p className="mt-1.5 text-sm leading-relaxed text-navy/70">{result.pivotText}</p>
-          <a href="/pricing/#quote" className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-teal-dark hover:text-navy">Build my instant quote <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4"><path d="M5 12h14M13 6l6 6-6 6" /></svg></a>
-        </div>
-        <button type="button" onClick={() => { setPhase('idle'); setResult(null); }} className="mt-5 rounded-full border-[1.5px] border-navy/15 px-5 py-2.5 text-sm font-semibold text-navy transition-colors hover:border-teal hover:text-teal-dark">↩ Run again</button>
+
+        {!done && (
+          <form onSubmit={sendReport} className="mt-5 border-t border-navy/10 pt-5">
+            <label className={labelCls}>Email (for your full factor-by-factor report + next steps)</label>
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@business.com" className={fieldCls + ' sm:flex-1'} />
+              <button type="submit" disabled={phase === 'sending'} className="inline-flex items-center justify-center gap-2 rounded-full bg-navy px-6 py-3 text-sm font-semibold whitespace-nowrap text-white transition-all duration-300 hover:bg-coral disabled:opacity-60">
+                {phase === 'sending' ? <><span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />Sending…</> : 'Get my full report'}
+              </button>
+            </div>
+            {error && <p className="mt-2 text-sm font-medium text-coral">{error}</p>}
+            <p className="mt-2 text-[11px] text-navy/45">Every factor behind this score, why it matters, and your next steps, emailed and shown here.</p>
+          </form>
+        )}
+
+        {done && (
+          <>
+            <ul className="mt-4 space-y-2">
+              {result.bullets.map((b, i) => <li key={i} className="flex items-start gap-2 text-sm text-navy/80"><span className="text-teal-dark">▸</span><span>{b}</span></li>)}
+            </ul>
+            <p className={`mt-4 text-xs ${verified ? 'text-teal-dark' : 'text-navy/50'}`}>
+              {verified ? `✓ Data source: ${result.liveNote}. Self-reported answers are labelled separately in your emailed report.` : 'Data source: self-reported answers only, no live check ran on this result.'}
+            </p>
+            {result.howToRead && <div className="mt-4 rounded-xl border border-navy/10 bg-off p-4 text-[13px] leading-relaxed text-navy/70"><b className="text-navy">How to read this:</b> {result.howToRead}</div>}
+            <p className="mt-4 text-xs text-teal-dark">✓ Your full report (every factor + next steps) was emailed to {emailedTo}.</p>
+            <div className="mt-5 rounded-xl border border-teal/30 bg-teal/[0.06] p-5">
+              <p className="font-display text-base font-semibold text-navy">{result.pivotTitle}</p>
+              <p className="mt-1.5 text-sm leading-relaxed text-navy/70">{result.pivotText}</p>
+              <a href="/pricing/#quote" className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-teal-dark hover:text-navy">Build my instant quote <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4"><path d="M5 12h14M13 6l6 6-6 6" /></svg></a>
+            </div>
+            <button type="button" onClick={() => { setPhase('idle'); setResult(null); setEmail(''); }} className="mt-5 rounded-full border-[1.5px] border-navy/15 px-5 py-2.5 text-sm font-semibold text-navy transition-colors hover:border-teal hover:text-teal-dark">↩ Run again</button>
+          </>
+        )}
       </div>
     );
+  })();
+
+  if (phase === 'scored' || phase === 'sending' || phase === 'done') {
+    return scoreCard;
   }
 
   return (
-    <form onSubmit={submit} className="rounded-2xl border border-navy/10 bg-white p-6 shadow-[0_10px_30px_rgba(26,43,74,0.06)] sm:p-8">
+    <form onSubmit={scan} className="rounded-2xl border border-navy/10 bg-white p-6 shadow-[0_10px_30px_rgba(26,43,74,0.06)] sm:p-8">
       <div className="grid gap-4 sm:grid-cols-2">
         {config.fields.filter((f) => f.type !== 'email').map(renderField)}
       </div>
       <div className="mt-5 border-t border-navy/10 pt-5">
-        <label className={labelCls}>{emailField.label}</label>
-        <div className="flex flex-col gap-3 sm:flex-row">
-          <input type="email" required value={vals[emailField.id]} onChange={(e) => set(emailField.id, e.target.value)} placeholder="you@business.com" className={fieldCls + ' sm:flex-1'} />
-          <button type="submit" disabled={phase === 'scanning'} className="inline-flex items-center justify-center gap-2 rounded-full bg-navy px-6 py-3 text-sm font-semibold whitespace-nowrap text-white transition-all duration-300 hover:bg-coral disabled:opacity-60">
-            {phase === 'scanning' ? <><span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />Scanning…</> : 'Get my score'}
-          </button>
-        </div>
+        <button type="submit" disabled={phase === 'scanning'} className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-navy px-6 py-3.5 text-sm font-semibold text-white transition-all duration-300 hover:bg-coral disabled:opacity-60 sm:w-auto">
+          {phase === 'scanning' ? <><span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />Scanning…</> : 'Get my score'}
+        </button>
         {error && <p className="mt-2 text-sm font-medium text-coral">{error}</p>}
-        <p className="mt-2 text-[11px] text-navy/45">{config.resultNote || 'Directional overview on screen; the full factor-by-factor report is emailed.'} Where you give a URL, we fetch the page live and label those rows verified.</p>
+        <p className="mt-2 text-[11px] text-navy/45">Your score shows here immediately, no email required. {config.resultNote || 'The full factor-by-factor report is unlocked by email.'} Where you give a URL, we fetch the page live and label those rows verified.</p>
       </div>
     </form>
   );
