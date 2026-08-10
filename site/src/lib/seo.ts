@@ -20,6 +20,11 @@ export const ORG_NAME = 'Click.n.likes';
 export const ORG_LEGAL = 'Click.n.likes';
 export const ORG_LOGO = `${SITE_ORIGIN}/logo.png`;
 export const OG_DEFAULT = `${SITE_ORIGIN}/og-default.png`;
+// Shared with organizationSchema() below and with llms.txt.ts, so the
+// one-line description of the agency stays identical everywhere a
+// machine reads it.
+export const ORG_DESCRIPTION =
+  'Full-stack organic growth agency for SaaS, manufacturers, legal and professional firms, D2C brands and local businesses worldwide. SEO, AI Search, Social, Content, Websites and Paid.';
 
 // Absolute production URL for a root-relative path ("/services/seo/").
 export function abs(path: string): string {
@@ -73,8 +78,7 @@ export function organizationSchema() {
     url: `${SITE_ORIGIN}/`,
     logo: ORG_LOGO,
     image: OG_DEFAULT,
-    description:
-      'Full-stack organic growth agency for SaaS, manufacturers, legal and professional firms, D2C brands and local businesses worldwide. SEO, AI Search, Social, Content, Websites and Paid.',
+    description: ORG_DESCRIPTION,
     email: 'business@clicknlikes.com',
     // `address` is a claim to be physically located somewhere, so it lists
     // only where we actually operate from. `areaServed` is the correct
