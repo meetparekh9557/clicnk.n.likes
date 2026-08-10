@@ -196,7 +196,7 @@ const relatedServices = relatedServiceSlugsForArticle
       <!-- Sidebar: sticky TOC + sibling posts, desktop only. The narrow
            reading column stays narrow for line-length; this is what the
            freed-up side space does instead of sitting empty. -->
-      {(toc.length > 0 || relatedArticles.length > 0) && (
+      {(toc.length > 0 || relatedArticles.length > 0 || relatedServices.length > 0) && (
         <aside class="hidden lg:block">
           <div class="sticky top-24 space-y-5">
             {toc.length > 0 && (
@@ -226,12 +226,30 @@ const relatedServices = relatedServiceSlugsForArticle
                 </ul>
               </div>
             )}
+            {relatedServices.length > 0 && (
+              <div class="reveal rounded-2xl border border-teal/30 bg-teal/[0.06] p-5" style="--d:300ms">
+                <p class="text-xs font-semibold tracking-[0.12em] text-teal-dark uppercase">The service this connects to</p>
+                <ul class="mt-3 space-y-4">
+                  {relatedServices.map((s) => (
+                    <li>
+                      <a href={withBase(s.href)} class="group block">
+                        <p class="font-display text-[14.5px] leading-snug font-semibold text-navy transition-colors group-hover:text-teal-dark">{s.title}</p>
+                        <p class="mt-1 text-[13px] leading-snug text-navy/60">{s.text}</p>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
         </aside>
       )}
     </div>
   </div>
 
-  <RelatedReading heading="Keep reading" items={relatedArticles} />
-  <RelatedReading heading="The service this connects to" items={relatedServices} class="pt-0" />
+  <!-- Desktop has these in the sticky sidebar already; mobile has no
+       sidebar (hidden lg:block), so it needs its own copy here or these
+       links vanish entirely below the lg breakpoint. -->
+  <RelatedReading heading="Keep reading" items={relatedArticles} class="lg:hidden" />
+  <RelatedReading heading="The service this connects to" items={relatedServices} class="pt-0 lg:hidden" />
 </Base>
