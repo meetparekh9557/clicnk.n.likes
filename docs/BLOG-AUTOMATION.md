@@ -14,7 +14,15 @@ this environment twice a week and:
 1. Opens `docs/blog-backlog.md` and takes the **first unchecked topic** (a
    real buyer question mapped to a service page), rotating verticals so two
    consecutive posts never cover the same one.
-2. Writes the article into `site/src/data/articles.ts` by **prepending** a new
+2. **Validates real demand before writing** (see "Validate real demand before
+   writing, not after" in `docs/blog-backlog.md`): WebSearches the topic's
+   core question, checks for real discussion/"people also ask" signal and
+   whether the current top-ranking pages are actually beatable by a young,
+   low-authority domain, and narrows to a more specific variant if the
+   topic as written shows no real search signal. This does not require a
+   paid keyword tool and never invents a volume number — it's a directional
+   real/winnable/narrow call from what the search actually returns.
+3. Writes the article into `site/src/data/articles.ts` by **prepending** a new
    entry to the `articles` array (newest first), matching the `Article`
    interface exactly: `slug, tag, title, excerpt, author, readTime,
    date (today, YYYY-MM-DD), body (HTML string), faqs`.
@@ -29,15 +37,20 @@ this environment twice a week and:
      services" links once to `/`, and "SEO agency" / "SEO services" links
      once to `/services/seo/`. Never all four crammed into one post just to
      hit this rule — a post only uses the phrase(s) a real sentence calls for.
-3. Generates the featured image:
+4. Generates the featured image:
    `node site/scripts/gen-featured.mjs --slug=<slug> --tag="<Tag>"
    --title="<line1>|<line2>"` → writes `site/public/insights/<slug>.png`
    (branded 1200×630, real Space Grotesk). The `|` marks the line break; the
    second line renders teal.
-4. Ticks the topic's box in `docs/blog-backlog.md`, and if fewer than 6 topics
+5. Ticks the topic's box in `docs/blog-backlog.md`, and if fewer than 6 topics
    remain, appends fresh buyer-question topics so the queue never runs dry.
-5. Builds the site (`cd site && npm run build`) to confirm no errors, commits,
+6. Builds the site (`cd site && npm run build`) to confirm no errors, commits,
    and pushes to `main` so the deploy workflow republishes.
+7. **Every new post is the next LinkedIn company-page Routine's default "blog
+   highlight" pick**, not one of three options chosen at random — see that
+   Routine's prompt. A young, thin-authority domain can't rely on organic
+   discovery alone; each post gets one guaranteed promotion touch the day it
+   ships.
 
 ## Push authentication (`GH_TOKEN`)
 

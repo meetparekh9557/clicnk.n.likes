@@ -36,9 +36,42 @@ section it's rotating into**, writes the post in the founder's voice (see
   note is resolved, either by the founder supplying the real figure or by
   finding a genuine named third-party source. When in doubt, leave the
   number out and write the point as a principle instead.
+- **Validate real demand before writing, not after.** A topic being on this
+  list means someone judged it a plausible buyer question — it does not mean
+  anyone checked whether people actually search that exact phrasing. Before
+  writing, WebSearch the topic's core question (and 1-2 phrasing variants)
+  and look at what comes back:
+  - **Real signal:** "People also ask" boxes, Reddit/Quora threads, or
+    competitor blog posts already answering the same question. This means
+    real people search it — proceed.
+  - **Winnable:** the pages currently ranking for it are thin, generic, or
+    from low-authority sites, not exclusively page-one incumbents like
+    HubSpot, Semrush or Search Engine Land. A young, low-authority domain
+    cannot out-rank those on a head term; it can win a specific long-tail
+    variant they haven't bothered to answer precisely.
+  - **No signal at all** (no related discussion, no "people also ask", the
+    query reads like something only an agency would think to ask): don't
+    drop the topic, but narrow it to a more specific, clearly-searched
+    variant if one surfaces during the check, and note in the backlog entry
+    what the check found. Writing into a query nobody types is exactly what
+    produces a technically-good post with permanently zero traffic.
+  - This check does not require a paid keyword tool, and none is connected
+    here — it is a directional real/winnable/narrow judgment call from what
+    WebSearch actually returns, not a synthetic search-volume number. Do not
+    invent a volume figure to justify a topic; the judgment itself is the
+    output.
+- **Every new post gets one guaranteed distribution touch, not just an
+  organic listing.** On a young, thin-authority domain, waiting on organic
+  discovery alone is slow by design. The day a post publishes, it is the
+  next LinkedIn company-page Routine's default pick (see that Routine's
+  "blog highlight" rotation) rather than one option among three chosen at
+  random — a specific, recent post to promote beats a generic rotation slot.
 - **Refill:** when fewer than 6 topics remain unchecked across all clusters,
   the task appends fresh buyer-question topics (from sales-call themes,
-  "people also ask", and the service pages) before it runs dry.
+  "people also ask", and the service pages) before it runs dry. Run the
+  demand-validation check above on new topics as they're appended, not only
+  at write-time — a topic that fails the check should be marked with a note
+  rather than added at face value.
 
 ## Column key
 
