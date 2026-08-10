@@ -456,11 +456,20 @@ function extractFacts_(html, url){
   var title = titleM ? stripTags(titleM[1]).slice(0,300) : '';
 
   var metaDesc = null, noindex = false, hasViewport = false;
+  var ogSiteName = null, ogImage = null, ogDescription = null, ogTitle = null;
   (html.match(/<meta\b[^>]*>/gi) || []).forEach(function(m){
     var n = (attr(m,'name') || attr(m,'property') || '').toLowerCase();
     if(n === 'description' && metaDesc === null) metaDesc = attr(m,'content') || '';
     if(n === 'robots' && /noindex/i.test(attr(m,'content') || '')) noindex = true;
     if(n === 'viewport') hasViewport = true;
+    // OG tags: a decent fallback source for business name/logo/description
+    // when a page has no schema at all yet, always labelled a suggestion
+    // (self-reported by the page's own meta tags), never presented as
+    // verified fact the way a live-fetched structured-data value is.
+    if(n === 'og:site_name' && ogSiteName === null) ogSiteName = attr(m,'content') || '';
+    if(n === 'og:image' && ogImage === null) ogImage = attr(m,'content') || '';
+    if(n === 'og:description' && ogDescription === null) ogDescription = attr(m,'content') || '';
+    if(n === 'og:title' && ogTitle === null) ogTitle = attr(m,'content') || '';
   });
 
   var hasCanonical = /<link\b[^>]*rel\s*=\s*["']canonical["']/i.test(html);
@@ -492,11 +501,30 @@ function extractFacts_(html, url){
   var listItems = (html.match(/<li\b/gi) || []).length;
 
   var schemaTypes = [];
+  // schemaObjects holds the actual parsed JSON-LD (not just the @type
+  // names) so a live URL check can score real field completeness the same
+  // way a pasted block does, and so the Schema Generator can pre-fill from
+  // whatever a business has already published rather than a blank form.
+  // Capped at 10 objects / ~20KB total so one bloated page can't blow up
+  // the response; a business with more than 10 schema blocks on one page
+  // gets the first 10, not a failure.
+  var schemaObjects = [];
   var ldRe = /<script\b[^>]*type\s*=\s*["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi, lm;
   while((lm = ldRe.exec(html)) !== null){
     var tRe = /"@type"\s*:\s*"([^"]+)"/g, tm;
     while((tm = tRe.exec(lm[1])) !== null){
       if(schemaTypes.indexOf(tm[1]) === -1 && schemaTypes.length < 20) schemaTypes.push(tm[1]);
+    }
+    if(schemaObjects.length < 10){
+      try {
+        var parsed = JSON.parse(lm[1].trim());
+        var arr = Array.isArray(parsed) ? parsed : (parsed['@graph'] ? parsed['@graph'] : [parsed]);
+        arr.forEach(function(o){
+          if(o && typeof o === 'object' && schemaObjects.length < 10){
+            schemaObjects.push(o);
+          }
+        });
+      } catch(e){ /* malformed JSON-LD on the live page; schemaTypes above still caught the @type via regex */ }
     }
   }
 
@@ -536,7 +564,12 @@ function extractFacts_(html, url){
     imgMissingAlt: imgMissingAlt,
     listItems: listItems,
     schemaTypes: schemaTypes,
+    schemaObjects: schemaObjects,
     hasSchema: schemaTypes.length > 0,
+    ogSiteName: ogSiteName,
+    ogImage: ogImage,
+    ogDescription: ogDescription,
+    ogTitle: ogTitle,
     hasCanonical: hasCanonical,
     noindex: noindex,
     hasViewport: hasViewport,

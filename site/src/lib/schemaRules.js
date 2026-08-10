@@ -28,6 +28,45 @@ export const SCHEMA_RULES = {
   Event: { required: ['name', 'startDate', 'location'], recommended: ['endDate', 'offers', 'image'] },
 };
 
+// Plain-English cost of a type being entirely absent from a page. This is
+// the translation layer every competitor tool skips: they name the missing
+// property, we say what it actually costs a business owner who has never
+// heard of JSON-LD.
+export const TYPE_MISSING_COST = {
+  Organization: 'Nothing tells Google or AI answer engines who you actually are, the foundation every other schema type and most AI citations build on.',
+  LocalBusiness: "You are not eligible for Google's local pack or Maps results, no matter how good your actual local SEO is.",
+  Article: 'Your posts show as a plain blue link in search instead of a card with a thumbnail and byline, and AI answer engines have less to work with when deciding whether to cite you.',
+  Product: 'No star rating, price or availability can show directly in your search result, even if the page itself has real reviews and pricing.',
+  FAQPage: 'You forfeit the expandable FAQ dropdown in search, one of the easiest ways to make a listing physically larger without paying for ads.',
+  HowTo: 'You forfeit the step-by-step rich result in search for a page that is already structured as steps.',
+};
+
+// Plain-English cost of one missing property on a type that does exist.
+export const PROP_COST = {
+  address: 'without it you are invisible in "near me" searches, the single highest-intent local query type',
+  telephone: 'click-to-call in the search result requires this field specifically',
+  image: 'Google will not grant the rich result at all without it, however complete the rest of the markup is',
+  datePublished: 'both Google and AI answer engines use this to judge freshness before citing you',
+  dateModified: 'signals the content is actively maintained, which AI answer engines weight when picking a source to cite',
+  author: 'part of the E-E-A-T signal Google associates with the Article rich result',
+  publisher: 'ties the content to a real, named organisation rather than an anonymous byline',
+  logo: "shows next to your name in Google's Knowledge Panel and in AI citations",
+  sameAs: 'the strongest signal tying your website to your real social profiles, which AI answer engines cross-reference before citing a business',
+  priceRange: 'shown directly in the local pack alongside your listing',
+  openingHoursSpecification: 'shown directly in the local pack; without it Google shows "Hours unknown" next to your listing',
+  geo: 'improves distance-based ranking specifically for "near me" searches',
+  brand: 'ties the product to a recognisable name instead of a generic listing',
+  description: 'gives Google and AI engines real context instead of guessing from surrounding text',
+  contactPoint: 'lets Google surface a verified contact method directly in search and AI answers',
+  mainEntity: 'the FAQ dropdown cannot render without at least one question/answer pair',
+  step: 'the HowTo rich result cannot render without at least one step',
+  'one of: offers, review, aggregateRating': 'at least one is required for any product rich result (price, a review, or a star rating)',
+};
+
+export function propCost(prop) {
+  return PROP_COST[prop] || 'a required field for this rich result to be eligible at all';
+}
+
 export function hasProp(obj, prop) {
   if (obj == null || typeof obj !== 'object') return false;
   const v = obj[prop];
@@ -36,6 +75,94 @@ export function hasProp(obj, prop) {
   if (typeof v === 'string') return v.trim().length > 0;
   if (typeof v === 'object') return Object.keys(v).length > 0;
   return true;
+}
+
+// Scores one parsed JSON-LD object against SCHEMA_RULES. Shared by the
+// paste-your-code path and the live-URL path so the two can never quietly
+// score the same markup differently.
+export function scoreSchemaObject(obj) {
+  const type = Array.isArray(obj['@type']) ? obj['@type'][0] : obj['@type'];
+  const rule = SCHEMA_RULES[type];
+  if (!rule) return { type: type || 'Unknown', known: false, pct: null, requiredMissing: [], recommendedMissing: [] };
+  const requiredMissing = rule.required.filter((p) => !hasProp(obj, p));
+  const oneOfOk = !rule.oneOf || rule.oneOf.some((p) => hasProp(obj, p));
+  const recommendedMissing = rule.recommended.filter((p) => !hasProp(obj, p));
+  const reqTotal = rule.required.length + (rule.oneOf ? 1 : 0);
+  const reqFound = (rule.required.length - requiredMissing.length) + (oneOfOk ? 1 : 0);
+  const recTotal = rule.recommended.length;
+  const recFound = recTotal - recommendedMissing.length;
+  const pct = Math.round((reqTotal ? (reqFound / reqTotal) * 70 : 70) + (recTotal ? (recFound / recTotal) * 30 : 30));
+  if (!oneOfOk) requiredMissing.push(`one of: ${rule.oneOf.join(', ')}`);
+  return { type, known: true, pct, requiredMissing, recommendedMissing, object: obj };
+}
+
+// Scores every detected object and rolls up an overall 0-100 completeness
+// score. `presentTypes` (from the caller) plus GENERATABLE_TYPES below
+// decides which of our six generatable types are entirely absent, each
+// carrying its own TYPE_MISSING_COST rather than just an empty checklist.
+export const GENERATABLE_TYPES = ['Organization', 'LocalBusiness', 'Article', 'Product', 'FAQPage', 'HowTo'];
+
+// Parses pasted JSON-LD (either raw JSON, or HTML containing one or more
+// <script type="application/ld+json"> blocks) into a flat list of objects.
+// Mirrors the live-URL parsing in apps-script.gs's extractFacts_ so pasted
+// and live-fetched markup score identically.
+export function parseJsonLdBlocks(text) {
+  const blocks = [];
+  const scriptRe = /<script\b[^>]*type\s*=\s*["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi;
+  let m, found = false;
+  while ((m = scriptRe.exec(text)) !== null) { found = true; blocks.push(m[1]); }
+  if (!found) blocks.push(text);
+  const objs = [];
+  const errors = [];
+  blocks.forEach((b) => {
+    const t = b.trim();
+    if (!t) return;
+    try {
+      const parsed = JSON.parse(t);
+      const arr = Array.isArray(parsed) ? parsed : (parsed['@graph'] ? parsed['@graph'] : [parsed]);
+      arr.forEach((o) => { if (o && typeof o === 'object') objs.push(o); });
+    } catch (e) {
+      errors.push(e.message);
+    }
+  });
+  return { objs, errors };
+}
+
+// Best-effort extraction of shared business identity fields from whichever
+// Organization/LocalBusiness object is already on a page, so the generator
+// can pre-fill from real, self-published data instead of a blank form.
+export function bizFromSchema(objs) {
+  const org = (objs || []).find((o) => {
+    const t = Array.isArray(o['@type']) ? o['@type'][0] : o['@type'];
+    return t === 'Organization' || t === 'LocalBusiness';
+  });
+  if (!org) return null;
+  const addr = (org.address && typeof org.address === 'object') ? org.address : {};
+  const logo = typeof org.logo === 'string' ? org.logo : (org.logo && org.logo.url) || org.image || '';
+  const phone = org.telephone || (org.contactPoint && org.contactPoint.telephone) || '';
+  return {
+    name: org.name || '',
+    url: org.url || '',
+    phone,
+    logo,
+    street: addr.streetAddress || '',
+    city: addr.addressLocality || '',
+    region: addr.addressRegion || '',
+    postalCode: addr.postalCode || '',
+    country: addr.addressCountry || '',
+    sameAs: Array.isArray(org.sameAs) ? org.sameAs.join(', ') : (org.sameAs || ''),
+  };
+}
+
+export function scoreSchemaObjects(objs) {
+  const results = (objs || []).map(scoreSchemaObject);
+  const presentTypes = results.map((r) => r.type);
+  const missingTypes = GENERATABLE_TYPES.filter((t) => !presentTypes.includes(t));
+  const knownResults = results.filter((r) => r.known);
+  const overall = results.length
+    ? Math.round(results.reduce((s, r) => s + (r.known ? r.pct : 60), 0) / results.length)
+    : 0;
+  return { results, knownResults, presentTypes, missingTypes, overall, hasAny: results.length > 0 };
 }
 
 // Builds a valid JSON-LD object from the Schema Generator's flat field

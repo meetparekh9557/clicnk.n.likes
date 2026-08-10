@@ -115,17 +115,6 @@ export const toolConfigs = {
       { id: 'paid_email', type: 'email', label: 'Email (for your full report)' },
     ],
   },
-  schemavalidator: {
-    scorer: 'schemavalidator', urlField: 'schemavalidator_url', requireOneOf: ['schemavalidator_content', 'schemavalidator_url'],
-    name: 'Schema Validator & Score',
-    lead: 'Paste your JSON-LD or give a page URL: we check it against the required properties Google actually looks for.',
-    resultNote: 'Your validation score appears on screen; the full required-vs-missing property list is emailed.',
-    fields: [
-      { id: 'schemavalidator_content', type: 'textarea', label: 'Paste your JSON-LD schema', optional: true, placeholder: '<script type="application/ld+json">{ "@context": "https://schema.org", ... }</script> (or just the JSON)' },
-      { id: 'schemavalidator_url', type: 'url', label: '...or your page URL', optional: true, placeholder: 'yourwebsite.com (checks which schema types are present)' },
-      { id: 'schemavalidator_email', type: 'email', label: 'Email (for your full report)' },
-    ],
-  },
   contentscore: {
     scorer: 'contentscore', urlField: 'contentscore_url', requireOneOf: ['contentscore_content', 'contentscore_url'],
     name: 'Content SEO Score',

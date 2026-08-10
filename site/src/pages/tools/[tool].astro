@@ -11,7 +11,7 @@ import SpeedCheck from '../../components/islands/SpeedCheck.jsx';
 import SnapshotCheck from '../../components/islands/SnapshotCheck.jsx';
 import FunnelRoiCalculator from '../../components/islands/FunnelRoiCalculator.jsx';
 import CompetitorThreat from '../../components/islands/CompetitorThreat.jsx';
-import SchemaGenerator from '../../components/islands/SchemaGenerator.jsx';
+import SchemaWorkbench from '../../components/islands/SchemaWorkbench.jsx';
 import GatedTool from '../../components/islands/GatedTool.jsx';
 import { tools, toolPages, toolHref } from '../../data/tools';
 import { toolConfigs } from '../../data/toolConfigs';
@@ -100,34 +100,34 @@ export function getStaticPaths() {
       },
     },
     'schema-generator': {
-      eyebrow: 'Generator',
-      h1: 'Schema Markup Generator',
-      lede: 'Pick a type, fill in your details, get valid JSON-LD you can paste straight into your site, no developer required.',
-      title: 'Free Schema Markup (JSON-LD) Generator | Click.n.likes',
-      description: 'Generate valid schema.org JSON-LD for Organization, LocalBusiness, Article, Product, FAQ and HowTo pages. Free, with an implementation guide emailed.',
+      eyebrow: 'Generator + Validator',
+      h1: 'Schema Markup Generator & Checker',
+      lede: 'Check what schema you already have, see exactly what is missing and why it matters, then generate it, pre-filled from your own page, no developer required.',
+      title: 'Free Schema Markup Generator & Checker (JSON-LD) | Click.n.likes',
+      description: 'Check your live schema against Google’s required properties, see the plain-English cost of every gap, and generate valid JSON-LD pre-filled from your own page. Free, no developer required.',
       body: {
-        intro: 'Schema markup, formally JSON-LD structured data, is how you tell Google and AI search engines exactly what your page is about, in a format machines can parse without guessing. Per Google Search Central’s own structured data guidelines, valid markup is a requirement for eligibility in rich results like star ratings, FAQ dropdowns and product listings, not just a nice-to-have. This generator builds valid JSON-LD for the schema types that matter most to a growing business, ready to paste straight into your site’s <head> tag.',
+        intro: 'Most schema tools make you choose: check what you have, or build what you need, in two separate places, re-typing your business details each time. This one does both in a single pass. Give us a URL and we read the schema already on that page, score it against Google Search Central’s own required and recommended properties, and tell you in plain English what each gap actually costs you, not just which property is missing. Then generate exactly what is missing, pre-filled from your own business details rather than a blank form.',
         checks: [
-          { label: 'Organization & LocalBusiness', text: 'Establishes who you are and where you operate, the foundation every other schema type builds on.' },
-          { label: 'Article', text: 'Marks up blog posts and guides so search engines and AI answers can cite them correctly, with author and date.' },
-          { label: 'Product', text: 'Structures pricing, availability and reviews for anything you sell.' },
-          { label: 'FAQ & HowTo', text: 'The two schema types most likely to earn a direct answer box or an AI citation for a specific question.' },
+          { label: 'Real completeness score', text: 'A 0–100 score against Google’s own documented requirements, not a pass/fail guess.' },
+          { label: 'Plain-English cost per gap', text: 'Not "missing: address" — "you are invisible in \'near me\' searches without it."' },
+          { label: 'Pre-filled from your own page', text: 'Answer your business details once; every schema type reuses them automatically.' },
+          { label: 'FAQ, HowTo, Product & more', text: 'The schema types most likely to earn a rich result or an AI citation for a specific question.' },
         ],
       },
     },
     'schema-validator': {
-      eyebrow: 'Validator',
+      eyebrow: 'Validator + Generator',
       h1: 'Schema Validator & Score',
-      lede: 'Paste your JSON-LD or give us a URL. We check it against the exact required properties Google looks for, and score what is missing.',
+      lede: 'Paste your JSON-LD or give us a URL. We score it against the exact required properties Google looks for, explain what each gap costs you, and can generate the fix.',
       title: 'Free Schema Markup Validator & Score | Click.n.likes',
-      description: 'Validate your schema.org JSON-LD against Google’s required and recommended properties. Free score, full checklist emailed, no call required.',
+      description: 'Validate your schema.org JSON-LD against Google’s required and recommended properties, see the plain-English cost of every gap, and generate what is missing. Free, no call required.',
       body: {
-        intro: 'Most schema markup fails silently: the JSON-LD is present on the page but missing a property Google actually requires, so it never qualifies for the rich result it was meant to earn, and nothing in your browser tells you that happened. This validator checks your markup, or the live markup already on any URL you give us, against the specific required and recommended properties Google’s own documentation lists for that schema type, and scores what is missing.',
+        intro: 'Most schema markup fails silently: the JSON-LD is present on the page but missing a property Google actually requires, so it never qualifies for the rich result it was meant to earn, and nothing in your browser tells you that happened. This checks your markup, or the live markup already on any URL you give us, against the specific required and recommended properties Google’s own documentation lists for that schema type, scores what is missing, and explains what the gap actually costs you, not just its name. Then generate the fix in the same place, pre-filled from your own page.',
         checks: [
-          { label: 'Required properties', text: 'The fields Google states are mandatory for that schema type to be eligible for a rich result at all.' },
-          { label: 'Recommended properties', text: 'Fields that are optional but measurably improve how the result is displayed.' },
-          { label: 'Live URL checking', text: 'Paste a URL and we read the markup that is actually shipping on your site right now, not what you think is there.' },
-          { label: 'Plain-English scoring', text: 'A pass or fail per property, not a wall of raw JSON errors.' },
+          { label: 'Required vs. recommended', text: 'The fields Google states are mandatory for a rich result, separated from the ones that just improve it.' },
+          { label: 'Live URL checking', text: 'Give us a URL and we read the markup actually shipping on your site right now, not what you think is there.' },
+          { label: 'Plain-English cost, not raw errors', text: 'Every gap explained in terms of what you lose in search, not a wall of JSON.' },
+          { label: 'Fix it in the same place', text: 'Generate exactly what is missing without starting over on a separate tool.' },
         ],
       },
     },
@@ -175,8 +175,7 @@ const iconWrap = 'mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 t
       {tool.slug === 'first-impression' && <SnapshotCheck client:load toolsHref={withBase('/tools/')} />}
       {tool.slug === 'funnel-roi' && <FunnelRoiCalculator client:load />}
       {tool.slug === 'competitor-threat' && <CompetitorThreat client:load />}
-      {tool.slug === 'schema-generator' && <SchemaGenerator client:load />}
-      {tool.slug === 'schema-validator' && <GatedTool config={toolConfigs.schemavalidator} serviceLabel="Schema Validator & Score" client:load />}
+      {(tool.slug === 'schema-generator' || tool.slug === 'schema-validator') && <SchemaWorkbench client:load />}
       {tool.slug === 'content-score' && <GatedTool config={toolConfigs.contentscore} serviceLabel="Content SEO Score" client:load />}
     </div>
   </section>

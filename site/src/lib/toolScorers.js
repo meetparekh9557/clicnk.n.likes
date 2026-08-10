@@ -6,7 +6,6 @@
 // factors, nextSteps, howToRead, pivotTitle, pivotText, statusLine }.
 // The v1 `seed` argument was never actually used, so it is dropped.
 import { fact, escapeHtml } from './engine';
-import { SCHEMA_RULES, hasProp } from './schemaRules';
 
 export const toolScorers = {
   // 1. Organic Authority Index
@@ -422,122 +421,6 @@ export const toolScorers = {
       howToRead: `Each checkbox you ticked maps to a real, named leak: sending traffic straight to your homepage instead of a dedicated landing page wastes roughly 35% of that spend. An unverified pixel wastes another 25%. A missing negative keyword list wastes 15%. These stack, then get multiplied by your actual monthly budget to get the rupee figure. All inputs are self-reported: we cannot see inside your ad account.`,
       pivotTitle: 'Full Ad Account Deep-Dive',
       pivotText: `Stop letting your ad budget bleed out. Request a formal Ad Account Deep-Dive from our performance strategists for ${inp.paid_industry || 'your industry'}.`,
-    };
-  },
-
-  // 8. Schema Validator & Score. Pasted JSON-LD is parsed and checked
-  // directly (verified: it is the exact code the visitor gave us this
-  // session), against Google's own documented required/recommended
-  // properties per type (schemaRules.js). A URL-only check can currently
-  // only confirm which @types are present on the live page (the analyzer
-  // extracts detected types, not the full parsed objects), so that path is
-  // honestly labelled as a coarser, partial check rather than a full pass.
-  schemavalidator(inp) {
-    const page = inp._page && inp._page.available ? inp._page : null;
-    const raw = String(inp.schemavalidator_content || '').trim();
-    const gaps = [];
-    const factors = [];
-    const nextSteps = [];
-
-    function extractBlocks(text) {
-      const blocks = [];
-      const scriptRe = /<script\b[^>]*type\s*=\s*["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi;
-      let m, found = false;
-      while ((m = scriptRe.exec(text)) !== null) { found = true; blocks.push(m[1]); }
-      if (!found) blocks.push(text);
-      const objs = [];
-      const errors = [];
-      blocks.forEach((b) => {
-        const t = b.trim();
-        if (!t) return;
-        try {
-          const parsed = JSON.parse(t);
-          const arr = Array.isArray(parsed) ? parsed : (parsed['@graph'] ? parsed['@graph'] : [parsed]);
-          arr.forEach((o) => { if (o && typeof o === 'object') objs.push(o); });
-        } catch (e) {
-          errors.push(e.message);
-        }
-      });
-      return { objs, errors };
-    }
-
-    function scoreObject(obj) {
-      const type = Array.isArray(obj['@type']) ? obj['@type'][0] : obj['@type'];
-      const rule = SCHEMA_RULES[type];
-      if (!rule) return { type: type || 'Unknown', known: false, pct: null, requiredMissing: [], recommendedMissing: [] };
-      const requiredMissing = rule.required.filter((p) => !hasProp(obj, p));
-      const oneOfOk = !rule.oneOf || rule.oneOf.some((p) => hasProp(obj, p));
-      const recommendedMissing = rule.recommended.filter((p) => !hasProp(obj, p));
-      const reqTotal = rule.required.length + (rule.oneOf ? 1 : 0);
-      const reqFound = (rule.required.length - requiredMissing.length) + (oneOfOk ? 1 : 0);
-      const recTotal = rule.recommended.length;
-      const recFound = recTotal - recommendedMissing.length;
-      const pct = Math.round((reqTotal ? (reqFound / reqTotal) * 70 : 70) + (recTotal ? (recFound / recTotal) * 30 : 30));
-      if (!oneOfOk) requiredMissing.push(`one of: ${rule.oneOf.join(', ')}`);
-      return { type, known: true, pct, requiredMissing, recommendedMissing };
-    }
-
-    let score;
-    let liveNote = null;
-
-    if (raw) {
-      const { objs, errors } = extractBlocks(raw);
-      if (!objs.length) {
-        score = 5;
-        gaps.push(`Could not parse this as valid JSON-LD${errors[0] ? `: ${errors[0]}` : ''}.`);
-        factors.push(fact('JSON syntax', 'Invalid or unparseable', 'verified', 'blocks all validation'));
-        nextSteps.push('Fix the JSON syntax first (a trailing comma or unescaped quote is the usual cause), or generate a guaranteed-valid block with our free Schema Generator.');
-      } else {
-        liveNote = 'Your pasted JSON-LD was parsed and checked directly, this session';
-        const results = objs.map(scoreObject);
-        score = Math.round(results.reduce((s, r) => s + (r.known ? r.pct : 60), 0) / results.length);
-        results.forEach((r) => {
-          if (!r.known) {
-            factors.push(fact(`${r.type} schema`, 'Valid JSON-LD, but not a type we have a required-property checklist for', 'verified', 'unscored'));
-            return;
-          }
-          factors.push(fact(`${r.type} schema`, r.requiredMissing.length ? `Missing: ${r.requiredMissing.join(', ')}` : 'All required properties present', 'verified', `${r.pct}%`));
-          if (r.requiredMissing.length) {
-            gaps.push(`${r.type}: missing required ${r.requiredMissing.join(', ')}`);
-            nextSteps.push(`Add the missing required ${r.requiredMissing.length > 1 ? 'properties' : 'property'} to your ${r.type} schema: ${r.requiredMissing.join(', ')}.`);
-          }
-          if (r.recommendedMissing.length) gaps.push(`${r.type}: missing recommended ${r.recommendedMissing.join(', ')}`);
-        });
-      }
-    } else if (page) {
-      liveNote = `Schema types detected live from ${page.finalUrl}`;
-      if (!page.hasSchema) {
-        score = 15;
-        gaps.push('No schema.org structured data detected on this page (verified)');
-        factors.push(fact('Structured data present', 'None found', 'verified', 'flagged'));
-        nextSteps.push('You have no schema at all: start with Organization or LocalBusiness, the highest-leverage type for most sites. Build it in under a minute with our free Schema Generator.');
-      } else {
-        score = 55;
-        factors.push(fact('Structured data present', `Detected: ${page.schemaTypes.slice(0, 5).join(', ')}`, 'verified', 'types confirmed live'));
-        gaps.push('Type presence confirmed, but required-property validation needs the actual JSON-LD: paste it above for a full pass/fail check');
-        nextSteps.push('Paste the JSON-LD itself (view source, copy the <script type="application/ld+json"> block) for a full required-property check: a live URL check can only confirm which types exist, not whether each one is complete.');
-      }
-    } else {
-      score = 5;
-    }
-
-    score = Math.max(5, Math.min(100, score));
-    const status = score < 50 ? 'Needs Work' : score < 85 ? 'Mostly Valid' : 'Strong';
-    nextSteps.push('Re-check with Google\'s own Rich Results Test after you publish the fix, it is the final word on rich-result eligibility.');
-
-    return {
-      score, indexLabel: 'Schema Validity',
-      liveNote,
-      interpretation: `${score}/100 (${status}). ${raw ? 'Checked directly against your pasted JSON-LD.' : page ? 'Checked from schema types detected on your live page.' : 'No schema given to check.'} ${score >= 85 ? 'Your markup meets the required properties Google looks for.' : score >= 50 ? 'The structure is there but missing pieces will keep you out of some rich results.' : 'This markup will not qualify for rich results in its current state.'}`,
-      bullets: [
-        `Schema Validity: ${score}/100 (${status}).`,
-        gaps[0] || 'No missing required properties found.',
-        raw ? 'Source: your pasted JSON-LD, checked directly.' : 'Source: schema types detected live from your URL.',
-      ],
-      gaps, factors, nextSteps: nextSteps.slice(0, 5),
-      howToRead: `We check your markup's @type against the required and recommended properties Google's own Search Central documentation lists for that type (e.g. Article needs headline, image, datePublished and author; Product needs at least one of offers, review or aggregateRating). Required properties are weighted 70% of the score, recommended ones 30%. Pasted JSON-LD is checked property-by-property; a URL alone can only confirm which types are present.`,
-      pivotTitle: 'Full Structured Data Rollout',
-      pivotText: 'A complete, validated schema strategy across every page type on your site, built and implemented for you.',
     };
   },
 
