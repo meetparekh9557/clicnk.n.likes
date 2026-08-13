@@ -1,0 +1,31 @@
+---
+// Site-wide Thank You page: the single URL every form on the site sends
+// people to after a successful submission - lead forms, quote calculators,
+// newsletter, and it's also the Meta/Google Ads conversion-tracking
+// destination. Deliberately a dead end: noindex,nofollow (never surfaced
+// in search, never passes link equity) and `bare` (no Nav, Footer, CtaBand
+// or WhatsApp button) - solely a confirmation for ad conversion tracking,
+// with zero paths to anywhere else on the site.
+import Base from '../layouts/Base.astro';
+import CircleCheck from '@lucide/astro/icons/circle-check';
+---
+
+<Base
+  title="Thank You | Click.n.likes"
+  description="Your submission has been received."
+  noindex
+  bare
+>
+  <section class="mx-auto flex min-h-screen max-w-xl flex-col items-center justify-center px-[5vw] py-20 text-center">
+    <span class="reveal grid h-16 w-16 place-items-center rounded-full bg-teal/10 text-teal-dark">
+      <CircleCheck size={36} stroke-width={1.8} aria-hidden="true" />
+    </span>
+    <h1 class="reveal-mask mt-6 font-display text-[clamp(1.8rem,4vw,2.6rem)] leading-[1.12] font-bold text-navy">
+      <span class="mask-line"><span>Got it, thank you.</span></span>
+    </h1>
+    <p class="reveal mt-4 max-w-md text-lg leading-relaxed text-navy/70" style="--d:120ms">
+      A strategist reviews every submission personally and replies within <b>1 business day</b>, usually much
+      faster. Check your inbox (and spam folder, just in case) for a confirmation.
+    </p>
+  </section>
+</Base>

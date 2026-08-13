@@ -25,8 +25,13 @@ interface Props {
   ogImage?: string;
   ogType?: string;
   jsonLd?: unknown | unknown[];
+  noindex?: boolean;
+  // Strips Nav, CtaBand, Footer and the WhatsApp button - every path off
+  // the page - for pages that must stay fully non-navigational (ad landing
+  // / conversion-confirmation pages). hideCta is redundant under bare.
+  bare?: boolean;
 }
-const { title, description, canonical, hideCta, ogImage, ogType, jsonLd } = Astro.props;
+const { title, description, canonical, hideCta, ogImage, ogType, jsonLd, noindex, bare } = Astro.props;
 // Preview builds (clicknlikes.com/preview/) must never be indexed, and
 // their canonicals point at the real future URL (base stripped).
 const isPreview = import.meta.env.PUBLIC_PREVIEW === '1';
@@ -76,7 +81,7 @@ const structuredData = [
     <script is:inline>document.documentElement.classList.add('js');</script>
     <title>{title}</title>
     <meta name="description" content={description} />
-    {isPreview && <meta name="robots" content="noindex,nofollow" />}
+    {(isPreview || noindex) && <meta name="robots" content="noindex,nofollow" />}
     <link rel="canonical" href={canonicalURL} />
     <link rel="icon" type="image/png" sizes="32x32" href={withBase('/favicon-32.png')} />
     <link rel="icon" type="image/png" sizes="512x512" href={withBase('/favicon.png')} />
@@ -119,13 +124,13 @@ const structuredData = [
     >
       Skip to content
     </a>
-    <Nav />
-    <main id="main" class="pt-[72px]">
+    {!bare && <Nav />}
+    <main id="main" class={bare ? undefined : 'pt-[72px]'}>
       <slot />
     </main>
-    {!hideCta && <CtaBand />}
-    <Footer />
-    <ChatButton />
+    {!bare && !hideCta && <CtaBand />}
+    {!bare && <Footer />}
+    {!bare && <ChatButton />}
     <script src="../scripts/motion.js"></script>
   </body>
 </html>

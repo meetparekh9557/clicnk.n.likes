@@ -1,0 +1,89 @@
+---
+// Services overview: every service in one place, each with its own
+// distinct CTA into that service's dedicated page. Built for paid social
+// (Meta) traffic that doesn't arrive with one specific service in mind -
+// a broad "what do you do" ad lands here, a specific-service ad should
+// still land directly on that service's own page (better message match).
+// No index page existed here before; the nav's "Services" dropdown was
+// the only way to see the full list.
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import Card from '../../components/Card.astro';
+import Button from '../../components/Button.astro';
+import { serviceDetails } from '../../data/services';
+import { breadcrumbSchema } from '../../lib/seo';
+import Search from '@lucide/astro/icons/search';
+import MapPin from '@lucide/astro/icons/map-pin';
+import Sparkles from '@lucide/astro/icons/sparkles';
+import Share2 from '@lucide/astro/icons/share-2';
+import FileText from '@lucide/astro/icons/file-text';
+import Monitor from '@lucide/astro/icons/monitor';
+import Megaphone from '@lucide/astro/icons/megaphone';
+
+const trail: [string, string][] = [
+  ['Home', '/'],
+  ['Services', '/services/'],
+];
+const jsonLd = breadcrumbSchema(trail);
+
+// Same icon per service everywhere on the site (matches the homepage
+// bento), and a distinct, benefit-led CTA per card rather than a
+// generic "Learn more" repeated seven times.
+const serviceIcons: Record<string, any> = {
+  seo: Search,
+  'local-seo': MapPin,
+  'ai-seo': Sparkles,
+  'social-media-growth': Share2,
+  'content-marketing': FileText,
+  'website-development': Monitor,
+  'paid-campaigns': Megaphone,
+};
+const ctaLabel: Record<string, string> = {
+  seo: 'See SEO plans',
+  'local-seo': 'Win the local pack',
+  'ai-seo': 'Get cited by AI',
+  'social-media-growth': 'Grow on social',
+  'content-marketing': 'See content plans',
+  'website-development': 'Get a website quote',
+  'paid-campaigns': 'See ad management plans',
+};
+const iconWrap = 'mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 text-teal-dark';
+---
+
+<Base
+  title="Our Services: SEO, AI Search, Social, Content, Websites, Paid | Click.n.likes"
+  description="Full-stack organic growth in 7 services: SEO, Local SEO, AI SEO, social, content, websites and paid campaigns. Published pricing, free live checks, no sales call required."
+  jsonLd={jsonLd}
+>
+  <Breadcrumbs trail={trail} />
+
+  <section class="mx-auto max-w-3xl px-[5vw] pt-16 pb-4 text-center lg:pt-20">
+    <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">What we do</p>
+    <h1 class="reveal-mask mt-4 font-display text-[clamp(2rem,4.2vw,3rem)] leading-[1.1] font-bold text-navy">
+      <span class="mask-line"><span>Seven channels.</span></span>
+      <span class="mask-line" style="--d:120ms"><span>One growth engine.</span></span>
+    </h1>
+    <p class="reveal mx-auto mt-5 max-w-xl text-lg leading-relaxed text-navy/70" style="--d:220ms">
+      Pick the one channel that's costing you the most right now, or let us run the whole stack: every service below
+      is built to feed the others, not compete with them for budget.
+    </p>
+  </section>
+
+  <section class="mx-auto max-w-6xl px-[5vw] py-14">
+    <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {serviceDetails.map((s, i) => {
+        const Icon = serviceIcons[s.slug];
+        return (
+          <Card class="reveal flex flex-col" style={`--d:${(i % 3) * 90}ms`}>
+            <div class={iconWrap}><Icon size={22} stroke-width={2} aria-hidden="true" /></div>
+            <h2 class="font-display text-lg font-semibold text-navy">{s.title}</h2>
+            <p class="mt-2 flex-1 text-sm leading-relaxed text-navy/60">{s.lead}</p>
+            <Button href={`/services/${s.slug}/`} variant="outline" arrow class="mt-5 w-full">
+              {ctaLabel[s.slug]}
+            </Button>
+          </Card>
+        );
+      })}
+    </div>
+  </section>
+</Base>

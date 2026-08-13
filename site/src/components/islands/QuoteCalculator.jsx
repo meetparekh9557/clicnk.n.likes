@@ -8,7 +8,7 @@
 // with ad spend billed to the client directly. Prices are authored in INR and
 // shown in the visitor's currency; the emailed quote is documented in INR.
 import { useState, useEffect } from 'react';
-import { OWNER_EMAIL, autoEmailReady, sendFromClicknlikes, buildReportEmailHtml, fact } from '../../lib/engine';
+import { OWNER_EMAIL, sendFromClicknlikes, buildReportEmailHtml, fact } from '../../lib/engine';
 import { getCurrency, loadRates, onCurrency, formatMoney, usableCurrency } from '../../lib/currency.js';
 import { useCountUp } from '../../lib/useCountUp.js';
 
@@ -78,7 +78,7 @@ const unitRate = (u, words) => (u.type === 'wordblog' ? u.price + Math.max(0, (w
 const incOf = (u, tierId) => (u.included && typeof u.included === 'object' ? (u.included[tierId] ?? u.included.starter) : u.included);
 const KEYS = Object.keys(SERVICES);
 
-export default function QuoteCalculator({ preselect }) {
+export default function QuoteCalculator({ preselect, thankYouHref }) {
   const [selected, setSelected] = useState(() => new Set(preselect ? [preselect] : ['seo']));
   const [tierOf, setTierOf] = useState({}); // svc -> tier id
   const [qty, setQty] = useState({}); // `${svc}.${unit}` -> total qty
@@ -87,7 +87,6 @@ export default function QuoteCalculator({ preselect }) {
   const [business, setBusiness] = useState('');
   const [email, setEmail] = useState('');
   const [sending, setSending] = useState(false);
-  const [sent, setSent] = useState(false);
   const [cur, setCur] = useState('INR');
   const [rates, setRates] = useState(null);
   useEffect(() => {
@@ -177,7 +176,7 @@ export default function QuoteCalculator({ preselect }) {
       bodyText: `New plan:\n\nBusiness: ${business}\nEmail: ${email}\nProspect currency: ${cur}\nDuration: ${dur.m} months (pay ${dur.charged})\nDiscount: ${Math.round(multi * 100)}% (INR base)\n\nLines (INR):\n${lines.map((l) => `  ${l.label}${l.tier ? ` (${l.tier})` : ''}: ${l.custom ? 'Custom' : inr(l.amt) + ' ' + l.unit}`).join('\n')}\n\nMonthly net: ${inr(monthlyNet)} | Over ${dur.m}mo: ${inr(monthlyForDuration)} | One-time: ${inr(onetimeNet)} | Grand: ${inr(grand)}`,
     });
     setSending(true);
-    setTimeout(() => { setSending(false); setSent(true); }, 600);
+    setTimeout(() => { window.location.href = thankYouHref; }, 600);
   }
 
   return (
@@ -315,23 +314,16 @@ export default function QuoteCalculator({ preselect }) {
           {shown !== 'INR' && <p className="mt-2 text-[11px] leading-relaxed text-navy/45">Shown in {shown} at today's exchange rate. Your quote is confirmed in {shown} in the written proposal.</p>}
         </div>
 
-        {sent ? (
-          <div className="mt-5 rounded-xl border border-teal/40 bg-white p-5 text-sm">
-            <p className="font-display font-semibold text-navy">✓ Your plan is on its way{business ? `, ${business}` : ''}.</p>
-            <p className="mt-1 text-navy/65">{autoEmailReady ? <>The itemised plan was emailed to <b>{email}</b>. Not there in a minute? Check spam.</> : 'Your details are logged and a strategist will follow up with the written proposal.'}</p>
+        <form onSubmit={submit} className="mt-5">
+          <p className="mb-2 text-[13px] font-semibold text-navy">Email me this plan</p>
+          <div className="grid gap-3">
+            <input value={business} onChange={(e) => setBusiness(e.target.value)} placeholder="Business name (optional)" className="rounded-[10px] border-[1.5px] border-navy/10 bg-white px-4 py-3 text-sm outline-none focus:border-teal" />
+            <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@business.com" aria-label="Your email" className="rounded-[10px] border-[1.5px] border-navy/10 bg-white px-4 py-3 text-sm outline-none focus:border-teal" />
+            <button type="submit" disabled={sending || sel.length === 0} className="inline-flex items-center justify-center gap-2 rounded-full bg-navy px-6 py-3.5 text-sm font-semibold text-white transition-all duration-300 hover:bg-coral disabled:opacity-50">
+              {sending ? 'Sending…' : 'Email me this plan'}
+            </button>
           </div>
-        ) : (
-          <form onSubmit={submit} className="mt-5">
-            <p className="mb-2 text-[13px] font-semibold text-navy">Email me this plan</p>
-            <div className="grid gap-3">
-              <input value={business} onChange={(e) => setBusiness(e.target.value)} placeholder="Business name (optional)" className="rounded-[10px] border-[1.5px] border-navy/10 bg-white px-4 py-3 text-sm outline-none focus:border-teal" />
-              <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@business.com" aria-label="Your email" className="rounded-[10px] border-[1.5px] border-navy/10 bg-white px-4 py-3 text-sm outline-none focus:border-teal" />
-              <button type="submit" disabled={sending || sel.length === 0} className="inline-flex items-center justify-center gap-2 rounded-full bg-navy px-6 py-3.5 text-sm font-semibold text-white transition-all duration-300 hover:bg-coral disabled:opacity-50">
-                {sending ? 'Sending…' : 'Email me this plan'}
-              </button>
-            </div>
-          </form>
-        )}
+        </form>
       </div>
     </div>
   );

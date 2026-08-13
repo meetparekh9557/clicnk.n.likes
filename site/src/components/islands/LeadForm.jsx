@@ -3,7 +3,7 @@
 // lead row to the Sheet), one visitor confirmation, then the success
 // panel with the same copy and next-step expectations.
 import { useState } from 'react';
-import { OWNER_EMAIL, autoEmailReady, sendFromClicknlikes } from '../../lib/engine';
+import { OWNER_EMAIL, sendFromClicknlikes } from '../../lib/engine';
 
 const STRUGGLES = [
   'Not showing up on Google search or Maps',
@@ -31,9 +31,8 @@ const fieldCls =
   'w-full rounded-[10px] border-[1.5px] border-navy/10 bg-white px-4 py-3.5 text-sm text-navy transition-colors outline-none focus:border-teal';
 const labelCls = 'mb-1.5 block text-[12.5px] font-semibold text-navy';
 
-export default function LeadForm({ contactHref, toolsHref }) {
+export default function LeadForm({ contactHref, thankYouHref }) {
   const [sending, setSending] = useState(false);
-  const [sent, setSent] = useState(null);
 
   function submit(evt) {
     evt.preventDefault();
@@ -61,54 +60,8 @@ export default function LeadForm({ contactHref, toolsHref }) {
     }
     setSending(true);
     setTimeout(() => {
-      setSending(false);
-      form.reset();
-      setSent({ name: obj.name, email: obj.email });
+      window.location.href = thankYouHref;
     }, 650);
-  }
-
-  if (sent) {
-    return (
-      <div className="rounded-2xl border border-teal/40 bg-white p-7 shadow-[0_18px_44px_rgba(26,43,74,0.10)]">
-        <div className="flex items-start gap-4">
-          <div className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-teal/15 font-bold text-teal-dark">✓</div>
-          <div>
-            <h4 className="font-display text-lg font-semibold text-navy">
-              {sent.name ? `Thanks, ${sent.name.split(' ')[0]}. ` : ''}Your growth snapshot request is in.
-            </h4>
-            <p className="mt-0.5 text-sm text-navy/60">We build it by hand, not from a template.</p>
-          </div>
-        </div>
-        <ol className="mt-5 space-y-3 text-sm text-navy/80">
-          <li className="flex gap-3">
-            <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-navy font-display text-xs text-white">1</span>
-            <span>
-              {autoEmailReady
-                ? <>A confirmation email has been sent to <b>{sent.email || 'your inbox'}</b> from business@clicknlikes.com. Not there in a minute? Check spam.</>
-                : 'Your details are logged with us.'}
-            </span>
-          </li>
-          <li className="flex gap-3">
-            <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-navy font-display text-xs text-white">2</span>
-            <span>A strategist reviews your details and replies within <b>1 business day</b>, usually much faster.</span>
-          </li>
-          <li className="flex gap-3">
-            <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-navy font-display text-xs text-white">3</span>
-            <span>
-              In the meantime, our <a href={toolsHref} className="text-teal-dark underline">free tools</a> can show you
-              where you stand, or grab an <a href={contactHref} className="text-teal-dark underline">instant quote</a>.
-            </span>
-          </li>
-        </ol>
-        <button
-          type="button"
-          onClick={() => setSent(null)}
-          className="mt-6 rounded-full border-[1.5px] border-navy/15 px-5 py-2.5 text-sm font-semibold text-navy transition-colors hover:border-teal hover:text-teal-dark"
-        >
-          ↩ Submit another
-        </button>
-      </div>
-    );
   }
 
   return (

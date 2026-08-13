@@ -2,11 +2,10 @@
 // handleSimpleForm('blog-newsletter'): owner notification (logs the
 // lead row) + visitor confirmation, then the newsletter success copy.
 import { useState } from 'react';
-import { OWNER_EMAIL, autoEmailReady, sendFromClicknlikes } from '../../lib/engine';
+import { OWNER_EMAIL, sendFromClicknlikes } from '../../lib/engine';
 
-export default function NewsletterForm() {
+export default function NewsletterForm({ thankYouHref }) {
   const [sending, setSending] = useState(false);
-  const [sentTo, setSentTo] = useState(null);
 
   function submit(evt) {
     evt.preventDefault();
@@ -25,34 +24,8 @@ export default function NewsletterForm() {
     });
     setSending(true);
     setTimeout(() => {
-      setSending(false);
-      form.reset();
-      setSentTo(email);
+      window.location.href = thankYouHref;
     }, 650);
-  }
-
-  if (sentTo) {
-    return (
-      <div className="rounded-2xl border border-teal/40 bg-white p-6 text-left shadow-[0_10px_30px_rgba(26,43,74,0.06)]">
-        <h4 className="font-display text-lg font-semibold text-navy">You're subscribed.</h4>
-        <p className="mt-1 text-sm text-navy/60">One practical growth idea a week. Unsubscribe anytime.</p>
-        <p className="mt-3 text-sm text-navy/80">
-          {autoEmailReady ? (
-            <>A welcome email is on its way to <b>{sentTo}</b>: if it's not there in a minute, check spam and drag it to your inbox.</>
-          ) : (
-            'Your subscription is logged with us.'
-          )}{' '}
-          First issue lands this week. Reply to any issue: a real person reads the replies.
-        </p>
-        <button
-          type="button"
-          onClick={() => setSentTo(null)}
-          className="mt-4 rounded-full border-[1.5px] border-navy/15 px-5 py-2 text-sm font-semibold text-navy transition-colors hover:border-teal hover:text-teal-dark"
-        >
-          ↩ Subscribe another
-        </button>
-      </div>
-    );
   }
 
   return (
