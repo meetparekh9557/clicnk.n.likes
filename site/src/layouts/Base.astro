@@ -26,12 +26,24 @@ interface Props {
   ogType?: string;
   jsonLd?: unknown | unknown[];
   noindex?: boolean;
-  // Strips Nav, CtaBand, Footer and the WhatsApp button - every path off
-  // the page - for pages that must stay fully non-navigational (ad landing
-  // / conversion-confirmation pages). hideCta is redundant under bare.
+  // Strips Nav, CtaBand, Footer and the WhatsApp button entirely - every
+  // path off the page - for a true dead-end (the Thank You page). hideCta
+  // is redundant under bare.
   bare?: boolean;
+  // Granular version of the same idea: hide/neuter individual pieces
+  // instead of stripping everything. Used by the ads landing page, which
+  // wants to *look* like a normal page (real Nav + Footer, for trust)
+  // while staying non-navigable - so Nav/Footer render but every link
+  // inside them loses its href via disableLinks.
+  hideNav?: boolean;
+  hideFooter?: boolean;
+  hideChat?: boolean;
+  disableLinks?: boolean;
 }
-const { title, description, canonical, hideCta, ogImage, ogType, jsonLd, noindex, bare } = Astro.props;
+const { title, description, canonical, hideCta, ogImage, ogType, jsonLd, noindex, bare, hideNav, hideFooter, hideChat, disableLinks } = Astro.props;
+const noNav = bare || hideNav;
+const noFooter = bare || hideFooter;
+const noChat = bare || hideChat;
 // Preview builds (clicknlikes.com/preview/) must never be indexed, and
 // their canonicals point at the real future URL (base stripped).
 const isPreview = import.meta.env.PUBLIC_PREVIEW === '1';
@@ -124,13 +136,13 @@ const structuredData = [
     >
       Skip to content
     </a>
-    {!bare && <Nav />}
-    <main id="main" class={bare ? undefined : 'pt-[72px]'}>
+    {!noNav && <Nav disableLinks={disableLinks} />}
+    <main id="main" class={noNav ? undefined : 'pt-[72px]'}>
       <slot />
     </main>
     {!bare && !hideCta && <CtaBand />}
-    {!bare && <Footer />}
-    {!bare && <ChatButton />}
+    {!noFooter && <Footer disableLinks={disableLinks} />}
+    {!noChat && <ChatButton />}
     <script src="../scripts/motion.js"></script>
   </body>
 </html>

@@ -1,19 +1,18 @@
 ---
 // Services overview: a dedicated Meta ads landing page, not a normal
-// site page. Deliberately isolated - noindex,nofollow, `bare` layout (no
-// site Nav/Footer/CtaBand/chat widget) - with its own minimal header
-// (logo only) and minimal footer (just the copyright line + Privacy/
-// Terms, nothing else). The 7 channel tiles are purely informational, no
-// links: the only way off this page is the Privacy/Terms footer links or
-// submitting the form below. The form is the page's entire job - a
-// paid click shouldn't need a second click to become a lead, so it
-// captures right here, with a multi-select for every service the
-// visitor is interested in rather than forcing a single pick.
+// site page - noindex,nofollow so it never shows up organically. It
+// keeps the real site Nav and Footer (for the trust/brand-recognition
+// a normal-looking page gives a paid-traffic visitor) but every link
+// inside them has its href stripped via disableLinks - same look, none
+// of them go anywhere. The only real actions on the page are the
+// per-channel CTAs (which scroll to and pre-check the form below, not
+// off-page) and submitting the form itself.
 import Base from '../../layouts/Base.astro';
 import SimpleForm from '../../components/islands/SimpleForm.jsx';
 import StatTile from '../../components/StatTile.astro';
 import { serviceDetails } from '../../data/services';
 import { marketStats } from '../../data/market';
+import { caseStudies } from '../../data/caseStudies';
 import { withBase } from '../../lib/url';
 import Search from '@lucide/astro/icons/search';
 import MapPin from '@lucide/astro/icons/map-pin';
@@ -22,8 +21,7 @@ import Share2 from '@lucide/astro/icons/share-2';
 import FileText from '@lucide/astro/icons/file-text';
 import Monitor from '@lucide/astro/icons/monitor';
 import Megaphone from '@lucide/astro/icons/megaphone';
-
-const year = new Date().getFullYear();
+import ArrowRight from '@lucide/astro/icons/arrow-right';
 
 // Same icon per service everywhere on the site (matches the homepage bento).
 const serviceIcons: Record<string, any> = {
@@ -35,11 +33,35 @@ const serviceIcons: Record<string, any> = {
   'website-development': Monitor,
   'paid-campaigns': Megaphone,
 };
+// A distinct, benefit-led CTA per card. Each scrolls to the form below
+// and pre-checks that service's chip - never off-page.
+const ctaLabel: Record<string, string> = {
+  seo: 'Start with SEO',
+  'local-seo': 'Win the local pack',
+  'ai-seo': 'Get cited by AI',
+  'social-media-growth': 'Grow on social',
+  'content-marketing': 'Start with content',
+  'website-development': 'Get a website quote',
+  'paid-campaigns': 'Start ad management',
+};
 
 // Three of the site's real, sourced market figures (data/market.ts) -
 // broad enough to support any of the 7 services, never invented for
 // this page.
 const proofStats = marketStats.slice(0, 3);
+
+// Real, sourced, dated results from two published case studies - never
+// invented for this page. Each links back to the actual client so the
+// number is checkable, exactly the standard the rest of the site holds
+// every figure to.
+const aidbylaw = caseStudies.find((c) => c.slug === 'aidbylaw')!;
+const kopaSeamless = caseStudies.find((c) => c.slug === 'kopa-seamless')!;
+const resultStats = [
+  { ...kopaSeamless.stats![0], client: kopaSeamless.client },
+  { ...aidbylaw.stats![3], client: aidbylaw.client },
+  { ...kopaSeamless.stats![1], client: kopaSeamless.client },
+  { ...aidbylaw.stats![0], client: aidbylaw.client },
+];
 
 const formFields = [
   { name: 'name', label: 'Full name', placeholder: 'Your name' },
@@ -57,13 +79,10 @@ const formFields = [
   title="Our Services: SEO, AI Search, Social, Content, Websites, Paid | Click.n.likes"
   description="Full-stack organic growth in 7 services: SEO, Local SEO, AI SEO, social, content, websites and paid campaigns. Published pricing, free live checks, no sales call required."
   noindex
-  bare
+  hideCta
+  hideChat
+  disableLinks
 >
-  <!-- Minimal header: logo only, not a link (this page has no navigation). -->
-  <header class="border-b border-navy/10 py-5 text-center">
-    <img src={withBase('/logo-wordmark.png')} alt="Click.n.likes" width="156" height="26" class="mx-auto h-[26px] w-auto" />
-  </header>
-
   <!-- Hero: a real navy band instead of another plain white section. -->
   <section class="relative overflow-hidden bg-navy">
     <div class="pointer-events-none absolute inset-0 opacity-[0.07]" style="background-image:radial-gradient(rgba(255,255,255,0.5) 1px, transparent 1px); background-size:26px 26px;"></div>
@@ -79,6 +98,12 @@ const formFields = [
         Pick the one channel that's costing you the most right now, or let us run the whole stack: every service below
         is built to feed the others, not compete with them for budget.
       </p>
+      <div class="reveal mt-8" style="--d:280ms">
+        <a href="#lead-form" class="inline-flex items-center gap-2 rounded-full bg-teal px-6 py-3.5 text-sm font-semibold text-navy transition-all duration-300 hover:-translate-y-0.5 hover:bg-white">
+          Tell us what you need
+          <ArrowRight size={16} stroke-width={2.4} aria-hidden="true" />
+        </a>
+      </div>
     </div>
   </section>
 
@@ -91,30 +116,57 @@ const formFields = [
     </div>
   </section>
 
-  <!-- Channels: informational only, no links off this page. -->
+  <!-- Channels: each with its own CTA that scrolls to (and pre-checks) the form. -->
   <section class="mx-auto max-w-4xl px-[5vw] py-16">
     <p class="reveal text-center text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">What we do</p>
     <div class="mt-8 divide-y divide-navy/10 rounded-2xl border border-navy/10 bg-white shadow-[0_10px_30px_rgba(26,43,74,0.06)]">
       {serviceDetails.map((s, i) => {
         const Icon = serviceIcons[s.slug];
         return (
-          <div class="reveal flex items-start gap-5 p-6" style={`--d:${(i % 4) * 70}ms`}>
+          <div class="reveal flex flex-col items-start gap-5 p-6 sm:flex-row sm:items-center" style={`--d:${(i % 4) * 70}ms`}>
             <span class="font-display text-sm font-bold text-navy/25 tabular-nums">{String(i + 1).padStart(2, '0')}</span>
             <div class="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-teal/10 text-teal-dark">
               <Icon size={22} stroke-width={2} aria-hidden="true" />
             </div>
-            <div>
+            <div class="flex-1">
               <h2 class="font-display text-lg font-semibold text-navy">{s.title}</h2>
               <p class="mt-1.5 text-sm leading-relaxed text-navy/60">{s.lead}</p>
             </div>
+            <a
+              href="#lead-form"
+              data-preselect={s.title}
+              class="inline-flex shrink-0 items-center gap-1.5 rounded-full border-[1.5px] border-navy/15 px-4 py-2 text-[13px] font-semibold text-navy transition-colors hover:border-teal hover:text-teal-dark"
+            >
+              {ctaLabel[s.slug]}
+              <ArrowRight size={14} stroke-width={2.4} aria-hidden="true" />
+            </a>
           </div>
         );
       })}
     </div>
   </section>
 
-  <!-- The form: the entire point of the page. -->
-  <section class="mx-auto max-w-2xl px-[5vw] pb-20 text-center">
+  <!-- Real results: sourced, dated, attributed to the named client. -->
+  <section class="border-y border-navy/10 bg-off">
+    <div class="mx-auto max-w-5xl px-[5vw] py-16">
+      <p class="reveal text-center text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">Real client results</p>
+      <h2 class="reveal mt-3 text-center font-display text-[clamp(1.6rem,3.2vw,2.2rem)] leading-[1.15] font-bold text-navy" style="--d:80ms">
+        Not projections. Numbers from live campaigns.
+      </h2>
+      <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {resultStats.map((s, i) => (
+          <div class="reveal rounded-2xl border border-navy/10 bg-white p-5" style={`--d:${i * 80}ms`}>
+            <div class="font-display text-3xl font-bold text-teal-dark">{s.value}</div>
+            <p class="mt-1.5 text-sm leading-relaxed text-navy/70">{s.label}</p>
+            <p class="mt-3 text-xs font-medium text-navy/45">{s.client} · {s.sub}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- The form: the page's main conversion path. -->
+  <section id="lead-form" class="mx-auto max-w-2xl scroll-mt-24 px-[5vw] py-20 text-center">
     <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase" style="--d:80ms">Not sure which one?</p>
     <h2 class="reveal mt-3 font-display text-[clamp(1.6rem,3.2vw,2.2rem)] leading-[1.15] font-bold text-navy" style="--d:120ms">
       Tell us what you're struggling with, we'll point you the right way.
@@ -130,14 +182,21 @@ const formFields = [
     </div>
   </section>
 
-  <!-- Minimal footer: just the copyright line and Privacy/Terms. -->
-  <footer class="border-t border-navy/10 py-6 text-center text-[12.5px] text-navy/50">
-    <p>
-      © {year} Click.n.likes. All rights reserved.
-      <span class="mx-1.5">·</span>
-      <a href={withBase('/privacy/')} class="hover:text-teal-dark hover:underline">Privacy</a>
-      <span class="mx-1">·</span>
-      <a href={withBase('/terms/')} class="hover:text-teal-dark hover:underline">Terms</a>
-    </p>
-  </footer>
+  <script>
+    // Delegated so it also covers CTAs added later. The form is a
+    // client:visible island, so clicking a CTA that scrolls it into view
+    // can outrace its hydration - window.__cnlPreselect is a queue
+    // SimpleForm drains on mount, so the value lands either way (the
+    // event covers the case where the form was already hydrated).
+    document.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      const btn = target.closest('[data-preselect]');
+      if (!btn) return;
+      const value = btn.getAttribute('data-preselect');
+      if (!value) return;
+      const detail = { field: 'services_interested', value };
+      (window as any).__cnlPreselect = detail;
+      window.dispatchEvent(new CustomEvent('cnl:preselect', { detail }));
+    });
+  </script>
 </Base>

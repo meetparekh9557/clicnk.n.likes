@@ -2,7 +2,7 @@
 // driven by a field config so Work/About/FAQ/Contact all reuse one
 // implementation. One owner notification (logs the sheet row) + one
 // visitor confirmation per submission, exactly like v1.
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { OWNER_EMAIL, sendFromClicknlikes } from '../../lib/engine';
 
 const fieldCls =
@@ -19,6 +19,34 @@ export default function SimpleForm({ tag, fields, submitLabel, thankYouHref }) {
       set.has(opt) ? set.delete(opt) : set.add(opt);
       return { ...prev, [name]: set };
     });
+
+  // Lets a plain <a href="#form-id"> CTA elsewhere on the page pre-check a
+  // chip before scrolling here, instead of just dropping the visitor at an
+  // empty form (see services/index.astro's per-channel CTAs). This island
+  // is client:visible, so a CTA click that scrolls the form into view can
+  // fire the click (and the event below) *before* hydration finishes -
+  // window.__cnlPreselect is a queue the click handler fills synchronously
+  // that this effect drains on mount, so the value survives that race
+  // regardless of exactly when hydration lands.
+  const applyPreselect = (field, value) => {
+    if (!field || !value) return;
+    setChipSel((prev) => {
+      const set = new Set(prev[field] || []);
+      set.add(value);
+      return { ...prev, [field]: set };
+    });
+  };
+  useEffect(() => {
+    if (window.__cnlPreselect) {
+      applyPreselect(window.__cnlPreselect.field, window.__cnlPreselect.value);
+      window.__cnlPreselect = null;
+    }
+    function onPreselect(evt) {
+      applyPreselect(evt.detail?.field, evt.detail?.value);
+    }
+    window.addEventListener('cnl:preselect', onPreselect);
+    return () => window.removeEventListener('cnl:preselect', onPreselect);
+  }, []);
 
   function submit(evt) {
     evt.preventDefault();
