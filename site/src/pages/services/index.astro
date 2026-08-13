@@ -1,17 +1,18 @@
 ---
 // Services overview: every service in one place, each with its own
-// distinct CTA into that service's dedicated page. Built for paid social
-// (Meta) traffic that doesn't arrive with one specific service in mind -
-// a broad "what do you do" ad lands here, a specific-service ad should
-// still land directly on that service's own page (better message match).
-// No index page existed here before; the nav's "Services" dropdown was
-// the only way to see the full list.
+// distinct CTA into that service's dedicated page. Built solely as a
+// Meta ads landing page for traffic that doesn't arrive with one
+// specific service in mind - a broad "what do you do" ad lands here.
+// Deliberately isolated: noindex,nofollow, no Nav/Footer/CtaBand/chat
+// widget (`bare`), not in the sitemap, not linked from primary nav - the
+// only way in is the ad's direct URL, and the only ways out are the
+// per-service CTAs below (the intended next step, not a navigation
+// escape hatch). A specific-service ad should still land directly on
+// that service's own real page for better message match.
 import Base from '../../layouts/Base.astro';
-import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import Card from '../../components/Card.astro';
 import Button from '../../components/Button.astro';
 import { serviceDetails } from '../../data/services';
-import { breadcrumbSchema } from '../../lib/seo';
 import Search from '@lucide/astro/icons/search';
 import MapPin from '@lucide/astro/icons/map-pin';
 import Sparkles from '@lucide/astro/icons/sparkles';
@@ -19,12 +20,6 @@ import Share2 from '@lucide/astro/icons/share-2';
 import FileText from '@lucide/astro/icons/file-text';
 import Monitor from '@lucide/astro/icons/monitor';
 import Megaphone from '@lucide/astro/icons/megaphone';
-
-const trail: [string, string][] = [
-  ['Home', '/'],
-  ['Services', '/services/'],
-];
-const jsonLd = breadcrumbSchema(trail);
 
 // Same icon per service everywhere on the site (matches the homepage
 // bento), and a distinct, benefit-led CTA per card rather than a
@@ -53,10 +48,9 @@ const iconWrap = 'mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 t
 <Base
   title="Our Services: SEO, AI Search, Social, Content, Websites, Paid | Click.n.likes"
   description="Full-stack organic growth in 7 services: SEO, Local SEO, AI SEO, social, content, websites and paid campaigns. Published pricing, free live checks, no sales call required."
-  jsonLd={jsonLd}
+  noindex
+  bare
 >
-  <Breadcrumbs trail={trail} />
-
   <section class="mx-auto max-w-3xl px-[5vw] pt-16 pb-4 text-center lg:pt-20">
     <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">What we do</p>
     <h1 class="reveal-mask mt-4 font-display text-[clamp(2rem,4.2vw,3rem)] leading-[1.1] font-bold text-navy">
