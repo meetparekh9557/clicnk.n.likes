@@ -1,43 +1,45 @@
 ---
 // Services overview: a dedicated Meta ads landing page, not a normal
-// site page - noindex,nofollow so it never shows up organically. It
-// keeps the real site Nav and Footer (for the trust/brand-recognition
-// a normal-looking page gives a paid-traffic visitor) but every link
-// inside them has its href stripped via disableLinks - same look, none
-// of them go anywhere. The only real actions on the page are the
-// per-channel CTAs (which scroll to and pre-check the form below, not
-// off-page) and submitting the form itself.
+// site page - noindex, so it never shows up organically. Custom minimal
+// header (logo, left) and footer (logo + copyright/legal only) instead
+// of the full site Nav/Footer, so nothing pulls attention away from the
+// page's own job: build trust fast, then convert via the form or
+// WhatsApp. Local SEO is deliberately left out of the channel list and
+// the form's service picker on this page only (the real site keeps it
+// everywhere else) - a standing instruction for this page specifically.
 import Base from '../../layouts/Base.astro';
 import SimpleForm from '../../components/islands/SimpleForm.jsx';
-import StatTile from '../../components/StatTile.astro';
 import { serviceDetails } from '../../data/services';
-import { marketStats } from '../../data/market';
 import { caseStudies } from '../../data/caseStudies';
+import { contact } from '../../data/site';
 import { withBase } from '../../lib/url';
 import Search from '@lucide/astro/icons/search';
-import MapPin from '@lucide/astro/icons/map-pin';
 import Sparkles from '@lucide/astro/icons/sparkles';
 import Share2 from '@lucide/astro/icons/share-2';
 import FileText from '@lucide/astro/icons/file-text';
 import Monitor from '@lucide/astro/icons/monitor';
 import Megaphone from '@lucide/astro/icons/megaphone';
 import ArrowRight from '@lucide/astro/icons/arrow-right';
+import Eye from '@lucide/astro/icons/eye';
+import Zap from '@lucide/astro/icons/zap';
+import TrendingUp from '@lucide/astro/icons/trending-up';
+import Layers from '@lucide/astro/icons/layers';
 
-// Same icon per service everywhere on the site (matches the homepage bento).
+const year = new Date().getFullYear();
+
+// This page only - every other page keeps all 7.
+const adsServices = serviceDetails.filter((s) => s.slug !== 'local-seo');
+
 const serviceIcons: Record<string, any> = {
   seo: Search,
-  'local-seo': MapPin,
   'ai-seo': Sparkles,
   'social-media-growth': Share2,
   'content-marketing': FileText,
   'website-development': Monitor,
   'paid-campaigns': Megaphone,
 };
-// A distinct, benefit-led CTA per card. Each scrolls to the form below
-// and pre-checks that service's chip - never off-page.
 const ctaLabel: Record<string, string> = {
   seo: 'Start with SEO',
-  'local-seo': 'Win the local pack',
   'ai-seo': 'Get cited by AI',
   'social-media-growth': 'Grow on social',
   'content-marketing': 'Start with content',
@@ -45,15 +47,9 @@ const ctaLabel: Record<string, string> = {
   'paid-campaigns': 'Start ad management',
 };
 
-// Three of the site's real, sourced market figures (data/market.ts) -
-// broad enough to support any of the 7 services, never invented for
-// this page.
-const proofStats = marketStats.slice(0, 3);
-
 // Real, sourced, dated results from two published case studies - never
-// invented for this page. Each links back to the actual client so the
-// number is checkable, exactly the standard the rest of the site holds
-// every figure to.
+// invented for this page. Kept high on the page, not buried at the
+// bottom, since this is the trust signal that actually earns the click.
 const aidbylaw = caseStudies.find((c) => c.slug === 'aidbylaw')!;
 const kopaSeamless = caseStudies.find((c) => c.slug === 'kopa-seamless')!;
 const resultStats = [
@@ -63,6 +59,18 @@ const resultStats = [
   { ...aidbylaw.stats![0], client: aidbylaw.client },
 ];
 
+// The real "How we're different" claims from the homepage, verbatim -
+// never invented for this page.
+const whyUs = [
+  { icon: Eye, title: 'Pricing you can see', text: 'Most agencies hide pricing behind a sales call. Ours is published, tiered and starts at ₹16,000.' },
+  { icon: Zap, title: 'Audits that actually run', text: 'Most "free audits" are empty lead-gen forms. Ours run real, transparent scoring the second you submit.' },
+  { icon: TrendingUp, title: 'Leads, not vanity metrics', text: 'Most agencies report clicks and impressions. We report the leads and enquiries the work actually generated.' },
+  { icon: Layers, title: 'One team, seven channels', text: 'Most agencies hand you between vendors for SEO, social, content and ads. We run it all under one roof.' },
+];
+
+const waMessage = "Hi Click.n.likes, I'd like to grow my business. Can you help?";
+const waHref = `${contact.whatsappHref}?text=${encodeURIComponent(waMessage)}`;
+
 const formFields = [
   { name: 'name', label: 'Full name', placeholder: 'Your name' },
   { name: 'email', label: 'Email', type: 'email', placeholder: 'you@business.com' },
@@ -70,84 +78,65 @@ const formFields = [
   { name: 'phone', label: 'WhatsApp number', type: 'tel', placeholder: '+91 98765 43210', required: false, optional: 'optional, for a faster reply' },
   {
     name: 'services_interested', label: 'Which services are you interested in?', type: 'chips', full: true,
-    options: serviceDetails.map((s) => s.title),
+    options: adsServices.map((s) => s.title),
   },
 ];
 ---
 
 <Base
   title="Our Services: SEO, AI Search, Social, Content, Websites, Paid | Click.n.likes"
-  description="Full-stack organic growth in 7 services: SEO, Local SEO, AI SEO, social, content, websites and paid campaigns. Published pricing, free live checks, no sales call required."
+  description="Full-stack organic growth: SEO, AI SEO, social, content, websites and paid campaigns. Published pricing, free live checks, no sales call required."
   noindex
-  hideCta
-  hideChat
-  disableLinks
+  bare
 >
-  <!-- Hero: a real navy band instead of another plain white section. -->
+  <!-- Minimal header: logo only, left-aligned. -->
+  <header class="border-b border-navy/10 px-[5vw] py-5">
+    <img src={withBase('/logo-wordmark.png')} alt="Click.n.likes" width="156" height="26" class="h-[26px] w-auto" />
+  </header>
+
+  <!-- Hero: headline + subhead + a row of real trust badges (not empty) + primary CTA. -->
   <section class="relative overflow-hidden bg-navy">
     <div class="pointer-events-none absolute inset-0 opacity-[0.07]" style="background-image:radial-gradient(rgba(255,255,255,0.5) 1px, transparent 1px); background-size:26px 26px;"></div>
-    <div class="relative mx-auto max-w-3xl px-[5vw] py-20 text-center lg:py-24">
+    <div class="relative mx-auto max-w-3xl px-[5vw] py-16 text-center lg:py-20">
       <p class="reveal inline-flex items-center gap-2 rounded-full border border-teal/40 bg-teal/10 px-4 py-1.5 text-[13px] font-semibold text-teal">
         <span class="h-1.5 w-1.5 rounded-full bg-teal"></span> Full-stack organic growth
       </p>
       <h1 class="reveal-mask mt-5 font-display text-[clamp(2.1rem,4.6vw,3.3rem)] leading-[1.08] font-bold text-white">
-        <span class="mask-line"><span>Seven channels.</span></span>
+        <span class="mask-line"><span>Six channels.</span></span>
         <span class="mask-line" style="--d:120ms"><span class="text-teal">One growth engine.</span></span>
       </h1>
       <p class="reveal mx-auto mt-5 max-w-xl text-lg leading-relaxed text-white/70" style="--d:220ms">
         Pick the one channel that's costing you the most right now, or let us run the whole stack: every service below
         is built to feed the others, not compete with them for budget.
       </p>
-      <div class="reveal mt-8" style="--d:280ms">
+      <div class="reveal mt-8 flex flex-wrap items-center justify-center gap-3" style="--d:280ms">
         <a href="#lead-form" class="inline-flex items-center gap-2 rounded-full bg-teal px-6 py-3.5 text-sm font-semibold text-navy transition-all duration-300 hover:-translate-y-0.5 hover:bg-white">
           Tell us what you need
           <ArrowRight size={16} stroke-width={2.4} aria-hidden="true" />
         </a>
+        <a href={waHref} target="_blank" rel="noopener" class="inline-flex items-center gap-2 rounded-full border-[1.5px] border-white/30 px-6 py-3.5 text-sm font-semibold text-white transition-all duration-300 hover:border-teal hover:text-teal">
+          Chat on WhatsApp
+        </a>
+      </div>
+      <div class="reveal mt-10 grid grid-cols-3 gap-3 border-t border-white/10 pt-8 text-left sm:gap-6" style="--d:340ms">
+        <div>
+          <p class="font-display text-xl font-bold text-teal sm:text-2xl">₹16,000</p>
+          <p class="mt-1 text-[12.5px] leading-snug text-white/60">Published pricing, no sales call to find out</p>
+        </div>
+        <div>
+          <p class="font-display text-xl font-bold text-teal sm:text-2xl">6</p>
+          <p class="mt-1 text-[12.5px] leading-snug text-white/60">Channels, one team, nothing between vendors</p>
+        </div>
+        <div>
+          <p class="font-display text-xl font-bold text-teal sm:text-2xl">Free</p>
+          <p class="mt-1 text-[12.5px] leading-snug text-white/60">Live site checks, no lead-gen quiz behind them</p>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- Proof strip: real, sourced market figures, not client-specific claims. -->
+  <!-- Real results: high on the page, sourced, dated, attributed - the actual trust signal. -->
   <section class="border-b border-navy/10 bg-off">
-    <div class="mx-auto grid max-w-5xl gap-4 px-[5vw] py-12 sm:grid-cols-3">
-      {proofStats.map((s, i) => (
-        <StatTile value={s.value} label={s.label} source={s.source} class="reveal" style={`--d:${i * 90}ms`} />
-      ))}
-    </div>
-  </section>
-
-  <!-- Channels: each with its own CTA that scrolls to (and pre-checks) the form. -->
-  <section class="mx-auto max-w-4xl px-[5vw] py-16">
-    <p class="reveal text-center text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">What we do</p>
-    <div class="mt-8 divide-y divide-navy/10 rounded-2xl border border-navy/10 bg-white shadow-[0_10px_30px_rgba(26,43,74,0.06)]">
-      {serviceDetails.map((s, i) => {
-        const Icon = serviceIcons[s.slug];
-        return (
-          <div class="reveal flex flex-col items-start gap-5 p-6 sm:flex-row sm:items-center" style={`--d:${(i % 4) * 70}ms`}>
-            <span class="font-display text-sm font-bold text-navy/25 tabular-nums">{String(i + 1).padStart(2, '0')}</span>
-            <div class="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-teal/10 text-teal-dark">
-              <Icon size={22} stroke-width={2} aria-hidden="true" />
-            </div>
-            <div class="flex-1">
-              <h2 class="font-display text-lg font-semibold text-navy">{s.title}</h2>
-              <p class="mt-1.5 text-sm leading-relaxed text-navy/60">{s.lead}</p>
-            </div>
-            <a
-              href="#lead-form"
-              data-preselect={s.title}
-              class="inline-flex shrink-0 items-center gap-1.5 rounded-full border-[1.5px] border-navy/15 px-4 py-2 text-[13px] font-semibold text-navy transition-colors hover:border-teal hover:text-teal-dark"
-            >
-              {ctaLabel[s.slug]}
-              <ArrowRight size={14} stroke-width={2.4} aria-hidden="true" />
-            </a>
-          </div>
-        );
-      })}
-    </div>
-  </section>
-
-  <!-- Real results: sourced, dated, attributed to the named client. -->
-  <section class="border-y border-navy/10 bg-off">
     <div class="mx-auto max-w-5xl px-[5vw] py-16">
       <p class="reveal text-center text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">Real client results</p>
       <h2 class="reveal mt-3 text-center font-display text-[clamp(1.6rem,3.2vw,2.2rem)] leading-[1.15] font-bold text-navy" style="--d:80ms">
@@ -161,6 +150,67 @@ const formFields = [
             <p class="mt-3 text-xs font-medium text-navy/45">{s.client} · {s.sub}</p>
           </div>
         ))}
+      </div>
+      <div class="reveal mt-10 text-center" style="--d:120ms">
+        <a href="#lead-form" class="inline-flex items-center gap-2 rounded-full bg-navy px-6 py-3.5 text-sm font-semibold text-white transition-all duration-300 hover:bg-coral">
+          Get results like these
+          <ArrowRight size={16} stroke-width={2.4} aria-hidden="true" />
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why choose us: the real, already-published differentiators. -->
+  <section class="mx-auto max-w-5xl px-[5vw] py-16">
+    <p class="reveal text-center text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">Why choose us</p>
+    <h2 class="reveal mt-3 text-center font-display text-[clamp(1.6rem,3.2vw,2.2rem)] leading-[1.15] font-bold text-navy" style="--d:80ms">
+      Not another agency with a "book a call" button.
+    </h2>
+    <div class="mt-10 grid gap-5 sm:grid-cols-2">
+      {whyUs.map((w, i) => (
+        <div class="reveal rounded-2xl border border-navy/10 bg-white p-6 shadow-[0_10px_30px_rgba(26,43,74,0.06)]" style={`--d:${i * 70}ms`}>
+          <div class="mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 text-teal-dark"><w.icon size={22} stroke-width={2} aria-hidden="true" /></div>
+          <h3 class="font-display text-lg font-semibold text-navy">{w.title}</h3>
+          <p class="mt-2 text-sm leading-relaxed text-navy/60">{w.text}</p>
+        </div>
+      ))}
+    </div>
+    <div class="reveal mt-10 text-center" style="--d:120ms">
+      <a href="#lead-form" class="inline-flex items-center gap-2 rounded-full border-[1.5px] border-navy/15 px-6 py-3.5 text-sm font-semibold text-navy transition-colors hover:border-teal hover:text-teal-dark">
+        Talk to us
+        <ArrowRight size={16} stroke-width={2.4} aria-hidden="true" />
+      </a>
+    </div>
+  </section>
+
+  <!-- Channels: each with its own CTA that scrolls to (and pre-checks) the form. -->
+  <section class="border-t border-navy/10 bg-off">
+    <div class="mx-auto max-w-4xl px-[5vw] py-16">
+      <p class="reveal text-center text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">What we do</p>
+      <div class="mt-8 divide-y divide-navy/10 rounded-2xl border border-navy/10 bg-white shadow-[0_10px_30px_rgba(26,43,74,0.06)]">
+        {adsServices.map((s, i) => {
+          const Icon = serviceIcons[s.slug];
+          return (
+            <div class="reveal flex flex-col items-start gap-5 p-6 sm:flex-row sm:items-center" style={`--d:${(i % 4) * 70}ms`}>
+              <span class="font-display text-sm font-bold text-navy/25 tabular-nums">{String(i + 1).padStart(2, '0')}</span>
+              <div class="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-teal/10 text-teal-dark">
+                <Icon size={22} stroke-width={2} aria-hidden="true" />
+              </div>
+              <div class="flex-1">
+                <h2 class="font-display text-lg font-semibold text-navy">{s.title}</h2>
+                <p class="mt-1.5 text-sm leading-relaxed text-navy/60">{s.lead}</p>
+              </div>
+              <a
+                href="#lead-form"
+                data-preselect={s.title}
+                class="inline-flex shrink-0 items-center gap-1.5 rounded-full border-[1.5px] border-navy/15 px-4 py-2 text-[13px] font-semibold text-navy transition-colors hover:border-teal hover:text-teal-dark"
+              >
+                {ctaLabel[s.slug]}
+                <ArrowRight size={14} stroke-width={2.4} aria-hidden="true" />
+              </a>
+            </div>
+          );
+        })}
       </div>
     </div>
   </section>
@@ -180,14 +230,38 @@ const formFields = [
         thankYouHref={withBase('/thank-you/')}
       />
     </div>
+    <p class="reveal mt-5 text-sm text-navy/55" style="--d:220ms">
+      Prefer to talk now? <a href={waHref} target="_blank" rel="noopener" class="font-semibold text-teal-dark underline decoration-teal/40 underline-offset-2">Message us on WhatsApp →</a>
+    </p>
   </section>
 
+  <!-- Minimal footer: logo + copyright + Privacy/Terms. -->
+  <footer class="border-t border-navy/10 py-8 text-center">
+    <img src={withBase('/logo-wordmark.png')} alt="Click.n.likes" width="130" height="22" class="mx-auto h-[22px] w-auto opacity-70" />
+    <p class="mt-4 text-[12.5px] text-navy/50">
+      © {year} Click.n.likes. All rights reserved.
+      <span class="mx-1.5">·</span>
+      <a href={withBase('/privacy/')} class="hover:text-teal-dark hover:underline">Privacy</a>
+      <span class="mx-1">·</span>
+      <a href={withBase('/terms/')} class="hover:text-teal-dark hover:underline">Terms</a>
+    </p>
+  </footer>
+
+  <!-- Floating WhatsApp button, prefilled for this page's context. -->
+  <a
+    href={waHref}
+    target="_blank"
+    rel="noopener"
+    aria-label="Chat with us on WhatsApp"
+    class="fixed right-4 bottom-4 z-30 inline-flex items-center gap-2 rounded-full bg-[#25D366] py-3 pr-5 pl-4 font-semibold text-white shadow-[0_12px_30px_rgba(37,211,102,0.45)] transition-transform duration-300 ease-out-quart hover:-translate-y-0.5 sm:right-6 sm:bottom-6"
+  >
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M12.04 2c-5.5 0-9.96 4.46-9.96 9.96 0 1.76.46 3.45 1.34 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.004c5.5 0 9.96-4.46 9.96-9.96 0-2.66-1.04-5.16-2.92-7.04A9.9 9.9 0 0 0 12.04 2zm0 18.13h-.003a8.23 8.23 0 0 1-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.25-8.24 2.2 0 4.27.86 5.83 2.42a8.19 8.19 0 0 1 2.41 5.83c0 4.55-3.7 8.24-8.24 8.24zm4.52-6.16c-.25-.12-1.47-.72-1.7-.81-.23-.08-.39-.12-.56.13-.16.24-.64.8-.78.97-.15.16-.29.18-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.02-.38.11-.5.11-.11.25-.29.37-.43.12-.15.16-.25.25-.42.08-.16.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.42-.56-.43l-.48-.01c-.16 0-.43.06-.66.31-.22.24-.86.85-.86 2.07 0 1.22.89 2.4 1.01 2.56.12.16 1.75 2.67 4.24 3.75.59.25 1.05.4 1.41.52.59.19 1.13.16 1.56.1.47-.07 1.47-.6 1.68-1.18.2-.58.2-1.08.14-1.18-.06-.11-.22-.17-.47-.29z"></path>
+    </svg>
+    <span class="hidden text-sm sm:inline">Chat with us</span>
+  </a>
+
   <script>
-    // Delegated so it also covers CTAs added later. The form is a
-    // client:visible island, so clicking a CTA that scrolls it into view
-    // can outrace its hydration - window.__cnlPreselect is a queue
-    // SimpleForm drains on mount, so the value lands either way (the
-    // event covers the case where the form was already hydrated).
     document.addEventListener('click', (e) => {
       const target = e.target as HTMLElement;
       const btn = target.closest('[data-preselect]');
