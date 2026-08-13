@@ -12,7 +12,9 @@
 import Base from '../../layouts/Base.astro';
 import Card from '../../components/Card.astro';
 import Button from '../../components/Button.astro';
+import SimpleForm from '../../components/islands/SimpleForm.jsx';
 import { serviceDetails } from '../../data/services';
+import { withBase } from '../../lib/url';
 import Search from '@lucide/astro/icons/search';
 import MapPin from '@lucide/astro/icons/map-pin';
 import Sparkles from '@lucide/astro/icons/sparkles';
@@ -43,6 +45,21 @@ const ctaLabel: Record<string, string> = {
   'paid-campaigns': 'See ad management plans',
 };
 const iconWrap = 'mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 text-teal-dark';
+
+// This is the page's actual capture mechanism - the cards above are a
+// self-service router for people who already know which channel they
+// want, but a paid click shouldn't require a second click just to
+// become a lead. Same field pattern as the other lead forms sitewide.
+const formFields = [
+  { name: 'name', label: 'Full name', placeholder: 'Your name' },
+  { name: 'email', label: 'Email', type: 'email', placeholder: 'you@business.com' },
+  { name: 'business', label: 'Business name', placeholder: 'Your business', required: false, optional: 'optional' },
+  { name: 'phone', label: 'WhatsApp number', type: 'tel', placeholder: '+91 98765 43210', required: false, optional: 'optional, for a faster reply' },
+  {
+    name: 'service_interested', label: 'Which service are you interested in?', type: 'select', full: true, required: false, emptyFirst: true,
+    options: ['Not sure yet, recommend for me', ...serviceDetails.map((s) => s.title)],
+  },
+];
 ---
 
 <Base
@@ -78,6 +95,22 @@ const iconWrap = 'mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 t
           </Card>
         );
       })}
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-2xl px-[5vw] pb-20 text-center">
+    <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase" style="--d:80ms">Not sure which one?</p>
+    <h2 class="reveal mt-3 font-display text-[clamp(1.6rem,3.2vw,2.2rem)] leading-[1.15] font-bold text-navy" style="--d:120ms">
+      Tell us what you're struggling with, we'll point you the right way.
+    </h2>
+    <div class="reveal mt-8 text-left" style="--d:180ms">
+      <SimpleForm
+        client:visible
+        tag="services-ads"
+        fields={formFields}
+        submitLabel="Talk to us"
+        thankYouHref={withBase('/thank-you/')}
+      />
     </div>
   </section>
 </Base>
