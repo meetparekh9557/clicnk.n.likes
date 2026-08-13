@@ -24,6 +24,7 @@ import Eye from '@lucide/astro/icons/eye';
 import Zap from '@lucide/astro/icons/zap';
 import TrendingUp from '@lucide/astro/icons/trending-up';
 import Layers from '@lucide/astro/icons/layers';
+import Check from '@lucide/astro/icons/check';
 
 const year = new Date().getFullYear();
 
@@ -45,6 +46,17 @@ const ctaLabel: Record<string, string> = {
   'content-marketing': 'Start with content',
   'website-development': 'Get a website quote',
   'paid-campaigns': 'Start ad management',
+};
+// What the client actually gets from each channel - outcome-framed, but
+// grounded in the real included deliverables already published on each
+// service's own page (data/services.ts `cards`), not new claims.
+const benefits: Record<string, string[]> = {
+  seo: ['Rank for the exact terms your buyers search', 'Technical fixes that stop leaks in traffic and rankings', 'Blog content built to move specific keywords, not just publish'],
+  'ai-seo': ["Get cited by ChatGPT, Gemini and Google's AI Overview", 'Schema that makes your entity unmistakable to crawlers', 'Tracked citations, so you see exactly where AI mentions you'],
+  'social-media-growth': ['Content calendars mapped to real business goals', 'Hooks and captions built to stop the scroll', 'A real playbook for turning DMs into leads'],
+  'content-marketing': ['Blogs and guides built around real search demand', 'Landing page copy that pairs with your website and converts', 'Every piece structured so AI Overviews can cite it too'],
+  'website-development': ['Sub-2-second mobile loads, not a bloated template', 'Every page engineered around one clear action', 'You own it outright, no lock-in to a proprietary builder'],
+  'paid-campaigns': ['Campaigns built for DMs and form fills, not just clicks', 'Retargeting that brings back visitors your content already warmed up', 'Cost per lead reported weekly, not buried in a monthly PDF'],
 };
 
 // Real, sourced, dated results from two published case studies - never
@@ -183,27 +195,68 @@ const formFields = [
     </div>
   </section>
 
-  <!-- Channels: each with its own CTA that scrolls to (and pre-checks) the form. -->
+  <!-- What you get: the benefits of working with us overall, spelled out. -->
+  <section class="border-t border-navy/10 bg-navy">
+    <div class="mx-auto max-w-4xl px-[5vw] py-16 text-center">
+      <p class="reveal text-xs font-semibold tracking-[0.14em] text-teal uppercase">What you get</p>
+      <h2 class="reveal mt-3 font-display text-[clamp(1.6rem,3.2vw,2.2rem)] leading-[1.15] font-bold text-white" style="--d:80ms">
+        This is what actually changes once we start.
+      </h2>
+      <div class="mt-10 grid gap-5 text-left sm:grid-cols-2">
+        {[
+          { title: 'A plan built on your numbers, not a guess', text: 'Every engagement starts with a real look at your site and rankings, so the plan is built on where you actually stand, not a template pitch.' },
+          { title: 'Leads that keep arriving after the campaign ends', text: 'Organic work compounds: rankings and content built this quarter keep sending enquiries long after, unlike a channel that switches off the day ad spend stops.' },
+          { title: 'One accountable team, not four vendors', text: 'SEO, content, social, websites and ads run under one roof, so nothing gets lost in the handoff between a designer, a freelancer and an ads agency.' },
+          { title: 'Full visibility into what is actually running', text: 'You see the real leads and enquiries the work produced, in plain English - not clicks and impressions dressed up as results.' },
+        ].map((b, i) => (
+          <div class="reveal flex items-start gap-3" style={`--d:${i * 70}ms`}>
+            <span class="mt-1 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-teal/15 text-teal"><Check size={14} stroke-width={2.8} aria-hidden="true" /></span>
+            <div>
+              <p class="font-display text-[15px] font-semibold text-white">{b.title}</p>
+              <p class="mt-1 text-[13.5px] leading-relaxed text-white/60">{b.text}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div class="reveal mt-10" style="--d:120ms">
+        <a href="#lead-form" class="inline-flex items-center gap-2 rounded-full bg-teal px-6 py-3.5 text-sm font-semibold text-navy transition-all duration-300 hover:-translate-y-0.5 hover:bg-white">
+          Get this for your business
+          <ArrowRight size={16} stroke-width={2.4} aria-hidden="true" />
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Channels: 3 cards per row (2 rows of 3), each with its own CTA that
+       scrolls to (and pre-checks) the form. -->
   <section class="border-t border-navy/10 bg-off">
-    <div class="mx-auto max-w-4xl px-[5vw] py-16">
+    <div class="mx-auto max-w-5xl px-[5vw] py-16">
       <p class="reveal text-center text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">What we do</p>
-      <div class="mt-8 divide-y divide-navy/10 rounded-2xl border border-navy/10 bg-white shadow-[0_10px_30px_rgba(26,43,74,0.06)]">
+      <div class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {adsServices.map((s, i) => {
           const Icon = serviceIcons[s.slug];
           return (
-            <div class="reveal flex flex-col items-start gap-5 p-6 sm:flex-row sm:items-center" style={`--d:${(i % 4) * 70}ms`}>
-              <span class="font-display text-sm font-bold text-navy/25 tabular-nums">{String(i + 1).padStart(2, '0')}</span>
-              <div class="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-teal/10 text-teal-dark">
-                <Icon size={22} stroke-width={2} aria-hidden="true" />
+            <div class="reveal flex flex-col rounded-2xl border border-navy/10 bg-white p-6 shadow-[0_10px_30px_rgba(26,43,74,0.06)]" style={`--d:${(i % 3) * 90}ms`}>
+              <div class="flex items-center gap-3">
+                <span class="font-display text-sm font-bold text-navy/25 tabular-nums">{String(i + 1).padStart(2, '0')}</span>
+                <div class="grid h-11 w-11 place-items-center rounded-xl bg-teal/10 text-teal-dark">
+                  <Icon size={22} stroke-width={2} aria-hidden="true" />
+                </div>
               </div>
-              <div class="flex-1">
-                <h2 class="font-display text-lg font-semibold text-navy">{s.title}</h2>
-                <p class="mt-1.5 text-sm leading-relaxed text-navy/60">{s.lead}</p>
-              </div>
+              <h2 class="mt-4 font-display text-lg font-semibold text-navy">{s.title}</h2>
+              <p class="mt-2 text-sm leading-relaxed text-navy/60">{s.lead}</p>
+              <ul class="mt-4 flex-1 space-y-2">
+                {benefits[s.slug].map((b) => (
+                  <li class="flex items-start gap-2 text-[13px] leading-snug text-navy/70">
+                    <Check size={15} stroke-width={2.6} class="mt-0.5 shrink-0 text-teal-dark" aria-hidden="true" />
+                    {b}
+                  </li>
+                ))}
+              </ul>
               <a
                 href="#lead-form"
                 data-preselect={s.title}
-                class="inline-flex shrink-0 items-center gap-1.5 rounded-full border-[1.5px] border-navy/15 px-4 py-2 text-[13px] font-semibold text-navy transition-colors hover:border-teal hover:text-teal-dark"
+                class="mt-5 inline-flex items-center justify-center gap-1.5 rounded-full border-[1.5px] border-navy/15 px-4 py-2.5 text-[13px] font-semibold text-navy transition-colors hover:border-teal hover:text-teal-dark"
               >
                 {ctaLabel[s.slug]}
                 <ArrowRight size={14} stroke-width={2.4} aria-hidden="true" />
