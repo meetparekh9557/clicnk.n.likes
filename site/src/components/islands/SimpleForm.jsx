@@ -11,6 +11,14 @@ const labelCls = 'mb-1.5 block text-[12.5px] font-semibold text-navy';
 
 export default function SimpleForm({ tag, fields, submitLabel, thankYouHref }) {
   const [sending, setSending] = useState(false);
+  // fieldName -> Set of selected options, for 'chips' (multi-select) fields.
+  const [chipSel, setChipSel] = useState({});
+  const toggleChip = (name, opt) =>
+    setChipSel((prev) => {
+      const set = new Set(prev[name] || []);
+      set.has(opt) ? set.delete(opt) : set.add(opt);
+      return { ...prev, [name]: set };
+    });
 
   function submit(evt) {
     evt.preventDefault();
@@ -58,6 +66,29 @@ export default function SimpleForm({ tag, fields, submitLabel, thankYouHref }) {
                     <option key={o} value={f.emptyFirst && i === 0 ? '' : o}>{o}</option>
                   ))}
                 </select>
+              </div>
+            );
+          }
+          if (f.type === 'chips') {
+            const sel = chipSel[f.name] || new Set();
+            return (
+              <div key={f.name} className="sm:col-span-2">
+                {label}
+                <div className="flex flex-wrap gap-2">
+                  {f.options.map((o) => {
+                    const active = sel.has(o);
+                    return (
+                      <button
+                        key={o} type="button" onClick={() => toggleChip(f.name, o)}
+                        aria-pressed={active}
+                        className={`rounded-full border-[1.5px] px-3.5 py-2 text-[12.5px] font-semibold transition-colors ${active ? 'border-teal bg-teal/10 text-navy' : 'border-navy/10 text-navy/60 hover:border-teal/40'}`}
+                      >
+                        {o}
+                      </button>
+                    );
+                  })}
+                </div>
+                <input type="hidden" name={f.name} value={[...sel].join(', ')} />
               </div>
             );
           }

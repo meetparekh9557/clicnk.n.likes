@@ -8,8 +8,8 @@
 // when it is a single clean number: ranges like "4-6 months" render as
 // plain text so they are never mangled by the animation. Without JS, or
 // under prefers-reduced-motion, the final value is what renders.
-interface Props { value: string; label: string; source: string; class?: string; }
-const { value, label, source, class: extra = '' } = Astro.props;
+interface Props { value: string; label: string; source: string; class?: string; style?: string; }
+const { value, label, source, class: extra = '', style } = Astro.props;
 
 const isRange = /\d\s*[-–]\s*\d/.test(value);
 const parts = value.match(/^([^\d]*?)([\d,]+(?:\.\d+)?)(.*)$/);
@@ -22,7 +22,7 @@ const decimals = animate && numText.includes('.') ? numText.split('.')[1].length
 const sep = animate && numText.includes(',');
 ---
 
-<div class={`rounded-2xl border border-navy/10 bg-white p-6 shadow-[0_10px_30px_rgba(26,43,74,0.06)] ${extra}`.trim()}>
+<div class={`rounded-2xl border border-navy/10 bg-white p-6 shadow-[0_10px_30px_rgba(26,43,74,0.06)] ${extra}`.trim()} style={style}>
   <div class="font-display text-4xl font-bold text-teal-dark">
     {animate ? (
       <span

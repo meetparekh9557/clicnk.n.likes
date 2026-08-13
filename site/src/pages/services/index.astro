@@ -1,19 +1,19 @@
 ---
-// Services overview: every service in one place, each with its own
-// distinct CTA into that service's dedicated page. Built solely as a
-// Meta ads landing page for traffic that doesn't arrive with one
-// specific service in mind - a broad "what do you do" ad lands here.
-// Deliberately isolated: noindex,nofollow, no Nav/Footer/CtaBand/chat
-// widget (`bare`), not in the sitemap, not linked from primary nav - the
-// only way in is the ad's direct URL, and the only ways out are the
-// per-service CTAs below (the intended next step, not a navigation
-// escape hatch). A specific-service ad should still land directly on
-// that service's own real page for better message match.
+// Services overview: a dedicated Meta ads landing page, not a normal
+// site page. Deliberately isolated - noindex,nofollow, `bare` layout (no
+// site Nav/Footer/CtaBand/chat widget) - with its own minimal header
+// (logo only) and minimal footer (just the copyright line + Privacy/
+// Terms, nothing else). The 7 channel tiles are purely informational, no
+// links: the only way off this page is the Privacy/Terms footer links or
+// submitting the form below. The form is the page's entire job - a
+// paid click shouldn't need a second click to become a lead, so it
+// captures right here, with a multi-select for every service the
+// visitor is interested in rather than forcing a single pick.
 import Base from '../../layouts/Base.astro';
-import Card from '../../components/Card.astro';
-import Button from '../../components/Button.astro';
 import SimpleForm from '../../components/islands/SimpleForm.jsx';
+import StatTile from '../../components/StatTile.astro';
 import { serviceDetails } from '../../data/services';
+import { marketStats } from '../../data/market';
 import { withBase } from '../../lib/url';
 import Search from '@lucide/astro/icons/search';
 import MapPin from '@lucide/astro/icons/map-pin';
@@ -23,9 +23,9 @@ import FileText from '@lucide/astro/icons/file-text';
 import Monitor from '@lucide/astro/icons/monitor';
 import Megaphone from '@lucide/astro/icons/megaphone';
 
-// Same icon per service everywhere on the site (matches the homepage
-// bento), and a distinct, benefit-led CTA per card rather than a
-// generic "Learn more" repeated seven times.
+const year = new Date().getFullYear();
+
+// Same icon per service everywhere on the site (matches the homepage bento).
 const serviceIcons: Record<string, any> = {
   seo: Search,
   'local-seo': MapPin,
@@ -35,29 +35,20 @@ const serviceIcons: Record<string, any> = {
   'website-development': Monitor,
   'paid-campaigns': Megaphone,
 };
-const ctaLabel: Record<string, string> = {
-  seo: 'See SEO plans',
-  'local-seo': 'Win the local pack',
-  'ai-seo': 'Get cited by AI',
-  'social-media-growth': 'Grow on social',
-  'content-marketing': 'See content plans',
-  'website-development': 'Get a website quote',
-  'paid-campaigns': 'See ad management plans',
-};
-const iconWrap = 'mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 text-teal-dark';
 
-// This is the page's actual capture mechanism - the cards above are a
-// self-service router for people who already know which channel they
-// want, but a paid click shouldn't require a second click just to
-// become a lead. Same field pattern as the other lead forms sitewide.
+// Three of the site's real, sourced market figures (data/market.ts) -
+// broad enough to support any of the 7 services, never invented for
+// this page.
+const proofStats = marketStats.slice(0, 3);
+
 const formFields = [
   { name: 'name', label: 'Full name', placeholder: 'Your name' },
   { name: 'email', label: 'Email', type: 'email', placeholder: 'you@business.com' },
   { name: 'business', label: 'Business name', placeholder: 'Your business', required: false, optional: 'optional' },
   { name: 'phone', label: 'WhatsApp number', type: 'tel', placeholder: '+91 98765 43210', required: false, optional: 'optional, for a faster reply' },
   {
-    name: 'service_interested', label: 'Which service are you interested in?', type: 'select', full: true, required: false, emptyFirst: true,
-    options: ['Not sure yet, recommend for me', ...serviceDetails.map((s) => s.title)],
+    name: 'services_interested', label: 'Which services are you interested in?', type: 'chips', full: true,
+    options: serviceDetails.map((s) => s.title),
   },
 ];
 ---
@@ -68,42 +59,67 @@ const formFields = [
   noindex
   bare
 >
-  <section class="mx-auto max-w-3xl px-[5vw] pt-16 pb-4 text-center lg:pt-20">
-    <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">What we do</p>
-    <h1 class="reveal-mask mt-4 font-display text-[clamp(2rem,4.2vw,3rem)] leading-[1.1] font-bold text-navy">
-      <span class="mask-line"><span>Seven channels.</span></span>
-      <span class="mask-line" style="--d:120ms"><span>One growth engine.</span></span>
-    </h1>
-    <p class="reveal mx-auto mt-5 max-w-xl text-lg leading-relaxed text-navy/70" style="--d:220ms">
-      Pick the one channel that's costing you the most right now, or let us run the whole stack: every service below
-      is built to feed the others, not compete with them for budget.
-    </p>
+  <!-- Minimal header: logo only, not a link (this page has no navigation). -->
+  <header class="border-b border-navy/10 py-5 text-center">
+    <img src={withBase('/logo-wordmark.png')} alt="Click.n.likes" width="156" height="26" class="mx-auto h-[26px] w-auto" />
+  </header>
+
+  <!-- Hero: a real navy band instead of another plain white section. -->
+  <section class="relative overflow-hidden bg-navy">
+    <div class="pointer-events-none absolute inset-0 opacity-[0.07]" style="background-image:radial-gradient(rgba(255,255,255,0.5) 1px, transparent 1px); background-size:26px 26px;"></div>
+    <div class="relative mx-auto max-w-3xl px-[5vw] py-20 text-center lg:py-24">
+      <p class="reveal inline-flex items-center gap-2 rounded-full border border-teal/40 bg-teal/10 px-4 py-1.5 text-[13px] font-semibold text-teal">
+        <span class="h-1.5 w-1.5 rounded-full bg-teal"></span> Full-stack organic growth
+      </p>
+      <h1 class="reveal-mask mt-5 font-display text-[clamp(2.1rem,4.6vw,3.3rem)] leading-[1.08] font-bold text-white">
+        <span class="mask-line"><span>Seven channels.</span></span>
+        <span class="mask-line" style="--d:120ms"><span class="text-teal">One growth engine.</span></span>
+      </h1>
+      <p class="reveal mx-auto mt-5 max-w-xl text-lg leading-relaxed text-white/70" style="--d:220ms">
+        Pick the one channel that's costing you the most right now, or let us run the whole stack: every service below
+        is built to feed the others, not compete with them for budget.
+      </p>
+    </div>
   </section>
 
-  <section class="mx-auto max-w-6xl px-[5vw] py-14">
-    <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+  <!-- Proof strip: real, sourced market figures, not client-specific claims. -->
+  <section class="border-b border-navy/10 bg-off">
+    <div class="mx-auto grid max-w-5xl gap-4 px-[5vw] py-12 sm:grid-cols-3">
+      {proofStats.map((s, i) => (
+        <StatTile value={s.value} label={s.label} source={s.source} class="reveal" style={`--d:${i * 90}ms`} />
+      ))}
+    </div>
+  </section>
+
+  <!-- Channels: informational only, no links off this page. -->
+  <section class="mx-auto max-w-4xl px-[5vw] py-16">
+    <p class="reveal text-center text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">What we do</p>
+    <div class="mt-8 divide-y divide-navy/10 rounded-2xl border border-navy/10 bg-white shadow-[0_10px_30px_rgba(26,43,74,0.06)]">
       {serviceDetails.map((s, i) => {
         const Icon = serviceIcons[s.slug];
         return (
-          <Card class="reveal flex flex-col" style={`--d:${(i % 3) * 90}ms`}>
-            <div class={iconWrap}><Icon size={22} stroke-width={2} aria-hidden="true" /></div>
-            <h2 class="font-display text-lg font-semibold text-navy">{s.title}</h2>
-            <p class="mt-2 flex-1 text-sm leading-relaxed text-navy/60">{s.lead}</p>
-            <Button href={`/services/${s.slug}/`} variant="outline" arrow class="mt-5 w-full">
-              {ctaLabel[s.slug]}
-            </Button>
-          </Card>
+          <div class="reveal flex items-start gap-5 p-6" style={`--d:${(i % 4) * 70}ms`}>
+            <span class="font-display text-sm font-bold text-navy/25 tabular-nums">{String(i + 1).padStart(2, '0')}</span>
+            <div class="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-teal/10 text-teal-dark">
+              <Icon size={22} stroke-width={2} aria-hidden="true" />
+            </div>
+            <div>
+              <h2 class="font-display text-lg font-semibold text-navy">{s.title}</h2>
+              <p class="mt-1.5 text-sm leading-relaxed text-navy/60">{s.lead}</p>
+            </div>
+          </div>
         );
       })}
     </div>
   </section>
 
+  <!-- The form: the entire point of the page. -->
   <section class="mx-auto max-w-2xl px-[5vw] pb-20 text-center">
     <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase" style="--d:80ms">Not sure which one?</p>
     <h2 class="reveal mt-3 font-display text-[clamp(1.6rem,3.2vw,2.2rem)] leading-[1.15] font-bold text-navy" style="--d:120ms">
       Tell us what you're struggling with, we'll point you the right way.
     </h2>
-    <div class="reveal mt-8 text-left" style="--d:180ms">
+    <div class="reveal mt-8 rounded-3xl border-[1.5px] border-teal/40 bg-teal/[0.04] p-1.5 text-left" style="--d:180ms">
       <SimpleForm
         client:visible
         tag="services-ads"
@@ -113,4 +129,15 @@ const formFields = [
       />
     </div>
   </section>
+
+  <!-- Minimal footer: just the copyright line and Privacy/Terms. -->
+  <footer class="border-t border-navy/10 py-6 text-center text-[12.5px] text-navy/50">
+    <p>
+      © {year} Click.n.likes. All rights reserved.
+      <span class="mx-1.5">·</span>
+      <a href={withBase('/privacy/')} class="hover:text-teal-dark hover:underline">Privacy</a>
+      <span class="mx-1">·</span>
+      <a href={withBase('/terms/')} class="hover:text-teal-dark hover:underline">Terms</a>
+    </p>
+  </footer>
 </Base>
