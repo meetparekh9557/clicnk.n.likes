@@ -1,14 +1,24 @@
 # Auto-blogging (2 posts/week, Tuesday + Friday)
 
-The Insights blog publishes **two posts a week — one Tuesday, one Friday —
-fully automatically**, in the founder's calibrated voice (see `/AGENTS.md`),
-with an on-brand featured image, no human input required. Every published
-post still obeys the site's core rule: any number in it traces to a real,
-named, checkable source, or it isn't published as a fact.
+> **RETIRED 2026-08-14 — there is no scheduled auto-blog any more.**
+> Both Routines (the Tuesday/Friday publisher and its watchdog) were deleted
+> after three consecutive scheduled runs fired and published nothing, with no
+> error surfaced. Their prompts and the failure record are preserved in
+> `docs/archive/auto-blog-routines-2026-08-14.md`.
+>
+> **Posts are now published on the founder's explicit approval only:** a draft
+> is prepared, the founder is notified, and it goes live when he says so.
+> Nothing publishes to `main` autonomously.
+>
+> Everything below the "How it works" heading describes the retired pipeline.
+> It is kept because the *content* rules in it — voice, structure, categories,
+> internal linking, sourcing, the image generator, the `Article` shape — still
+> govern every post, however it gets written. The *scheduling* and *pushing*
+> parts no longer apply.
 
-## How it works
+## How it worked (retired pipeline)
 
-A scheduled task (a Claude Code Remote Routine) fires into a fresh session in
+A scheduled task (a Claude Code Remote Routine) fired into a fresh session in
 this environment twice a week and:
 
 1. Opens `docs/blog-backlog.md` and takes the **first unchecked topic** (a
@@ -94,10 +104,10 @@ automatically. A new post needs only the `articles` entry + the PNG.
 
 ## Managing it
 
-- **Pause / stop:** disable or delete the Routine (owned by this account).
-  Ask Claude to "pause the auto-blog" or manage it from the Routines list.
+- **Pause / stop:** done — both Routines were deleted on 2026-08-14. There is
+  nothing scheduled left to pause.
 - **Change topics:** edit `docs/blog-backlog.md` — reorder, add, or remove
-  topics. The task always takes the top unchecked one.
+  topics. Whoever writes the next post takes the top unchecked one.
 - **Change cadence:** the schedule is `30 5 * * 2,5` (UTC) = Tuesday & Friday,
   05:30 UTC (11:00 AM IST). The commit's author/committer timestamp is
   randomized to 1-59 minutes after that (via `GIT_AUTHOR_DATE`/

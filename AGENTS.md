@@ -78,8 +78,16 @@ practical about the next real step.
 - **A missed schedule is recovered the same day, never carried forward.** If a
   scheduled automation fails, fix the cause and re-fire it that day so the slot
   is not lost. That only works if something notices, so every scheduled Routine
-  needs a check on the day it runs — the auto-blog has a watchdog Routine three
-  hours behind it that republishes if the post is missing.
+  needs a check on the day it runs.
+- **The blog is no longer auto-published.** Both auto-blog Routines (the
+  Tue/Fri publisher and its watchdog) were deleted on 2026-08-14 after three
+  scheduled runs in a row fired and produced nothing, silently — a watchdog
+  that fails the same way as the thing it watches is not a safety net. Posts
+  now ship on the founder's explicit approval: prepare the draft, notify him,
+  publish only when he says to. Never push a post to `main` unprompted. The
+  retired prompts and the full failure record are in
+  `docs/archive/auto-blog-routines-2026-08-14.md`; the content rules in
+  `docs/BLOG-AUTOMATION.md` still govern how a post is written.
 - **A Routine's fired session starts with NOTHING.** It does not inherit this
   session's checkout: `/home/user` comes up empty, so every prompt must clone
   the repo itself (`git clone https://github.com/meetparekh9557/clicnk.n.likes.git
