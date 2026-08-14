@@ -35,6 +35,7 @@ Live, real scans - not lead-gen quizzes. Each shows a score on screen for free; 
 
 ## Insights
 
+- [Why does my first month of Google Ads look worse than month 4?](https://clicknlikes.com/insights/google-ads-learning-phase/): The first 30 days of a new ad account are a calibration period, not a verdict, and judging the campaign on them is the most expensive mistake a new advertiser makes.
 - [How do I know if my site's slow load speed is actually costing me leads?](https://clicknlikes.com/insights/slow-speed-costing-leads/): Speed loss is invisible by nature, nobody who leaves in three seconds ever writes to tell you why, but it is measurable if you know where to look.
 - [Service-area business vs. storefront: does local SEO work differently?](https://clicknlikes.com/insights/service-area-vs-storefront/): Plumbers, electricians and consultants who visit the customer play a different local SEO game than a clinic with a front door, and treating them the same costs both.
 - [What should a website cost, and what should be included?](https://clicknlikes.com/insights/website-cost-checklist/): Real 2026 India pricing, freelancer through agency, plus the checklist of what a proper build should never bill you as an extra.
