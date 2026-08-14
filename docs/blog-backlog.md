@@ -83,6 +83,7 @@ section it's rotating into**, writes the post in the founder's voice (see
 - [x] reviews-that-convert — How do I get more Google reviews without begging for them?
 - [ ] review-count-threshold — How many reviews do I actually need to rank in the local pack? — links: hub (local SEO services), sibling `gbp-mistakes` (review cadence) — `[NEEDS REAL DATA: a named third-party study or a real agency client example correlating review count vs. rating with local-pack rank — do not publish the "40 reviews at 4.6 beats 90 at 4.1" framing until one is found/confirmed]`
 - [x] service-area-vs-storefront — Service-area business vs. storefront: does local SEO work differently? — links: hub (local SEO services), sibling `gbp-mistakes` (expand its service-area paragraph rather than repeat it) — client example optional, can ship without one
+- [x] rank-on-maps — Why does my competitor outrank me on Google Maps when I'm closer? — links: hub (local SEO services), siblings `gbp-mistakes` (profile relevance errors), `reviews-that-convert` (review process), `service-area-vs-storefront` (service-area rules) — demand check Aug 2026: strong signal, 8 competitors answering the exact query, ALL small agency sites, no HubSpot/Ahrefs-tier incumbent. Winnable.
 
 ## Social Media Growth cluster — hub: `/services/social-media-growth/`
 
@@ -96,6 +97,7 @@ section it's rotating into**, writes the post in the founder's voice (see
 - [x] cheap-website-cost — Why does a good website cost more than the cheap quote I was given?
 - [x] website-cost-checklist — What should a website cost, and what should be included? (uses the real, published one-time pricing already live in the Quote Calculator: Starter ₹16,000/5 pages, Growth ₹50,000/12 pages, Pro ₹1,24,000/20 pages, ₹4,500/extra page — this was already public, just not yet written up as its own post)
 - [x] slow-speed-costing-leads — How do I know if my site's slow load speed is actually costing me leads? — links: hub (website development), sibling `3-second-test` (reuse its "four leaks" framework for consistency), and `/tools/website-speed/` — ready to write now: reuses the already-sourced Google/SOASTA mobile-speed stat, no new data needed
+- [x] website-redesign-worth-it — Is a website redesign worth it, or should I just fix what I have? — links: hub (website development), siblings `slow-speed-costing-leads`, `website-cost-checklist`, `cheap-website-cost`, and `/work/aidbylaw/` — highest commercial intent in this cluster. Demand check Aug 2026: 7 agency posts on the exact question, no major incumbent. Winnable.
 
 ## Paid Campaigns cluster — hub: `/services/paid-campaigns/`
 
@@ -104,14 +106,20 @@ section it's rotating into**, writes the post in the founder's voice (see
 - [x] google-ads-learning-phase — Why does my first month of Google Ads look worse than month 4? — links: hub (paid campaigns), sibling `paid-ads-budget` (that post gives the budgeting formula; this one covers the learning-phase timing the formula doesn't), and `/work/aidbylaw/` — ready to write now using AidByLaw's real, already-published numbers: ₹50,000–₹1,50,000/month budget, 20–30 leads/month during the two-month platform learning phase, climbing to 150+ by mid-engagement. Retitled from the brief's original ("How much should I budget for Google Ads in month one?") specifically to avoid duplicating `paid-ads-budget`'s question.
 - [ ] cost-per-lead-benchmark — What's a good cost-per-lead benchmark for [category]? — links: hub (paid campaigns), `/tools/funnel-roi/`, sibling `seo-or-ads-first` — `[NEEDS REAL DATA: a named third-party cost-per-lead benchmark by category (e.g. a WordStream-style report), or the agency's own client averages by category — do not publish a single CPL number without one]`
 
+## AI Search cluster — hub: `/services/ai-seo/`
+
+Founded Aug 2026. The hub had almost no supporting content despite AI search
+being one of the site's strongest positioning angles.
+
+- [x] ai-search — Why your clinic needs to worry about ChatGPT, not just Google
+- [x] blog-that-ranks — How to write one blog post that ranks and gets cited by AI
+- [x] ai-overview-traffic — Are Google's AI Overviews stealing my website traffic? — links: hub (AI SEO services), siblings `ai-search`, `blog-that-ranks` — uses the real sourced Sistrix 27%→11% CTR figure (via Forbes). Honest differentiator most competitors miss: local/service businesses have largely NOT been hit, because their customers arrive via location searches.
+
 ## General queue (SEO, Content, AI Search — not yet clustered)
 
-- [ ] seo-timeline — How long does SEO really take to show results? (SEO → /services/seo/)
+- [ ] seo-timeline — How long does SEO really take to show results? (SEO → /services/seo/) — `[DEMAND CHECK FAILED Aug 2026: real signal but NOT winnable — page one is Ahrefs, Search Engine Land, seo.com and Orbit Media. A young domain cannot rank this head term, and the intent is research rather than hiring. Narrow to a specific long-tail variant before writing, or leave it.]`
 - [ ] content-vs-ads-manufacturer — Should a manufacturer invest in content or trade-show leads? (Content → /services/content-marketing/)
-- [ ] rank-on-maps — Why does my competitor outrank me on Google Maps when I'm closer? (Local SEO → /services/local-seo/)
-- [ ] ai-overview-traffic — Are Google's AI Overviews stealing my website traffic? (AI SEO → /services/ai-seo/)
 - [ ] keywords-worth-targeting — How do I know which keywords are actually worth targeting? (SEO → /services/seo/)
-- [ ] website-redesign-worth-it — Is a website redesign worth it, or should I just fix what I have? (Websites → /services/website-development/)
 - [ ] video-content-necessary — Do I really need to make video content to grow? (Social → /services/social-media-growth/)
 - [ ] measure-marketing-roi — How do I actually measure whether my marketing is working? (Content → /services/content-marketing/)
 - [ ] local-vs-national-seo — Should a local business target the whole country or just its city? (Local SEO → /services/local-seo/)
