@@ -25,6 +25,7 @@ import Zap from '@lucide/astro/icons/zap';
 import TrendingUp from '@lucide/astro/icons/trending-up';
 import Layers from '@lucide/astro/icons/layers';
 import Check from '@lucide/astro/icons/check';
+import Phone from '@lucide/astro/icons/phone';
 
 const year = new Date().getFullYear();
 
@@ -82,12 +83,32 @@ const whyUs = [
 
 const waMessage = "Hi Click.n.likes, I'd like to grow my business. Can you help?";
 const waHref = `${contact.whatsappHref}?text=${encodeURIComponent(waMessage)}`;
+const telHref = `tel:${contact.whatsappHref.replace('https://wa.me/', '+')}`;
+
+// Real, already-published answers - the refund/invoicing terms are the
+// same ones stated on the pricing page's quote calculator, and the
+// timeline figure is the same sourced stat used on /why-organic/. Never
+// invented for this page.
+const faqs = [
+  {
+    q: 'How long until we see results?',
+    a: "Depends on the channel. Paid campaigns can start sending leads within days. Organic work (SEO, content, AI SEO) compounds - Google's own guidance is four months to a year before it fully kicks in, which is also why most engagements run both at once: paid for now, organic for what keeps working after.",
+  },
+  {
+    q: "What's the contract, and what if it doesn't work out?",
+    a: 'A term is invoiced once, up front. If we part ways early, every month you\'ve paid for but not received is refunded in full within 14 working days - the same terms on our pricing page, not different terms for ads traffic.',
+  },
+  {
+    q: 'Do you guarantee rankings or results?',
+    a: 'No, and any agency that does is not being straight with you. What we do guarantee is honest reporting: the actual leads and enquiries the work produced, not clicks or impressions dressed up as results.',
+  },
+];
 
 const formFields = [
   { name: 'name', label: 'Full name', placeholder: 'Your name' },
   { name: 'email', label: 'Email', type: 'email', placeholder: 'you@business.com' },
   { name: 'business', label: 'Business name', placeholder: 'Your business', required: false, optional: 'optional' },
-  { name: 'phone', label: 'WhatsApp number', type: 'tel', placeholder: '+91 98765 43210', required: false, optional: 'optional, for a faster reply' },
+  { name: 'phone', label: 'WhatsApp number', type: 'tel', placeholder: '+91 98765 43210' },
   {
     name: 'services_interested', label: 'Which services are you interested in?', type: 'chips', full: true,
     options: adsServices.map((s) => s.title),
@@ -126,7 +147,7 @@ const formFields = [
           Tell us what you need
           <ArrowRight size={16} stroke-width={2.4} aria-hidden="true" />
         </a>
-        <a href={waHref} target="_blank" rel="noopener" class="inline-flex items-center gap-2 rounded-full border-[1.5px] border-white/30 px-6 py-3.5 text-sm font-semibold text-white transition-all duration-300 hover:border-teal hover:text-teal">
+        <a href={waHref} target="_blank" rel="noopener" data-track="whatsapp_click" class="inline-flex items-center gap-2 rounded-full border-[1.5px] border-white/30 px-6 py-3.5 text-sm font-semibold text-white transition-all duration-300 hover:border-teal hover:text-teal">
           Chat on WhatsApp
         </a>
       </div>
@@ -157,8 +178,11 @@ const formFields = [
       <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {resultStats.map((s, i) => (
           <div class="reveal rounded-2xl border border-navy/10 bg-white p-5" style={`--d:${i * 80}ms`}>
-            <div class="font-display text-3xl font-bold text-teal-dark">{s.value}</div>
-            <p class="mt-1.5 text-sm leading-relaxed text-navy/70">{s.label}</p>
+            <div class="flex items-center gap-2">
+              <span class="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-teal/10 text-teal-dark"><TrendingUp size={13} stroke-width={2.6} aria-hidden="true" /></span>
+              <div class="font-display text-3xl font-bold text-teal-dark">{s.value}</div>
+            </div>
+            <p class="mt-2 text-sm leading-relaxed text-navy/70">{s.label}</p>
             <p class="mt-3 text-xs font-medium text-navy/45">{s.client} · {s.sub}</p>
           </div>
         ))}
@@ -268,23 +292,50 @@ const formFields = [
     </div>
   </section>
 
+  <!-- FAQ: real, already-published answers - timeline, contract terms, results risk. -->
+  <section class="border-t border-navy/10 bg-off">
+    <div class="mx-auto max-w-3xl px-[5vw] py-16">
+      <p class="reveal text-center text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">Before you ask</p>
+      <h2 class="reveal mt-3 text-center font-display text-[clamp(1.6rem,3.2vw,2.2rem)] leading-[1.15] font-bold text-navy" style="--d:80ms">
+        Three things people ask before they reach out.
+      </h2>
+      <div class="mt-10 space-y-5">
+        {faqs.map((f, i) => (
+          <div class="reveal rounded-2xl border border-navy/10 bg-white p-6" style={`--d:${i * 80}ms`}>
+            <p class="font-display text-[15px] font-semibold text-navy">{f.q}</p>
+            <p class="mt-2 text-sm leading-relaxed text-navy/65">{f.a}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
   <!-- The form: the page's main conversion path. -->
   <section id="lead-form" class="mx-auto max-w-2xl scroll-mt-24 px-[5vw] py-20 text-center">
     <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase" style="--d:80ms">Not sure which one?</p>
     <h2 class="reveal mt-3 font-display text-[clamp(1.6rem,3.2vw,2.2rem)] leading-[1.15] font-bold text-navy" style="--d:120ms">
       Tell us what you're struggling with, we'll point you the right way.
     </h2>
+    <!-- Trust repeated right beside the form itself, not just earlier on the page. -->
+    <div class="reveal mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[13px] font-semibold text-navy/60" style="--d:140ms">
+      <span class="inline-flex items-center gap-1.5"><span class="text-teal-dark">71%</span> of Kopa Seamless's leads now from organic</span>
+      <span class="hidden text-navy/25 sm:inline">·</span>
+      <span class="inline-flex items-center gap-1.5"><span class="text-teal-dark">340-390</span> leads/mo at close for AidByLaw</span>
+    </div>
     <div class="reveal mt-8 rounded-3xl border-[1.5px] border-teal/40 bg-teal/[0.04] p-1.5 text-left" style="--d:180ms">
       <SimpleForm
         client:visible
         tag="services-ads"
         fields={formFields}
-        submitLabel="Talk to us"
+        submitLabel="Get my recommendation"
         thankYouHref={withBase('/thank-you/')}
+        footnote="We reply within 24 hours. No spam, ever."
       />
     </div>
     <p class="reveal mt-5 text-sm text-navy/55" style="--d:220ms">
-      Prefer to talk now? <a href={waHref} target="_blank" rel="noopener" class="font-semibold text-teal-dark underline decoration-teal/40 underline-offset-2">Message us on WhatsApp →</a>
+      Prefer to talk now?
+      <a href={waHref} target="_blank" rel="noopener" data-track="whatsapp_click" class="font-semibold text-teal-dark underline decoration-teal/40 underline-offset-2">Message us on WhatsApp</a>
+      or <a href={telHref} data-track="call_click" class="font-semibold text-teal-dark underline decoration-teal/40 underline-offset-2">call {contact.whatsappDisplay}</a>
     </p>
   </section>
 
@@ -306,6 +357,7 @@ const formFields = [
     target="_blank"
     rel="noopener"
     aria-label="Chat with us on WhatsApp"
+    data-track="whatsapp_click"
     class="fixed right-4 bottom-4 z-30 inline-flex items-center gap-2 rounded-full bg-[#25D366] py-3 pr-5 pl-4 font-semibold text-white shadow-[0_12px_30px_rgba(37,211,102,0.45)] transition-transform duration-300 ease-out-quart hover:-translate-y-0.5 sm:right-6 sm:bottom-6"
   >
     <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -315,15 +367,28 @@ const formFields = [
   </a>
 
   <script>
+    import { trackEvent } from '../../lib/engine';
+
     document.addEventListener('click', (e) => {
       const target = e.target as HTMLElement;
-      const btn = target.closest('[data-preselect]');
-      if (!btn) return;
-      const value = btn.getAttribute('data-preselect');
-      if (!value) return;
-      const detail = { field: 'services_interested', value };
-      (window as any).__cnlPreselect = detail;
-      window.dispatchEvent(new CustomEvent('cnl:preselect', { detail }));
+
+      const preselectBtn = target.closest('[data-preselect]');
+      if (preselectBtn) {
+        const value = preselectBtn.getAttribute('data-preselect');
+        if (value) {
+          const detail = { field: 'services_interested', value };
+          (window as any).__cnlPreselect = detail;
+          window.dispatchEvent(new CustomEvent('cnl:preselect', { detail }));
+        }
+      }
+
+      // GA4 event on every WhatsApp/call touchpoint on this page (hero,
+      // floating button, near-form link) - there is no Meta Pixel or
+      // Google Ads conversion tag installed on the site to also fire yet.
+      const trackBtn = target.closest('[data-track]');
+      if (trackBtn) {
+        trackEvent(trackBtn.getAttribute('data-track') || 'click', { page: 'services_ads' });
+      }
     });
   </script>
 </Base>

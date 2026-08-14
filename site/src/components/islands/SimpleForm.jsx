@@ -3,13 +3,13 @@
 // implementation. One owner notification (logs the sheet row) + one
 // visitor confirmation per submission, exactly like v1.
 import { useState, useEffect } from 'react';
-import { OWNER_EMAIL, sendFromClicknlikes } from '../../lib/engine';
+import { OWNER_EMAIL, sendFromClicknlikes, trackEvent } from '../../lib/engine';
 
 const fieldCls =
   'w-full rounded-[10px] border-[1.5px] border-navy/10 bg-white px-4 py-3.5 text-sm text-navy transition-colors outline-none focus:border-teal';
 const labelCls = 'mb-1.5 block text-[12.5px] font-semibold text-navy';
 
-export default function SimpleForm({ tag, fields, submitLabel, thankYouHref }) {
+export default function SimpleForm({ tag, fields, submitLabel, thankYouHref, footnote }) {
   const [sending, setSending] = useState(false);
   // fieldName -> Set of selected options, for 'chips' (multi-select) fields.
   const [chipSel, setChipSel] = useState({});
@@ -69,6 +69,7 @@ export default function SimpleForm({ tag, fields, submitLabel, thankYouHref }) {
         bodyText: `Hi ${obj.name || ''},\n\nThanks for reaching out to Click.n.likes. We've received your message and will get back to you within one business day.\n\nHere's a copy of what you sent us:\n${summary}\n\nBest,\nClick.n.likes\nbusiness@clicknlikes.com`,
       });
     }
+    trackEvent('generate_lead', { form_tag: tag });
     setSending(true);
     setTimeout(() => {
       window.location.href = thankYouHref;
@@ -153,6 +154,7 @@ export default function SimpleForm({ tag, fields, submitLabel, thankYouHref }) {
           </>
         )}
       </button>
+      {footnote && <p className="mt-3 text-center text-xs text-navy/50">{footnote}</p>}
     </form>
   );
 }

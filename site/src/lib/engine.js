@@ -20,6 +20,21 @@ export const SHEET_WEBHOOK_URL =
 
 export const autoEmailReady = !!SHEET_WEBHOOK_URL && SHEET_WEBHOOK_URL.indexOf('YOUR_') !== 0;
 
+// Fires a GA4 event via the gtag loaded in Base.astro (skipped entirely on
+// preview builds and if gtag hasn't loaded yet for any reason). This is
+// GA4 only - there is currently no Meta Pixel or Google Ads conversion tag
+// anywhere on the site, so this cannot forward to those. Safe to call from
+// anywhere; never throws.
+export function trackEvent(name, params = {}) {
+  try {
+    if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
+      window.gtag('event', name, params);
+    }
+  } catch (e) {
+    /* never block the visitor's action on analytics */
+  }
+}
+
 /* Minimum time the scan animation stays visible: just enough for the
    spinner to feel like real, purposeful work rather than an instant
    flash. A real live fetch that takes longer simply runs past it. */
