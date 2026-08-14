@@ -1,4 +1,4 @@
-import{j as t}from"./jsx-runtime.D_zvdyIk.js";import{r as m}from"./index.DBy5LfQW.js";import{s as i,O as d}from"./engine.CZuigsdE.js";function x({thankYouHref:a}){const[s,l]=m.useState(!1);function n(o){o.preventDefault();const r=o.target,e=new FormData(r).get("email");i({toEmail:d,replyTo:e||void 0,subject:`New blog-newsletter lead: ${e||"website visitor"}`,bodyText:`New submission from the blog-newsletter form:
+import{j as t}from"./jsx-runtime.D_zvdyIk.js";import{r as m}from"./index.DBy5LfQW.js";import{s as i,O as d}from"./engine.D0tkjpfY.js";function x({thankYouHref:a}){const[s,l]=m.useState(!1);function n(o){o.preventDefault();const r=o.target,e=new FormData(r).get("email");i({toEmail:d,replyTo:e||void 0,subject:`New blog-newsletter lead: ${e||"website visitor"}`,bodyText:`New submission from the blog-newsletter form:
 
 email: ${e}`}),i({toEmail:e,subject:"We got your message: Click.n.likes",bodyText:`Hi ,
 
