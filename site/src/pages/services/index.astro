@@ -114,6 +114,14 @@ const formFields = [
     options: adsServices.map((s) => s.title),
   },
 ];
+
+// Two fields only - the whole point is a visitor can inquire without
+// scrolling past the hero. Separate tag from the full form below so
+// owner-notification emails show which one someone actually used.
+const heroFormFields = [
+  { name: 'name', label: 'Full name', placeholder: 'Your name' },
+  { name: 'phone', label: 'WhatsApp number', type: 'tel', placeholder: '+91 98765 43210' },
+];
 ---
 
 <Base
@@ -142,13 +150,22 @@ const formFields = [
         Pick the one channel that's costing you the most right now, or let us run the whole stack: every service below
         is built to feed the others, not compete with them for budget.
       </p>
-      <div class="reveal mt-8 flex flex-wrap items-center justify-center gap-3" style="--d:280ms">
-        <a href="#lead-form" class="inline-flex items-center gap-2 rounded-full bg-teal px-6 py-3.5 text-sm font-semibold text-navy transition-all duration-300 hover:-translate-y-0.5 hover:bg-white">
-          Tell us what you need
-          <ArrowRight size={16} stroke-width={2.4} aria-hidden="true" />
+      <div class="reveal mx-auto mt-8 max-w-md rounded-3xl border-[1.5px] border-teal/40 bg-teal/[0.06] p-1.5 text-left" style="--d:280ms">
+        <SimpleForm
+          client:load
+          tag="services-ads-hero"
+          fields={heroFormFields}
+          submitLabel="Get my recommendation"
+          thankYouHref={withBase('/thank-you/')}
+        />
+      </div>
+      <div class="reveal mt-4 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm text-white/60" style="--d:320ms">
+        <a href={waHref} target="_blank" rel="noopener" data-track="whatsapp_click" class="inline-flex items-center gap-1.5 font-semibold text-white transition-colors hover:text-teal">
+          Or chat on WhatsApp
         </a>
-        <a href={waHref} target="_blank" rel="noopener" data-track="whatsapp_click" class="inline-flex items-center gap-2 rounded-full border-[1.5px] border-white/30 px-6 py-3.5 text-sm font-semibold text-white transition-all duration-300 hover:border-teal hover:text-teal">
-          Chat on WhatsApp
+        <span class="text-white/25">·</span>
+        <a href="#lead-form" class="inline-flex items-center gap-1.5 font-semibold text-white transition-colors hover:text-teal">
+          See all 6 services first
         </a>
       </div>
       <div class="reveal mt-10 grid grid-cols-3 gap-3 border-t border-white/10 pt-8 text-left sm:gap-6" style="--d:340ms">
