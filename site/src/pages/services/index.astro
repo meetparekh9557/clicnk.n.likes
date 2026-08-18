@@ -117,14 +117,16 @@ const formFields = [
 
 // Name, email and phone - the minimum to actually act on a lead (email
 // is what triggers the visitor's confirmation email, same as every
-// other form on the site). Business name and service selection stay
-// on the full form below; this one's job is speed, not completeness.
-// Separate tag from the full form below so owner-notification emails
-// show which one someone actually used.
+// other form on the site). City is optional but genuinely useful for
+// routing - we work Ahmedabad, Mumbai and worldwide remote. Business
+// name and service selection stay on the full form below; this one's
+// job is speed, not completeness. Separate tag from the full form
+// below so owner-notification emails show which one someone used.
 const heroFormFields = [
   { name: 'name', label: 'Full name', placeholder: 'Your name' },
   { name: 'email', label: 'Email', type: 'email', placeholder: 'you@business.com' },
-  { name: 'phone', label: 'WhatsApp number', type: 'tel', placeholder: '+91 98765 43210', full: true },
+  { name: 'phone', label: 'WhatsApp number', type: 'tel', placeholder: '+91 98765 43210' },
+  { name: 'city', label: 'City', placeholder: 'Ahmedabad, Mumbai...', required: false, optional: 'optional' },
 ];
 ---
 
