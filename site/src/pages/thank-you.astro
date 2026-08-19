@@ -13,20 +13,30 @@
 // explore section below. Still noindex,nofollow - a confirmation page has
 // no reason to rank.
 import Base from '../layouts/Base.astro';
+import Card from '../components/Card.astro';
 import CircleCheck from '@lucide/astro/icons/circle-check';
+import FileText from '@lucide/astro/icons/file-text';
+import TrendingUp from '@lucide/astro/icons/trending-up';
+import Search from '@lucide/astro/icons/search';
+import Layers from '@lucide/astro/icons/layers';
+import ArrowRight from '@lucide/astro/icons/arrow-right';
 import { articles } from '../data/articles';
 import { caseStudies } from '../data/caseStudies';
 
-const latestPosts = articles.slice(0, 2).map((a) => ({ title: a.title, href: `/insights/${a.slug}/` }));
+const latestPosts = articles.slice(0, 2).map((a) => ({ tag: 'From the blog', icon: FileText, title: a.title, href: `/insights/${a.slug}/` }));
 const featuredCaseStudies = ['aidbylaw', 'kopa-seamless']
   .map((slug) => caseStudies.find((c) => c.slug === slug))
   .filter((c): c is NonNullable<typeof c> => !!c)
-  .map((c) => ({ title: `${c.client} case study`, href: `/work/${c.slug}/` }));
+  .map((c) => ({ tag: 'Real results', icon: TrendingUp, title: `${c.client} case study`, href: `/work/${c.slug}/` }));
 
-const exploreGroups = [
-  { label: 'From the blog', links: latestPosts },
-  { label: 'Real results', links: featuredCaseStudies },
-  { label: 'Explore', links: [{ title: 'Services', href: '/services/seo/' }, { title: 'Free Tools', href: '/tools/' }] },
+// One flat card grid, ordered blog -> case studies -> tools/services, not
+// 3 separate stacked lists - each card carries its own tag so the order
+// still reads even without group headings.
+const exploreCards = [
+  ...latestPosts,
+  ...featuredCaseStudies,
+  { tag: 'Free tools', icon: Search, title: 'Run a free live site check', href: '/tools/' },
+  { tag: 'Services', icon: Layers, title: 'See what we run for clients', href: '/services/seo/' },
 ];
 ---
 
@@ -36,7 +46,7 @@ const exploreGroups = [
   noindex
   hideCta
 >
-  <section class="mx-auto flex min-h-screen max-w-xl flex-col items-center justify-center px-[5vw] py-20 text-center">
+  <section class="mx-auto flex min-h-screen max-w-4xl flex-col items-center justify-center px-[5vw] py-20 text-center">
     <span class="reveal grid h-16 w-16 place-items-center rounded-full bg-teal/10 text-teal-dark">
       <CircleCheck size={36} stroke-width={1.8} aria-hidden="true" />
     </span>
@@ -48,20 +58,20 @@ const exploreGroups = [
       faster. Check your inbox (and spam folder, just in case) for a confirmation.
     </p>
 
-    <div class="reveal mt-10 w-full border-t border-navy/10 pt-8" style="--d:200ms">
+    <div class="reveal mt-12 w-full border-t border-navy/10 pt-10" style="--d:200ms">
       <p class="text-sm text-navy/50">While you wait, here's a place to start:</p>
-      <div class="mt-6 space-y-6">
-        {exploreGroups.map((g) => (
-          <div>
-            <p class="text-xs font-semibold tracking-[0.14em] text-navy/35 uppercase">{g.label}</p>
-            <div class="mt-2 flex flex-col items-center gap-y-2">
-              {g.links.map((l) => (
-                <a href={l.href} class="text-sm font-medium text-navy/65 underline decoration-navy/15 underline-offset-4 transition-colors hover:text-teal-dark hover:decoration-teal-dark">
-                  {l.title}
-                </a>
-              ))}
+      <div class="mt-6 grid gap-4 text-left sm:grid-cols-2 lg:grid-cols-3">
+        {exploreCards.map((c, i) => (
+          <Card href={c.href} class="reveal group !p-5" style={`--d:${240 + i * 60}ms`}>
+            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-teal/10 text-teal-dark">
+              <c.icon size={19} stroke-width={2} aria-hidden="true" />
             </div>
-          </div>
+            <p class="mt-3 text-[11px] font-semibold tracking-[0.1em] text-navy/40 uppercase">{c.tag}</p>
+            <p class="mt-1.5 flex items-start justify-between gap-2 text-[14.5px] font-semibold leading-snug text-navy">
+              <span>{c.title}</span>
+              <ArrowRight size={15} stroke-width={2.4} class="mt-0.5 shrink-0 text-navy/30 transition-colors group-hover:text-teal-dark" aria-hidden="true" />
+            </p>
+          </Card>
         ))}
       </div>
     </div>
