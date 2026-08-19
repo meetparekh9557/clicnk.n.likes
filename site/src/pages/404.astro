@@ -7,16 +7,23 @@
 import Base from '../layouts/Base.astro';
 import Button from '../components/Button.astro';
 import { marketStats } from '../data/market';
+import { articles } from '../data/articles';
+import { caseStudies } from '../data/caseStudies';
 
-// Deliberately not the full site nav - just the 4 pages a lost visitor
-// actually wants. /services/ has no single index (the old ads-only
-// overview was removed), so "Services" points at a real representative
-// service page instead of a dead route.
-const quickLinks = [
-  { title: 'Services', href: '/services/seo/' },
+// Real content, not category links - a lost visitor who scrolls past the
+// scan/contact CTAs is browsing, so give them actual pieces to land on.
+// Latest 2 posts (articles is newest-first) so this never goes stale as
+// new posts get added; 2 real, named case studies (never a made-up one).
+const latestPosts = articles.slice(0, 2).map((a) => ({ title: a.title, href: `/insights/${a.slug}/` }));
+const featuredCaseStudies = ['aidbylaw', 'kopa-seamless']
+  .map((slug) => caseStudies.find((c) => c.slug === slug))
+  .filter((c): c is NonNullable<typeof c> => !!c)
+  .map((c) => ({ title: `${c.client} case study`, href: `/work/${c.slug}/` }));
+const exploreLinks = [
+  ...latestPosts,
+  ...featuredCaseStudies,
   { title: 'Free Tools', href: '/tools/' },
-  { title: 'Work', href: '/work/' },
-  { title: 'Contact', href: '/contact/' },
+  { title: 'Services', href: '/services/seo/' },
 ];
 
 // Same sourced stat as the homepage hero's trust row - never a new number
@@ -42,17 +49,16 @@ const organicStat = marketStats.find((s) => s.source.includes('BrightEdge Resear
     </p>
     <div class="reveal mt-8 flex flex-col items-center gap-4" style="--d:200ms">
       <Button href="/tools/" arrow magnetic>Still want to grow your traffic? Run a free scan</Button>
-      <a href="/" class="text-sm font-semibold text-navy/55 underline decoration-navy/20 underline-offset-4 transition-colors hover:text-teal-dark hover:decoration-teal-dark">
-        Or just go to the homepage
+      <a href="/contact/" class="text-sm font-semibold text-navy/55 underline decoration-navy/20 underline-offset-4 transition-colors hover:text-teal-dark hover:decoration-teal-dark">
+        Or talk to us directly
       </a>
     </div>
     <p class="reveal mt-8 text-sm font-semibold text-navy/50" style="--d:230ms">
       <span class="text-teal-dark">{organicStat}</span> of web traffic is organic search - the free scan shows you where yours stands.
     </p>
-    <div class="reveal mt-10 border-t border-navy/10 pt-8" style="--d:260ms">
-      <p class="text-xs font-semibold tracking-[0.14em] text-navy/40 uppercase">Popular pages</p>
-      <nav class="mt-4 flex flex-wrap items-center justify-center gap-x-5 gap-y-2" aria-label="Popular pages">
-        {quickLinks.map((l) => (
+    <div class="reveal mt-10 w-full border-t border-navy/10 pt-8" style="--d:260ms">
+      <nav class="mx-auto flex max-w-sm flex-col items-center gap-y-3" aria-label="Explore the site">
+        {exploreLinks.map((l) => (
           <a href={l.href} class="text-sm font-medium text-navy/60 underline decoration-navy/15 underline-offset-4 transition-colors hover:text-teal-dark hover:decoration-teal-dark">
             {l.title}
           </a>

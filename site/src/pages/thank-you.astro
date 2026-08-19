@@ -1,13 +1,31 @@
 ---
 // Site-wide Thank You page: the single URL every form on the site sends
 // people to after a successful submission - lead forms, quote calculators,
-// newsletter, and it's also the Meta/Google Ads conversion-tracking
-// destination. Deliberately a dead end: noindex,nofollow (never surfaced
-// in search, never passes link equity) and `bare` (no Nav, Footer, CtaBand
-// or WhatsApp button) - solely a confirmation for ad conversion tracking,
-// with zero paths to anywhere else on the site.
+// newsletter. Originally a pure dead end for Meta/Google Ads conversion-
+// tracking cleanliness, but no ad pixel is actually installed anywhere in
+// this codebase (confirmed) and the standalone ads landing page that was
+// the reason for that isolation has since been deleted - so a converted
+// visitor sitting on a true dead end is a wasted engagement opportunity,
+// not a tracking safeguard. Still `bare` (no site Nav/Footer/CtaBand) to
+// keep the moment focused, but now offers a deliberate, ordered path
+// deeper into the site: blog, then case studies, then services/tools.
+// Still noindex,nofollow - a confirmation page has no reason to rank.
 import Base from '../layouts/Base.astro';
 import CircleCheck from '@lucide/astro/icons/circle-check';
+import { articles } from '../data/articles';
+import { caseStudies } from '../data/caseStudies';
+
+const latestPosts = articles.slice(0, 2).map((a) => ({ title: a.title, href: `/insights/${a.slug}/` }));
+const featuredCaseStudies = ['aidbylaw', 'kopa-seamless']
+  .map((slug) => caseStudies.find((c) => c.slug === slug))
+  .filter((c): c is NonNullable<typeof c> => !!c)
+  .map((c) => ({ title: `${c.client} case study`, href: `/work/${c.slug}/` }));
+
+const exploreGroups = [
+  { label: 'From the blog', links: latestPosts },
+  { label: 'Real results', links: featuredCaseStudies },
+  { label: 'Explore', links: [{ title: 'Services', href: '/services/seo/' }, { title: 'Free Tools', href: '/tools/' }] },
+];
 ---
 
 <Base
@@ -27,5 +45,23 @@ import CircleCheck from '@lucide/astro/icons/circle-check';
       A strategist reviews every submission personally and replies within <b>1 business day</b>, usually much
       faster. Check your inbox (and spam folder, just in case) for a confirmation.
     </p>
+
+    <div class="reveal mt-10 w-full border-t border-navy/10 pt-8" style="--d:200ms">
+      <p class="text-sm text-navy/50">While you wait, here's a place to start:</p>
+      <div class="mt-6 space-y-6">
+        {exploreGroups.map((g) => (
+          <div>
+            <p class="text-xs font-semibold tracking-[0.14em] text-navy/35 uppercase">{g.label}</p>
+            <div class="mt-2 flex flex-col items-center gap-y-2">
+              {g.links.map((l) => (
+                <a href={l.href} class="text-sm font-medium text-navy/65 underline decoration-navy/15 underline-offset-4 transition-colors hover:text-teal-dark hover:decoration-teal-dark">
+                  {l.title}
+                </a>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
   </section>
 </Base>
