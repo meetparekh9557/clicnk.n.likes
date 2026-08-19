@@ -1,0 +1,53 @@
+---
+// Custom 404: Astro emits this as /404.html, which GitHub Pages serves
+// automatically (with a real 404 status) for any unmatched URL. Real Nav +
+// Footer + chat button stay on (unlike the Thank You page's `bare` dead
+// end) - a visitor who hits a bad link still needs real ways out. noindex
+// so a stray crawl of a dead link never gets this page indexed.
+import Base from '../layouts/Base.astro';
+import Button from '../components/Button.astro';
+
+// Deliberately not the full site nav - just the 4 pages a lost visitor
+// actually wants. /services/ has no single index (the old ads-only
+// overview was removed), so "Services" points at a real representative
+// service page instead of a dead route.
+const quickLinks = [
+  { title: 'Services', href: '/services/seo/' },
+  { title: 'Free Tools', href: '/tools/' },
+  { title: 'Work', href: '/work/' },
+  { title: 'Contact', href: '/contact/' },
+];
+---
+
+<Base
+  title="Page Not Found | Click.n.likes"
+  description="The page you're looking for doesn't exist or has moved. Head back to the homepage, or explore SEO, content, social and website services from Click.n.likes."
+  noindex
+  hideCta
+>
+  <section class="mx-auto flex min-h-[70vh] max-w-2xl flex-col items-center justify-center px-[5vw] py-20 text-center">
+    <p class="reveal font-display text-[clamp(3.5rem,10vw,6rem)] leading-none font-bold text-teal" style="--d:0ms">
+      404
+    </p>
+    <h1 class="reveal-mask mt-4 font-display text-[clamp(1.7rem,3.8vw,2.4rem)] leading-[1.15] font-bold text-navy">
+      <span class="mask-line"><span>Even we can't rank a page that doesn't exist.</span></span>
+    </h1>
+    <p class="reveal mt-4 max-w-md text-lg leading-relaxed text-navy/70" style="--d:120ms">
+      The page you're looking for doesn't exist or has moved. Here's how to get back on track.
+    </p>
+    <div class="reveal mt-8 flex flex-wrap items-center justify-center gap-3" style="--d:200ms">
+      <Button href="/" arrow magnetic>Go to homepage</Button>
+      <Button href="/tools/" variant="outline" arrow>Still want to grow your traffic? Run a free scan</Button>
+    </div>
+    <div class="reveal mt-10 border-t border-navy/10 pt-8" style="--d:260ms">
+      <p class="text-xs font-semibold tracking-[0.14em] text-navy/40 uppercase">Popular pages</p>
+      <nav class="mt-4 flex flex-wrap items-center justify-center gap-x-5 gap-y-2" aria-label="Popular pages">
+        {quickLinks.map((l) => (
+          <a href={l.href} class="text-sm font-medium text-navy/60 underline decoration-navy/15 underline-offset-4 transition-colors hover:text-teal-dark hover:decoration-teal-dark">
+            {l.title}
+          </a>
+        ))}
+      </nav>
+    </div>
+  </section>
+</Base>
