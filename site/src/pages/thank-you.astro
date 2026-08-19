@@ -23,20 +23,23 @@ import ArrowRight from '@lucide/astro/icons/arrow-right';
 import { articles } from '../data/articles';
 import { caseStudies } from '../data/caseStudies';
 
-const latestPosts = articles.slice(0, 2).map((a) => ({ tag: 'From the blog', icon: FileText, title: a.title, href: `/insights/${a.slug}/` }));
+const latestPosts = articles.slice(0, 2).map((a) => ({ tag: 'From the blog', icon: FileText, title: a.title, desc: a.excerpt, href: `/insights/${a.slug}/` }));
 const featuredCaseStudies = ['aidbylaw', 'kopa-seamless']
   .map((slug) => caseStudies.find((c) => c.slug === slug))
   .filter((c): c is NonNullable<typeof c> => !!c)
-  .map((c) => ({ tag: 'Real results', icon: TrendingUp, title: `${c.client} case study`, href: `/work/${c.slug}/` }));
+  .map((c) => ({ tag: 'Real results', icon: TrendingUp, title: `${c.client} case study`, desc: c.excerpt, href: `/work/${c.slug}/` }));
 
 // One flat card grid, ordered blog -> case studies -> tools/services, not
 // 3 separate stacked lists - each card carries its own tag so the order
-// still reads even without group headings.
+// still reads even without group headings. desc on every card (real
+// excerpts already published for blog/case-study entries; a genuine
+// one-line description for the other two) so cards read full at the
+// sitewide 1400px container width instead of stretching mostly-empty.
 const exploreCards = [
   ...latestPosts,
   ...featuredCaseStudies,
-  { tag: 'Free tools', icon: Search, title: 'Run a free live site check', href: '/tools/' },
-  { tag: 'Services', icon: Layers, title: 'See what we run for clients', href: '/services/seo/' },
+  { tag: 'Free tools', icon: Search, title: 'Run a free live site check', desc: 'The same live scan from the homepage - 11 verified signals, emailed to you, no call required.', href: '/tools/' },
+  { tag: 'Services', icon: Layers, title: 'See what we run for clients', desc: 'SEO, AI search, content, social, websites and paid - published pricing, no sales call to find out.', href: '/services/seo/' },
 ];
 ---
 
@@ -46,7 +49,7 @@ const exploreCards = [
   noindex
   hideCta
 >
-  <section class="mx-auto flex min-h-screen max-w-5xl flex-col items-center justify-center px-[5vw] py-20 text-center">
+  <section class="mx-auto flex min-h-screen max-w-6xl flex-col items-center justify-center px-[5vw] py-20 text-center">
     <div class="mx-auto flex max-w-xl flex-col items-center">
       <span class="reveal grid h-16 w-16 place-items-center rounded-full bg-teal/10 text-teal-dark">
         <CircleCheck size={36} stroke-width={1.8} aria-hidden="true" />
@@ -73,6 +76,7 @@ const exploreCards = [
               <span>{c.title}</span>
               <ArrowRight size={15} stroke-width={2.4} class="mt-0.5 shrink-0 text-navy/30 transition-colors group-hover:text-teal-dark" aria-hidden="true" />
             </p>
+            <p class="mt-2 text-[13px] leading-relaxed text-navy/55">{c.desc}</p>
           </Card>
         ))}
       </div>
