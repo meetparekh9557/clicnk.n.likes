@@ -9,7 +9,7 @@ const fieldCls =
   'w-full rounded-[10px] border-[1.5px] border-navy/10 bg-white px-4 py-3.5 text-sm text-navy transition-colors outline-none focus:border-teal';
 const labelCls = 'mb-1.5 block text-[12.5px] font-semibold text-navy';
 
-export default function SimpleForm({ tag, fields, submitLabel, thankYouHref, footnote, heading, subheading }) {
+export default function SimpleForm({ tag, fields, submitLabel, thankYouHref, footnote }) {
   const [sending, setSending] = useState(false);
   // fieldName -> Set of selected options, for 'chips' (multi-select) fields.
   const [chipSel, setChipSel] = useState({});
@@ -78,12 +78,6 @@ export default function SimpleForm({ tag, fields, submitLabel, thankYouHref, foo
 
   return (
     <form onSubmit={submit} className="rounded-2xl border border-navy/10 bg-white p-7 text-left shadow-[0_10px_30px_rgba(26,43,74,0.06)]">
-      {heading && (
-        <div className="mb-5">
-          <p className="font-display text-lg font-semibold text-navy">{heading}</p>
-          {subheading && <p className="mt-1 text-[13px] leading-snug text-navy/55">{subheading}</p>}
-        </div>
-      )}
       <div className="grid gap-4 sm:grid-cols-2">
         {fields.map((f) => {
           const id = `${tag}-${f.name}`;
