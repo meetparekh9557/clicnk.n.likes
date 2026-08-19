@@ -1,15 +1,17 @@
 ---
 // Site-wide Thank You page: the single URL every form on the site sends
 // people to after a successful submission - lead forms, quote calculators,
-// newsletter. Originally a pure dead end for Meta/Google Ads conversion-
-// tracking cleanliness, but no ad pixel is actually installed anywhere in
-// this codebase (confirmed) and the standalone ads landing page that was
-// the reason for that isolation has since been deleted - so a converted
-// visitor sitting on a true dead end is a wasted engagement opportunity,
-// not a tracking safeguard. Still `bare` (no site Nav/Footer/CtaBand) to
-// keep the moment focused, but now offers a deliberate, ordered path
-// deeper into the site: blog, then case studies, then services/tools.
-// Still noindex,nofollow - a confirmation page has no reason to rank.
+// newsletter. Originally a pure `bare` dead end for Meta/Google Ads
+// conversion-tracking cleanliness, but no ad pixel is actually installed
+// anywhere in this codebase (confirmed, before one was later added and
+// verified to work regardless of noindex/bare status) and the standalone
+// ads landing page that was the reason for that isolation has since been
+// deleted - so a converted visitor sitting on a true dead end was a wasted
+// engagement opportunity, not a tracking safeguard. Real Nav + Footer +
+// chat button now stay on (matching the 404 page's treatment), only the
+// CtaBand is hidden to avoid a redundant second CTA under the curated
+// explore section below. Still noindex,nofollow - a confirmation page has
+// no reason to rank.
 import Base from '../layouts/Base.astro';
 import CircleCheck from '@lucide/astro/icons/circle-check';
 import { articles } from '../data/articles';
@@ -32,7 +34,7 @@ const exploreGroups = [
   title="Thank You | Click.n.likes"
   description="Your submission has been received."
   noindex
-  bare
+  hideCta
 >
   <section class="mx-auto flex min-h-screen max-w-xl flex-col items-center justify-center px-[5vw] py-20 text-center">
     <span class="reveal grid h-16 w-16 place-items-center rounded-full bg-teal/10 text-teal-dark">
