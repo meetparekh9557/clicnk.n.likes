@@ -37,6 +37,16 @@ html { background-color: #ffffff; }
   --font-body: "DM Sans", system-ui, sans-serif;
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+
+  /* Sitewide structural-section width (hero, stat rows, logo walls, card
+     grids - every page reaches for max-w-6xl as its wide wrapper, there is
+     no separate "container" component). Tailwind's default (72rem/1152px)
+     left large empty margins on 1440px+ screens. Widened here, once, so
+     every current and future max-w-6xl inherits it automatically - never
+     hardcode a wider value per-section instead of overriding this token.
+     Narrower scales (max-w-3xl/2xl/xl and below), used for readable-width
+     paragraphs and subheads, are untouched on purpose. */
+  --container-6xl: 87.5rem; /* 1400px, up from Tailwind's default 72rem/1152px */
 }
 
 /* ---------- Motion utilities (design direction: expo/quart, 600-900ms) ---
