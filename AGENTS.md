@@ -193,6 +193,16 @@ Rules:
 - Email gating stays: every tool requires an email before results.
 - Test with Playwright at iPhone-13 viewport before pushing UI changes; check
   for horizontal overflow on every page touched.
+- Every page's structural sections (hero, card/grid layouts, stat rows, logo
+  strips - anything wider than a single text column) must use the sitewide
+  wide container (`max-w-6xl`, which resolves to 1400px via `--container-6xl`
+  in `global.css`, not Tailwind's smaller default) - never a narrower ad-hoc
+  value like `max-w-4xl`/`max-w-5xl` for that kind of section, on any page,
+  new or existing. Check every section's width against this before treating
+  a page as done, not just the first one built. The one standing exception:
+  long-form/paragraph text and single-column CTA blocks stay at a narrower,
+  readable width on purpose - that's a deliberate readability call, not an
+  oversight, and doesn't need widening.
 - The premium rebuild scope (4 phases) is the roadmap of record; Phase 2 is an
   Astro + Tailwind + React-islands rebuild with real per-page URLs.
 - A cheap executor subagent lives at `.claude/agents/executor.md` (Haiku model),
