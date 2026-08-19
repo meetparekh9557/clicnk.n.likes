@@ -58,8 +58,10 @@ export default function CustomQuote() {
   const [ambition, setAmbition] = useState('grow');
   const [timeline, setTimeline] = useState(TIMELINES[1]);
   const [goal, setGoal] = useState('');
+  const [name, setName] = useState('');
   const [business, setBusiness] = useState('');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [sending, setSending] = useState(false);
   const [result, setResult] = useState(null);
   const [cur, setCur] = useState('INR');
@@ -143,7 +145,7 @@ export default function CustomQuote() {
     if (discountPct > 0) notes.push(`A ${Math.round(discountPct * 100)}% multi-service bundle discount is included above.`);
     notes.push(`Quote your reference ${ref} when you reply, and the written proposal is built around exactly this scope.`);
 
-    const bodyText = `Hi,\n\nHere is your custom quote from Click.n.likes for ${business || 'your business'}.\n\nUnique quote reference: ${ref}\nIndustry: ${indLabel}\nServices: ${svcLabels}\nGrowth ambition: ${AMBITION[ambition].label}\nTimeline: ${timeline}\n\nIndicative investment: ${totalLine}\n\nLine items:\n${lines.map((l) => `• ${l.label}: ${money(l.amt)} ${l.unit}`).join('\n')}\n\n${goal.trim() ? `What success looks like for you:\n${goal.trim()}\n\n` : ''}Notes:\n${notes.map((n) => `• ${n}`).join('\n')}\n\nReply to this email to turn it into a written proposal.\n\nBest,\nClick.n.likes\nbusiness@clicknlikes.com`;
+    const bodyText = `Hi ${name || 'there'},\n\nHere is your custom quote from Click.n.likes for ${business || 'your business'}.\n\nUnique quote reference: ${ref}\nIndustry: ${indLabel}\nServices: ${svcLabels}\nGrowth ambition: ${AMBITION[ambition].label}\nTimeline: ${timeline}\n\nIndicative investment: ${totalLine}\n\nLine items:\n${lines.map((l) => `• ${l.label}: ${money(l.amt)} ${l.unit}`).join('\n')}\n\n${goal.trim() ? `What success looks like for you:\n${goal.trim()}\n\n` : ''}Notes:\n${notes.map((n) => `• ${n}`).join('\n')}\n\nReply to this email to turn it into a written proposal.\n\nBest,\nClick.n.likes\nbusiness@clicknlikes.com`;
 
     const bodyHtml = buildReportEmailHtml({
       toolLabel: 'Custom Quote',
@@ -153,11 +155,11 @@ export default function CustomQuote() {
       interpretation, liveNote: null, factors, nextSteps: notes,
     });
 
-    sendFromClicknlikes({ toEmail: email, toName: business, subject: `Your custom quote from Click.n.likes (${ref})`, bodyText, bodyHtml });
+    sendFromClicknlikes({ toEmail: email, toName: name, subject: `Your custom quote from Click.n.likes (${ref})`, bodyText, bodyHtml });
     sendFromClicknlikes({
       toEmail: OWNER_EMAIL, replyTo: email,
-      subject: `New custom-quote lead: ${business || email} (${ref})`,
-      bodyText: `New custom quote ${ref}:\n\nBusiness: ${business}\nEmail: ${email}\nProspect currency: ${cur}\nIndustry: ${indLabel}\nServices: ${svcLabels}\nAmbition: ${AMBITION[ambition].label}\nTimeline: ${timeline}\nInvestment: ${totalLine}${cur !== 'INR' ? ` (INR base: ${totalLineInr})` : ''}\nGoal: ${goal.trim() || '-'}`,
+      subject: `New custom-quote lead: ${name || business || email} (${ref})`,
+      bodyText: `New custom quote ${ref}:\n\nName: ${name}\nBusiness: ${business}\nEmail: ${email}\nPhone: ${phone || '-'}\nProspect currency: ${cur}\nIndustry: ${indLabel}\nServices: ${svcLabels}\nAmbition: ${AMBITION[ambition].label}\nTimeline: ${timeline}\nInvestment: ${totalLine}${cur !== 'INR' ? ` (INR base: ${totalLineInr})` : ''}\nGoal: ${goal.trim() || '-'}`,
     });
 
     setSending(true);
@@ -241,9 +243,13 @@ export default function CustomQuote() {
               Enter your email and we build your number now, stamp it with a unique reference, and send the full breakdown you can reply to.
             </p>
             <form onSubmit={submit} className="mt-auto grid gap-3 pt-5">
+              <input required value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name" aria-label="Your name"
+                className="rounded-[10px] border-[1.5px] border-navy/10 bg-white px-4 py-3 text-sm outline-none focus:border-teal" />
               <input value={business} onChange={(e) => setBusiness(e.target.value)} placeholder="Business name (optional)"
                 className="rounded-[10px] border-[1.5px] border-navy/10 bg-white px-4 py-3 text-sm outline-none focus:border-teal" />
               <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@business.com" aria-label="Your email"
+                className="rounded-[10px] border-[1.5px] border-navy/10 bg-white px-4 py-3 text-sm outline-none focus:border-teal" />
+              <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="WhatsApp number (optional, for a faster reply)" aria-label="Your WhatsApp number"
                 className="rounded-[10px] border-[1.5px] border-navy/10 bg-white px-4 py-3 text-sm outline-none focus:border-teal" />
               <button type="submit" disabled={sending || sel.length === 0}
                 className="inline-flex items-center justify-center gap-2 rounded-full bg-navy px-6 py-3.5 text-sm font-semibold text-white transition-all duration-300 hover:bg-coral disabled:opacity-50">

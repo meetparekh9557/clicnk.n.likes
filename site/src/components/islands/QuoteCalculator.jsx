@@ -84,8 +84,10 @@ export default function QuoteCalculator({ preselect, thankYouHref }) {
   const [qty, setQty] = useState({}); // `${svc}.${unit}` -> total qty
   const [words, setWords] = useState({}); // `${svc}.${unit}` -> avg words
   const [duration, setDuration] = useState(3);
+  const [name, setName] = useState('');
   const [business, setBusiness] = useState('');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [sending, setSending] = useState(false);
   const [cur, setCur] = useState('INR');
   const [rates, setRates] = useState(null);
@@ -161,7 +163,7 @@ export default function QuoteCalculator({ preselect, thankYouHref }) {
     const curNote = shown !== 'INR' ? ` These figures are shown in ${shown} at today's exchange rate; your written proposal confirms the final amount in ${shown}.` : '';
     const termLine = monthlyNet > 0 ? ` The term is invoiced once, up front, and works out to ${money(monthlyNet)} a month${freeMonths ? `, with ${freeMonths} month${freeMonths > 1 ? 's' : ''} free for committing to the full term` : ''}. If we part ways early, any month paid for but not delivered is refunded in full.` : '';
     const interpretation = `Based on the services, tiers and duration you selected, your indicative investment is ${totalLine || '—'}.${termLine} Each service starts at its tier base (strategy, management and reporting) plus the add-ons you dialled in.${curNote}`;
-    const bodyText = `Hi,\n\nHere is your plan from Click.n.likes for ${business || 'your business'}:\n\n${interpretation}\n\nLine items:\n${lines.map((l) => `• ${l.label}${l.tier ? ` (${l.tier})` : ''}: ${l.custom ? 'Custom — quoted separately' : money(l.amt) + ' ' + l.unit}`).join('\n')}\n\nNotes:\n${notes.map((n) => `• ${n}`).join('\n')}\n\nReply to this email to turn this into a written proposal, or reach us at clicknlikes.com.\n\nBest,\nClick.n.likes\nbusiness@clicknlikes.com`;
+    const bodyText = `Hi ${name || 'there'},\n\nHere is your plan from Click.n.likes for ${business || 'your business'}:\n\n${interpretation}\n\nLine items:\n${lines.map((l) => `• ${l.label}${l.tier ? ` (${l.tier})` : ''}: ${l.custom ? 'Custom — quoted separately' : money(l.amt) + ' ' + l.unit}`).join('\n')}\n\nNotes:\n${notes.map((n) => `• ${n}`).join('\n')}\n\nReply to this email to turn this into a written proposal, or reach us at clicknlikes.com.\n\nBest,\nClick.n.likes\nbusiness@clicknlikes.com`;
     const bodyHtml = buildReportEmailHtml({
       toolLabel: 'Your plan',
       forLine: `Prepared for ${business || 'your business'} · ${new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}`,
@@ -169,11 +171,11 @@ export default function QuoteCalculator({ preselect, thankYouHref }) {
       indexLabel: 'Your indicative investment',
       interpretation, liveNote: null, factors, nextSteps: notes,
     });
-    sendFromClicknlikes({ toEmail: email, toName: business, subject: 'Your plan from Click.n.likes', bodyText, bodyHtml });
+    sendFromClicknlikes({ toEmail: email, toName: name, subject: 'Your plan from Click.n.likes', bodyText, bodyHtml });
     sendFromClicknlikes({
       toEmail: OWNER_EMAIL, replyTo: email,
-      subject: `New plan-builder lead: ${business || email}`,
-      bodyText: `New plan:\n\nBusiness: ${business}\nEmail: ${email}\nProspect currency: ${cur}\nDuration: ${dur.m} months (pay ${dur.charged})\nDiscount: ${Math.round(multi * 100)}% (INR base)\n\nLines (INR):\n${lines.map((l) => `  ${l.label}${l.tier ? ` (${l.tier})` : ''}: ${l.custom ? 'Custom' : inr(l.amt) + ' ' + l.unit}`).join('\n')}\n\nMonthly net: ${inr(monthlyNet)} | Over ${dur.m}mo: ${inr(monthlyForDuration)} | One-time: ${inr(onetimeNet)} | Grand: ${inr(grand)}`,
+      subject: `New plan-builder lead: ${name || business || email}`,
+      bodyText: `New plan:\n\nName: ${name}\nBusiness: ${business}\nEmail: ${email}\nPhone: ${phone || '-'}\nProspect currency: ${cur}\nDuration: ${dur.m} months (pay ${dur.charged})\nDiscount: ${Math.round(multi * 100)}% (INR base)\n\nLines (INR):\n${lines.map((l) => `  ${l.label}${l.tier ? ` (${l.tier})` : ''}: ${l.custom ? 'Custom' : inr(l.amt) + ' ' + l.unit}`).join('\n')}\n\nMonthly net: ${inr(monthlyNet)} | Over ${dur.m}mo: ${inr(monthlyForDuration)} | One-time: ${inr(onetimeNet)} | Grand: ${inr(grand)}`,
     });
     setSending(true);
     setTimeout(() => { window.location.href = thankYouHref; }, 600);
@@ -317,8 +319,10 @@ export default function QuoteCalculator({ preselect, thankYouHref }) {
         <form onSubmit={submit} className="mt-5">
           <p className="mb-2 text-[13px] font-semibold text-navy">Email me this plan</p>
           <div className="grid gap-3">
+            <input required value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name" aria-label="Your name" className="rounded-[10px] border-[1.5px] border-navy/10 bg-white px-4 py-3 text-sm outline-none focus:border-teal" />
             <input value={business} onChange={(e) => setBusiness(e.target.value)} placeholder="Business name (optional)" className="rounded-[10px] border-[1.5px] border-navy/10 bg-white px-4 py-3 text-sm outline-none focus:border-teal" />
             <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@business.com" aria-label="Your email" className="rounded-[10px] border-[1.5px] border-navy/10 bg-white px-4 py-3 text-sm outline-none focus:border-teal" />
+            <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="WhatsApp number (optional, for a faster reply)" aria-label="Your WhatsApp number" className="rounded-[10px] border-[1.5px] border-navy/10 bg-white px-4 py-3 text-sm outline-none focus:border-teal" />
             <button type="submit" disabled={sending || sel.length === 0} className="inline-flex items-center justify-center gap-2 rounded-full bg-navy px-6 py-3.5 text-sm font-semibold text-white transition-all duration-300 hover:bg-coral disabled:opacity-50">
               {sending ? 'Sending…' : 'Email me this plan'}
             </button>
