@@ -2,15 +2,37 @@
 // driven by a field config so Work/About/FAQ/Contact all reuse one
 // implementation. One owner notification (logs the sheet row) + one
 // visitor confirmation per submission, exactly like v1.
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { OWNER_EMAIL, sendFromClicknlikes, trackEvent } from '../../lib/engine';
 
 const fieldCls =
   'w-full rounded-[10px] border-[1.5px] border-navy/10 bg-white px-4 py-3.5 text-sm text-navy transition-colors outline-none focus:border-teal';
 const labelCls = 'mb-1.5 block text-[12.5px] font-semibold text-navy';
 
-export default function SimpleForm({ tag, fields, submitLabel, thankYouHref, footnote }) {
+// Attribution params worth keeping with a lead, for any form on the site -
+// not just paid-traffic pages. Read once at module load (not per-render);
+// a real page load never changes its own query string underneath it.
+const ATTRIBUTION_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'fbclid'];
+const attribution = (() => {
+  if (typeof window === 'undefined') return {};
+  const params = new URLSearchParams(window.location.search);
+  const out = {};
+  ATTRIBUTION_KEYS.forEach((k) => {
+    const v = params.get(k);
+    if (v) out[k] = v;
+  });
+  return out;
+})();
+
+export default function SimpleForm({ tag, fields, submitLabel, thankYouHref, footnote, startEventName, submitEventName }) {
   const [sending, setSending] = useState(false);
+  const started = useRef(false);
+  const onFormFocus = () => {
+    if (startEventName && !started.current) {
+      started.current = true;
+      trackEvent(startEventName, { form_tag: tag });
+    }
+  };
   // fieldName -> Set of selected options, for 'chips' (multi-select) fields.
   const [chipSel, setChipSel] = useState({});
   const toggleChip = (name, opt) =>
@@ -54,12 +76,16 @@ export default function SimpleForm({ tag, fields, submitLabel, thankYouHref, foo
     const obj = {};
     new FormData(form).forEach((v, k) => (obj[k] = v));
 
-    const summary = Object.entries(obj).map(([k, v]) => `${k}: ${v}`).join('\n');
+    const summary = Object.entries(obj)
+      .filter(([k]) => !ATTRIBUTION_KEYS.includes(k))
+      .map(([k, v]) => `${k}: ${v}`)
+      .join('\n');
+    const attributionLines = Object.entries(attribution).map(([k, v]) => `${k}: ${v}`).join('\n');
     sendFromClicknlikes({
       toEmail: OWNER_EMAIL,
       replyTo: obj.email || undefined,
       subject: `New ${tag} lead: ${obj.name || obj.email || 'website visitor'}`,
-      bodyText: `New submission from the ${tag} form:\n\n${summary}`,
+      bodyText: `New submission from the ${tag} form:\n\n${summary}${attributionLines ? `\n\nAttribution:\n${attributionLines}` : ''}`,
     });
     if (obj.email) {
       sendFromClicknlikes({
@@ -69,7 +95,7 @@ export default function SimpleForm({ tag, fields, submitLabel, thankYouHref, foo
         bodyText: `Hi ${obj.name || ''},\n\nThanks for reaching out to Click.n.likes. We've received your message and will get back to you within one business day.\n\nHere's a copy of what you sent us:\n${summary}\n\nBest,\nClick.n.likes\nbusiness@clicknlikes.com`,
       });
     }
-    trackEvent('generate_lead', { form_tag: tag });
+    trackEvent(submitEventName || 'generate_lead', { form_tag: tag });
     setSending(true);
     setTimeout(() => {
       window.location.href = thankYouHref;
@@ -77,7 +103,10 @@ export default function SimpleForm({ tag, fields, submitLabel, thankYouHref, foo
   }
 
   return (
-    <form onSubmit={submit} className="rounded-2xl border border-navy/10 bg-white p-7 text-left shadow-[0_10px_30px_rgba(26,43,74,0.06)]">
+    <form onSubmit={submit} onFocus={onFormFocus} className="rounded-2xl border border-navy/10 bg-white p-7 text-left shadow-[0_10px_30px_rgba(26,43,74,0.06)]">
+      {Object.entries(attribution).map(([k, v]) => (
+        <input key={k} type="hidden" name={k} value={v} />
+      ))}
       <div className="grid gap-4 sm:grid-cols-2">
         {fields.map((f) => {
           const id = `${tag}-${f.name}`;

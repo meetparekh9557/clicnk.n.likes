@@ -1,0 +1,77 @@
+---
+// Dedicated thank-you page for the /growth/ ads funnel - separate from
+// the main site's /thank-you/ on purpose (per the growth-page brief:
+// "Do not redirect to the homepage. Create a dedicated thank-you page.").
+// Keeps the same minimized-exits philosophy as /growth/ itself: 3 real
+// next steps, nothing more. noindex - a confirmation page has no reason
+// to rank.
+import Base from '../../layouts/Base.astro';
+import { withBase } from '../../lib/url';
+import CircleCheck from '@lucide/astro/icons/circle-check';
+import Search from '@lucide/astro/icons/search';
+import TrendingUp from '@lucide/astro/icons/trending-up';
+import ArrowRight from '@lucide/astro/icons/arrow-right';
+---
+
+<Base
+  title="Your Inquiry Is In | Click.n.likes"
+  description="Your inquiry has been received. The Click.n.likes team will review what you've shared."
+  noindex
+  bare
+>
+  <header class="border-b border-navy/10 px-[5vw] py-5">
+    <div class="mx-auto max-w-6xl">
+      <img src={withBase('/logo-wordmark.png')} alt="Click.n.likes" width="150" height="25" class="h-[25px] w-auto" />
+    </div>
+  </header>
+
+  <section class="mx-auto flex max-w-lg flex-col items-center px-[5vw] py-20 text-center">
+    <span class="reveal grid h-16 w-16 place-items-center rounded-full bg-teal/10 text-teal-dark">
+      <CircleCheck size={36} stroke-width={1.8} aria-hidden="true" />
+    </span>
+    <h1 class="reveal-mask mt-6 font-display text-[clamp(1.8rem,4vw,2.6rem)] leading-[1.12] font-bold text-navy">
+      <span class="mask-line"><span>Your Inquiry Is In.</span></span>
+    </h1>
+    <p class="reveal mt-4 text-lg leading-relaxed text-navy/70" style="--d:120ms">
+      The Click.n.likes team will review what you've shared.
+    </p>
+
+    <div class="reveal mt-10 w-full border-t border-navy/10 pt-8" style="--d:200ms">
+      <p class="text-sm font-semibold text-navy">While You Wait</p>
+      <p class="mt-2 text-[14.5px] leading-relaxed text-navy/60">
+        You can run our free Growth Scan to identify potential issues with your website.
+      </p>
+      <a
+        href={withBase('/tools/')}
+        data-track="growth_scan_click"
+        class="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-navy px-6 py-3.5 text-sm font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-coral sm:w-auto"
+      >
+        <Search size={16} stroke-width={2.4} aria-hidden="true" />
+        Run My Free Growth Scan
+      </a>
+    </div>
+
+    <div class="reveal mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm" style="--d:260ms">
+      <a href={withBase('/growth/#results')} data-track="case_study_click" class="inline-flex items-center gap-1.5 font-semibold text-teal-dark underline decoration-teal/40 underline-offset-2 hover:text-navy">
+        <TrendingUp size={14} stroke-width={2.4} aria-hidden="true" />
+        See Our Results
+      </a>
+      <span class="text-navy/25">·</span>
+      <a href={withBase('/')} class="inline-flex items-center gap-1.5 font-semibold text-navy/60 underline decoration-navy/20 underline-offset-2 hover:text-teal-dark">
+        Explore Click.n.likes
+        <ArrowRight size={14} stroke-width={2.4} aria-hidden="true" />
+      </a>
+    </div>
+  </section>
+
+  <script>
+    import { trackEvent } from '../../lib/engine';
+    document.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      const trackBtn = target.closest('[data-track]');
+      if (trackBtn) {
+        trackEvent(trackBtn.getAttribute('data-track') || 'click', { page: 'growth_thank_you' });
+      }
+    });
+  </script>
+</Base>
