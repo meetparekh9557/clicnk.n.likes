@@ -20,15 +20,27 @@ export const SHEET_WEBHOOK_URL =
 
 export const autoEmailReady = !!SHEET_WEBHOOK_URL && SHEET_WEBHOOK_URL.indexOf('YOUR_') !== 0;
 
-// Fires a GA4 event via the gtag loaded in Base.astro (skipped entirely on
-// preview builds and if gtag hasn't loaded yet for any reason). This is
-// GA4 only - there is currently no Meta Pixel or Google Ads conversion tag
-// anywhere on the site, so this cannot forward to those. Safe to call from
-// anywhere; never throws.
+// Map our own GA4 event names to Meta's standard event names, only where a
+// real equivalent exists - never invent a mapping just to fire something.
+const META_STANDARD_EVENTS = { generate_lead: 'Lead' };
+
+// Fires a GA4 event via the gtag loaded in Base.astro, and the matching
+// Meta Pixel standard event via the fbq loaded in the same file, if one is
+// mapped above. Both are skipped entirely on preview builds (neither
+// script loads there) and if the relevant global hasn't loaded for any
+// reason. Safe to call from anywhere; never throws.
 export function trackEvent(name, params = {}) {
   try {
     if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
       window.gtag('event', name, params);
+    }
+  } catch (e) {
+    /* never block the visitor's action on analytics */
+  }
+  try {
+    const metaEvent = META_STANDARD_EVENTS[name];
+    if (metaEvent && typeof window !== 'undefined' && typeof window.fbq === 'function') {
+      window.fbq('track', metaEvent, params);
     }
   } catch (e) {
     /* never block the visitor's action on analytics */

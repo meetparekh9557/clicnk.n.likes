@@ -87,6 +87,30 @@ const structuredData = [
         </script>
       </>
     )}
+    <!-- Meta Pixel. Same preview-guard as GA4 above, so noindex/preview
+         traffic never counts toward ad conversion data. Lead events are
+         forwarded to it from lib/engine.js's trackEvent, same call site
+         GA4 already uses - see that file's comment. -->
+    {!isPreview && (
+      <>
+        <script is:inline>
+          !function(f,b,e,v,n,t,s)
+          {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+          n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+          if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+          n.queue=[];t=b.createElement(e);t.async=!0;
+          t.src=v;s=b.getElementsByTagName(e)[0];
+          s.parentNode.insertBefore(t,s)}(window, document,'script',
+          'https://connect.facebook.net/en_US/fbevents.js');
+          fbq('init', '1583719839948336');
+          fbq('track', 'PageView');
+        </script>
+        <noscript>
+          <img height="1" width="1" style="display:none" alt=""
+            src="https://www.facebook.com/tr?id=1583719839948336&ev=PageView&noscript=1" />
+        </noscript>
+      </>
+    )}
     <!-- Progressive-enhancement flag: lets scroll-triggered animations
          (e.g. the self-drawing charts) start from zero only when JS can
          finish them; without JS the content renders at full state. -->
