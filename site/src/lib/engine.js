@@ -22,7 +22,7 @@ export const autoEmailReady = !!SHEET_WEBHOOK_URL && SHEET_WEBHOOK_URL.indexOf('
 
 // Map our own GA4 event names to Meta's standard event names, only where a
 // real equivalent exists - never invent a mapping just to fire something.
-const META_STANDARD_EVENTS = { generate_lead: 'Lead' };
+const META_STANDARD_EVENTS = { generate_lead: 'Lead', whatsapp_click: 'Contact' };
 
 // Fires a GA4 event via the gtag loaded in Base.astro, and the matching
 // Meta Pixel standard event via the fbq loaded in the same file, if one is
