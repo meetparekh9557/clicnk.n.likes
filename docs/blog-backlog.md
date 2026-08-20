@@ -60,6 +60,32 @@ section it's rotating into**, writes the post in the founder's voice (see
     WebSearch actually returns, not a synthetic search-volume number. Do not
     invent a volume figure to justify a topic; the judgment itself is the
     output.
+- **The TITLE must carry the phrase people actually search. The H2s carry
+  the conversation.** This is the single biggest thing wrong with the posts
+  published up to Aug 2026, and Search Console proves it. Three posts sit on
+  page one of Google right now — and earned 1, 2 and 4 impressions in 28 days,
+  because the only queries they match are rephrasings of their own titles:
+
+  | Published title | The query it actually ranks for | Impressions |
+  | --- | --- | --- |
+  | Why does my competitor outrank me on Google Maps when I'm closer? | "why nearby doctors rank above me" | 2 |
+  | Service-area business vs. storefront | "storefront business vs. service-area businesses" | 9 |
+  | The Google Business Profile mistakes costing you the local pack | "missing local pack test" | 1 |
+  | How much should a small business spend on marketing? | (the real head term) | 3, at position 90 |
+
+  Nobody types "why nearby doctors rank above me". The titles were written as
+  conversation, and Google matched them to conversation. Keep the founder's
+  question-form voice for **H2s** — it is genuinely good for AI citation,
+  because an answer engine lifts a question with a direct answer under it —
+  but the **title and slug** must contain the phrase a buyer types. "The
+  3-second test your website keeps failing" is invented terminology: it reads
+  well and it is unsearchable.
+- **Aim for the middle band, and know which failure you are avoiding.**
+  Topic selection so far has been bimodal and both ends produce nothing:
+  ultra-specific phrasings that are winnable but that nobody searches, and
+  head terms with real demand where a young domain sits at position 90. A
+  topic has to clear BOTH tests, and the demand check below only covers one
+  of them unless you deliberately ask the second.
 - **Every new post gets one guaranteed distribution touch, not just an
   organic listing.** On a young, thin-authority domain, waiting on organic
   discovery alone is slow by design. The day a post publishes, it is the
@@ -83,7 +109,7 @@ section it's rotating into**, writes the post in the founder's voice (see
 - [x] reviews-that-convert — How do I get more Google reviews without begging for them?
 - [ ] review-count-threshold — How many reviews do I actually need to rank in the local pack? — links: hub (local SEO services), sibling `gbp-mistakes` (review cadence) — `[NEEDS REAL DATA: a named third-party study or a real agency client example correlating review count vs. rating with local-pack rank — do not publish the "40 reviews at 4.6 beats 90 at 4.1" framing until one is found/confirmed]`
 - [x] service-area-vs-storefront — Service-area business vs. storefront: does local SEO work differently? — links: hub (local SEO services), sibling `gbp-mistakes` (expand its service-area paragraph rather than repeat it) — client example optional, can ship without one
-- [x] rank-on-maps — Why does my competitor outrank me on Google Maps when I'm closer? — links: hub (local SEO services), siblings `gbp-mistakes` (profile relevance errors), `reviews-that-convert` (review process), `service-area-vs-storefront` (service-area rules) — demand check Aug 2026: strong signal, 8 competitors answering the exact query, ALL small agency sites, no HubSpot/Ahrefs-tier incumbent. Winnable.
+- [x] rank-on-maps — Why does my competitor outrank me on Google Maps when I'm closer? `[PHRASING FAIL: ranks position 85 on "why nearby doctors rank above me", 2 impressions/28d. Retitle toward the searched phrasing when next revised.]` — links: hub (local SEO services), siblings `gbp-mistakes` (profile relevance errors), `reviews-that-convert` (review process), `service-area-vs-storefront` (service-area rules) — demand check Aug 2026: strong signal, 8 competitors answering the exact query, ALL small agency sites, no HubSpot/Ahrefs-tier incumbent. Winnable.
 
 ## Social Media Growth cluster — hub: `/services/social-media-growth/`
 
@@ -93,7 +119,7 @@ section it's rotating into**, writes the post in the founder's voice (see
 
 ## Website Development cluster — hub: `/services/website-development/`
 
-- [x] 3-second-test — The 3-second test your website keeps failing
+- [x] 3-second-test — The 3-second test your website keeps failing `[PHRASING FAIL: position 6.25 with 4 impressions/28d. "3-second test" is invented terminology - unsearchable. Retitle toward the real question when next revised.]`
 - [x] cheap-website-cost — Why does a good website cost more than the cheap quote I was given?
 - [x] website-cost-checklist — What should a website cost, and what should be included? (uses the real, published one-time pricing already live in the Quote Calculator: Starter ₹16,000/5 pages, Growth ₹50,000/12 pages, Pro ₹1,24,000/20 pages, ₹4,500/extra page — this was already public, just not yet written up as its own post)
 - [x] slow-speed-costing-leads — How do I know if my site's slow load speed is actually costing me leads? — links: hub (website development), sibling `3-second-test` (reuse its "four leaks" framework for consistency), and `/tools/website-speed/` — ready to write now: reuses the already-sourced Google/SOASTA mobile-speed stat, no new data needed
@@ -111,9 +137,39 @@ section it's rotating into**, writes the post in the founder's voice (see
 Founded Aug 2026. The hub had almost no supporting content despite AI search
 being one of the site's strongest positioning angles.
 
-- [x] ai-search — Why your clinic needs to worry about ChatGPT, not just Google
+- [x] ai-search — Why your clinic needs to worry about ChatGPT, not just Google `[PHRASING FAIL: position 4 with 1 impression/28d. Ranking well for a query nobody types.]`
 - [x] blog-that-ranks — How to write one blog post that ranks and gets cited by AI
 - [x] ai-overview-traffic — Are Google's AI Overviews stealing my website traffic? — links: hub (AI SEO services), siblings `ai-search`, `blog-that-ranks` — uses the real sourced Sistrix 27%→11% CTR figure (via Forbes). Honest differentiator most competitors miss: local/service businesses have largely NOT been hit, because their customers arrive via location searches.
+
+## Hiring-intent cluster — hub: `/services/seo/`
+
+Added Aug 2026 after the Search Console audit above. Every other cluster
+targets a buyer diagnosing a *problem*. This one targets a buyer who has
+already decided to hire or fire an agency, which is the highest-intent
+moment there is — and the SERPs are winnable because they are contested
+entirely by other small agencies, not by HubSpot or Ahrefs.
+
+These also suit this site specifically: published transparent pricing and
+the no-lock-in refund are exactly the things these posts ask a reader to
+demand of an agency, so we can answer our own questions on the page instead
+of dodging them the way most agencies writing these posts have to.
+
+- [ ] questions-to-ask-seo-agency — Questions to Ask an SEO Agency Before You Hire One — links: hub (SEO agency), `/pricing/`, sibling `seo-agency-red-flags` — demand check Aug 2026: real signal, 7+ dedicated competitor posts, ALL small agency sites, no page-one incumbent. Winnable and maximum intent. Answer every question on the page with our own real answer (published pricing, who does the work, what the first 90 days are) rather than listing questions abstractly — that is the differentiator no competitor on this SERP can copy.
+- [ ] seo-agency-red-flags — SEO Agency Red Flags: How to Tell If Yours Is Actually Working — links: hub (SEO agency), sibling `questions-to-ask-seo-agency`, `/work/aidbylaw/` — demand check Aug 2026: real signal, 6+ competitor posts, all small sites. Highest-intent moment of all: someone searching this is about to fire an agency. Our entire positioning is the inverse of these red flags, so this is written from what we already do, not invented. `[NEEDS REAL DATA: the "75% of businesses switch agencies over misaligned expectations" figure surfaced during the demand check but was not traced to a named primary source — find the original or write the point as a principle.]`
+- [ ] what-seo-report-should-show — What Should an SEO Report Actually Show You? — links: hub (SEO agency), siblings `seo-agency-red-flags`, `measure-marketing-roi` — companion to red-flags rather than a duplicate: that post is signals of a bad agency, this one is the specific artefact a client should be receiving monthly. Checklist structure is prime AI-citation material.
+- [ ] seo-cost-published-prices — How Much Does SEO Cost? (With Our Actual Published Prices) — links: hub (SEO agency), `/pricing/`, sibling `questions-to-ask-seo-agency` — the head term is competitive, but almost no agency publishes real numbers, and we already do. Real figures are also exactly what an answer engine quotes. Narrow the title to a long-tail variant if the demand check finds page one held by incumbents.
+- [ ] get-cited-by-chatgpt — How to Get Your Business Cited by ChatGPT and AI Overviews — links: `/services/ai-seo/` (AI SEO services), siblings `ai-search`, `blog-that-ranks`, `ai-overview-traffic` — emerging topic, so the SERP is thinner than the equivalent classic-SEO query, and demand is growing rather than flat. `[NEEDS REAL DATA: a BrightEdge figure for the share of queries showing AI Overviews surfaced during the demand check (~48%, Feb 2026) — trace it to BrightEdge's own publication before using it.]`
+
+## Industry cluster — leads over volume
+
+Lower search volume than the clusters above, and that is the trade accepted
+on purpose: these convert far harder because they name the reader's business.
+Only two verticals qualify, because these are the only two with a real,
+quantified case study to point at — do not add a third until there is a
+client result to back it.
+
+- [ ] seo-for-law-firms — SEO for Law Firms: What Actually Moves the Needle — links: `/services/seo/`, `/work/aidbylaw/` — AidByLaw is the proof: real published figures, paid leads 20-30/mo to 340-390/mo over 13 months, organic 0 to 40/mo.
+- [ ] seo-for-manufacturers — SEO for Manufacturers: How Buyers Actually Find Suppliers — links: `/services/seo/`, `/work/kopa-seamless/` — personas are already written into `/AGENTS.md`'s brand voice section (engineers, procurement managers, MRO specialists); Kopa Seamless is the proof.
 
 ## General queue (SEO, Content, AI Search — not yet clustered)
 
