@@ -6,7 +6,7 @@
 // a hidden input so plain FormData submission still works exactly as before
 // and nothing downstream needs to know this is a React island.
 import { useState, useRef, useEffect, useMemo } from 'react';
-import { COUNTRIES, COUNTRY_BY_CODE, flagOf, detectCountry } from '../../data/countries';
+import { COUNTRIES, COUNTRY_BY_CODE, flagSrc, detectCountry } from '../../data/countries';
 
 export default function CountrySelect({ name = 'country', id, required = true, initial = '', onValueChange }) {
   // Pre-select from the browser's own locale/timezone. Always overridable.
@@ -106,8 +106,17 @@ export default function CountrySelect({ name = 'country', id, required = true, i
         aria-haspopup="listbox"
         aria-expanded={open}
       >
-        <span className={selected ? 'text-navy' : 'text-navy/40'}>
-          {selected ? `${flagOf(selected.code)} ${selected.name}` : 'Select your country'}
+        <span className={`flex items-center gap-2 ${selected ? 'text-navy' : 'text-navy/40'}`}>
+          {selected && <img
+          src={flagSrc(selected.code)}
+          alt=""
+          aria-hidden="true"
+          loading="lazy"
+          width="20"
+          height="15"
+          className="h-[15px] w-5 shrink-0 rounded-[2px] object-cover ring-1 ring-navy/10"
+        />}
+          {selected ? selected.name : 'Select your country'}
         </span>
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="shrink-0 text-navy/40" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
       </button>
@@ -141,7 +150,15 @@ export default function CountrySelect({ name = 'country', id, required = true, i
                   i === active ? 'bg-teal/10 text-navy' : 'text-navy/75'
                 }`}
               >
-                <span>{flagOf(c.code)} {c.name}</span>
+                <span className="flex items-center gap-2"><img
+          src={flagSrc(c.code)}
+          alt=""
+          aria-hidden="true"
+          loading="lazy"
+          width="20"
+          height="15"
+          className="h-[15px] w-5 shrink-0 rounded-[2px] object-cover ring-1 ring-navy/10"
+        />{c.name}</span>
                 <span className="text-[12px] tabular-nums text-navy/40">{c.dial}</span>
               </li>
             ))}

@@ -236,39 +236,69 @@ export const COUNTRY_BY_CODE: Record<string, Country> = Object.fromEntries(
   COUNTRIES.map((c) => [c.code, c])
 );
 
-// Regional flag emoji from the ISO code, computed rather than stored:
-// 'IN' -> 🇮🇳. Windows renders these as letter pairs rather than flags,
-// which is why the country NAME is always shown beside it, never alone.
-export function flagOf(code: string): string {
+// Path to this country's flag SVG. Real images, not emoji: Windows ships
+// no flag emoji at all and renders regional indicators as bare letter pairs
+// ("IN", "US"), so the emoji approach silently degraded for a large share of
+// desktop visitors. Base-aware so the /preview/ deployment resolves too.
+export function flagSrc(code: string): string {
   if (!code || code.length !== 2) return '';
-  return String.fromCodePoint(
-    ...[...code.toUpperCase()].map((ch) => 0x1f1e6 + ch.charCodeAt(0) - 65)
-  );
+  const base = (import.meta.env.BASE_URL || '/').replace(/\/+$/, '');
+  return `${base}/flags/${code.toLowerCase()}.svg`;
 }
 
-// Best guess at the visitor's country, from the browser's own locale and
-// timezone. Deliberately NOT an IP lookup: this runs synchronously before
-// first paint with no third-party request, no added latency and nothing
-// to fail, where an IP service would add a round trip, a dependency and a
-// privacy surface. It only ever PRE-SELECTS a value the visitor can change,
-// so being occasionally wrong (VPN, travel) costs nothing.
+// IANA timezone -> ISO country. Timezone is the best location signal a
+// browser gives us for free: it reflects where the device actually is,
+// where navigator.language reflects what language the user reads in.
+const ZONE_COUNTRY: Record<string, string> = {
+  'Asia/Kolkata': 'IN', 'Asia/Calcutta': 'IN',
+  'Asia/Dubai': 'AE', 'Asia/Muscat': 'OM', 'Asia/Riyadh': 'SA', 'Asia/Qatar': 'QA',
+  'Asia/Bahrain': 'BH', 'Asia/Kuwait': 'KW', 'Asia/Baghdad': 'IQ', 'Asia/Tehran': 'IR',
+  'Asia/Karachi': 'PK', 'Asia/Dhaka': 'BD', 'Asia/Colombo': 'LK', 'Asia/Kathmandu': 'NP',
+  'Asia/Singapore': 'SG', 'Asia/Kuala_Lumpur': 'MY', 'Asia/Jakarta': 'ID', 'Asia/Manila': 'PH',
+  'Asia/Bangkok': 'TH', 'Asia/Ho_Chi_Minh': 'VN', 'Asia/Saigon': 'VN', 'Asia/Hong_Kong': 'HK',
+  'Asia/Shanghai': 'CN', 'Asia/Taipei': 'TW', 'Asia/Tokyo': 'JP', 'Asia/Seoul': 'KR',
+  'Asia/Jerusalem': 'IL', 'Asia/Tel_Aviv': 'IL', 'Asia/Istanbul': 'TR', 'Europe/Istanbul': 'TR',
+  'Europe/London': 'GB', 'Europe/Dublin': 'IE', 'Europe/Lisbon': 'PT', 'Europe/Madrid': 'ES',
+  'Europe/Paris': 'FR', 'Europe/Brussels': 'BE', 'Europe/Amsterdam': 'NL', 'Europe/Berlin': 'DE',
+  'Europe/Zurich': 'CH', 'Europe/Vienna': 'AT', 'Europe/Rome': 'IT', 'Europe/Athens': 'GR',
+  'Europe/Stockholm': 'SE', 'Europe/Oslo': 'NO', 'Europe/Copenhagen': 'DK', 'Europe/Helsinki': 'FI',
+  'Europe/Warsaw': 'PL', 'Europe/Prague': 'CZ', 'Europe/Budapest': 'HU', 'Europe/Bucharest': 'RO',
+  'Europe/Moscow': 'RU', 'Europe/Kyiv': 'UA', 'Europe/Kiev': 'UA',
+  'America/New_York': 'US', 'America/Chicago': 'US', 'America/Denver': 'US',
+  'America/Phoenix': 'US', 'America/Los_Angeles': 'US', 'America/Anchorage': 'US',
+  'Pacific/Honolulu': 'US', 'America/Detroit': 'US',
+  'America/Toronto': 'CA', 'America/Vancouver': 'CA', 'America/Edmonton': 'CA',
+  'America/Winnipeg': 'CA', 'America/Halifax': 'CA',
+  'America/Mexico_City': 'MX', 'America/Bogota': 'CO', 'America/Lima': 'PE',
+  'America/Santiago': 'CL', 'America/Sao_Paulo': 'BR', 'America/Argentina/Buenos_Aires': 'AR',
+  'Australia/Sydney': 'AU', 'Australia/Melbourne': 'AU', 'Australia/Brisbane': 'AU',
+  'Australia/Perth': 'AU', 'Australia/Adelaide': 'AU',
+  'Pacific/Auckland': 'NZ',
+  'Africa/Johannesburg': 'ZA', 'Africa/Lagos': 'NG', 'Africa/Nairobi': 'KE',
+  'Africa/Cairo': 'EG', 'Africa/Casablanca': 'MA', 'Africa/Accra': 'GH',
+};
+
+// Best guess at the visitor's country.
+//
+// TIMEZONE IS CHECKED FIRST, and that order matters: navigator.language is a
+// language preference, not a location. A very large share of devices in India
+// report "en-US" - and plain "en" also maximises to US - so reading the locale
+// first told an Indian visitor in Asia/Kolkata that they were in the United
+// States. Timezone gets it right for exactly that case, and locale remains a
+// reasonable fallback for the zones not mapped above.
+//
+// Deliberately NOT an IP lookup: this resolves synchronously before first
+// paint with no third-party request, no added latency and no privacy surface,
+// and it only ever pre-selects a value the visitor can change.
 export function detectCountry(): string {
   if (typeof window === 'undefined') return '';
   try {
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+    if (ZONE_COUNTRY[tz]) return ZONE_COUNTRY[tz];
+  } catch (e) { /* fall through to locale */ }
+  try {
     const region = new Intl.Locale(navigator.language).maximize().region;
     if (region && COUNTRY_BY_CODE[region]) return region;
-  } catch (e) { /* older browsers: fall through to timezone */ }
-  try {
-    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
-    const byZone: Record<string, string> = {
-      'Asia/Calcutta': 'IN', 'Asia/Kolkata': 'IN', 'Asia/Dubai': 'AE',
-      'Europe/London': 'GB', 'America/New_York': 'US', 'America/Chicago': 'US',
-      'America/Denver': 'US', 'America/Los_Angeles': 'US', 'America/Toronto': 'CA',
-      'Australia/Sydney': 'AU', 'Asia/Singapore': 'SG', 'Asia/Riyadh': 'SA',
-      'Asia/Qatar': 'QA', 'Europe/Dublin': 'IE', 'Europe/Berlin': 'DE',
-      'Europe/Paris': 'FR', 'Europe/Amsterdam': 'NL', 'Europe/Zurich': 'CH',
-    };
-    if (byZone[tz]) return byZone[tz];
   } catch (e) { /* nothing more to try */ }
   return '';
 }

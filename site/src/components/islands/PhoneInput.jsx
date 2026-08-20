@@ -9,7 +9,7 @@
 // (via the 'cnl:country' event), unless the visitor has already set the
 // code by hand, in which case their choice is left alone.
 import { useState, useRef, useEffect, useMemo } from 'react';
-import { COUNTRIES, COUNTRY_BY_CODE, flagOf, detectCountry } from '../../data/countries';
+import { COUNTRIES, COUNTRY_BY_CODE, flagSrc, detectCountry } from '../../data/countries';
 
 export default function PhoneInput({ name = 'phone', id, required = false, placeholder = '98765 43210', onValueChange }) {
   const [code, setCode] = useState('IN');
@@ -103,7 +103,15 @@ export default function PhoneInput({ name = 'phone', id, required = false, place
           aria-label={`Country code, currently ${current.name} ${current.dial}`}
           className="flex shrink-0 items-center gap-1.5 rounded-l-[9px] border-r border-navy/10 px-3 py-3.5 text-sm text-navy hover:bg-off"
         >
-          <span aria-hidden="true">{flagOf(current.code)}</span>
+          <img
+          src={flagSrc(current.code)}
+          alt=""
+          aria-hidden="true"
+          loading="lazy"
+          width="20"
+          height="15"
+          className="h-[15px] w-5 shrink-0 rounded-[2px] object-cover ring-1 ring-navy/10"
+        />
           <span className="tabular-nums">{current.dial}</span>
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-navy/40" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
         </button>
@@ -149,7 +157,15 @@ export default function PhoneInput({ name = 'phone', id, required = false, place
                   i === active ? 'bg-teal/10 text-navy' : 'text-navy/75'
                 }`}
               >
-                <span>{flagOf(c.code)} {c.name}</span>
+                <span className="flex items-center gap-2"><img
+          src={flagSrc(c.code)}
+          alt=""
+          aria-hidden="true"
+          loading="lazy"
+          width="20"
+          height="15"
+          className="h-[15px] w-5 shrink-0 rounded-[2px] object-cover ring-1 ring-navy/10"
+        />{c.name}</span>
                 <span className="text-[12px] tabular-nums text-navy/40">{c.dial}</span>
               </li>
             ))}
