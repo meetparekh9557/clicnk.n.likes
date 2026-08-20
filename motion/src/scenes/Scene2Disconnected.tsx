@@ -3,18 +3,25 @@ import { AbsoluteFill, useCurrentFrame } from 'remotion';
 import { Rail } from '../components/Rail';
 import { Headline } from '../components/Headline';
 import { script } from '../data/script';
-import { ramp } from '../components/easing';
+import { ramp, rampOut } from '../components/easing';
 
 const s = script.scene2;
-const b = s.beats;
+
+type Beats = { readonly [K in keyof typeof script.scene2.beats]: number };
 
 // Five channels, all busy, all travelling on separate tracks that never meet.
 // The rails keep moving under the copy - activity continues while the point
 // lands, which is the point.
-export const Scene2Disconnected: React.FC = () => {
+export const Scene2Disconnected: React.FC<{ beats?: Beats; duration?: number }> = ({
+  beats,
+  duration = script.scene2.durationInFrames,
+}) => {
+  const b = beats ?? s.beats;
   const frame = useCurrentFrame();
   // Rails dim as the copy arrives, so the type always wins the contrast fight.
-  const dim = 1 - ramp(frame, b.dimAt, 18) * 0.62;
+  // They then fade out over the hand-off - without this the Sequence simply
+  // ends and a row of faint chips disappears on a hard cut.
+  const dim = (1 - ramp(frame, b.dimAt, 18) * 0.62) * rampOut(frame, duration - 16, 16);
 
   return (
     <AbsoluteFill>

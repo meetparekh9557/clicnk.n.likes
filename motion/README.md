@@ -17,7 +17,8 @@ npm run studio
 
 # render (see "Browser" below for REMOTION_BROWSER)
 export REMOTION_BROWSER=/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell
-npm run render
+npm run render          # long cut
+npm run render:short    # cold-traffic cut
 
 # one frame, for checking a beat or making a thumbnail
 npx remotion still src/index.ts GrowthAd out/f.png --frame=420 \

@@ -6,12 +6,19 @@ import { theme } from '../data/theme';
 import { ramp, rampOut, OUT, BACK } from '../components/easing';
 
 const s = script.scene7;
-const b = s.beats;
+
+type Beats = { readonly [K in keyof typeof script.scene7.beats]: number };
 
 // The pace drops here on purpose. Everything before this was moving; the close
 // stops, so the address has somewhere quiet to land and two full seconds to be
 // read and typed.
-export const Scene7CTA: React.FC = () => {
+// `showLines` drops the four-line build-up. The long cut earns it; the short
+// cut opens straight on the turn.
+export const Scene7CTA: React.FC<{ beats?: Beats; showLines?: boolean }> = ({
+  beats,
+  showLines = true,
+}) => {
+  const b = beats ?? s.beats;
   const frame = useCurrentFrame();
   const turnOut = rampOut(frame, b.turnOut, 12);
   const btnQ = ramp(frame, b.btnIn, 18, { easing: BACK });
@@ -20,9 +27,11 @@ export const Scene7CTA: React.FC = () => {
 
   return (
     <AbsoluteFill>
-      <AbsoluteFill style={{ justifyContent: 'center', padding: '0 84px' }}>
-        <Headline lines={s.lines} start={b.linesIn} exitAt={b.linesOut} size={94} dir={1} />
-      </AbsoluteFill>
+      {showLines ? (
+        <AbsoluteFill style={{ justifyContent: 'center', padding: '0 84px' }}>
+          <Headline lines={s.lines} start={b.linesIn} exitAt={b.linesOut} size={94} dir={1} />
+        </AbsoluteFill>
+      ) : null}
 
       <AbsoluteFill style={{ justifyContent: 'center', padding: '0 84px', opacity: turnOut }}>
         <Headline lines={s.turn} start={b.turnIn} size={106} accent={1} dir={-1} />

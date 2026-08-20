@@ -72,3 +72,29 @@ export const script = {
     beats: { linesIn: 2, linesOut: 64, turnIn: 72, turnOut: 108, btnIn: 114, urlIn: 122, logoIn: 128 },
   },
 } as const;
+
+// THE SHORT CUT - the one that runs on cold Meta traffic.
+//
+// Same three components as the long film, retimed: hook, disconnected
+// channels, close. Everything in the middle (the four problem beats, the
+// inequality, the diagnosis, the four-step process) is argument, and a
+// stranger who did not choose you will not stay for an argument. They get the
+// premise and the ask; the long cut is for people who already clicked.
+//
+// scene7 runs with `showLines` off here, so the close opens straight on the
+// turn instead of building to it - there is no time to build.
+export const shortCut = {
+  scene1: {
+    durationInFrames: 132,
+    beats: { firstIn: 2, firstOut: 56, secondIn: 64, secondOut: 120 },
+  },
+  scene2: {
+    durationInFrames: 120,
+    beats: { copyIn: 20, copyOut: 108, dimAt: 20 },
+  },
+  scene7: {
+    durationInFrames: 186,
+    showLines: false,
+    beats: { linesIn: 0, linesOut: 0, turnIn: 4, turnOut: 74, btnIn: 80, urlIn: 90, logoIn: 98 },
+  },
+} as const;
