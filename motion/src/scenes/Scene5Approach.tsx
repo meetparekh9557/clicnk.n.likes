@@ -6,25 +6,26 @@ import { theme } from '../data/theme';
 import { ramp, rampOut, OUT } from '../components/easing';
 
 const s = script.scene5;
+const b = s.beats;
 
 // "We start with the problem" - then the six places a problem can hide, with
 // the two flagged ones lighting up. It is a diagnosis, shown as one.
 export const Scene5Approach: React.FC = () => {
   const frame = useCurrentFrame();
-  const wordQ = ramp(frame, 56, 16, { easing: OUT });
-  const ringIn = ramp(frame, 64, 22, { easing: OUT });
-  const headOut = rampOut(frame, 96, 14);
-  const gridOut = rampOut(frame, 106, 12);
+  const wordQ = ramp(frame, b.wordIn, 16, { easing: OUT });
+  const ringIn = ramp(frame, b.gridIn, 22, { easing: OUT });
+  const headOut = rampOut(frame, b.headOut, 14);
+  const gridOut = rampOut(frame, b.gridOut, 12);
 
   return (
     <AbsoluteFill>
       <AbsoluteFill style={{ justifyContent: 'center', padding: '0 84px' }}>
-        <Headline lines={s.first} start={2} exitAt={34} size={100} dir={1} />
+        <Headline lines={s.first} start={b.firstIn} exitAt={b.firstOut} size={100} dir={1} />
       </AbsoluteFill>
 
       <AbsoluteFill style={{ justifyContent: 'center', padding: '0 84px', opacity: headOut }}>
         <div style={{ transform: 'translateY(-360px)' }}>
-          <Headline lines={s.second} start={42} size={98} dir={-1} />
+          <Headline lines={s.second} start={b.secondIn} size={98} dir={-1} />
           <div
             style={{
               fontFamily: theme.display, fontWeight: 700, fontSize: 128,
@@ -46,9 +47,9 @@ export const Scene5Approach: React.FC = () => {
           {s.areas.map((area, i) => {
             const col = i % 3;
             const row = Math.floor(i / 3);
-            const q = ramp(frame, 64 + i * 3, 18, { easing: OUT });
+            const q = ramp(frame, b.gridIn + i * 3, 18, { easing: OUT });
             const flagged = (s.flagged as readonly number[]).includes(i);
-            const pulse = flagged ? 0.5 + 0.5 * Math.sin((frame - 70) * 0.22) : 0;
+            const pulse = flagged ? 0.5 + 0.5 * Math.sin((frame - b.gridIn) * 0.22) : 0;
             return (
               <div
                 key={area}

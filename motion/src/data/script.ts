@@ -1,72 +1,74 @@
-// Every word in the film, and how long each scene runs.
+// Every word in the film, and every timing that shapes it.
 //
-// This is the single edit point for copy and pacing: change a string here and
-// the render follows, no scene component needs touching. Durations are in
-// frames at 30fps.
+// This is the single edit point for copy and pacing: change a string or a
+// number here and the render follows - no scene component needs touching.
+// All timings are in frames at 30fps.
+//
+// `beats` are frame offsets measured from the START of that scene. Raising a
+// scene's durationInFrames without moving its beats simply holds the last
+// message on screen for longer, which is the usual way to slow the cut down.
 import { staticFile } from 'remotion';
 
 export const ui = (n: string) => staticFile(`ui/${n}.png`);
 
 export const script = {
   scene1: {
-    durationInFrames: 96,
+    durationInFrames: 144,
     first: ['YOUR BUSINESS', "DOESN'T NEED", 'MORE MARKETING.'],
     second: ['IT NEEDS TO KNOW', "WHAT'S NOT WORKING."],
-    accentLineIndex: 1, // second line of `second` takes the accent colour
+    accentLineIndex: 1,
+    beats: { firstIn: 2, firstOut: 66, secondIn: 74, secondOut: 132 },
   },
   scene2: {
-    durationInFrames: 96,
+    durationInFrames: 132,
     chips: ['SEO', 'ADS', 'CONTENT', 'SOCIAL', 'WEBSITE'],
     lines: ['DOING MORE', "DOESN'T ALWAYS", 'MEAN GROWING MORE.'],
+    beats: { copyIn: 26, copyOut: 118, dimAt: 26 },
   },
   scene3: {
-    durationInFrames: 168,
+    durationInFrames: 252,
     pairs: [
       { setup: 'Getting traffic…', payoff: 'but not enough enquiries.', art: 'growth-hero' },
       { setup: 'Running ads…', payoff: "but unsure what's actually working.", art: 'plan-builder' },
       { setup: 'Creating content…', payoff: "but customers aren't finding you.", art: 'tools-grid' },
       { setup: 'Your competitors…', payoff: 'keep showing up first.', art: 'tools-channel' },
     ],
+    // Offsets within each pair's own slot (slot = duration / pairs.length).
+    beats: { setupIn: 0, payoffIn: 16, panelIn: 5, outBefore: 12 },
   },
   scene4: {
-    durationInFrames: 96,
+    durationInFrames: 144,
     top: 'MORE MARKETING',
     symbol: '≠',
     bottom: 'MORE GROWTH',
     after: ['THE FIRST STEP', 'IS FINDING', 'THE GAP.'],
+    beats: { topIn: 0, bottomIn: 6, symbolIn: 16, eqOut: 68, pullIn: 78, afterIn: 80, afterOut: 132 },
   },
   scene5: {
-    durationInFrames: 120,
+    durationInFrames: 180,
     first: ["WE DON'T START", 'WITH A SERVICE.'],
     second: ['WE START', 'WITH THE'],
     accentWord: 'PROBLEM.',
-    // The six areas a gap can sit in. The two flagged ones light up.
     areas: ['SEARCH', 'CONVERSION', 'CONTENT', 'WEBSITE', 'PAID', 'AI SEARCH'],
     flagged: [0, 3],
+    beats: { firstIn: 2, firstOut: 52, secondIn: 60, wordIn: 76, gridIn: 88, headOut: 150, gridOut: 164 },
   },
   scene6: {
-    durationInFrames: 120,
+    durationInFrames: 174,
     steps: [
       { label: 'FIND THE GAP.', art: 'sound-familiar' },
       { label: 'PRIORITISE IT.', art: 'how-it-works' },
       { label: 'FIX WHAT MATTERS.', art: 'services' },
       { label: 'MEASURE THE RESULT.', art: 'before-after' },
     ],
+    beats: { labelIn: 2, outBefore: 12 },
   },
   scene7: {
-    durationInFrames: 126,
+    durationInFrames: 192,
     lines: ['SOMETHING IN YOUR', 'MARKETING MAY BE', 'HOLDING YOUR', 'BUSINESS BACK.'],
     turn: ["LET'S FIND OUT", 'WHAT IT IS.'],
     cta: 'SEND YOUR INQUIRY',
     url: 'clicknlikes.com/growth',
+    beats: { linesIn: 2, linesOut: 64, turnIn: 72, turnOut: 108, btnIn: 114, urlIn: 122, logoIn: 128 },
   },
 } as const;
-
-export const TOTAL =
-  script.scene1.durationInFrames +
-  script.scene2.durationInFrames +
-  script.scene3.durationInFrames +
-  script.scene4.durationInFrames +
-  script.scene5.durationInFrames +
-  script.scene6.durationInFrames +
-  script.scene7.durationInFrames;

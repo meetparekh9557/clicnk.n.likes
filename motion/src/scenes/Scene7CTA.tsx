@@ -6,25 +6,26 @@ import { theme } from '../data/theme';
 import { ramp, rampOut, OUT, BACK } from '../components/easing';
 
 const s = script.scene7;
+const b = s.beats;
 
 // The pace drops here on purpose. Everything before this was moving; the close
 // stops, so the address has somewhere quiet to land and two full seconds to be
 // read and typed.
 export const Scene7CTA: React.FC = () => {
   const frame = useCurrentFrame();
-  const turnOut = rampOut(frame, 74, 12);
-  const btnQ = ramp(frame, 80, 18, { easing: BACK });
-  const urlQ = ramp(frame, 88, 16, { easing: OUT });
-  const logoQ = ramp(frame, 94, 16, { easing: OUT });
+  const turnOut = rampOut(frame, b.turnOut, 12);
+  const btnQ = ramp(frame, b.btnIn, 18, { easing: BACK });
+  const urlQ = ramp(frame, b.urlIn, 16, { easing: OUT });
+  const logoQ = ramp(frame, b.logoIn, 16, { easing: OUT });
 
   return (
     <AbsoluteFill>
       <AbsoluteFill style={{ justifyContent: 'center', padding: '0 84px' }}>
-        <Headline lines={s.lines} start={2} exitAt={44} size={94} dir={1} />
+        <Headline lines={s.lines} start={b.linesIn} exitAt={b.linesOut} size={94} dir={1} />
       </AbsoluteFill>
 
       <AbsoluteFill style={{ justifyContent: 'center', padding: '0 84px', opacity: turnOut }}>
-        <Headline lines={s.turn} start={52} size={106} accent={1} dir={-1} />
+        <Headline lines={s.turn} start={b.turnIn} size={106} accent={1} dir={-1} />
       </AbsoluteFill>
 
       <AbsoluteFill style={{ alignItems: 'center', justifyContent: 'center' }}>

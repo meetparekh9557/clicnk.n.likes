@@ -6,6 +6,7 @@ import { script } from '../data/script';
 import { ramp } from '../components/easing';
 
 const s = script.scene2;
+const b = s.beats;
 
 // Five channels, all busy, all travelling on separate tracks that never meet.
 // The rails keep moving under the copy - activity continues while the point
@@ -13,7 +14,7 @@ const s = script.scene2;
 export const Scene2Disconnected: React.FC = () => {
   const frame = useCurrentFrame();
   // Rails dim as the copy arrives, so the type always wins the contrast fight.
-  const dim = 1 - ramp(frame, 26, 18) * 0.62;
+  const dim = 1 - ramp(frame, b.dimAt, 18) * 0.62;
 
   return (
     <AbsoluteFill>
@@ -22,7 +23,7 @@ export const Scene2Disconnected: React.FC = () => {
       <Rail items={s.chips} y={520} speed={6.4} scale={0.86} opacity={dim * 0.9} />
       <Rail items={[...s.chips].reverse()} y={710} speed={-4.4} scale={0.74} opacity={dim * 0.7} />
       <AbsoluteFill style={{ justifyContent: 'center', padding: '0 84px' }}>
-        <Headline lines={s.lines} start={26} exitAt={86} size={106} />
+        <Headline lines={s.lines} start={b.copyIn} exitAt={b.copyOut} size={106} />
       </AbsoluteFill>
     </AbsoluteFill>
   );

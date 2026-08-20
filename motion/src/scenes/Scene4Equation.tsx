@@ -6,20 +6,21 @@ import { theme } from '../data/theme';
 import { ramp, rampOut, BACK, OUT } from '../components/easing';
 
 const s = script.scene4;
+const b = s.beats;
 
 // The pattern interrupt. The two halves arrive from opposite sides and the
 // inequality punches between them - the only overshoot in the film, saved for
 // the one frame that has to stop a thumb.
 export const Scene4Equation: React.FC = () => {
   const frame = useCurrentFrame();
-  const topQ = ramp(frame, 0, 14, { easing: OUT });
-  const botQ = ramp(frame, 6, 14, { easing: OUT });
-  const symQ = ramp(frame, 16, 16, { easing: BACK });
-  const eqOut = rampOut(frame, 42, 12);
+  const topQ = ramp(frame, b.topIn, 14, { easing: OUT });
+  const botQ = ramp(frame, b.bottomIn, 14, { easing: OUT });
+  const symQ = ramp(frame, b.symbolIn, 16, { easing: BACK });
+  const eqOut = rampOut(frame, b.eqOut, 12);
 
   // Six loose points pulled to one centre as the closing line lands.
-  const pull = ramp(frame, 52, 26, { easing: OUT });
-  const dotsOut = rampOut(frame, 84, 10);
+  const pull = ramp(frame, b.pullIn, 26, { easing: OUT });
+  const dotsOut = rampOut(frame, b.afterOut - 2, 10);
 
   return (
     <AbsoluteFill>
@@ -76,7 +77,7 @@ export const Scene4Equation: React.FC = () => {
       </AbsoluteFill>
 
       <AbsoluteFill style={{ justifyContent: 'center', padding: '0 84px' }}>
-        <Headline lines={s.after} start={52} exitAt={86} size={102} accent={2} dir={1} />
+        <Headline lines={s.after} start={b.afterIn} exitAt={b.afterOut} size={102} accent={2} dir={1} />
       </AbsoluteFill>
     </AbsoluteFill>
   );

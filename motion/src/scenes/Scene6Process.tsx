@@ -6,6 +6,7 @@ import { theme } from '../data/theme';
 import { ramp, rampOut, OUT } from '../components/easing';
 
 const s = script.scene6;
+const b = s.beats;
 const EACH = Math.floor(s.durationInFrames / s.steps.length);
 
 // Four steps, each one a real screen travelling across the frame under its
@@ -13,8 +14,8 @@ const EACH = Math.floor(s.durationInFrames / s.steps.length);
 // never has time to settle - that is the "continuous" the brief asks for.
 const Step: React.FC<{ label: string; art: string; index: number }> = ({ label, art, index }) => {
   const frame = useCurrentFrame();
-  const q = ramp(frame, 2, 13, { easing: OUT });
-  const out = rampOut(frame, EACH - 11, 11);
+  const q = ramp(frame, b.labelIn, 13, { easing: OUT });
+  const out = rampOut(frame, EACH - b.outBefore, b.outBefore);
   const flip = index % 2 === 1;
 
   return (

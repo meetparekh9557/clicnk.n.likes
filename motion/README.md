@@ -4,7 +4,7 @@ Remotion project for the kinetic-typography / UI-motion ads. Renders
 **1080×1920, 30fps, full bleed** — no letterbox, no bars, every scene paints
 the entire canvas.
 
-Current composition: **`GrowthAd`**, ~26 seconds, driving `/growth/`.
+Current composition: **`GrowthAd`**, ~39 seconds, driving `/growth/`.
 
 ## Running it
 
@@ -45,8 +45,14 @@ on playback; limited-range yuv420p is handled identically everywhere.
 Everything a non-engineer needs to change lives in two files.
 
 - **`src/data/script.ts`** — every word on screen, every scene's length in
-  frames, and which UI capture each beat uses. Change a string, re-render,
-  done. No scene component needs touching.
+  frames, the beat timings inside each scene, and which UI capture each beat
+  uses. Change a string or a number, re-render, done. No scene component needs
+  touching; not one frame number is hardcoded in a scene file.
+
+  **To slow the cut down**, raise a scene's `durationInFrames` and leave its
+  `beats` alone — the last message simply holds on screen for longer. To
+  re-time the reveals themselves, move the `beats`, which are frame offsets
+  from that scene's own start.
 - **`src/data/theme.ts`** — brand colours, fonts, and the shared timing
   rhythm (line stagger, reveal length, scene overlap).
 
@@ -100,6 +106,15 @@ descendants**. Anything positioned with `position: absolute; top: 50%` must sit
 *outside* `HBlur`, or it resolves against the blur wrapper and lands in the
 wrong half of the frame. `UIPanel` and `Rail` are both built that way on
 purpose.
+
+## The corner wordmark
+
+`BrandMark` holds the logo top-left for the whole film, then fades out shortly
+before the closing scene raises its own large wordmark — two of the same mark
+in one frame reads as a mistake. Its position is a compromise between
+placements: low enough to clear the Reels/Stories chrome that covers the top
+~14% of the frame, high enough to still read as a corner lockup in Facebook
+feed where there is no overlay.
 
 ## No audio
 

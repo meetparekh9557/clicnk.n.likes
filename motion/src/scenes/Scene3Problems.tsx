@@ -6,6 +6,7 @@ import { theme } from '../data/theme';
 import { ramp, rampOut, OUT } from '../components/easing';
 
 const s = script.scene3;
+const b = s.beats;
 const EACH = Math.floor(s.durationInFrames / s.pairs.length);
 
 // Setup line, then the turn. The panel slides in on the setup and slides out
@@ -14,9 +15,9 @@ const Pair: React.FC<{ setup: string; payoff: string; art: string; flip: boolean
   setup, payoff, art, flip,
 }) => {
   const frame = useCurrentFrame();
-  const out = rampOut(frame, EACH - 9, 9);
-  const setupQ = ramp(frame, 0, 12, { easing: OUT });
-  const payoffQ = ramp(frame, 15, 14, { easing: OUT });
+  const out = rampOut(frame, EACH - b.outBefore, b.outBefore);
+  const setupQ = ramp(frame, b.setupIn, 12, { easing: OUT });
+  const payoffQ = ramp(frame, b.payoffIn, 14, { easing: OUT });
 
   return (
     <AbsoluteFill style={{ opacity: out }}>
@@ -26,7 +27,7 @@ const Pair: React.FC<{ setup: string; payoff: string; art: string; flip: boolean
         y={330}
         width={760}
         fromX={flip ? 1100 : -1100}
-        start={4}
+        start={b.panelIn}
         len={26}
         rotate={flip ? 2.5 : -2.5}
         opacity={0.92}

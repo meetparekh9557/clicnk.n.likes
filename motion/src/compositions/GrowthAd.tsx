@@ -2,6 +2,7 @@ import React from 'react';
 import { AbsoluteFill, Sequence } from 'remotion';
 import { Fonts } from '../components/Fonts';
 import { Bg } from '../components/Bg';
+import { BrandMark } from '../components/BrandMark';
 import { Scene1Hook } from '../scenes/Scene1Hook';
 import { Scene2Disconnected } from '../scenes/Scene2Disconnected';
 import { Scene3Problems } from '../scenes/Scene3Problems';
@@ -36,6 +37,10 @@ export const SCENE_STARTS = ORDER.reduce<number[]>((acc, _, i) => {
 export const DURATION =
   ORDER.reduce((n, s) => n + s.dur, 0) - timing.overlap * (ORDER.length - 1);
 
+// The corner mark steps aside just before the closing scene raises its own
+// large wordmark, so the two never share a frame.
+const MARK_FADE = SCENE_STARTS[ORDER.length - 1] + script.scene7.beats.logoIn - 26;
+
 export const GrowthAd: React.FC = () => (
   <AbsoluteFill>
     <Fonts />
@@ -49,5 +54,6 @@ export const GrowthAd: React.FC = () => (
         <Comp />
       </Sequence>
     ))}
+    <BrandMark fadeOutAt={MARK_FADE} />
   </AbsoluteFill>
 );
