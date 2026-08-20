@@ -56,7 +56,10 @@ Nothing here is a round number someone liked the sound of.
 - **₹16,000 – ₹1,24,000 / mo** — the published Starter and Pro tiers in
   `src/pages/pricing.astro`. If those tiers change, the reel is wrong and has
   to be re-rendered — and the captures retaken.
-- **12 free checks** — the 5 tools in `src/data/tools.ts` plus the 7 per-service
+- **12 free checks** — STALE AS OF AUGUST 2026. The rendered launch reel still
+  says 12, but `/tools/` now carries 7 tools plus 7 channel readiness checks,
+  so the true count is 14. Re-render before reusing this cut anywhere. The
+  original basis was the 5 tools in `src/data/tools.ts` plus the 7 per-service
   checks listed in `src/pages/tools/index.astro`, each of which renders a real
   `GatedTool` at `/services/<slug>/#tool`. It is 12, not 5: counting only the
   hub understates the product.
