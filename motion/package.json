@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "studio": "remotion studio src/index.ts",
-    "render": "remotion render src/index.ts GrowthAd out/growth-ad.mp4 --browser-executable=$REMOTION_BROWSER --crf=18 --concurrency=4",
+    "render": "remotion render src/index.ts GrowthAd out/growth-ad.mp4 --browser-executable=$REMOTION_BROWSER --crf=18 --pixel-format=yuv420p --concurrency=4",
     "still": "remotion still src/index.ts GrowthAd out/frame.png --browser-executable=$REMOTION_BROWSER",
     "typecheck": "tsc --noEmit"
   },

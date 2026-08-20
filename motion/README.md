@@ -32,8 +32,13 @@ compatible one, so point `--browser-executable` at it — that is what
 `REMOTION_BROWSER` above is for. Plain Chromium will not work: Remotion needs
 the old headless mode, which the full Chrome binary no longer has.
 
-A full render takes roughly 10–20 minutes here — the directional-blur filters
-are the expensive part. Run it in the background.
+A full render takes roughly 10 minutes on 4 cores — the directional-blur
+filters are the expensive part — so run it in the background. `--concurrency`
+cannot exceed the core count or the render refuses to start.
+
+`npm run render` passes `--pixel-format=yuv420p` deliberately. Remotion's JPEG
+pipeline otherwise emits full-range `yuvj420p`, which some Meta decoders shift
+on playback; limited-range yuv420p is handled identically everywhere.
 
 ## Editing
 
