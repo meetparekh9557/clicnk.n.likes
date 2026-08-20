@@ -11,12 +11,13 @@ export default function NewsletterForm({ thankYouHref }) {
     evt.preventDefault();
     const form = evt.target;
     const email = new FormData(form).get('email');
+    const page = typeof window !== 'undefined' ? window.location.pathname : '';
     sendFromClicknlikes({
       toEmail: OWNER_EMAIL,
       replyTo: email || undefined,
       subject: `New blog-newsletter lead: ${email || 'website visitor'}`,
-      bodyText: `New submission from the blog-newsletter form:\n\nemail: ${email}`,
-      fields: { form: 'blog-newsletter', email: email },
+      bodyText: `New submission from the blog-newsletter form:\n\nCame from page: ${page}\n\nemail: ${email}`,
+      fields: { form: 'blog-newsletter', page: page, email: email },
     });
     sendFromClicknlikes({
       toEmail: email,

@@ -47,10 +47,17 @@ var BRAND_ALIAS = 'business@clicknlikes.com';
    silently drop data just because this script wasn't updated. */
 var FORM_LEADS_TAB = 'Form Leads';
 var FORM_LEAD_COLUMNS = [
-  'Timestamp', 'Form', 'Name', 'Email', 'Phone', 'Business', 'Website',
-  'City', 'Country', 'Category', 'Service', 'Problem', 'Goal', 'Budget',
-  'Message', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_content',
-  'utm_term', 'fbclid'
+  // Who and where from
+  'Timestamp', 'Form', 'Page', 'Name', 'Email', 'Phone', 'Business', 'Website',
+  'City', 'Country',
+  // What they want
+  'Category', 'Service', 'Services', 'Industry', 'Problem', 'Goal', 'Message',
+  // Pricing-page forms (plan builder + custom quote)
+  'Budget', 'Ambition', 'Timeline', 'Duration', 'Currency', 'Discount',
+  'Investment', 'Investment_INR', 'Monthly_INR', 'Onetime_INR', 'Total_INR',
+  'Reference',
+  // Ad attribution
+  'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'fbclid'
 ];
 var RENDER_DAILY_CAP = 200; // max Cloudflare renders per day (free-tier guard)
 // Logo for the email header, inlined via CID so recipients always see it

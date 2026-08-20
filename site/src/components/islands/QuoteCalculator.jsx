@@ -156,6 +156,7 @@ export default function QuoteCalculator({ preselect, thankYouHref }) {
 
   function submit(evt) {
     evt.preventDefault();
+    const pagePath = typeof window !== 'undefined' ? window.location.pathname : '';
     const factors = lines.map((l) => fact(l.label + (l.tier ? ` · ${l.tier}` : ''), l.custom ? 'Custom — quoted separately' : money(l.amt) + ' ' + l.unit, 'self', 'plan line'));
     if (multi) factors.push(fact('Multi-service discount', '15% off', 'self', 'applied'));
     factors.push(fact('Project duration', `${dur.m} month${dur.m > 1 ? 's' : ''}${freeMonths ? ` · pay ${dur.charged}, ${freeMonths} free` : ''}`, 'self', 'selected'));
@@ -175,7 +176,21 @@ export default function QuoteCalculator({ preselect, thankYouHref }) {
     sendFromClicknlikes({
       toEmail: OWNER_EMAIL, replyTo: email,
       subject: `New plan-builder lead: ${name || business || email}`,
-      bodyText: `New plan:\n\nName: ${name}\nBusiness: ${business}\nEmail: ${email}\nPhone: ${phone || '-'}\nProspect currency: ${cur}\nDuration: ${dur.m} months (pay ${dur.charged})\nDiscount: ${Math.round(multi * 100)}% (INR base)\n\nLines (INR):\n${lines.map((l) => `  ${l.label}${l.tier ? ` (${l.tier})` : ''}: ${l.custom ? 'Custom' : inr(l.amt) + ' ' + l.unit}`).join('\n')}\n\nMonthly net: ${inr(monthlyNet)} | Over ${dur.m}mo: ${inr(monthlyForDuration)} | One-time: ${inr(onetimeNet)} | Grand: ${inr(grand)}`,
+      bodyText: `New plan:\n\nCame from page: ${pagePath}\n\nName: ${name}\nBusiness: ${business}\nEmail: ${email}\nPhone: ${phone || '-'}\nProspect currency: ${cur}\nDuration: ${dur.m} months (pay ${dur.charged})\nDiscount: ${Math.round(multi * 100)}% (INR base)\n\nLines (INR):\n${lines.map((l) => `  ${l.label}${l.tier ? ` (${l.tier})` : ''}: ${l.custom ? 'Custom' : inr(l.amt) + ' ' + l.unit}`).join('\n')}\n\nMonthly net: ${inr(monthlyNet)} | Over ${dur.m}mo: ${inr(monthlyForDuration)} | One-time: ${inr(onetimeNet)} | Grand: ${inr(grand)}`,
+      fields: {
+        form: 'plan-builder',
+        page: pagePath,
+        name, business, email,
+        phone: phone || '',
+        services: lines.map((l) => `${l.label}${l.tier ? ` (${l.tier})` : ''}`).join(', '),
+        duration: `${dur.m} months (pay ${dur.charged})`,
+        currency: cur,
+        discount: `${Math.round(multi * 100)}%`,
+        monthly_inr: monthlyNet,
+        onetime_inr: onetimeNet,
+        total_inr: grand,
+        investment: totalLine || '',
+      },
     });
     setSending(true);
     setTimeout(() => { window.location.href = thankYouHref; }, 600);

@@ -120,6 +120,7 @@ export default function CustomQuote() {
     evt.preventDefault();
     if (!sel.length) return;
     const { monthly, onetime, discountPct, lines } = compute();
+    const pagePath = typeof window !== 'undefined' ? window.location.pathname : '';
     const ref = makeRef();
     const indLabel = INDUSTRIES.find((i) => i.key === industry).label;
     const svcLabels = sel.map((k) => SERVICES[k].label).join(', ');
@@ -159,7 +160,22 @@ export default function CustomQuote() {
     sendFromClicknlikes({
       toEmail: OWNER_EMAIL, replyTo: email,
       subject: `New custom-quote lead: ${name || business || email} (${ref})`,
-      bodyText: `New custom quote ${ref}:\n\nName: ${name}\nBusiness: ${business}\nEmail: ${email}\nPhone: ${phone || '-'}\nProspect currency: ${cur}\nIndustry: ${indLabel}\nServices: ${svcLabels}\nAmbition: ${AMBITION[ambition].label}\nTimeline: ${timeline}\nInvestment: ${totalLine}${cur !== 'INR' ? ` (INR base: ${totalLineInr})` : ''}\nGoal: ${goal.trim() || '-'}`,
+      bodyText: `New custom quote ${ref}:\n\nCame from page: ${pagePath}\n\nName: ${name}\nBusiness: ${business}\nEmail: ${email}\nPhone: ${phone || '-'}\nProspect currency: ${cur}\nIndustry: ${indLabel}\nServices: ${svcLabels}\nAmbition: ${AMBITION[ambition].label}\nTimeline: ${timeline}\nInvestment: ${totalLine}${cur !== 'INR' ? ` (INR base: ${totalLineInr})` : ''}\nGoal: ${goal.trim() || '-'}`,
+      fields: {
+        form: 'custom-quote',
+        page: pagePath,
+        reference: ref,
+        name, business, email,
+        phone: phone || '',
+        industry: indLabel,
+        services: svcLabels,
+        ambition: AMBITION[ambition].label,
+        timeline,
+        currency: cur,
+        investment: totalLine,
+        investment_inr: totalLineInr,
+        goal: goal.trim(),
+      },
     });
 
     setSending(true);

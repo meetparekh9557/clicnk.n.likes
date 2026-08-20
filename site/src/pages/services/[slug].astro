@@ -14,6 +14,8 @@ import StatTile from '../../components/StatTile.astro';
 import FirstPageCliff from '../../components/islands/FirstPageCliff.jsx';
 import CliffTable from '../../components/CliffTable.astro';
 import GatedTool from '../../components/islands/GatedTool.jsx';
+import SimpleForm from '../../components/islands/SimpleForm.jsx';
+import Check from '@lucide/astro/icons/check';
 import { serviceDetails, serviceProof, serviceDeepDive, relatedServiceSlugs, categoryToServiceSlug } from '../../data/services';
 import { articles } from '../../data/articles';
 import { toolConfigs } from '../../data/toolConfigs';
@@ -66,6 +68,26 @@ const proof = serviceProof[service.slug];
 const deep = serviceDeepDive[service.slug];
 const toolConfig = toolConfigs[service.toolKey];
 const servicePath = `/services/${service.slug}/`;
+
+// Enquiry form for THIS service only. Deliberately no service picker:
+// the visitor is already on the page for the thing they want, and
+// showing a list of the other six here would invite second-guessing and
+// add cognitive load at the exact moment they are ready to ask. The
+// service is stamped on the lead server-side via lockedFields instead,
+// so the sheet still records which service the enquiry is about.
+const serviceFormFields = [
+  { name: 'name', label: 'Full name', placeholder: 'Your name' },
+  { name: 'email', label: 'Email', type: 'email', placeholder: 'you@business.com' },
+  { name: 'business', label: 'Business name', placeholder: 'Your business', required: false, optional: 'optional' },
+  { name: 'phone', label: 'WhatsApp number', type: 'tel', placeholder: '+91 98765 43210', required: false, optional: 'optional, for a faster reply' },
+  { name: 'website', label: 'Website URL', placeholder: 'yoursite.com', required: false, optional: 'optional' },
+  {
+    name: 'message',
+    label: `What do you want ${service.title.split(' (')[0]} to fix for you?`,
+    type: 'textarea',
+    placeholder: 'The one thing holding your growth back right now. Be honest, we will be honest back.',
+  },
+];
 
 // Per-page SEO meta, written in the founder's voice (not the generic
 // "<title> | brand" fallback). Titles in Title Case, descriptions ~155ch.
@@ -180,29 +202,43 @@ const relatedServices = (relatedServiceSlugs[service.slug] ?? [])
     <section class="border-t border-navy/10">
       <div class="mx-auto max-w-6xl px-[5vw] py-16">
         <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">Why it matters</p>
-        <div class="mt-8 grid gap-10 lg:grid-cols-2 lg:items-center">
-          <div>
-            <h2 class="reveal font-display text-[clamp(1.6rem,3vw,2.3rem)] leading-[1.15] font-bold text-navy" style="--d:60ms">
-              {proof.title}
-            </h2>
-            <p class="reveal mt-4 text-lg leading-relaxed text-navy/70" style="--d:140ms">{proof.intro}</p>
+        {proof.showCliff ? (
+          /* The cliff chart plus its 10-row table are together ~4x taller
+             than the heading and intro, so pairing them column-against-text
+             left a screen-height hole beside the copy. Text runs full width
+             above instead, then the two views of the same dataset sit side
+             by side, where their heights actually match. */
+          <>
+            <div class="mt-8 max-w-3xl">
+              <h2 class="reveal font-display text-[clamp(1.6rem,3vw,2.3rem)] leading-[1.15] font-bold text-navy" style="--d:60ms">
+                {proof.title}
+              </h2>
+              <p class="reveal mt-4 text-lg leading-relaxed text-navy/70" style="--d:140ms">{proof.intro}</p>
+            </div>
+            <div class="reveal mt-10 grid gap-8 lg:grid-cols-2 lg:items-start" style="--d:220ms">
+              <FirstPageCliff client:visible />
+              <CliffTable />
+            </div>
+          </>
+        ) : (
+          <div class="mt-8 grid gap-10 lg:grid-cols-2 lg:items-center">
+            <div>
+              <h2 class="reveal font-display text-[clamp(1.6rem,3vw,2.3rem)] leading-[1.15] font-bold text-navy" style="--d:60ms">
+                {proof.title}
+              </h2>
+              <p class="reveal mt-4 text-lg leading-relaxed text-navy/70" style="--d:140ms">{proof.intro}</p>
+            </div>
+            <div class="reveal" style="--d:220ms">
+              {proof.stat && <StatTile value={proof.stat.value} label={proof.stat.label} source={proof.stat.source} class="p-8" />}
+              {!proof.stat && proof.note && (
+                <Card class="bg-gradient-to-br from-white to-off p-8">
+                  <div class={iconWrap}><HeroIcon size={22} stroke-width={2} aria-hidden="true" /></div>
+                  <p class="text-lg leading-relaxed font-medium text-navy">{proof.note}</p>
+                </Card>
+              )}
+            </div>
           </div>
-          <div class="reveal" style="--d:220ms">
-            {proof.showCliff && (
-              <>
-                <FirstPageCliff client:visible />
-                <CliffTable />
-              </>
-            )}
-            {proof.stat && <StatTile value={proof.stat.value} label={proof.stat.label} source={proof.stat.source} class="p-8" />}
-            {!proof.showCliff && !proof.stat && proof.note && (
-              <Card class="bg-gradient-to-br from-white to-off p-8">
-                <div class={iconWrap}><HeroIcon size={22} stroke-width={2} aria-hidden="true" /></div>
-                <p class="text-lg leading-relaxed font-medium text-navy">{proof.note}</p>
-              </Card>
-            )}
-          </div>
-        </div>
+        )}
         {(proof.showCliff || proof.stat) && proof.note && (
           <p class="reveal mt-6 max-w-2xl text-sm text-navy/55" style="--d:280ms">{proof.note}</p>
         )}
@@ -291,6 +327,53 @@ const relatedServices = (relatedServiceSlugs[service.slug] ?? [])
       </div>
     </section>
   )}
+
+  <!-- Enquiry form: this service only, no picker (see serviceFormFields) -->
+  <section id="enquire" class="scroll-mt-24 border-t border-navy/10 bg-off">
+    <div class="mx-auto max-w-6xl px-[5vw] py-16">
+      <div class="grid items-start gap-x-12 gap-y-8 lg:grid-cols-[0.9fr_1.1fr]">
+        <div>
+          <p class="reveal text-xs font-semibold tracking-[0.14em] text-navy/50 uppercase">Talk to us</p>
+          <h2 class="reveal mt-3 font-display text-[clamp(1.6rem,3vw,2.3rem)] leading-[1.15] font-bold text-navy" style="--d:60ms">
+            Ready to put {service.title.split(' (')[0]} to work?
+          </h2>
+          <p class="reveal mt-4 text-lg leading-relaxed text-navy/70" style="--d:120ms">
+            Tell us what you are trying to fix and we will tell you honestly whether
+            {' '}{service.title.split(' (')[0]} is the right place to start, or whether something else deserves
+            your budget first.
+          </p>
+          <ul class="reveal mt-7 space-y-3 border-t border-navy/10 pt-6" style="--d:180ms">
+            {[
+              'We read it ourselves. No call centre, no sales script.',
+              'You get an honest answer, including "this is not your problem right now".',
+              'Published pricing, so you already know the numbers before we talk.',
+            ].map((t) => (
+              <li class="flex items-start gap-2.5 text-[14.5px] leading-relaxed text-navy/70">
+                <span class="mt-0.5 grid h-[18px] w-[18px] shrink-0 place-items-center rounded-full bg-teal/15 text-teal-dark">
+                  <Check size={11} stroke-width={3} aria-hidden="true" />
+                </span>
+                {t}
+              </li>
+            ))}
+          </ul>
+          <p class="reveal mt-6 text-[14px] leading-relaxed text-navy/55" style="--d:220ms">
+            Prefer numbers first? <a href={withBase('/pricing/#quote')} class="font-semibold text-teal-dark underline decoration-teal/40 underline-offset-2 hover:decoration-teal">Build an instant quote</a> instead.
+          </p>
+        </div>
+        <SimpleForm
+          client:visible
+          tag={`service-${service.slug}`}
+          fields={serviceFormFields}
+          lockedFields={{ service: service.title }}
+          submitLabel="Send my enquiry"
+          thankYouHref={withBase('/thank-you/')}
+          footnote="A real person from Click.n.likes will review your enquiry. No obligation to hire us."
+          startEventName="inquiry_form_start"
+          submitEventName="inquiry_form_submit"
+        />
+      </div>
+    </div>
+  </section>
 
   <RelatedReading heading="Related reading" items={relatedArticles} />
   <RelatedReading heading="Related services" items={relatedServices} class="pt-0" />

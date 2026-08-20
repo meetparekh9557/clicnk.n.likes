@@ -24,7 +24,20 @@ const attribution = (() => {
   return out;
 })();
 
-export default function SimpleForm({ tag, fields, submitLabel, thankYouHref, footnote, startEventName, submitEventName }) {
+// The page the lead actually came from. Read at submit time rather than
+// module load so it is correct even if the island is reused after a
+// client-side navigation. Kept out of the visitor's confirmation email -
+// it is internal routing information, not something they sent us.
+export function currentPagePath() {
+  if (typeof window === 'undefined') return '';
+  return window.location.pathname || '/';
+}
+
+// `lockedFields` is a flat object of values fixed by the page rather than
+// chosen by the visitor - used by the service pages to stamp the one
+// service that page is about, without ever showing a picker listing the
+// other services.
+export default function SimpleForm({ tag, fields, submitLabel, thankYouHref, footnote, startEventName, submitEventName, lockedFields }) {
   const [sending, setSending] = useState(false);
   const started = useRef(false);
   const onFormFocus = () => {
@@ -81,15 +94,16 @@ export default function SimpleForm({ tag, fields, submitLabel, thankYouHref, foo
       .map(([k, v]) => `${k}: ${v}`)
       .join('\n');
     const attributionLines = Object.entries(attribution).map(([k, v]) => `${k}: ${v}`).join('\n');
+    const page = currentPagePath();
     sendFromClicknlikes({
       toEmail: OWNER_EMAIL,
       replyTo: obj.email || undefined,
       subject: `New ${tag} lead: ${obj.name || obj.email || 'website visitor'}`,
-      bodyText: `New submission from the ${tag} form:\n\n${summary}${attributionLines ? `\n\nAttribution:\n${attributionLines}` : ''}`,
+      bodyText: `New submission from the ${tag} form:\n\nCame from page: ${page}\n\n${summary}${attributionLines ? `\n\nAttribution:\n${attributionLines}` : ''}`,
       // One sheet column per field. `obj` already carries the attribution
       // params too - they're rendered as hidden inputs inside this form,
       // so FormData picks them up with everything else.
-      fields: { form: tag, ...obj },
+      fields: { form: tag, page, ...lockedFields, ...obj },
     });
     if (obj.email) {
       sendFromClicknlikes({
@@ -109,6 +123,9 @@ export default function SimpleForm({ tag, fields, submitLabel, thankYouHref, foo
   return (
     <form onSubmit={submit} onFocus={onFormFocus} className="rounded-2xl border border-navy/10 bg-white p-7 text-left shadow-[0_10px_30px_rgba(26,43,74,0.06)]">
       {Object.entries(attribution).map(([k, v]) => (
+        <input key={k} type="hidden" name={k} value={v} />
+      ))}
+      {Object.entries(lockedFields || {}).map(([k, v]) => (
         <input key={k} type="hidden" name={k} value={v} />
       ))}
       <div className="grid gap-4 sm:grid-cols-2">
