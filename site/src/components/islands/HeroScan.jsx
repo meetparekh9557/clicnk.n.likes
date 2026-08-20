@@ -11,7 +11,7 @@ import {
   fetchPageFacts,
   scoreOnPageHealth,
   buildReportEmailHtml,
-  sendFromClicknlikes,
+  sendFromClicknlikes, TOOL_LEADS_TAB,
 } from '../../lib/engine';
 
 const SCAN_STEPS = [
@@ -79,7 +79,23 @@ export default function HeroScan({ toolsHref }) {
         toEmail: OWNER_EMAIL,
         replyTo: email,
         subject: `🔔 New Website Health Scan lead: ${email}`,
-        bodyText: `New Live Website Health Scan lead (homepage hero):\n\nEmail: ${email}\nURL: ${url}\nScore: ${score}/100\nData source: LIVE page fetch\nGaps:\n${gaps.length ? gaps.map((g) => '  - ' + g).join('\n') : '  (none)'}\nPage facts: title ${page.titleLength}ch | meta ${page.metaDescription === null ? 'MISSING' : page.metaDescriptionLength + 'ch'} | H1s ${page.h1Count} | ${page.wordCount}w | alt ${page.imgMissingAlt}/${page.imgCount} missing | schema ${page.hasSchema ? 'yes' : 'no'} | noindex ${page.noindex ? 'YES!' : 'no'}`,
+        bodyText: `New Live Website Health Scan lead (homepage hero):\n\nCame from page: ${typeof window !== 'undefined' ? window.location.pathname : ''}\nEmail: ${email}\nURL: ${url}\nScore: ${score}/100\nData source: LIVE page fetch\nGaps:\n${gaps.length ? gaps.map((g) => '  - ' + g).join('\n') : '  (none)'}\nPage facts: title ${page.titleLength}ch | meta ${page.metaDescription === null ? 'MISSING' : page.metaDescriptionLength + 'ch'} | H1s ${page.h1Count} | ${page.wordCount}w | alt ${page.imgMissingAlt}/${page.imgCount} missing | schema ${page.hasSchema ? 'yes' : 'no'} | noindex ${page.noindex ? 'YES!' : 'no'}`,
+        leadTab: TOOL_LEADS_TAB,
+        fields: {
+          tool: 'Website Health Scan',
+          page: typeof window !== 'undefined' ? window.location.pathname : '',
+          email, url,
+          score,
+          'data source': 'LIVE page fetch',
+          gaps: gaps.join(' | '),
+          scan_title_length: page.titleLength,
+          scan_meta_length: page.metaDescription === null ? 'MISSING' : page.metaDescriptionLength,
+          scan_h1_count: page.h1Count,
+          scan_word_count: page.wordCount,
+          scan_images_missing_alt: `${page.imgMissingAlt}/${page.imgCount}`,
+          scan_has_schema: page.hasSchema ? 'yes' : 'no',
+          scan_noindex: page.noindex ? 'YES' : 'no',
+        },
       });
       setResult({ score, bullets, finalUrl: page.finalUrl });
       setPhase('done');
@@ -88,7 +104,15 @@ export default function HeroScan({ toolsHref }) {
         toEmail: OWNER_EMAIL,
         replyTo: email,
         subject: `🔔 New Website Health Scan lead: ${email}`,
-        bodyText: `New Live Website Health Scan lead (homepage hero):\n\nEmail: ${email}\nURL: ${url}\nResult: live fetch FAILED (${page.reason}); visitor pointed to the full tool for the self-reported path.`,
+        bodyText: `New Live Website Health Scan lead (homepage hero):\n\nCame from page: ${typeof window !== 'undefined' ? window.location.pathname : ''}\nEmail: ${email}\nURL: ${url}\nResult: live fetch FAILED (${page.reason}); visitor pointed to the full tool for the self-reported path.`,
+        leadTab: TOOL_LEADS_TAB,
+        fields: {
+          tool: 'Website Health Scan',
+          page: typeof window !== 'undefined' ? window.location.pathname : '',
+          email, url,
+          'data source': `live fetch FAILED (${page.reason})`,
+          rating: 'Pointed to full tool for self-reported path',
+        },
       });
       setPhase('failed');
     }

@@ -75,13 +75,24 @@ export function postToScript(payload) {
   }
 }
 
-/* Appends one row to the lead sheet. Pass `fields` (a flat object of the
-   form's own field names -> values) to get one column per field on the
-   'Form Leads' tab; without it the row falls back to the legacy
-   subject/details blob on the 'Leads' tab, which is what the scored
-   tools still use. */
-export function logLeadToSheet(subject, details, fields) {
-  postToScript({ subject: subject, details: details, fields: fields || null });
+/* Appends one row to the lead sheet. Pass `fields` (a flat object of
+   name -> value) to get one column per field; without it the row falls
+   back to the legacy subject/details blob on the 'Leads' tab.
+   `tab` picks which structured sheet the row lands on: enquiry forms go
+   to 'Form Leads', the scored tools to 'Tool Leads'. They are kept apart
+   on purpose - a tool row carries its own scoring inputs (46 distinct
+   keys across the seven tools), and merging those into the enquiry sheet
+   would bury the columns you actually read a sales lead by. */
+export const FORM_LEADS_TAB = 'Form Leads';
+export const TOOL_LEADS_TAB = 'Tool Leads';
+
+export function logLeadToSheet(subject, details, fields, tab) {
+  postToScript({
+    subject: subject,
+    details: details,
+    fields: fields || null,
+    tab: tab || (fields ? FORM_LEADS_TAB : ''),
+  });
 }
 
 /* Asks the Apps Script to fetch ONE page server-side and hands back
@@ -212,8 +223,8 @@ export function buildReportEmailHtml(o) {
    hooking the sheet log here logs each lead once, with full details,
    independently of whether the emails themselves succeed. Returns a
    mailto fallback link. */
-export function sendFromClicknlikes({ toEmail, toName, subject, bodyText, bodyHtml, replyTo, fields }) {
-  if (toEmail === OWNER_EMAIL) logLeadToSheet(subject, bodyText, fields);
+export function sendFromClicknlikes({ toEmail, toName, subject, bodyText, bodyHtml, replyTo, fields, leadTab }) {
+  if (toEmail === OWNER_EMAIL) logLeadToSheet(subject, bodyText, fields, leadTab);
   postToScript({
     action: 'send',
     to: toEmail,

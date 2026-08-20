@@ -5,7 +5,8 @@
 // real screenshot and an honest prompt to judge it. Degrades to an honest
 // "coming soon" if the render backend isn't configured.
 import { useState } from 'react';
-import { OWNER_EMAIL, fetchScreenshot, sendFromClicknlikes } from '../../lib/engine';
+import { OWNER_EMAIL, fetchScreenshot, sendFromClicknlikes, TOOL_LEADS_TAB,
+} from '../../lib/engine';
 
 export default function SnapshotCheck({ toolsHref }) {
   const [url, setUrl] = useState('');
@@ -27,7 +28,15 @@ export default function SnapshotCheck({ toolsHref }) {
       toEmail: OWNER_EMAIL,
       replyTo: email,
       subject: `🔔 New First-impression snapshot lead: ${email}`,
-      bodyText: `New First-impression snapshot lead:\n\nEmail: ${email}\nURL: ${url}\nRendered above-the-fold successfully.`,
+      bodyText: `New First-impression snapshot lead:\n\nCame from page: ${typeof window !== 'undefined' ? window.location.pathname : ''}\nEmail: ${email}\nURL: ${url}\nRendered above-the-fold successfully.`,
+      leadTab: TOOL_LEADS_TAB,
+      fields: {
+        tool: 'First-impression snapshot',
+        page: typeof window !== 'undefined' ? window.location.pathname : '',
+        email, url,
+        'data source': 'LIVE render',
+        rating: 'Rendered above-the-fold successfully',
+      },
     });
     setImg(r.image);
     setPhase('done');

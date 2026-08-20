@@ -44,11 +44,13 @@ export default function LeadForm({ contactHref, thankYouHref }) {
     const summary = Object.entries(obj)
       .map(([k, v]) => `${k}: ${v}`)
       .join('\n');
+    const homePage = typeof window !== 'undefined' ? window.location.pathname : '';
     sendFromClicknlikes({
       toEmail: OWNER_EMAIL,
       replyTo: obj.email || undefined,
       subject: `New home lead: ${obj.name || obj.email || 'website visitor'}`,
-      bodyText: `New submission from the home form:\n\n${summary}`,
+      bodyText: `New submission from the home form:\n\nCame from page: ${homePage}\n\n${summary}`,
+      fields: { form: 'home', page: homePage, ...obj },
     });
     if (obj.email) {
       sendFromClicknlikes({
@@ -85,13 +87,13 @@ export default function LeadForm({ contactHref, thankYouHref }) {
         </div>
         <div className="sm:col-span-2">
           <label className={labelCls} htmlFor="lead-struggle">What are you struggling with?</label>
-          <select id="lead-struggle" name="struggle" className={fieldCls}>
+          <select id="lead-struggle" name="problem" className={fieldCls}>
             {STRUGGLES.map((s) => <option key={s}>{s}</option>)}
           </select>
         </div>
         <div>
           <label className={labelCls} htmlFor="lead-service">Service you're most interested in</label>
-          <select id="lead-service" name="service_interested" className={fieldCls}>
+          <select id="lead-service" name="service" className={fieldCls}>
             {SERVICE_OPTIONS.map((s) => <option key={s}>{s}</option>)}
           </select>
         </div>

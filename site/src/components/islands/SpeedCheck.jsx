@@ -12,7 +12,7 @@ import {
   fetchPageSpeed,
   buildReportEmailHtml,
   sendFromClicknlikes,
-  fact,
+  fact, TOOL_LEADS_TAB,
 } from '../../lib/engine';
 
 const STEPS = [
@@ -143,6 +143,19 @@ export default function SpeedCheck({ toolsHref }) {
       toEmail: OWNER_EMAIL,
       replyTo: email,
       subject: `🔔 New Speed check lead: ${email} (${sections.map((s) => `${s.label} ${s.r.score}`).join(', ')})`,
+      leadTab: TOOL_LEADS_TAB,
+      fields: {
+        tool: 'Speed & Core Web Vitals',
+        page: typeof window !== 'undefined' ? window.location.pathname : '',
+        email,
+        url: sections[0].r.psi.finalUrl,
+        score: sections.map((s) => `${s.label} ${s.r.score}`).join(' | '),
+        'data source': 'LIVE PageSpeed Insights',
+        ...Object.fromEntries(sections.map((s) => [
+          'speed_' + String(s.label).toLowerCase(),
+          `${s.r.score}/100 LCP ${s.r.psi.lcpText} CLS ${s.r.psi.clsText} TBT ${s.r.psi.tbtText} FCP ${s.r.psi.fcpText}`,
+        ])),
+      },
       bodyText: `New Live Speed & Core Web Vitals lead:\n\nEmail: ${email}\nURL: ${sections[0].r.psi.finalUrl}\nData source: LIVE PageSpeed Insights\n\n${sections.map((s) => `${s.label}: ${s.r.score}/100 — LCP ${s.r.psi.lcpText} | CLS ${s.r.psi.clsText} | TBT ${s.r.psi.tbtText} | FCP ${s.r.psi.fcpText} | field ${s.r.psi.hasField ? s.r.psi.fieldOverall : 'none'}`).join('\n')}`,
     });
     setPhase('done');

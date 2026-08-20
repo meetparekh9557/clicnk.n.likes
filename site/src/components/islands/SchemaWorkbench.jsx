@@ -9,7 +9,8 @@
 // what's missing pre-filled from what's already on the page. Email only
 // gates the ready-to-paste code + implementation guide, not the diagnosis.
 import { useState } from 'react';
-import { TOOL_SCAN_MIN_MS, OWNER_EMAIL, sendFromClicknlikes, escapeHtml, fetchPageFacts } from '../../lib/engine';
+import { TOOL_SCAN_MIN_MS, OWNER_EMAIL, sendFromClicknlikes, escapeHtml, fetchPageFacts, TOOL_LEADS_TAB,
+} from '../../lib/engine';
 import {
   SCHEMA_TYPES, GENERATABLE_TYPES, buildJsonLd, scoreSchemaObjects,
   parseJsonLdBlocks, bizFromSchema, propCost, TYPE_MISSING_COST,
@@ -214,6 +215,17 @@ export default function SchemaWorkbench() {
     sendFromClicknlikes({
       toEmail: OWNER_EMAIL, replyTo: email,
       subject: `New Schema Workbench lead: ${email}`,
+      leadTab: TOOL_LEADS_TAB,
+      fields: {
+        tool: 'Schema Workbench',
+        page: typeof window !== 'undefined' ? window.location.pathname : '',
+        email,
+        url: mode === 'url' ? url : 'pasted JSON-LD',
+        score: analysis ? analysis.overall : '',
+        'data source': mode === 'url' ? 'LIVE fetch' : 'pasted JSON-LD',
+        schema_types: results.map((r) => r.label).join(', '),
+        ...Object.fromEntries(Object.entries(biz).filter(([, v]) => v).map(([k, v]) => ['schema_' + k, String(v).slice(0, 500)])),
+      },
       bodyText: `New Schema Workbench lead:\n\nEmail: ${email}\nSource: ${mode === 'url' ? url : 'pasted JSON-LD'}\nOverall score at analysis: ${analysis ? analysis.overall : 'n/a'}/100\nGenerated types: ${results.map((r) => r.label).join(', ')}\n\nBusiness info given:\n${Object.entries(biz).filter(([, v]) => v).map(([k, v]) => `  ${k}: ${v}`).join('\n')}`,
     });
 

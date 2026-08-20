@@ -8,7 +8,7 @@
 // then shown on screen AND emailed as the deliverable.
 import { useState } from 'react';
 import {
-  TOOL_SCAN_MIN_MS, OWNER_EMAIL,
+  TOOL_SCAN_MIN_MS, OWNER_EMAIL, TOOL_LEADS_TAB,
   fetchPageFacts, fetchPageSpeed, buildReportEmailHtml, sendFromClicknlikes,
 } from '../../lib/engine';
 import { toolScorers } from '../../lib/toolScorers';
@@ -61,6 +61,7 @@ export default function GatedTool({ config, serviceLabel }) {
     evt.preventDefault();
     if (!email.trim()) { setError('Enter your email: your full report is sent there.'); return; }
     setError('');
+    const toolPage = typeof window !== 'undefined' ? window.location.pathname : '';
     setPhase('sending');
 
     const r = result;
@@ -77,7 +78,24 @@ export default function GatedTool({ config, serviceLabel }) {
     sendFromClicknlikes({
       toEmail: OWNER_EMAIL, replyTo: email,
       subject: `New ${serviceLabel} tool lead: ${email}`,
-      bodyText: `New "${serviceLabel}" free-tool lead:\n\nEmail: ${email}\nScore: ${r.score}/100 (${r.indexLabel})\nData source: ${r.liveNote ? 'includes LIVE verified data' : 'self-reported only'}\nGaps:\n${(r.gaps || []).map((g) => '  - ' + g).join('\n') || '  (none)'}\n\nInputs:\n${Object.entries(inputs).filter(([k]) => k !== '_page' && k !== '_psi').map(([k, v]) => `  ${k}: ${String(v).slice(0, 200)}`).join('\n')}`,
+      bodyText: `New "${serviceLabel}" free-tool lead:\n\nCame from page: ${toolPage}\nEmail: ${email}\nScore: ${r.score}/100 (${r.indexLabel})\nData source: ${r.liveNote ? 'includes LIVE verified data' : 'self-reported only'}\nGaps:\n${(r.gaps || []).map((g) => '  - ' + g).join('\n') || '  (none)'}\n\nInputs:\n${Object.entries(inputs).filter(([k]) => k !== '_page' && k !== '_psi').map(([k, v]) => `  ${k}: ${String(v).slice(0, 200)}`).join('\n')}`,
+      leadTab: TOOL_LEADS_TAB,
+      fields: {
+        tool: serviceLabel,
+        page: toolPage,
+        email,
+        score: r.score,
+        rating: r.indexLabel,
+        'data source': r.liveNote ? 'LIVE verified' : 'self-reported',
+        gaps: (r.gaps || []).join(' | '),
+        // Each tool's own scoring inputs, already namespaced per tool
+        // (seo_url, localseo_nap, ...) so they never collide in the sheet.
+        ...Object.fromEntries(
+          Object.entries(inputs)
+            .filter(([k]) => k !== '_page' && k !== '_psi')
+            .map(([k, v]) => [k, String(v).slice(0, 500)])
+        ),
+      },
     });
 
     setEmailedTo(email);

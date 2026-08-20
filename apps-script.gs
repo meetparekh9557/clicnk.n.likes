@@ -59,6 +59,18 @@ var FORM_LEAD_COLUMNS = [
   // Ad attribution
   'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'fbclid'
 ];
+
+/* Scored free-tool captures get their own tab. Same one-column-per-field
+   treatment, different shape: a tool row carries the score it produced
+   and that tool's own inputs (seo_url, localseo_nap, paid_budget and so
+   on - 46 distinct keys across the seven tools, already namespaced per
+   tool so they never collide). Those inputs land in columns after the
+   core ones below, appended on first sight like any other new field. */
+var TOOL_LEADS_TAB = 'Tool Leads';
+var TOOL_LEAD_COLUMNS = [
+  'Timestamp', 'Tool', 'Page', 'Email', 'URL', 'Score', 'Rating',
+  'Data Source', 'Gaps'
+];
 var RENDER_DAILY_CAP = 200; // max Cloudflare renders per day (free-tier guard)
 // Logo for the email header, inlined via CID so recipients always see it
 // (no hotlink for Gmail to hide). Fetched server-side at send time.
@@ -319,7 +331,7 @@ function doPost(e){
     }
     GmailApp.sendEmail(data.to, data.subject || '', data.body || '', opts);
   } else if(data.fields){
-    logFormLead_(data.fields);
+    logStructuredLead_(data.fields, data.tab || FORM_LEADS_TAB);
   } else {
     var ss = SpreadsheetApp.openById(SHEET_ID);
     var sh = ss.getSheetByName('Leads') || ss.insertSheet('Leads');
@@ -332,25 +344,27 @@ function doPost(e){
 }
 
 /**
- * Writes one form submission to the 'Form Leads' tab, one field per
- * column. Resolves each incoming field name to its column by matching
- * the header row case-insensitively, and APPENDS A NEW COLUMN for any
- * field name it has never seen — so a field added to a form on the site
- * lands in the sheet without this script needing an edit first.
+ * Writes one submission to a structured tab, one field per column.
+ * Resolves each incoming field name to its column by matching the header
+ * row case-insensitively, and APPENDS A NEW COLUMN for any field name it
+ * has never seen — so a field added to a form or a tool on the site lands
+ * in the sheet without this script needing an edit first.
  * Takes a document lock because two submissions landing together could
  * otherwise both append the same new column.
  */
-function logFormLead_(fields){
+function logStructuredLead_(fields, tabName){
+  var tab = tabName || FORM_LEADS_TAB;
+  var starterColumns = tab === TOOL_LEADS_TAB ? TOOL_LEAD_COLUMNS : FORM_LEAD_COLUMNS;
   var lock = LockService.getDocumentLock();
   try{ lock.waitLock(15000); }catch(err){ /* proceed rather than drop a lead */ }
   try{
     var ss = SpreadsheetApp.openById(SHEET_ID);
-    var sh = ss.getSheetByName(FORM_LEADS_TAB);
+    var sh = ss.getSheetByName(tab);
     if(!sh){
-      sh = ss.insertSheet(FORM_LEADS_TAB);
-      sh.appendRow(FORM_LEAD_COLUMNS);
+      sh = ss.insertSheet(tab);
+      sh.appendRow(starterColumns);
       sh.setFrozenRows(1);
-      sh.getRange(1, 1, 1, FORM_LEAD_COLUMNS.length).setFontWeight('bold');
+      sh.getRange(1, 1, 1, starterColumns.length).setFontWeight('bold');
     }
 
     var lastCol = sh.getLastColumn();

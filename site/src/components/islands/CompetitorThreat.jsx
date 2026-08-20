@@ -4,7 +4,8 @@
 // + summary are deterministic from the three answers; an optional email
 // unlocks the full report + counter-moves, sent via the shared engine.
 import { useState } from 'react';
-import { OWNER_EMAIL, autoEmailReady, sendFromClicknlikes, buildReportEmailHtml, fact } from '../../lib/engine';
+import { OWNER_EMAIL, autoEmailReady, sendFromClicknlikes, buildReportEmailHtml, fact, TOOL_LEADS_TAB,
+} from '../../lib/engine';
 
 const QUESTIONS = [
   {
@@ -80,7 +81,20 @@ export default function CompetitorThreat() {
       sendFromClicknlikes({
         toEmail: OWNER_EMAIL, replyTo: email,
         subject: `New Competitor Quiz lead: ${email}`,
-        bodyText: `New Competitor Threat Estimator lead:\n\nProspect Industry: ${industry || 'Not specified'}\nEmail: ${email}\nScore: ${points}/100\nStatus: ${status}\nAnswers: publishing=${q1Label}, ads=${q2Label}, website=${q3Label}`,
+        bodyText: `New Competitor Threat Estimator lead:\n\nCame from page: ${typeof window !== 'undefined' ? window.location.pathname : ''}\nProspect Industry: ${industry || 'Not specified'}\nEmail: ${email}\nScore: ${points}/100\nStatus: ${status}\nAnswers: publishing=${q1Label}, ads=${q2Label}, website=${q3Label}`,
+        leadTab: TOOL_LEADS_TAB,
+        fields: {
+          tool: 'Competitor Threat Estimator',
+          page: typeof window !== 'undefined' ? window.location.pathname : '',
+          email,
+          score: points,
+          rating: status,
+          industry: industry || '',
+          'data source': 'self-reported',
+          threat_publishing: q1Label,
+          threat_ads: q2Label,
+          threat_website: q3Label,
+        },
       });
     }
     setResult({ points, status, tone, summary, emailed: !!email });
