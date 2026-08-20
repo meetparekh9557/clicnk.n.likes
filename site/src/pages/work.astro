@@ -51,7 +51,8 @@ const formFields = [
   { name: 'category', label: 'Business category', placeholder: 'e.g. dermatology clinic' },
   { name: 'email', label: 'Email', type: 'email', placeholder: 'you@business.com' },
   { name: 'city', label: 'City', placeholder: 'e.g. Ahmedabad, Dubai, London, Toronto' },
-  { name: 'phone', label: 'WhatsApp number', type: 'tel', placeholder: '+91 98765 43210', required: false, optional: 'optional, for a faster reply' },
+  { name: 'phone', label: 'WhatsApp number', type: 'phone', placeholder: '98765 43210', required: false, optional: 'optional, for a faster reply' },
+  { name: 'country', label: 'Country', type: 'country' },
   { name: 'budget', label: 'Monthly budget range', type: 'select', optional: 'optional', emptyFirst: true, options: ['Prefer not to say yet', 'Under ₹16,000', '₹16,000 - ₹40,000', '₹40,000 - ₹1,00,000', '₹1,00,000+'] },
 ];
 ---

@@ -80,12 +80,13 @@ const heroFields = [
   { name: 'business', label: 'Business / Brand', placeholder: 'Your business' },
   { name: 'website', label: 'Website URL', placeholder: 'yoursite.com', required: false, optional: 'optional' },
   { name: 'email', label: 'Work email', type: 'email', placeholder: 'you@business.com' },
-  { name: 'phone', label: 'WhatsApp / Phone', type: 'tel', placeholder: '+1 234 567 8900' },
+  { name: 'phone', label: 'WhatsApp / Phone', type: 'phone', placeholder: '234 567 8900' },
+  { name: 'city', label: 'City', placeholder: 'Your city' },
+  { name: 'country', label: 'Country', type: 'country' },
   { name: 'problem', label: "What's currently not working?", type: 'select', full: true, emptyFirst: true, options: ['Choose one', ...problemOptions] },
 ];
 const finalFields = [
   ...heroFields,
-  { name: 'country', label: 'Country', placeholder: 'Where is your business based?', required: false, optional: 'optional' },
   { name: 'goal', label: 'What are you trying to improve?', type: 'select', full: true, emptyFirst: true, options: ['Choose one', ...improveOptions] },
   { name: 'message', label: "Tell us what's currently not working", type: 'textarea', full: true, required: false, optional: 'optional', placeholder: 'The more specific, the better we can help.' },
 ];

@@ -4,6 +4,8 @@
 // panel with the same copy and next-step expectations.
 import { useState } from 'react';
 import { OWNER_EMAIL, sendFromClicknlikes } from '../../lib/engine';
+import CountrySelect from './CountrySelect.jsx';
+import PhoneInput from './PhoneInput.jsx';
 
 const STRUGGLES = [
   'Not showing up on Google search or Maps',
@@ -83,7 +85,15 @@ export default function LeadForm({ contactHref, thankYouHref }) {
         </div>
         <div>
           <label className={labelCls} htmlFor="lead-phone">WhatsApp number</label>
-          <input id="lead-phone" required type="tel" name="phone" placeholder="+91 98765 43210" className={fieldCls} />
+          <PhoneInput id="lead-phone" name="phone" required placeholder="98765 43210" />
+        </div>
+        <div>
+          <label className={labelCls} htmlFor="lead-city">City</label>
+          <input id="lead-city" required type="text" name="city" placeholder="Your city" className={fieldCls} />
+        </div>
+        <div>
+          <label className={labelCls} htmlFor="lead-country">Country</label>
+          <CountrySelect id="lead-country" name="country" />
         </div>
         <div className="sm:col-span-2">
           <label className={labelCls} htmlFor="lead-struggle">What are you struggling with?</label>

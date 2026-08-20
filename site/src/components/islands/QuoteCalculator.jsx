@@ -9,6 +9,8 @@
 // shown in the visitor's currency; the emailed quote is documented in INR.
 import { useState, useEffect } from 'react';
 import { OWNER_EMAIL, sendFromClicknlikes, buildReportEmailHtml, fact } from '../../lib/engine';
+import CountrySelect from './CountrySelect.jsx';
+import PhoneInput from './PhoneInput.jsx';
 import { getCurrency, loadRates, onCurrency, formatMoney, usableCurrency } from '../../lib/currency.js';
 import { useCountUp } from '../../lib/useCountUp.js';
 
@@ -88,6 +90,8 @@ export default function QuoteCalculator({ preselect, thankYouHref }) {
   const [business, setBusiness] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
+  const [city, setCity] = useState('');
+  const [country, setCountry] = useState('');
   const [sending, setSending] = useState(false);
   const [cur, setCur] = useState('INR');
   const [rates, setRates] = useState(null);
@@ -176,12 +180,13 @@ export default function QuoteCalculator({ preselect, thankYouHref }) {
     sendFromClicknlikes({
       toEmail: OWNER_EMAIL, replyTo: email,
       subject: `New plan-builder lead: ${name || business || email}`,
-      bodyText: `New plan:\n\nCame from page: ${pagePath}\n\nName: ${name}\nBusiness: ${business}\nEmail: ${email}\nPhone: ${phone || '-'}\nProspect currency: ${cur}\nDuration: ${dur.m} months (pay ${dur.charged})\nDiscount: ${Math.round(multi * 100)}% (INR base)\n\nLines (INR):\n${lines.map((l) => `  ${l.label}${l.tier ? ` (${l.tier})` : ''}: ${l.custom ? 'Custom' : inr(l.amt) + ' ' + l.unit}`).join('\n')}\n\nMonthly net: ${inr(monthlyNet)} | Over ${dur.m}mo: ${inr(monthlyForDuration)} | One-time: ${inr(onetimeNet)} | Grand: ${inr(grand)}`,
+      bodyText: `New plan:\n\nCame from page: ${pagePath}\n\nName: ${name}\nBusiness: ${business}\nEmail: ${email}\nPhone: ${phone || '-'}\nCity: ${city || '-'}\nCountry: ${country || '-'}\nViewed in: ${cur}\nDuration: ${dur.m} months (pay ${dur.charged})\nDiscount: ${Math.round(multi * 100)}% (INR base)\n\nLines (INR):\n${lines.map((l) => `  ${l.label}${l.tier ? ` (${l.tier})` : ''}: ${l.custom ? 'Custom' : inr(l.amt) + ' ' + l.unit}`).join('\n')}\n\nMonthly net: ${inr(monthlyNet)} | Over ${dur.m}mo: ${inr(monthlyForDuration)} | One-time: ${inr(onetimeNet)} | Grand: ${inr(grand)}`,
       fields: {
         form: 'plan-builder',
         page: pagePath,
         name, business, email,
         phone: phone || '',
+        city, country,
         services: lines.map((l) => `${l.label}${l.tier ? ` (${l.tier})` : ''}`).join(', '),
         duration: `${dur.m} months (pay ${dur.charged})`,
         currency: cur,
@@ -337,7 +342,9 @@ export default function QuoteCalculator({ preselect, thankYouHref }) {
             <input required value={name} onChange={(e) => setName(e.target.value)} placeholder="Your name" aria-label="Your name" className="rounded-[10px] border-[1.5px] border-navy/10 bg-white px-4 py-3 text-sm outline-none focus:border-teal" />
             <input value={business} onChange={(e) => setBusiness(e.target.value)} placeholder="Business name (optional)" className="rounded-[10px] border-[1.5px] border-navy/10 bg-white px-4 py-3 text-sm outline-none focus:border-teal" />
             <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@business.com" aria-label="Your email" className="rounded-[10px] border-[1.5px] border-navy/10 bg-white px-4 py-3 text-sm outline-none focus:border-teal" />
-            <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="WhatsApp number (optional, for a faster reply)" aria-label="Your WhatsApp number" className="rounded-[10px] border-[1.5px] border-navy/10 bg-white px-4 py-3 text-sm outline-none focus:border-teal" />
+            <PhoneInput name="phone" placeholder="WhatsApp number (optional)" onValueChange={setPhone} />
+            <input required value={city} onChange={(e) => setCity(e.target.value)} placeholder="Your city" aria-label="Your city" className="rounded-[10px] border-[1.5px] border-navy/10 bg-white px-4 py-3 text-sm outline-none focus:border-teal" />
+            <CountrySelect name="country" onValueChange={setCountry} />
             <button type="submit" disabled={sending || sel.length === 0} className="inline-flex items-center justify-center gap-2 rounded-full bg-navy px-6 py-3.5 text-sm font-semibold text-white transition-all duration-300 hover:bg-coral disabled:opacity-50">
               {sending ? 'Sending…' : 'Email me this plan'}
             </button>

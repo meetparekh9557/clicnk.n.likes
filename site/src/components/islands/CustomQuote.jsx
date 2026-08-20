@@ -11,6 +11,8 @@
 // with scope/ambition: more work, more money, never with who is asking.
 import { useState, useEffect } from 'react';
 import { OWNER_EMAIL, autoEmailReady, sendFromClicknlikes, buildReportEmailHtml, fact, hashStr } from '../../lib/engine';
+import CountrySelect from './CountrySelect.jsx';
+import PhoneInput from './PhoneInput.jsx';
 import { getCurrency, loadRates, onCurrency, formatMoney, usableCurrency } from '../../lib/currency.js';
 import { useCountUp } from '../../lib/useCountUp.js';
 
@@ -62,6 +64,8 @@ export default function CustomQuote() {
   const [business, setBusiness] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
+  const [city, setCity] = useState('');
+  const [country, setCountry] = useState('');
   const [sending, setSending] = useState(false);
   const [result, setResult] = useState(null);
   const [cur, setCur] = useState('INR');
@@ -160,13 +164,14 @@ export default function CustomQuote() {
     sendFromClicknlikes({
       toEmail: OWNER_EMAIL, replyTo: email,
       subject: `New custom-quote lead: ${name || business || email} (${ref})`,
-      bodyText: `New custom quote ${ref}:\n\nCame from page: ${pagePath}\n\nName: ${name}\nBusiness: ${business}\nEmail: ${email}\nPhone: ${phone || '-'}\nProspect currency: ${cur}\nIndustry: ${indLabel}\nServices: ${svcLabels}\nAmbition: ${AMBITION[ambition].label}\nTimeline: ${timeline}\nInvestment: ${totalLine}${cur !== 'INR' ? ` (INR base: ${totalLineInr})` : ''}\nGoal: ${goal.trim() || '-'}`,
+      bodyText: `New custom quote ${ref}:\n\nCame from page: ${pagePath}\n\nName: ${name}\nBusiness: ${business}\nEmail: ${email}\nPhone: ${phone || '-'}\nCity: ${city || '-'}\nCountry: ${country || '-'}\nViewed in: ${cur}\nIndustry: ${indLabel}\nServices: ${svcLabels}\nAmbition: ${AMBITION[ambition].label}\nTimeline: ${timeline}\nInvestment: ${totalLine}${cur !== 'INR' ? ` (INR base: ${totalLineInr})` : ''}\nGoal: ${goal.trim() || '-'}`,
       fields: {
         form: 'custom-quote',
         page: pagePath,
         reference: ref,
         name, business, email,
         phone: phone || '',
+        city, country,
         industry: indLabel,
         services: svcLabels,
         ambition: AMBITION[ambition].label,
@@ -265,8 +270,10 @@ export default function CustomQuote() {
                 className="rounded-[10px] border-[1.5px] border-navy/10 bg-white px-4 py-3 text-sm outline-none focus:border-teal" />
               <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@business.com" aria-label="Your email"
                 className="rounded-[10px] border-[1.5px] border-navy/10 bg-white px-4 py-3 text-sm outline-none focus:border-teal" />
-              <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="WhatsApp number (optional, for a faster reply)" aria-label="Your WhatsApp number"
+              <PhoneInput name="phone" placeholder="WhatsApp number (optional)" onValueChange={setPhone} />
+              <input required value={city} onChange={(e) => setCity(e.target.value)} placeholder="Your city" aria-label="Your city"
                 className="rounded-[10px] border-[1.5px] border-navy/10 bg-white px-4 py-3 text-sm outline-none focus:border-teal" />
+              <CountrySelect name="country" onValueChange={setCountry} />
               <button type="submit" disabled={sending || sel.length === 0}
                 className="inline-flex items-center justify-center gap-2 rounded-full bg-navy px-6 py-3.5 text-sm font-semibold text-white transition-all duration-300 hover:bg-coral disabled:opacity-50">
                 {sending ? 'Building your quote…' : 'Get my unique quote'}

@@ -4,6 +4,8 @@
 // visitor confirmation per submission, exactly like v1.
 import { useState, useEffect, useRef } from 'react';
 import { OWNER_EMAIL, sendFromClicknlikes, trackEvent } from '../../lib/engine';
+import CountrySelect from './CountrySelect.jsx';
+import PhoneInput from './PhoneInput.jsx';
 
 const fieldCls =
   'w-full rounded-[10px] border-[1.5px] border-navy/10 bg-white px-4 py-3.5 text-sm text-navy transition-colors outline-none focus:border-teal';
@@ -168,6 +170,22 @@ export default function SimpleForm({ tag, fields, submitLabel, thankYouHref, foo
                   })}
                 </div>
                 <input type="hidden" name={f.name} value={[...sel].join(', ')} />
+              </div>
+            );
+          }
+          if (f.type === 'country') {
+            return (
+              <div key={f.name} className={f.full ? 'sm:col-span-2' : ''}>
+                {label}
+                <CountrySelect id={id} name={f.name} required={f.required !== false} />
+              </div>
+            );
+          }
+          if (f.type === 'phone') {
+            return (
+              <div key={f.name} className={f.full ? 'sm:col-span-2' : ''}>
+                {label}
+                <PhoneInput id={id} name={f.name} required={f.required !== false} placeholder={f.placeholder} />
               </div>
             );
           }
