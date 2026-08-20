@@ -68,8 +68,7 @@ export const script = {
     lines: ['SOMETHING IN YOUR', 'MARKETING MAY BE', 'HOLDING YOUR', 'BUSINESS BACK.'],
     turn: ["LET'S FIND OUT", 'WHAT IT IS.'],
     cta: 'SEND YOUR INQUIRY',
-    url: 'clicknlikes.com/growth',
-    beats: { linesIn: 2, linesOut: 64, turnIn: 72, turnOut: 108, btnIn: 114, urlIn: 122, logoIn: 128 },
+    beats: { linesIn: 2, linesOut: 64, turnIn: 72, turnOut: 108, btnIn: 114, logoIn: 124 },
   },
 } as const;
 
@@ -98,6 +97,6 @@ export const shortCut = {
   scene7: {
     durationInFrames: 156,
     showLines: false,
-    beats: { linesIn: 0, linesOut: 0, turnIn: 4, turnOut: 62, btnIn: 68, urlIn: 80, logoIn: 88 },
+    beats: { linesIn: 0, linesOut: 0, turnIn: 4, turnOut: 62, btnIn: 68, logoIn: 82 },
   },
 } as const;

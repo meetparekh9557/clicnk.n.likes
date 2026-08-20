@@ -29,7 +29,6 @@ export const Scene7CTA: React.FC<{ beats?: Beats; showLines?: boolean }> = ({
     fps,
     config: { damping: 11, stiffness: 150, mass: 0.8 },
   });
-  const urlQ = ramp(frame, b.urlIn, 16, { easing: OUT });
   const logoQ = ramp(frame, b.logoIn, 16, { easing: OUT });
 
   return (
@@ -78,24 +77,10 @@ export const Scene7CTA: React.FC<{ beats?: Beats; showLines?: boolean }> = ({
           </span>
           {s.cta}
         </div>
-        <div
-          style={{
-            marginTop: 42,
-            fontFamily: theme.body,
-            fontWeight: 700,
-            fontSize: 48,
-            color: 'rgba(255,255,255,0.92)',
-            letterSpacing: '0.01em',
-            opacity: urlQ,
-            transform: `translateY(${(1 - urlQ) * 30}px)`,
-          }}
-        >
-          {s.url}
-        </div>
         <Img
           src={staticFile('logo-wordmark.png')}
           style={{
-            marginTop: 92,
+            marginTop: 78,
             height: 86,
             opacity: logoQ,
             transform: `translateY(${(1 - logoQ) * 24}px)`,

@@ -25,30 +25,11 @@ export const BrandMark: React.FC<{ fadeOutAt: number }> = ({ fadeOutAt }) => {
         top: 206,
         display: 'flex',
         alignItems: 'center',
-        gap: 18,
         opacity: inQ * outQ,
         transform: `translateY(${(1 - inQ) * -16}px)`,
       }}
     >
       <Img src={staticFile('logo-wordmark.png')} style={{ height: 54, display: 'block' }} />
-      <div
-        style={{
-          width: 2,
-          height: 30,
-          background: 'rgba(255,255,255,0.20)',
-        }}
-      />
-      <div
-        style={{
-          fontFamily: "'DM Sans', system-ui, sans-serif",
-          fontWeight: 500,
-          fontSize: 25,
-          letterSpacing: '0.02em',
-          color: 'rgba(255,255,255,0.55)',
-        }}
-      >
-        clicknlikes.com
-      </div>
     </div>
   );
 };
