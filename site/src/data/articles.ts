@@ -77,9 +77,9 @@ export const articles: Article[] = [
       <h2>Conclusion: Compete on the 2 Factors You Can Actually Move</h2>
       <p>Distance is the one local ranking factor no business can negotiate with, and it absorbs most of the attention precisely because it is the most visible. Relevance and prominence decide nearly everything else, and both respond to deliberate, unglamorous work: describing the business precisely, keeping details consistent everywhere they appear, and earning reviews and local mentions on purpose rather than by accident. A competitor further away who outranks you has not found a loophole. They have simply been competing on two factors while you were watching the third. Closing that gap is the substance of real <a href="/services/local-seo/">local SEO services</a>, and it is durable in a way that a paid placement never is, which is why we build it as the foundation of every <a href="/">organic growth agency</a> engagement with a local business.</p>
       <div class="article-cta">
-        <h4>Want to know exactly why you're being outranked on the map?</h4>
-        <p>We will audit your profile against the competitors actually beating you, check your rankings from where your customers really search, and tell you honestly which gaps are worth closing first.</p>
-        <a class="btn btn-teal magnetic" href="/services/local-seo/">See Local SEO</a>
+        <h4>Want to see how strong that competitor actually is?</h4>
+        <p>Score your main rival on the signals that decide the map, then see exactly where the gap sits. If you would rather we closed it for you, that is what our <a href="/services/local-seo/">local SEO services</a> do.</p>
+        <a class="btn btn-teal magnetic" href="/tools/competitor-threat/">Score Your Competitor</a>
       </div>`,
     faqs: [
       { q: "Does distance matter most for Google Maps rankings?", a: "It is one of three factors, not the deciding one. Google names relevance, distance and prominence as the inputs to local ranking, and states that a more prominent, more relevant business can rank above a closer one." },
@@ -125,9 +125,9 @@ export const articles: Article[] = [
       <h2>Conclusion: Rebuild the Foundation, Refresh the Surface</h2>
       <p>A website redesign is worth it when the foundation is wrong: when the pages your buyers need do not exist, when the site cannot be changed without a developer, when it was never built to be found, or when it fails outright on the device most of your customers use. It is not worth it because the design feels dated, and treating aesthetics as the trigger is how businesses spend a large sum and get a prettier version of the same performance. Diagnose the structure first, insist that redirects and search fundamentals are written into the scope, and treat the build as the foundation of a lead generation asset rather than a line-item expense. That is the standard we hold in every <a href="/services/website-development/">website development</a> project we take on.</p>
       <div class="article-cta">
-        <h4>Not sure whether yours needs a rebuild or a repair?</h4>
-        <p>We will audit the structure, search foundations and mobile experience of your current site, and tell you honestly which one you need, including when the honest answer is that a few fixes will do.</p>
-        <a class="btn btn-teal magnetic" href="/services/website-development/">See Website Development</a>
+        <h4>See your homepage the way a first-time visitor does</h4>
+        <p>Before you decide between a rebuild and a repair, look at what a stranger actually takes in during their first few seconds. If the answer is a rebuild, our <a href="/services/website-development/">website development</a> work starts from the structure, not the paint.</p>
+        <a class="btn btn-teal magnetic" href="/tools/first-impression/">Run the First-Impression Snapshot</a>
       </div>`,
     faqs: [
       { q: "Should I redesign my website just because it looks outdated?", a: "Rarely on that basis alone. Dated design is a symptom worth weighing, but the case for a rebuild rests on structure: whether the pages your buyers need exist, whether the site can be changed without a developer, whether it was built to be found, and whether it works on a phone." },
@@ -172,9 +172,9 @@ export const articles: Article[] = [
       <h2>Conclusion: A Real Shift, Not the End of Organic Search</h2>
       <p>AI Overviews have genuinely reduced clicks on broad informational searches, and any business built on that kind of traffic should treat it as a structural change rather than a fluctuation. But the widespread claim that organic search is finished does not survive contact with the evidence: buyers searching with intent to act still click, still compare, and still choose a business to contact. The correct response is neither panic nor denial. It is to check your own impressions against your own clicks, to invest in the specific, sourced, genuinely useful content that a summary cannot stand in for, and to keep building the durable visibility that works across search results, AI answers and assistants alike, which is what an <a href="/">organic growth agency</a> should be accountable for in the first place.</p>
       <div class="article-cta">
-        <h4>Want to know whether AI Overviews are actually costing you anything?</h4>
-        <p>We will check your real impression and click data, identify which of your pages are exposed and which are not, and tell you honestly if the answer is that your traffic was never at risk.</p>
-        <a class="btn btn-teal magnetic" href="/services/ai-seo/">See AI SEO</a>
+        <h4>Find out whether your pages are built to be cited</h4>
+        <p>Score one of your pages against the on-page fundamentals that decide whether a search engine, or an answer engine, can actually use it. Our <a href="/services/ai-seo/">AI SEO services</a> exist for the pages that need more than a score.</p>
+        <a class="btn btn-teal magnetic" href="/tools/content-score/">Score a Page</a>
       </div>`,
     faqs: [
       { q: "Do AI Overviews reduce clicks to websites?", a: "On searches where they appear, yes. Analysis by Sistrix reported in Forbes found the first organic result earns a click around 27% of the time normally, falling to roughly 11% when an AI Overview sits above it." },
@@ -229,9 +229,9 @@ export const articles: Article[] = [
       <h2>Conclusion: Judge the Campaign on Month 4, Manage It From Day 1</h2>
       <p>A new Google Ads account asks its owner for something genuinely difficult: to keep spending through the one period specifically engineered to look like failure, while still doing real work on it. The businesses that get this right are not the patient ones and they are not the busy ones, they are the ones who understand which lever does what. They spend month 1 removing waste, fixing tracking and improving the page the clicks land on, and they leave the calibration alone to finish. Then they judge the channel on month 4, against a cost-per-lead target they set before they ever switched it on. Treated that way, a paid budget stops being a monthly gamble on an unpredictable number and becomes a measurable acquisition channel, running alongside an organic engine that keeps compounding whether or not the ads are live this quarter.</p>
       <div class="article-cta">
-        <h4>Want a paid account managed through the learning period, not abandoned in it?</h4>
-        <p>We will tell you honestly what your first 90 days should look like, what we will fix while the campaigns calibrate, and where organic should be carrying the load in the meantime.</p>
-        <a class="btn btn-teal magnetic" href="/services/paid-campaigns/">See Paid Campaigns</a>
+        <h4>Know what your paid traffic is worth before month 4</h4>
+        <p>A campaign that finishes calibrating still fails if the page behind it does not convert. See how much revenue leaks below a healthy 3% conversion rate, then judge the campaign against that. Our <a href="/services/paid-campaigns/">paid campaigns</a> are managed on both halves.</p>
+        <a class="btn btn-teal magnetic" href="/tools/funnel-roi/">Check Your Funnel Leak</a>
       </div>`,
     faqs: [
       { q: "How long does the Google Ads learning phase last?", a: "According to Google Ads Help, calibration can take up to three weeks or one to two full conversion cycles, though it can be faster where a campaign generates plenty of conversion data. Low-volume accounts with long sales cycles sit at the longer end of that range." },
@@ -325,9 +325,9 @@ export const articles: Article[] = [
       <h2>Conclusion: Draw the map you can actually prove</h2>
       <p>A storefront business earns local trust by being findable at one honest address. A service-area business earns the same trust differently, by being provably active across a smaller, truthful footprint rather than a sprawling, aspirational one. The mechanics differ, the address setting, the review workflow, the area list, but the underlying test does not: can you back up, with real reviews and real completed jobs, every claim your profile is making. Businesses that pass that test, whichever type of profile they run, are the ones the local pack keeps rewarding.</p>
       <div class="article-cta">
-        <h4>Score your local visibility in 30 seconds</h4>
-        <p>Our free Local SEO check measures your effective radius, your review gap against your leading competitor, and your profile freshness, exactly the signals the local pack rewards, storefront or service-area alike.</p>
-        <a class="btn btn-teal magnetic" href="/services/local-seo/">Run the free local check</a>
+        <h4>Run a live audit of the page behind your listing</h4>
+        <p>An 11-signal on-page check of the page your profile actually points at, because a listing can only ever be as good as what it sends people to. Our <a href="/services/local-seo/">local SEO services</a> cover both halves.</p>
+        <a class="btn btn-teal magnetic" href="/tools/">Run the Website Health Scan</a>
       </div>`,
     faqs: [
       { q: "Should a service-area business hide its address on Google Business Profile?", a: "Yes, if customers are never received there. Google's own guidelines are built around this: a service-area business lists the areas it serves rather than a public address, and publishing an address anyway, out of habit, mixes signals rather than adding credibility." },
@@ -526,9 +526,9 @@ export const articles: Article[] = [
       <h2>Conclusion: Budget From the Enquiry Backward, Never From a Guess Forward</h2>
       <p>A Google Ads budget set by feel is really just a hope with a dollar sign attached. Set from your target enquiry count, a realistic conversion rate and your industry's actual cost-per-click, it becomes a number you can defend, adjust and hold your campaign accountable to. Ad spend stays separate from the organic engine that keeps compounding after you stop paying for it, which is exactly why we run <a href="/services/paid-campaigns/">paid campaigns</a> as an amplifier to organic growth, not a substitute for it.</p>
       <div class="article-cta">
-        <h4>Want a realistic paid budget mapped to your actual numbers?</h4>
-        <p>We will build your budget from your real conversion rate and industry cost-per-click, not a guess, and show you exactly where organic should be doing the heavier lifting.</p>
-        <a class="btn btn-teal magnetic" href="/services/paid-campaigns/">See Paid Campaigns</a>
+        <h4>Put your real conversion rate into the budget maths</h4>
+        <p>The formula on this page only works with your actual numbers. See what you leak below a healthy 3% conversion rate, then set the budget against it rather than against a guess. Our <a href="/services/paid-campaigns/">paid campaigns</a> work from the same arithmetic.</p>
+        <a class="btn btn-teal magnetic" href="/tools/funnel-roi/">Check Your Funnel Leak</a>
       </div>`,
     faqs: [
       { q: "How much should a small business spend on Google Ads per month?", a: "There is no universal number. A realistic budget is your target enquiry count, divided by a realistic conversion rate (often around 3%), multiplied by your industry's average cost-per-click, which per WordStream's Google Ads Benchmarks report typically runs $2 to $4 though it varies significantly by industry." },
@@ -566,9 +566,9 @@ export const articles: Article[] = [
       <h2>Conclusion: A Website Is an Asset or a Liability, Rarely Something in Between</h2>
       <p>The price gap between a cheap website and a properly built one is really the price of everything that happens after the page finishes loading, or fails to load fast enough to matter. A site built for speed, structure and conversion transforms from a line-item expense into your most powerful 24/7 lead generation asset; a cheap one quietly costs you the enquiries it was never built to earn.</p>
       <div class="article-cta">
-        <h4>Not sure which one your current site actually is?</h4>
-        <p>Run a free Website Health Score, a real fetch of your live page against the same speed and structure signals covered here, full report emailed, no call required.</p>
-        <a class="btn btn-teal magnetic" href="/services/website-development/">See Website Development</a>
+        <h4>See what the cheap build is actually costing you</h4>
+        <p>Look at your homepage the way a new visitor does, then judge the quote against what they see. Our <a href="/services/website-development/">website development</a> pricing is published in full, so there is nothing to reverse-engineer.</p>
+        <a class="btn btn-teal magnetic" href="/tools/first-impression/">Run the First-Impression Snapshot</a>
       </div>`,
     faqs: [
       { q: "Why do website quotes vary so much for what looks like the same site?", a: "The visible design is rarely where the difference lies. A properly built site also solves for load speed, technical structure and schema markup, and conversion design, all of which are invisible in a screenshot but directly affect how many visitors actually become leads." },
@@ -747,9 +747,9 @@ export const articles: Article[] = [
       <h2>Conclusion: A Range to Choose From, Not a Number to Copy</h2>
       <p>There is no single correct marketing budget, but there is a real, sourced range: 7% at the conservative end, 9.4% at the end that better reflects how much a genuinely small business needs to spend to be found at all. The businesses that get this wrong are rarely the ones spending too much; they are almost always the ones who treated marketing as a discretionary expense to be decided after everything else, rather than the line item that determines whether the rest of the business ever gets found.</p>
       <div class="article-cta">
-        <h4>Want a number built for your actual business, not a benchmark?</h4>
-        <p>Tell us your revenue stage and category, and we will map a realistic monthly figure and channel split for you, not a generic percentage.</p>
-        <a href="/pricing/" class="btn">See transparent pricing</a>
+        <h4>Find the money you are already losing before you spend more</h4>
+        <p>Most budgets are set before anyone checks what the existing traffic fails to convert. See what leaks below a healthy 3% conversion rate, then decide what the budget actually needs to cover.</p>
+        <a class="btn btn-teal magnetic" href="/tools/funnel-roi/">Check Your Funnel Leak</a>
       </div>`,
     faqs: [
       { q: "What percentage of revenue should a small business spend on marketing?", a: "The U.S. Small Business Administration recommends 7-8% of revenue for businesses under $5 million in annual revenue. The Deloitte/Duke Fuqua CMO Survey, which samples a broader mix of company sizes, found an average of 9.4%. Newer, pre-revenue or early-stage businesses often need to spend above this range temporarily to build initial visibility." },
@@ -797,9 +797,9 @@ export const articles: Article[] = [
       <h2>Conclusion: A sequence, not a side</h2>
       <p>The question "SEO or ads first?" contains a false choice, because the businesses that grow most efficiently are never on one side of it for long. Paid buys you the present; organic buys you the future; and the art is in sequencing them so that today's enquiries fund tomorrow's asset. Chosen deliberately, with a clear read on your timeline, your margins and your capacity to wait, this is not a monthly expense to minimise but a compounding investment that steadily lowers the cost of every customer you win.</p>
       <div class="article-cta">
-        <h4>See where your budget is actually leaking</h4>
-        <p>Our free tools scan your live site and your funnel so you can see, before you spend another rupee, whether your problem is traffic, conversion, or the sequence you are funding them in.</p>
-        <a class="btn btn-teal magnetic" href="/tools/">Run the free checks</a>
+        <h4>Decide with your own numbers, not a general rule</h4>
+        <p>Whichever channel you start with, both are wasted on a page that does not convert. See what you leak below a healthy 3% conversion rate before you commit the budget either way.</p>
+        <a class="btn btn-teal magnetic" href="/tools/funnel-roi/">Check Your Funnel Leak</a>
       </div>`,
     faqs: [
       { q: "Is SEO or Google Ads cheaper?", a: "On any single day paid looks cheaper because it produces enquiries immediately while organic produces none. Measured over one to two years the picture inverts: organic keeps delivering visitors at no per-click cost long after the work is done, while the paid meter never stops. They are a short game and a long game, not a like-for-like cost comparison." },
@@ -852,9 +852,9 @@ export const articles: Article[] = [
       <h2>Conclusion: Securing your place in the answer</h2>
       <p>Visibility in AI answers is not a novelty to revisit in a few years; it is the same buyer journey you have always competed for, relocated to a new venue. The businesses that restructure their content now, while most of their market has not yet noticed, will occupy the recommendations everyone else spends the next several years trying to break into. Treated properly, your website transforms from a digital brochure into a source that machines quote and customers trust, a 24/7 asset that recommends you even while you sleep.</p>
       <div class="article-cta">
-        <h4>See how an AI engine reads your website</h4>
-        <p>Our free AI readability check scans your actual page the way a language model reads it: structure, quotable facts, and schema, and reports precisely what is missing.</p>
-        <a class="btn btn-teal magnetic" href="/services/ai-seo/">Run the free AI SEO check</a>
+        <h4>Check whether an assistant could actually quote your page</h4>
+        <p>Score one page against the on-page fundamentals that decide whether it can be read, understood and cited. Our <a href="/services/ai-seo/">AI SEO services</a> handle the pages that need structural work.</p>
+        <a class="btn btn-teal magnetic" href="/tools/content-score/">Score a Page</a>
       </div>`,
     faqs: [
       { q: "Will AI search replace Google for my business?", a: "Not replace, but reshape. Google itself now places AI Overviews above its traditional links, and assistants like ChatGPT sit alongside it. The two feed each other: ranking well still helps an engine decide you are authoritative, so the goal is to rank and to be quotable, not to choose between them." },
@@ -971,9 +971,9 @@ export const articles: Article[] = [
       <h2>Conclusion: One post, engineered properly</h2>
       <p>A blog is not a publishing obligation; it is a portfolio of answers, each one a permanent, 24/7 salesperson for a question your buyers genuinely ask. Ten posts engineered this way will outperform a hundred produced to fill a calendar, and they will continue producing enquiries years after the effort of writing them has been forgotten.</p>
       <div class="article-cta">
-        <h4>Measure your content engine honestly</h4>
-        <p>Our free content check fetches your page live, verifies its word count, structure, and schema, and scores your publishing cadence against what actually ranks and gets cited.</p>
-        <a class="btn btn-teal magnetic" href="/services/content-marketing/">Run the free content check</a>
+        <h4>Score the post you are about to publish</h4>
+        <p>Run one page against the same on-page fundamentals this article describes, and see what it is missing before it goes live rather than after. Our <a href="/services/content-marketing/">content marketing</a> programme does this at volume.</p>
+        <a class="btn btn-teal magnetic" href="/tools/content-score/">Score a Page</a>
       </div>`,
     faqs: [
       { q: "How long should a blog post be to rank?", a: "Long enough to answer its question completely, usually eight hundred to two thousand words depending on the topic's complexity. Length itself is not a ranking factor; completeness is. Padding a finished answer to hit a word count makes it weaker, not stronger, for both readers and AI." },
@@ -1028,9 +1028,9 @@ export const articles: Article[] = [
       <h2>Conclusion: The quiet engine behind every booking</h2>
       <p>A website that passes the three-second test is not a design accomplishment; it is a business system, quietly qualifying and converting visitors around the clock. Fixing these leaks transforms your site from a line-item expense into the 24/7 booking engine it was always supposed to be, and it does so with the traffic you already have, no additional spend required.</p>
       <div class="article-cta">
-        <h4>Scan your website health, live</h4>
-        <p>Our free scanner fetches your actual page and verifies eleven signals, structure, indexability, speed factors, in about twenty seconds, with every finding labelled verified or self-reported.</p>
-        <a class="btn btn-teal magnetic" href="/tools/">Run the live website scan</a>
+        <h4>Take the 3-second test properly</h4>
+        <p>See your homepage the way a first-time visitor does, and find out what they actually register before deciding to stay or leave. Our <a href="/services/website-development/">website development</a> work starts exactly there.</p>
+        <a class="btn btn-teal magnetic" href="/tools/first-impression/">Run the First-Impression Snapshot</a>
       </div>`,
     faqs: [
       { q: "What is the three-second test?", a: "Open your homepage on a phone, count to three, and close it. Then ask what a stranger could answer: what you do, whom you serve, and what to do next. If any answer is unclear in three seconds, your site is leaking enquiries no matter how much traffic it receives." },
