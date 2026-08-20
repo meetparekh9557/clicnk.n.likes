@@ -96,8 +96,8 @@ const faqs = [
   { q: 'Do I need to know which service I need?', a: "No. Tell us what's not working. We'll help identify the likely problem." },
   { q: 'Do you guarantee rankings?', a: "No. We'd rather tell you what is realistic than make promises we can't control." },
   { q: 'Do you work with businesses outside India?', a: 'Yes. We work with businesses across different markets and adapt the strategy to the market you\'re targeting.' },
-  { q: 'Will someone actually review my inquiry?', a: 'Yes. Your inquiry is reviewed by the Click.n.likes team rather than disappearing into a generic contact inbox.' },
-  { q: "I've worked with agencies before. Why should this be different?", a: 'We start by understanding the business problem instead of immediately selling a service. We identify the gaps, prioritize them and explain what we believe should happen next.' },
+  { q: 'Will someone actually review my enquiry?', a: 'Yes. Your enquiry is reviewed by the Click.n.likes team rather than disappearing into a generic contact inbox.' },
+  { q: "I've worked with agencies before. Why should this be different?", a: 'We start by understanding the business problem instead of immediately selling a service. We identify the gaps, prioritise them and explain what we believe should happen next.' },
 ];
 
 const canonicalURL = `${SITE_ORIGIN}/growth/`;
@@ -139,7 +139,7 @@ const webPageSchema = {
         <a href="#faq" class="text-[14px] font-medium text-navy/70 hover:text-teal-dark">FAQ</a>
       </nav>
       <a href="#hero-form" data-track="hero_inquiry_click" class="inline-flex items-center gap-1.5 rounded-full bg-navy px-5 py-2.5 text-[13.5px] font-semibold text-white transition-colors hover:bg-coral">
-        Send An Inquiry
+        Send An Enquiry
       </a>
     </div>
   </header>
@@ -164,7 +164,7 @@ const webPageSchema = {
           </p>
           <div class="mt-7 flex flex-wrap items-center gap-3">
             <a href="#hero-form" data-track="hero_inquiry_click" class="inline-flex items-center gap-2 rounded-full bg-navy px-7 py-4 text-[15px] font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-coral">
-              Send My Inquiry
+              Send My Enquiry
               <ArrowRight size={17} stroke-width={2.4} aria-hidden="true" />
             </a>
           </div>
@@ -179,9 +179,9 @@ const webPageSchema = {
             client:load
             tag="growth-hero"
             fields={heroFields}
-            submitLabel="Send My Inquiry"
+            submitLabel="Send My Enquiry"
             thankYouHref={withBase('/growth/thank-you/')}
-            footnote="A real person from Click.n.likes will review your inquiry."
+            footnote="A real person from Click.n.likes will review your enquiry."
             startEventName="inquiry_form_start"
             submitEventName="inquiry_form_submit"
           />
@@ -195,8 +195,8 @@ const webPageSchema = {
     <div class="mx-auto max-w-3xl px-[5vw] py-16 text-center">
       <h2 class="reveal font-display text-[clamp(1.7rem,3.4vw,2.4rem)] font-bold text-navy">Sound Familiar?</h2>
       <ul class="reveal mt-8 space-y-4 text-left text-lg leading-relaxed text-navy/75" style="--d:80ms">
-        <li>You are getting website visitors, but enquiries are inconsistent.</li>
-        <li>You are investing in ads, but you're not sure they're profitable.</li>
+        <li>You're getting website visitors, but enquiries are inconsistent.</li>
+        <li>You're investing in ads, but you're not sure they're profitable.</li>
         <li>You're publishing content, but it isn't bringing customers.</li>
         <li>Your competitors keep appearing ahead of you.</li>
         <li>Your website looks professional, but isn't converting enough visitors.</li>
@@ -249,7 +249,7 @@ const webPageSchema = {
       </ul>
       <p class="reveal mt-8 text-lg font-semibold text-navy" style="--d:140ms">The first step isn't doing more.<br />It's knowing what to fix.</p>
       <a href="#hero-form" data-track="hero_inquiry_click" class="reveal mt-6 inline-flex items-center gap-2 rounded-full bg-navy px-6 py-3.5 text-sm font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-coral" style="--d:180ms">
-        Send My Inquiry
+        Send My Enquiry
         <ArrowRight size={15} stroke-width={2.4} aria-hidden="true" />
       </a>
     </div>
@@ -285,7 +285,7 @@ const webPageSchema = {
         {[
           { n: '01', t: 'Diagnose', d: 'We look at your search visibility, website, content, conversion journey, social presence and paid acquisition.' },
           { n: '02', t: 'Identify', d: 'We find the gaps costing you traffic, enquiries and customers.' },
-          { n: '03', t: 'Prioritize', d: 'We separate what needs attention now from what can wait.' },
+          { n: '03', t: 'Prioritise', d: 'We separate what needs attention now from what can wait.' },
           { n: '04', t: 'Execute', d: 'Our team works across the channels your business actually needs.' },
           { n: '05', t: 'Measure', d: 'We focus on business outcomes, not reports filled with meaningless numbers.' },
         ].map((s, i) => (
@@ -331,7 +331,7 @@ const webPageSchema = {
       </div>
       <div class="reveal mt-10 text-center" style="--d:120ms">
         <a href="#hero-form" data-track="hero_inquiry_click" class="inline-flex items-center gap-2 rounded-full bg-navy px-6 py-3.5 text-sm font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-coral">
-          Send My Inquiry
+          Send My Enquiry
           <ArrowRight size={15} stroke-width={2.4} aria-hidden="true" />
         </a>
       </div>
@@ -354,7 +354,7 @@ const webPageSchema = {
         <div class="reveal rounded-2xl border-[1.5px] border-teal/40 bg-teal/[0.05] p-6" style="--d:100ms">
           <p class="text-xs font-semibold tracking-[0.12em] text-teal-dark uppercase">After</p>
           <ul class="mt-4 space-y-3">
-            {['Clear growth strategy', 'Prioritized opportunities', 'Greater search visibility', 'More qualified enquiries', 'Measurable acquisition', 'Content built around demand', 'Website built to convert', 'Strategy for search and AI discovery'].map((t) => (
+            {['Clear growth strategy', 'Prioritised opportunities', 'Greater search visibility', 'More qualified enquiries', 'Measurable acquisition', 'Content built around demand', 'Website built to convert', 'Strategy for search and AI discovery'].map((t) => (
               <li class="flex items-start gap-2.5 text-[14.5px] font-medium text-navy"><Check size={16} stroke-width={2.6} class="mt-0.5 shrink-0 text-teal-dark" aria-hidden="true" />{t}</li>
             ))}
           </ul>
@@ -428,19 +428,7 @@ const webPageSchema = {
         Not a call centre. Not someone reading a sales script. Not a salesperson trying to push the biggest package.
         You tell us what's happening. We look at the business. Then we tell you what we think makes sense.
       </p>
-      <div class="reveal mx-auto mt-8 flex max-w-md items-center gap-4 rounded-2xl border border-navy/10 bg-white p-5 text-left" style="--d:100ms">
-        <div class="grid h-14 w-14 shrink-0 place-items-center rounded-full bg-navy/5 font-display text-base font-bold text-navy/60">MP</div>
-        <div class="flex-1">
-          <p class="font-display text-base font-semibold text-navy">Meet Parekh</p>
-          <p class="text-sm text-navy/55">Founder, Click.n.likes · 9 years in organic growth</p>
-        </div>
-        <a href="https://www.linkedin.com/in/meetparekh21/" target="_blank" rel="noopener" aria-label="Meet Parekh on LinkedIn" class="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-navy/15 text-navy transition-colors hover:border-teal hover:bg-teal/10 hover:text-teal-dark">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S.02 4.88.02 3.5C.02 2.12 1.13 1 2.5 1s2.48 1.12 2.48 2.5zM.5 8h4V23h-4V8zm7.5 0h3.8v2.05h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1V23h-4v-7.9c0-1.88-.03-4.3-2.62-4.3-2.62 0-3.02 2.05-3.02 4.17V23H8V8z"/></svg>
-        </a>
-      </div>
       <div class="reveal mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[13px] font-semibold text-navy/55" style="--d:140ms">
-        <span>9 years organic growth experience</span>
-        <span class="text-navy/25">·</span>
         <span>Experience across multiple markets</span>
         <span class="text-navy/25">·</span>
         <span>SEO + AI Search + Content + Web + Paid</span>
@@ -483,7 +471,7 @@ const webPageSchema = {
       </p>
       <div class="reveal mt-6 text-center" style="--d:180ms">
         <a href="#hero-form" data-track="hero_inquiry_click" class="inline-flex items-center gap-2 rounded-full bg-navy px-6 py-3.5 text-sm font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-coral">
-          Send My Inquiry
+          Send My Enquiry
           <ArrowRight size={15} stroke-width={2.4} aria-hidden="true" />
         </a>
       </div>
@@ -502,7 +490,7 @@ const webPageSchema = {
         But if you want someone to look at the entire picture and tell you what actually deserves attention, let's talk.
       </p>
       <a href="#hero-form" data-track="hero_inquiry_click" class="reveal mt-7 inline-flex items-center gap-2 rounded-full bg-teal px-6 py-3.5 text-sm font-semibold text-navy transition-all duration-300 hover:-translate-y-0.5 hover:bg-white" style="--d:140ms">
-        Send My Inquiry
+        Send My Enquiry
         <ArrowRight size={15} stroke-width={2.4} aria-hidden="true" />
       </a>
     </div>
@@ -511,7 +499,7 @@ const webPageSchema = {
   <!-- ============ 14. FAQ / OBJECTION HANDLING ============ -->
   <section id="faq" class="scroll-mt-20 border-b border-navy/10 bg-white">
     <div class="mx-auto max-w-3xl px-[5vw] py-16">
-      <h2 class="reveal text-center font-display text-[clamp(1.6rem,3.2vw,2.2rem)] font-bold text-navy">Before You Send An Inquiry, You Probably Have A Few Questions.</h2>
+      <h2 class="reveal text-center font-display text-[clamp(1.6rem,3.2vw,2.2rem)] font-bold text-navy">Before You Send An Enquiry, You Probably Have A Few Questions.</h2>
       <div class="mt-10 space-y-4">
         {faqs.map((f, i) => (
           <details class="reveal group rounded-2xl border border-navy/10 bg-off/60 p-5" data-track="faq_interaction" style={`--d:${i * 40}ms`}>
@@ -562,9 +550,9 @@ const webPageSchema = {
           client:visible
           tag="growth-final"
           fields={finalFields}
-          submitLabel="Send My Inquiry"
+          submitLabel="Send My Enquiry"
           thankYouHref={withBase('/growth/thank-you/')}
-          footnote="A real person from Click.n.likes will review your inquiry. No obligation to hire us."
+          footnote="A real person from Click.n.likes will review your enquiry. No obligation to hire us."
           startEventName="inquiry_form_start"
           submitEventName="inquiry_form_submit"
         />
@@ -593,7 +581,7 @@ const webPageSchema = {
   <div id="sticky-cta" class="pointer-events-none fixed inset-x-0 bottom-0 z-30 translate-y-full opacity-0 transition-all duration-300 ease-out-quart lg:inset-x-auto lg:right-6 lg:bottom-6">
     <div class="pointer-events-auto border-t border-navy/10 bg-white p-3 shadow-[0_-8px_30px_rgba(26,43,74,0.10)] lg:rounded-full lg:border lg:p-1.5 lg:shadow-[0_12px_34px_rgba(26,43,74,0.14)]">
       <a href="#hero-form" data-track="hero_inquiry_click" class="flex items-center justify-center gap-2 rounded-full bg-navy px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-coral">
-        Send My Inquiry
+        Send My Enquiry
         <ArrowRight size={15} stroke-width={2.4} aria-hidden="true" />
       </a>
     </div>
