@@ -49,15 +49,35 @@ function initMotion() {
     document.querySelectorAll('.stat-count').forEach((el) => countIo.observe(el));
   }
 
+  // `will-change` is a hint for an animation that is ABOUT to run, and it has
+  // to be withdrawn once that animation is done. Left in place it creates a
+  // permanent stacking context on every revealed element, which silently traps
+  // any z-index inside it: a dropdown inside a .reveal wrapper could not paint
+  // above a later section no matter how high its own z-index went. It also
+  // keeps a compositing layer alive per element for no benefit.
+  const settle = (el) => {
+    el.style.willChange = 'auto';
+  };
+  const revealNow = (el) => {
+    el.classList.add('in');
+    // Clear the hint when the reveal transition finishes; the timeout is the
+    // fallback for elements whose transition never fires (already in view,
+    // reduced motion, interrupted).
+    let done = false;
+    const finish = () => { if (!done) { done = true; settle(el); } };
+    el.addEventListener('transitionend', finish, { once: true });
+    setTimeout(finish, 1600);
+  };
+
   const targets = document.querySelectorAll('.reveal:not(.in), .reveal-mask:not(.in)');
   if (reduce || !('IntersectionObserver' in window)) {
-    targets.forEach((el) => el.classList.add('in'));
+    targets.forEach(revealNow);
   } else {
     const io = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
           if (entry.isIntersecting) {
-            entry.target.classList.add('in');
+            revealNow(entry.target);
             io.unobserve(entry.target);
           }
         }

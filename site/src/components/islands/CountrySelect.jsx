@@ -94,8 +94,13 @@ export default function CountrySelect({ name = 'country', id, required = true, i
   const field =
     'w-full rounded-[10px] border-[1.5px] border-navy/10 bg-white px-4 py-3.5 text-left text-sm text-navy transition-colors outline-none focus:border-teal';
 
+  // Raise this whole field above its siblings while the list is open. The
+  // real fix for the dropdown painting under later sections is in motion.js
+  // (a .reveal ancestor's will-change was creating a permanent stacking
+  // context), but lifting the field too means this component does not
+  // silently break again if some future wrapper reintroduces one.
   return (
-    <div className="relative" ref={boxRef}>
+    <div className={`relative ${open ? 'z-50' : ''}`} ref={boxRef}>
       <input type="hidden" name={name} value={selected ? selected.name : ''} />
       <button
         type="button"

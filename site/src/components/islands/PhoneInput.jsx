@@ -90,8 +90,13 @@ export default function PhoneInput({ name = 'phone', id, required = false, place
     if (onValueChange) onValueChange(combined);
   }, [combined]);
 
+  // Raise this whole field above its siblings while the list is open. The
+  // real fix for the dropdown painting under later sections is in motion.js
+  // (a .reveal ancestor's will-change was creating a permanent stacking
+  // context), but lifting the field too means this component does not
+  // silently break again if some future wrapper reintroduces one.
   return (
-    <div className="relative" ref={boxRef}>
+    <div className={`relative ${open ? 'z-50' : ''}`} ref={boxRef}>
       <input type="hidden" name={name} value={combined} />
       <div className="flex rounded-[10px] border-[1.5px] border-navy/10 bg-white transition-colors focus-within:border-teal">
         <button
