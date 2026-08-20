@@ -36,9 +36,19 @@ A full render takes roughly 10 minutes on 4 cores — the directional-blur
 filters are the expensive part — so run it in the background. `--concurrency`
 cannot exceed the core count or the render refuses to start.
 
-`npm run render` passes `--pixel-format=yuv420p` deliberately. Remotion's JPEG
-pipeline otherwise emits full-range `yuvj420p`, which some Meta decoders shift
-on playback; limited-range yuv420p is handled identically everywhere.
+### Always run `npm run finish` before shipping
+
+Remotion's JPEG frame pipeline tags its output **full-range `yuvj420p`**, and
+`--pixel-format=yuv420p` does **not** override it — this was tested, not
+assumed. Some Meta decoders shift full-range colour on playback, so a delivery
+file needs one normalising pass to limited-range yuv420p with bt709 tags:
+
+```bash
+FFMPEG=/path/to/ffmpeg npm run finish
+```
+
+It takes well under a minute. Treat it as a required step, not a fallback —
+a raw `npm run render` output is not a delivery file.
 
 ## Editing
 
