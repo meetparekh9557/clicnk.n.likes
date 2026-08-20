@@ -86,6 +86,10 @@ export default function SimpleForm({ tag, fields, submitLabel, thankYouHref, foo
       replyTo: obj.email || undefined,
       subject: `New ${tag} lead: ${obj.name || obj.email || 'website visitor'}`,
       bodyText: `New submission from the ${tag} form:\n\n${summary}${attributionLines ? `\n\nAttribution:\n${attributionLines}` : ''}`,
+      // One sheet column per field. `obj` already carries the attribution
+      // params too - they're rendered as hidden inputs inside this form,
+      // so FormData picks them up with everything else.
+      fields: { form: tag, ...obj },
     });
     if (obj.email) {
       sendFromClicknlikes({

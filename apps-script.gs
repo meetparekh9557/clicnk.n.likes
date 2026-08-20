@@ -35,6 +35,23 @@
 
 var SHEET_ID = '1fdqShmBkDnVPPdhtmEo4wdmkc5u9bJe2kKteJpmUsWo';
 var BRAND_ALIAS = 'business@clicknlikes.com';
+
+/* Form leads get one column per field, on their own tab. Tools keep
+   writing their rendered report to the legacy 'Leads' tab, because a
+   tool submission is a scored report (score, gaps, per-tool inputs),
+   not a form — mapping those to columns would spawn a new column per
+   tool input and wreck the sheet.
+   This list is the PREFERRED ORDER only, not a limit: any field name
+   the site sends that isn't here gets its own column appended
+   automatically (see logFormLead_), so adding a form field can never
+   silently drop data just because this script wasn't updated. */
+var FORM_LEADS_TAB = 'Form Leads';
+var FORM_LEAD_COLUMNS = [
+  'Timestamp', 'Form', 'Name', 'Email', 'Phone', 'Business', 'Website',
+  'City', 'Country', 'Category', 'Service', 'Problem', 'Goal', 'Budget',
+  'Message', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_content',
+  'utm_term', 'fbclid'
+];
 var RENDER_DAILY_CAP = 200; // max Cloudflare renders per day (free-tier guard)
 // Logo for the email header, inlined via CID so recipients always see it
 // (no hotlink for Gmail to hide). Fetched server-side at send time.
@@ -294,6 +311,8 @@ function doPost(e){
       opts.from = BRAND_ALIAS;
     }
     GmailApp.sendEmail(data.to, data.subject || '', data.body || '', opts);
+  } else if(data.fields){
+    logFormLead_(data.fields);
   } else {
     var ss = SpreadsheetApp.openById(SHEET_ID);
     var sh = ss.getSheetByName('Leads') || ss.insertSheet('Leads');
@@ -303,6 +322,67 @@ function doPost(e){
     sh.appendRow([new Date(), data.subject || '', data.details || '']);
   }
   return ContentService.createTextOutput('ok');
+}
+
+/**
+ * Writes one form submission to the 'Form Leads' tab, one field per
+ * column. Resolves each incoming field name to its column by matching
+ * the header row case-insensitively, and APPENDS A NEW COLUMN for any
+ * field name it has never seen — so a field added to a form on the site
+ * lands in the sheet without this script needing an edit first.
+ * Takes a document lock because two submissions landing together could
+ * otherwise both append the same new column.
+ */
+function logFormLead_(fields){
+  var lock = LockService.getDocumentLock();
+  try{ lock.waitLock(15000); }catch(err){ /* proceed rather than drop a lead */ }
+  try{
+    var ss = SpreadsheetApp.openById(SHEET_ID);
+    var sh = ss.getSheetByName(FORM_LEADS_TAB);
+    if(!sh){
+      sh = ss.insertSheet(FORM_LEADS_TAB);
+      sh.appendRow(FORM_LEAD_COLUMNS);
+      sh.setFrozenRows(1);
+      sh.getRange(1, 1, 1, FORM_LEAD_COLUMNS.length).setFontWeight('bold');
+    }
+
+    var lastCol = sh.getLastColumn();
+    var headers = sh.getRange(1, 1, 1, lastCol).getValues()[0];
+    var indexOfHeader = {};
+    for(var i = 0; i < headers.length; i++){
+      indexOfHeader[String(headers[i]).trim().toLowerCase()] = i;
+    }
+
+    var row = [];
+    for(var c = 0; c < headers.length; c++) row.push('');
+    // Guard: if the Timestamp header were ever renamed by hand, an
+    // unguarded row[undefined] would drop the timestamp silently.
+    if(!('timestamp' in indexOfHeader)){
+      headers.push('Timestamp');
+      indexOfHeader['timestamp'] = headers.length - 1;
+      sh.getRange(1, headers.length).setValue('Timestamp').setFontWeight('bold');
+      row.push('');
+    }
+    row[indexOfHeader['timestamp']] = new Date();
+
+    Object.keys(fields).forEach(function(key){
+      var value = fields[key];
+      if(value === null || value === undefined || value === '') return;
+      var lookup = String(key).trim().toLowerCase();
+      if(!(lookup in indexOfHeader)){
+        // Unknown field: give it a column of its own at the far right.
+        headers.push(key);
+        indexOfHeader[lookup] = headers.length - 1;
+        sh.getRange(1, headers.length).setValue(key).setFontWeight('bold');
+        row.push('');
+      }
+      row[indexOfHeader[lookup]] = value;
+    });
+
+    sh.appendRow(row);
+  } finally {
+    try{ lock.releaseLock(); }catch(err){}
+  }
 }
 
 /**

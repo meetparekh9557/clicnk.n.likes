@@ -16,6 +16,7 @@ export default function NewsletterForm({ thankYouHref }) {
       replyTo: email || undefined,
       subject: `New blog-newsletter lead: ${email || 'website visitor'}`,
       bodyText: `New submission from the blog-newsletter form:\n\nemail: ${email}`,
+      fields: { form: 'blog-newsletter', email: email },
     });
     sendFromClicknlikes({
       toEmail: email,

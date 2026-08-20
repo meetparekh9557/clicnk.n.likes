@@ -75,9 +75,13 @@ export function postToScript(payload) {
   }
 }
 
-/* Appends one row to the lead sheet. */
-export function logLeadToSheet(subject, details) {
-  postToScript({ subject: subject, details: details });
+/* Appends one row to the lead sheet. Pass `fields` (a flat object of the
+   form's own field names -> values) to get one column per field on the
+   'Form Leads' tab; without it the row falls back to the legacy
+   subject/details blob on the 'Leads' tab, which is what the scored
+   tools still use. */
+export function logLeadToSheet(subject, details, fields) {
+  postToScript({ subject: subject, details: details, fields: fields || null });
 }
 
 /* Asks the Apps Script to fetch ONE page server-side and hands back
@@ -208,8 +212,8 @@ export function buildReportEmailHtml(o) {
    hooking the sheet log here logs each lead once, with full details,
    independently of whether the emails themselves succeed. Returns a
    mailto fallback link. */
-export function sendFromClicknlikes({ toEmail, toName, subject, bodyText, bodyHtml, replyTo }) {
-  if (toEmail === OWNER_EMAIL) logLeadToSheet(subject, bodyText);
+export function sendFromClicknlikes({ toEmail, toName, subject, bodyText, bodyHtml, replyTo, fields }) {
+  if (toEmail === OWNER_EMAIL) logLeadToSheet(subject, bodyText, fields);
   postToScript({
     action: 'send',
     to: toEmail,
