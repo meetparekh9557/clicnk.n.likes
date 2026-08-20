@@ -227,7 +227,7 @@ const webPageSchema = {
       <p class="reveal mt-8 text-lg font-semibold text-navy" style="--d:120ms">
         The problem may not be that you need more marketing.<br />You may need the right marketing working together.
       </p>
-      <a href="#hero-form" data-track="hero_inquiry_click" class="reveal mt-6 inline-flex items-center gap-2 rounded-full border-[1.5px] border-navy/15 px-6 py-3.5 text-sm font-semibold text-navy transition-colors hover:border-teal hover:text-teal-dark" style="--d:160ms">
+      <a href="#hero-form" data-track="hero_inquiry_click" class="reveal mt-6 inline-flex items-center gap-2 rounded-full border-[1.5px] border-navy/15 px-6 py-3.5 text-sm font-semibold text-navy transition-colors hover:border-teal hover:text-teal-dark" style="--d:180ms">
         Find Out What's Wrong
         <ArrowRight size={15} stroke-width={2.4} aria-hidden="true" />
       </a>
@@ -245,7 +245,31 @@ const webPageSchema = {
         <li>A poor conversion path can turn expensive traffic into wasted ad spend.</li>
         <li>If your brand isn't visible where customers are searching, someone else gets the opportunity.</li>
       </ul>
-      <p class="reveal mt-8 text-lg leading-relaxed text-white" style="--d:120ms">
+      <!-- Illustrative arithmetic, not a result claim, and labelled as such
+           on screen. The list above is abstract - every owner already knows
+           bad marketing costs money - so this makes the size of the gap
+           legible without attaching it to any client or promising it. The
+           numbers are deliberately round: they are a demonstration of how
+           conversion rate scales, nothing more. -->
+      <div class="reveal mt-10 rounded-2xl border border-white/15 bg-white/[0.04] p-7" style="--d:120ms">
+        <p class="text-xs font-semibold tracking-[0.14em] text-white/45 uppercase">For example: the same 1,000 visitors</p>
+        <div class="mt-5 grid gap-5 sm:grid-cols-2">
+          <div class="rounded-xl border border-white/10 p-5">
+            <p class="font-display text-3xl font-bold text-white/50 tabular-nums">10</p>
+            <p class="mt-1 text-[14px] text-white/60">enquiries at a 1% conversion rate</p>
+          </div>
+          <div class="rounded-xl border-[1.5px] border-teal/40 bg-teal/[0.08] p-5">
+            <p class="font-display text-3xl font-bold text-teal tabular-nums">30</p>
+            <p class="mt-1 text-[14px] text-white/80">enquiries at a 3% conversion rate</p>
+          </div>
+        </div>
+        <p class="mt-5 text-[15px] font-semibold text-white">The traffic was already there. The opportunity wasn't.</p>
+        <p class="mt-2 text-[12.5px] leading-relaxed text-white/40">
+          A worked example to show how conversion rate scales, not a projection or a result we are promising.
+        </p>
+      </div>
+
+      <p class="reveal mt-8 text-lg leading-relaxed text-white" style="--d:140ms">
         The question isn't <span class="text-white/60">"Should I spend more on marketing?"</span><br />
         It is <b class="text-teal">"Is my existing marketing actually working together?"</b>
       </p>
