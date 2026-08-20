@@ -64,7 +64,6 @@ const featured = [aidbylaw, kopaSeamless];
 
 const waMessage = "Hi Click.n.likes, I'd like to talk about my business's growth.";
 const waHref = `${contact.whatsappHref}?text=${encodeURIComponent(waMessage)}`;
-const telHref = `tel:${contact.whatsappHref.replace('https://wa.me/', '+')}`;
 
 const problemOptions = [
   'Not enough leads', "SEO isn't generating results", "Website isn't converting", "Ads aren't profitable",
@@ -560,7 +559,6 @@ const webPageSchema = {
       <p class="reveal mt-5 text-center text-sm text-white/55" style="--d:140ms">
         No obligation. No generic sales pitch. Prefer to talk directly?
         <a href={waHref} target="_blank" rel="noopener" data-track="whatsapp_click" class="font-semibold text-teal underline decoration-teal/40 underline-offset-2">WhatsApp us</a>
-        or <a href={telHref} data-track="phone_click" class="font-semibold text-teal underline decoration-teal/40 underline-offset-2">call {contact.whatsappDisplay}</a>
       </p>
     </div>
   </section>
