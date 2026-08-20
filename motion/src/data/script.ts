@@ -85,16 +85,19 @@ export const script = {
 // turn instead of building to it - there is no time to build.
 export const shortCut = {
   scene1: {
-    durationInFrames: 132,
-    beats: { firstIn: 2, firstOut: 56, secondIn: 64, secondOut: 120 },
+    durationInFrames: 126,
+    beats: { firstIn: 2, firstOut: 54, secondIn: 62, secondOut: 116 },
   },
   scene2: {
-    durationInFrames: 120,
-    beats: { copyIn: 20, copyOut: 108, dimAt: 20 },
+    durationInFrames: 168,
+    // The animated build runs on its own internal clock (cards, links, breaks,
+    // warning); `copyIn` is the only beat here because the words are the
+    // conclusion of that sequence and must not arrive before it resolves.
+    beats: { copyIn: 96, copyOut: 160, dimAt: 96 },
   },
   scene7: {
-    durationInFrames: 186,
+    durationInFrames: 156,
     showLines: false,
-    beats: { linesIn: 0, linesOut: 0, turnIn: 4, turnOut: 74, btnIn: 80, urlIn: 90, logoIn: 98 },
+    beats: { linesIn: 0, linesOut: 0, turnIn: 4, turnOut: 62, btnIn: 68, urlIn: 80, logoIn: 88 },
   },
 } as const;

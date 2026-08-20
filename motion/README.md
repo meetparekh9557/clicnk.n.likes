@@ -96,6 +96,35 @@ cp /tmp/shots/*.png ../motion/public/ui/
 Then point a beat at a different capture by editing its `art` field in
 `script.ts`.
 
+## The motion vocabulary
+
+Five devices do the work. Everything else is timing.
+
+1. **Per-word springs, not per-line slides.** `KineticHeadline` animates each
+   word on its own spring with a mask reveal and a `rotateX` tip-up, so a line
+   reads as language assembling rather than a block sliding. Words also leave
+   staggered, in reverse order, which gives the exit follow-through instead of
+   the block snapping off as one piece.
+2. **Draw-on strokes.** SVG paths with `pathLength={1}` and an animated
+   `strokeDashoffset` let a connector draw itself. This is what makes the
+   middle scene an argument: the links FORM in teal before they break, and you
+   cannot feel something break unless you first watched it work.
+3. **Springs where punch is wanted, eases where calm is.** The break marks and
+   the CTA use `spring()` so they overshoot and settle; scene exits use
+   bezier eases so they leave cleanly. Mixing the two is the difference
+   between "animated" and "designed".
+4. **A transition with weight.** `Sweep` crosses the frame as a slanted band
+   with a bright leading edge running ahead of it. A crossfade says "two
+   things happened"; an object crossing says "this became that". It travels
+   one way into the argument and the other way out, so the film has a shape.
+5. **Directional blur.** `HBlur` applies an SVG `feGaussianBlur` with zero
+   vertical deviation, so fast horizontal travel smears along its axis like a
+   real shutter rather than going isotropically soft.
+
+Nothing is ever fully parked: the background drifts across the whole film, the
+rig in the middle scene keeps drifting after it lands, and the warning pulses.
+A held graphic that stops dead reads as a frozen render.
+
 ## Why it reads as one sequence
 
 Three deliberate choices, all easy to break by accident:

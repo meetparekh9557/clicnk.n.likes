@@ -3,24 +3,27 @@ import { AbsoluteFill, Sequence } from 'remotion';
 import { Fonts } from '../components/Fonts';
 import { Bg } from '../components/Bg';
 import { BrandMark } from '../components/BrandMark';
+import { Sweep } from '../components/Sweep';
 import { Scene1Hook } from '../scenes/Scene1Hook';
-import { Scene2Disconnected } from '../scenes/Scene2Disconnected';
+import { SceneDisconnect } from '../scenes/SceneDisconnect';
 import { Scene7CTA } from '../scenes/Scene7CTA';
 import { shortCut } from '../data/script';
 import { timing } from '../data/theme';
 
-// The cold-traffic cut: ~14 seconds, three scenes, same components as the long
-// film with the timings in `shortCut` instead of `script`.
+// The cold-traffic cut: ~14.5 seconds. Premise, argument, ask.
 //
-// What was dropped and why: the four problem beats, the inequality and the
-// four-step process are all *argument*. A stranger who did not choose you will
-// not stay for an argument - they get the premise and the ask. The long cut is
-// the retargeting and organic asset, for people who already clicked once.
+// The middle scene is the one carrying the weight - five channels switch on,
+// links draw between them, the links break, and the gap gets named. The copy
+// arrives as the conclusion of that animation rather than as its caption.
+//
+// Scene changes are handed over by a Sweep rather than a crossfade: a shape
+// with direction and weight crosses the frame, which reads as "this became
+// that" instead of "two things happened".
 const ORDER = [
   { node: <Scene1Hook beats={shortCut.scene1.beats} />, dur: shortCut.scene1.durationInFrames },
   {
     node: (
-      <Scene2Disconnected
+      <SceneDisconnect
         beats={shortCut.scene2.beats}
         duration={shortCut.scene2.durationInFrames}
       />
@@ -56,6 +59,10 @@ export const GrowthAdShort: React.FC = () => (
         {node}
       </Sequence>
     ))}
+    {/* The band travels one way into the argument and the other way out of it,
+        so the film has a shape rather than a direction. */}
+    <Sweep at={STARTS[1] - 10} len={20} />
+    <Sweep at={STARTS[2] - 10} len={20} flip />
     <BrandMark fadeOutAt={MARK_FADE} />
   </AbsoluteFill>
 );
