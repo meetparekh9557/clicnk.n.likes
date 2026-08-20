@@ -1,9 +1,13 @@
-// Multi-currency display for the pricing page. Pricing is authored in
-// INR (the base the whole business is quoted in); this module shows those
-// same numbers in a visitor's local currency, converted at that day's
-// live exchange rate. It NEVER changes the underlying price - only how it
-// is displayed - and it falls back to INR whenever a live rate cannot be
-// fetched, so a rate outage can never invent a wrong number.
+// Per-market pricing for the pricing page. Prices are AUTHORED in INR
+// (the base the business is quoted in) but each market's figures are set
+// to that market's own going rate for agency work - they are not the INR
+// price run through an exchange rate. A US retainer is priced against US
+// agency rates, a UAE one against UAE rates, and so on.
+//
+// This is a deliberate commercial decision, and the pricing UI says so
+// on screen ("Pricing is set per market, not converted at an exchange
+// rate") rather than leaving a visitor to infer a conversion that isn't
+// happening.
 //
 // Framework-agnostic on purpose: the pricing page's inline controller
 // script and the React calculator islands all import the same helpers and
@@ -20,28 +24,95 @@ export const CURRENCIES = {
   SGD: { code: 'SGD', locale: 'en-SG', label: 'Singapore (S$ SGD)', short: 'S$ SGD' },
 };
 
-// Curated, hand-set price points per market, keyed by the INR base amount of
-// each tier. These are deliberate clean numbers (£399, not £394.12) so the
-// pricing reads as intentional in every currency, not machine-converted. Any
-// currency NOT listed here falls back to a live-rate conversion (approx). The
-// contract is always billed in the INR base; local display is a convenience.
-// Keys MUST track the live tier ladder in pricing.astro and the per-service
-// tiers in the quote builder (16k / 33k / 50k / 75k / 1.24L). When they drift,
-// a tier with no curated row falls through to a machine conversion sitting
-// next to a curated one, which is what makes a price list look careless.
+// Hand-set price points per market, keyed by the INR base amount of each
+// tier. Deliberate clean numbers (£400, not £394.12) so the ladder reads as
+// intentional in every currency. Keys MUST track the live tier ladder in
+// pricing.astro and the per-service tiers in the quote builder
+// (16k / 33k / 50k / 75k / 1.24L); when they drift, a tier with no row here
+// falls through to a MARKET_RATE calculation sitting beside a clean one,
+// which is what makes a price list look careless.
+//
+// Set to each market's own going rate for agency retainers, NOT converted
+// from INR at an exchange rate. Researched Aug 2026 against published
+// agency pricing surveys per market:
+//   US      SMB $1,500-5,000/mo, avg retainer $2,917, local/narrow $500-1,500
+//   UK      small business £750-2,000, local service £300-800
+//   DACH    €1,500-5,000, floor €800
+//   UAE     AED 3,000-8,000 small-mid, 8,000-30,000 full service
+//   Canada  CAD 1,500-5,000 SMB, 1,000-2,500 small local
+//   AU      AUD 1,500-5,000 SMB, average 2,500-3,500
+//   SG      SGD 1,500-3,000 SME - and notably stratified by agency age:
+//           under 2 years averages 1,540, over 5 years averages 3,648
+//
+// That last figure sets the whole posture. Markets price agency maturity,
+// not just scope, so this ladder deliberately sits in the new-to-mid band
+// rather than at the mature-agency average: high enough to be taken
+// seriously, not so high it invites a comparison we would lose on
+// track record.
+// NUMBERS, not display strings, and that matters: the quote builder has to
+// add these up. When this table held formatted strings the builder could
+// not use them, so it computed totals from the INR base times MARKET_RATE
+// instead - which put four line items reading $500 above a subtotal of
+// $1,651 on the same screen. One numeric source of truth, formatted for
+// display by money(), keeps the line items and the total in agreement.
 export const CURATED = {
-  16000:  { INR: '₹16,000',   USD: '$190',   EUR: '€179',   GBP: '£149',   AED: 'Dh 699',   CAD: 'CA$259',   AUD: 'A$289',   SGD: 'S$259' },
-  33000:  { INR: '₹33,000',   USD: '$390',   EUR: '€369',   GBP: '£309',   AED: 'Dh 1,449', CAD: 'CA$549',   AUD: 'A$599',   SGD: 'S$539' },
-  50000:  { INR: '₹50,000',   USD: '$590',   EUR: '€559',   GBP: '£469',   AED: 'Dh 2,199', CAD: 'CA$819',   AUD: 'A$909',   SGD: 'S$809' },
-  75000:  { INR: '₹75,000',   USD: '$890',   EUR: '€839',   GBP: '£699',   AED: 'Dh 3,299', CAD: 'CA$1,229', AUD: 'A$1,359', SGD: 'S$1,209' },
-  124000: { INR: '₹1,24,000', USD: '$1,470', EUR: '€1,379', GBP: '£1,159', AED: 'Dh 5,449', CAD: 'CA$2,029', AUD: 'A$2,249', SGD: 'S$1,999' },
+  16000:  { INR: 16000,  USD: 500,  EUR: 800,  GBP: 400,  AED: 3000,  CAD: 1000, AUD: 1100, SGD: 800 },
+  33000:  { INR: 33000,  USD: 900,  EUR: 1300, GBP: 700,  AED: 5000,  CAD: 1600, AUD: 1800, SGD: 1400 },
+  50000:  { INR: 50000,  USD: 1500, EUR: 2000, GBP: 1200, AED: 8000,  CAD: 2500, AUD: 2800, SGD: 2200 },
+  75000:  { INR: 75000,  USD: 2200, EUR: 3000, GBP: 1800, AED: 12000, CAD: 3500, AUD: 3800, SGD: 3000 },
+  124000: { INR: 124000, USD: 3200, EUR: 4200, GBP: 2500, AED: 18000, CAD: 4800, AUD: 5000, SGD: 4000 },
 };
 
-// The curated clean price string for a tier amount in a currency, or null if
-// this amount/currency isn't curated (caller then converts at the live rate).
+// Symbols kept explicit rather than left to Intl: Intl renders AED as
+// "AED 3,000.00" where the price list wants "Dh 3,000".
+const SYMBOL = { INR: '₹', USD: '$', EUR: '€', GBP: '£', AED: 'Dh ', CAD: 'CA$', AUD: 'A$', SGD: 'S$' };
+
+// Multiplier from the INR base to each market's price, for every amount
+// that ISN'T one of the curated tiers above - add-on sliders, per-unit
+// extras and computed totals. Fitted to the top of the ladder, because
+// add-ons scale with the size of the engagement.
+//
+// This replaces the old live-exchange-rate conversion, and that is the
+// point: converting add-ons at FX while tiers were priced to market gave
+// a $500 Starter sitting beside $6 add-ons. One multiplier per market
+// keeps every figure on a pricing page internally consistent - and it
+// removes a third-party FX fetch from the critical path, so pricing can
+// no longer degrade because someone else's API was slow.
+export const MARKET_RATE = {
+  INR: 1,
+  USD: 0.0258,
+  EUR: 0.0339,
+  GBP: 0.0202,
+  AED: 0.1452,
+  CAD: 0.0387,
+  AUD: 0.0403,
+  SGD: 0.0323,
+};
+
+// The price of an INR tier amount in `cur`, AS A NUMBER: the curated figure
+// when this is one of the published tiers, otherwise the INR base at that
+// market's rate. This is the single function every price on the site should
+// go through, so a tier costs the same wherever it is rendered or summed.
+export function priceIn(inr, cur) {
+  const row = CURATED[inr];
+  if (row && row[cur] != null) return row[cur];
+  const rate = MARKET_RATE[cur];
+  return rate ? inr * rate : inr;
+}
+
+// Formats an amount ALREADY IN `cur` - no conversion. Use for anything the
+// quote builder has computed in the display currency.
+export function money(amount, cur) {
+  const c = CURRENCIES[cur] ? cur : 'INR';
+  const grouped = Math.round(amount).toLocaleString(c === 'INR' ? 'en-IN' : 'en-US');
+  return (SYMBOL[c] || c + ' ') + grouped;
+}
+
+// The clean price string for a tier amount in a currency, or null if this
+// amount/currency has no row. Kept for the .cnl-price spans on pricing.astro.
 export function curatedPrice(inr, cur) {
   const row = CURATED[inr];
-  return row && row[cur] ? row[cur] : null;
+  return row && row[cur] != null ? money(row[cur], cur) : null;
 }
 
 // Whether `cur` is a currency we know how to display at all. Deliberately
@@ -65,10 +136,6 @@ export function usableCurrency(cur) {
 }
 
 const LS_CUR = 'cnl_currency';
-const LS_FX = 'cnl_fxrates';
-// Free, no-key, CORS-enabled daily rates (base INR). Falls back to INR
-// display if it is ever unreachable.
-const FX_URL = 'https://open.er-api.com/v6/latest/INR';
 
 const TZ_CUR = {
   'Asia/Dubai': 'AED', 'Asia/Muscat': 'AED',
@@ -125,28 +192,14 @@ export function onCurrency(cb) {
 // Resolves the day's rates, cached per-day in localStorage and on
 // window.__cnlRates. Returns { rates, date, live }. `live:false` means we
 // are showing yesterday's cache or nothing (in which case callers show INR).
+// Kept async and same-shaped so every existing caller works untouched, but
+// it no longer fetches anything: prices are set per market (MARKET_RATE),
+// not converted at a daily exchange rate, so there is nothing to fetch and
+// nothing that can fail. Resolves immediately.
 export async function loadRates() {
-  const day = today();
-  if (typeof window !== 'undefined' && window.__cnlRates && window.__cnlRates.date === day && window.__cnlRates.rates) return window.__cnlRates;
-  try {
-    const c = JSON.parse(localStorage.getItem(LS_FX) || 'null');
-    if (c && c.date === day && c.rates) { const r = { date: day, rates: c.rates, live: true }; if (typeof window !== 'undefined') window.__cnlRates = r; return r; }
-  } catch (e) { /* ignore */ }
-  try {
-    const res = await fetch(FX_URL);
-    const data = await res.json();
-    if (data && data.result === 'success' && data.rates) {
-      try { localStorage.setItem(LS_FX, JSON.stringify({ date: day, rates: data.rates })); } catch (e) { /* ignore */ }
-      const r = { date: day, rates: data.rates, live: true };
-      if (typeof window !== 'undefined') window.__cnlRates = r;
-      return r;
-    }
-  } catch (e) { /* network/offline */ }
-  try {
-    const c = JSON.parse(localStorage.getItem(LS_FX) || 'null');
-    if (c && c.rates) { const r = { date: c.date, rates: c.rates, live: false }; if (typeof window !== 'undefined') window.__cnlRates = r; return r; }
-  } catch (e) { /* ignore */ }
-  return { date: day, rates: null, live: false };
+  const r = { date: today(), rates: MARKET_RATE, live: true };
+  if (typeof window !== 'undefined') window.__cnlRates = r;
+  return r;
 }
 
 // The exact amount in `cur`, or null if it cannot be converted (no rate).
@@ -158,17 +211,9 @@ export function convert(inr, cur, rates) {
 
 // Formats an INR figure in the chosen currency. Always safe: if there is
 // no rate for `cur`, it renders the honest INR figure instead of guessing.
-export function formatMoney(inr, cur, rates) {
-  const amt = convert(inr, cur, rates);
-  if (cur === 'INR' || amt === null) {
-    return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(Math.round(inr));
-  }
-  const c = CURRENCIES[cur] || CURRENCIES.INR;
-  try {
-    return new Intl.NumberFormat(c.locale, { style: 'currency', currency: cur, maximumFractionDigits: 0 }).format(Math.round(amt));
-  } catch (e) {
-    return cur + ' ' + Math.round(amt).toLocaleString('en-US');
-  }
+export function formatMoney(inr, cur) {
+  const c = CURRENCIES[cur] ? cur : 'INR';
+  return money(priceIn(inr, c), c);
 }
 
 // Relabels a number in the visitor's currency WITHOUT converting it — for

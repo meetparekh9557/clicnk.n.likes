@@ -13,7 +13,7 @@ import { useState, useEffect } from 'react';
 import { OWNER_EMAIL, autoEmailReady, sendFromClicknlikes, buildReportEmailHtml, fact, hashStr } from '../../lib/engine';
 import CountrySelect from './CountrySelect.jsx';
 import PhoneInput from './PhoneInput.jsx';
-import { getCurrency, loadRates, onCurrency, formatMoney, usableCurrency } from '../../lib/currency.js';
+import { getCurrency, onCurrency, usableCurrency, priceIn, money as fmtMoney } from '../../lib/currency.js';
 import { useCountUp } from '../../lib/useCountUp.js';
 
 const BASE_FEE = 16000;
@@ -69,10 +69,8 @@ export default function CustomQuote() {
   const [sending, setSending] = useState(false);
   const [result, setResult] = useState(null);
   const [cur, setCur] = useState('INR');
-  const [rates, setRates] = useState(null);
   useEffect(() => {
     setCur(getCurrency());
-    loadRates().then((r) => setRates(r.rates));
     return onCurrency((c) => setCur(c || getCurrency()));
   }, []);
   // Display in the visitor's currency; the emailed quote keeps INR, the
@@ -80,7 +78,15 @@ export default function CustomQuote() {
   // One currency per view: without live rates this resolves to INR so a
   // converted figure never sits beside a rupee one.
   const shown = usableCurrency(cur);
-  const money = (n) => formatMoney(n, shown, rates);
+  // Amounts arrive already in the display currency (compute() converts each
+  // line through priceIn), so this formats without converting again. Summing
+  // in INR and converting the total would disagree with the line items
+  // wherever a line lands exactly on a curated tier amount - which it does at
+  // the Establish ambition, where every service is exactly the base fee.
+  const money = (n) => fmtMoney(n, shown);
+  // See QuoteCalculator: money() no longer converts, so an INR figure needs
+  // priceOf() or it renders the rupee number under a dollar sign.
+  const priceOf = (inrAmt) => fmtMoney(priceIn(inrAmt, shown), shown);
   // Count the revealed totals up from zero when the quote lands.
   const monthlyView = useCountUp(result?.monthly ?? 0);
   const onetimeView = useCountUp(result?.onetime ?? 0);
@@ -101,18 +107,25 @@ export default function CustomQuote() {
     const mult = AMBITION[ambition].mult;
     let monthly = 0, onetime = 0;
     const lines = [];
+    let monthlyInr = 0, onetimeInr = 0;
     sel.forEach((k) => {
       const scope = Math.round(BASE_FEE * (mult - 1) * 0.75); // extra deliverables above base
-      const amt = BASE_FEE + scope;
-      if (SERVICES[k].kind === 'onetime') onetime += amt; else monthly += amt;
-      lines.push({ label: SERVICES[k].label, amt, unit: SERVICES[k].kind === 'onetime' ? 'one-time' : '/month' });
+      const amtInr = BASE_FEE + scope;
+      const amt = priceIn(amtInr, shown);
+      if (SERVICES[k].kind === 'onetime') { onetime += amt; onetimeInr += amtInr; }
+      else { monthly += amt; monthlyInr += amtInr; }
+      lines.push({ label: SERVICES[k].label, amt, amtInr, unit: SERVICES[k].kind === 'onetime' ? 'one-time' : '/month' });
     });
     const monthlyCount = sel.filter((k) => SERVICES[k].kind === 'monthly').length;
     const discountPct = monthlyCount >= 4 ? 0.15 : monthlyCount >= 2 ? 0.08 : 0;
     monthly = Math.round(monthly * (1 - discountPct));
-    if (monthly > 0 && monthly < MIN_PROJECT) monthly = MIN_PROJECT;
-    if (onetime > 0 && onetime < MIN_PROJECT) onetime = MIN_PROJECT;
-    return { monthly, onetime, discountPct, lines };
+    onetime = Math.round(onetime * (1 - discountPct));
+    monthlyInr = Math.round(monthlyInr * (1 - discountPct));
+    onetimeInr = Math.round(onetimeInr * (1 - discountPct));
+    const floor = priceIn(MIN_PROJECT, shown);
+    if (monthly > 0 && monthly < floor) { monthly = floor; monthlyInr = MIN_PROJECT; }
+    if (onetime > 0 && onetime < floor) { onetime = floor; onetimeInr = MIN_PROJECT; }
+    return { monthly, onetime, monthlyInr, onetimeInr, discountPct, lines };
   }
 
   function makeRef() {
@@ -123,13 +136,13 @@ export default function CustomQuote() {
   function submit(evt) {
     evt.preventDefault();
     if (!sel.length) return;
-    const { monthly, onetime, discountPct, lines } = compute();
+    const { monthly, onetime, monthlyInr, onetimeInr, discountPct, lines } = compute();
     const pagePath = typeof window !== 'undefined' ? window.location.pathname : '';
     const ref = makeRef();
     const indLabel = INDUSTRIES.find((i) => i.key === industry).label;
     const svcLabels = sel.map((k) => SERVICES[k].label).join(', ');
     const totalLine = [monthly > 0 ? money(monthly) + '/month' : null, onetime > 0 ? money(onetime) + ' one-time' : null].filter(Boolean).join(' + ');
-    const totalLineInr = [monthly > 0 ? inr(monthly) + '/month' : null, onetime > 0 ? inr(onetime) + ' one-time' : null].filter(Boolean).join(' + ');
+    const totalLineInr = [monthlyInr > 0 ? inr(monthlyInr) + '/month' : null, onetimeInr > 0 ? inr(onetimeInr) + ' one-time' : null].filter(Boolean).join(' + ');
 
     const factors = [
       fact('Industry', indLabel, 'self', 'noted'),
@@ -141,8 +154,8 @@ export default function CustomQuote() {
     if (discountPct > 0) factors.push(fact('Bundle discount', `${Math.round(discountPct * 100)}% off monthly`, 'self', 'applied'));
     if (goal.trim()) factors.push(fact('What success looks like', goal.trim(), 'self', 'noted'));
 
-    const curNote = shown !== 'INR' ? ` These figures are shown in ${shown} at today's exchange rate; your written proposal confirms the final amount in ${shown}.` : '';
-    const interpretation = `This is your personalised quote (reference ${ref}) for a ${AMBITION[ambition].label.toLowerCase()} push across ${svcLabels}. Every service includes a flat ${money(16000)} base and scales with the depth of work, never with your industry.${curNote} Reply with your reference and we build the written proposal around exactly this.`;
+    const curNote = shown !== 'INR' ? ` These figures are shown in ${shown}, priced for that market rather than converted from another; your written proposal confirms the final amount in ${shown}.` : '';
+    const interpretation = `This is your personalised quote (reference ${ref}) for a ${AMBITION[ambition].label.toLowerCase()} push across ${svcLabels}. Every service includes a flat ${priceOf(16000)} base and scales with the depth of work, never with your industry.${curNote} Reply with your reference and we build the written proposal around exactly this.`;
 
     const notes = [];
     if (selected.has('paid')) notes.push('Ad spend is billed directly from your card on the ad platform, separate from this fee.');
@@ -252,7 +265,7 @@ export default function CustomQuote() {
             <ul className="mt-4 space-y-1.5 border-t border-navy/10 pt-3 text-[12.5px] text-navy/65">
               {result.lines.map((l) => <li key={l.label} className="flex justify-between gap-2"><span>{l.label}</span><span className="tabular-nums whitespace-nowrap">{money(l.amt)} {l.unit}</span></li>)}
             </ul>
-            {shown !== 'INR' && <p className="mt-3 text-[11px] leading-relaxed text-navy/50">Shown in {shown} at today's exchange rate. Your quote is confirmed in {shown} in the written proposal.</p>}
+            {shown !== 'INR' && <p className="mt-3 text-[11px] leading-relaxed text-navy/50">Pricing is set per market, not converted at an exchange rate. Your quote is confirmed in {shown} in the written proposal.</p>}
             <p className="mt-4 text-[12.5px] leading-relaxed text-navy/70">
               {autoEmailReady ? <>Sent to <b>{email}</b> with reference <b>{result.ref}</b>. Reply with that reference and we build the written proposal around exactly this scope.</> : <>Your details and reference <b>{result.ref}</b> are logged, and a strategist will follow up with the written proposal.</>}
             </p>
