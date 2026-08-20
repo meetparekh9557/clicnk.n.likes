@@ -32,13 +32,12 @@ const OUT = args.out || resolve(ROOT, '../ad-growth-1080x1350.png');
 
 // --- copy, in one place -----------------------------------------------------
 const copy = {
-  headline: ['YOUR BUSINESS', "DOESN'T NEED", 'MORE MARKETING.'],
+  headline: ['YOUR BUSINESS', 'DOESN\u2019T NEED', 'MORE MARKETING.'],
   turnQuiet: 'IT NEEDS TO KNOW',
-  turnLoud: "WHAT'S NOT WORKING.",
+  turnLoud: 'WHAT\u2019S NOT WORKING.',
   channels: ['SEO', 'ADS', 'CONTENT', 'SOCIAL', 'WEBSITE'],
-  support: "More SEO, ads or content won't fix a problem you haven't identified yet.",
-  cta: "FIND OUT WHAT'S HOLDING YOU BACK",
-  url: 'clicknlikes.com/growth',
+  support: 'More SEO, ads or content won\u2019t fix a problem you haven\u2019t identified yet.',
+  cta: 'FIND OUT WHAT\u2019S HOLDING YOU BACK',
 };
 
 const b64 = (p) => readFileSync(resolve(ROOT, p)).toString('base64');
@@ -88,22 +87,23 @@ html,body{width:1080px;height:1350px;overflow:hidden}
 #glow{background:radial-gradient(680px 560px at 76% 16%,rgba(78,205,196,0.26),transparent 70%);filter:blur(26px)}
 #glow2{background:radial-gradient(560px 470px at 12% 88%,rgba(255,71,87,0.12),transparent 72%);filter:blur(30px)}
 #vig{background:radial-gradient(122% 76% at 50% 46%,transparent 44%,rgba(8,16,30,0.5) 100%)}
-.stack{position:relative;z-index:2;display:flex;flex-direction:column;height:100%}
+.stack{position:relative;z-index:2;display:flex;flex-direction:column;height:100%;
+  justify-content:space-between}
 
 /* 1. headline - the first thing seen, and the biggest thing on the canvas */
-h1{font-family:'Space Grotesk';font-weight:700;font-size:92px;line-height:1.03;
+h1{font-family:'Space Grotesk';font-weight:700;font-size:89px;line-height:1.03;
   letter-spacing:-0.038em;color:#fff}
 
 /* 2. the turn. The quiet line sets up the loud one; the accent line is the
       single strongest contrast in the creative. */
-.turnQuiet{margin-top:34px;font-family:'Space Grotesk';font-weight:700;font-size:52px;
+.turnQuiet{margin-top:34px;font-family:'Space Grotesk';font-weight:700;font-size:49px;
   letter-spacing:-0.02em;color:rgba(255,255,255,0.60)}
-.turnLoud{margin-top:6px;font-family:'Space Grotesk';font-weight:700;font-size:80px;
+.turnLoud{margin-top:6px;font-family:'Space Grotesk';font-weight:700;font-size:77px;
   line-height:1.04;letter-spacing:-0.035em;color:#4ECDC4;
   text-shadow:0 18px 60px rgba(78,205,196,0.30)}
 
 /* 3. five live channels that refuse to line up */
-.cardsWrap{position:relative;margin-top:50px;height:172px}
+.cardsWrap{position:relative;height:172px}
 .cards{display:flex;gap:20px;align-items:flex-start}
 .card{width:166px;padding:20px 17px 18px;border-radius:18px;
   background:rgba(255,255,255,0.065);border:1.5px solid rgba(255,255,255,0.16);
@@ -111,7 +111,7 @@ h1{font-family:'Space Grotesk';font-weight:700;font-size:92px;line-height:1.03;
 .cardTop{display:flex;align-items:center;gap:11px}
 .dot{width:11px;height:11px;border-radius:50%;background:#4ECDC4;
   box-shadow:0 0 14px rgba(78,205,196,0.85)}
-.lbl{font-family:'Space Grotesk';font-weight:700;font-size:23px;letter-spacing:0.01em;
+.lbl{font-family:'Space Grotesk';font-weight:700;font-size:20px;letter-spacing:0.01em;
   color:rgba(255,255,255,0.94)}
 .bars{display:flex;align-items:flex-end;gap:6px;height:36px;margin-top:14px}
 .bar{width:13px;border-radius:4px;background:rgba(78,205,196,0.42)}
@@ -120,19 +120,18 @@ h1{font-family:'Space Grotesk';font-weight:700;font-size:92px;line-height:1.03;
   background:repeating-linear-gradient(90deg,rgba(255,255,255,0.42) 0 9px,transparent 9px 19px)}
 
 /* 4. one short line of support copy */
-.support{margin-top:58px;font-size:32px;line-height:1.44;color:rgba(255,255,255,0.72);
-  max-width:930px}
+.support{margin-top:52px;font-size:29px;line-height:1.44;color:rgba(255,255,255,0.72);
+  max-width:660px}
+
+/* brand mark, top left, ahead of the headline */
+.brand{display:flex;align-items:center;margin-bottom:46px}
+.brand img{height:44px;opacity:0.95}
 
 /* 5. CTA - unmistakable, deliberately smaller than the headline */
-.ctaRow{margin-top:auto;display:flex;flex-direction:column;align-items:flex-start}
+.ctaRow{display:flex;flex-direction:column;align-items:flex-start}
 .cta{display:inline-block;background:#4ECDC4;color:#12233E;border-radius:999px;
-  padding:28px 50px;font-family:'Space Grotesk';font-weight:700;font-size:37px;
+  padding:28px 50px;font-family:'Space Grotesk';font-weight:700;font-size:34px;
   letter-spacing:-0.012em;white-space:nowrap;box-shadow:0 24px 56px rgba(78,205,196,0.32)}
-.url{margin-top:22px;font-family:'DM Sans';font-weight:700;font-size:31px;
-  color:rgba(255,255,255,0.88);letter-spacing:0.005em}
-.foot{margin-top:32px;display:flex;align-items:center;
-  border-top:1.5px solid rgba(255,255,255,0.12);padding-top:26px;width:100%}
-.foot img{height:40px;opacity:0.92}
 </style></head><body>
 <div id="ad">
   <div class="layer" id="grid"></div>
@@ -141,10 +140,14 @@ h1{font-family:'Space Grotesk';font-weight:700;font-size:92px;line-height:1.03;
   <div class="layer" id="vig"></div>
 
   <div class="stack">
-    <h1>${copy.headline.join('<br>')}</h1>
-    <div class="turnQuiet">${copy.turnQuiet}</div>
-    <div class="turnLoud">${copy.turnLoud}</div>
+    <div class="block">
+      <div class="brand"><img src="data:image/png;base64,${logo}"></div>
+      <h1>${copy.headline.join('<br>')}</h1>
+      <div class="turnQuiet">${copy.turnQuiet}</div>
+      <div class="turnLoud">${copy.turnLoud}</div>
+    </div>
 
+    <div class="block">
     <div class="cardsWrap">
       <!-- Broken links, drawn behind the cards. Each span deliberately falls
            short of the next card, so the row reads as five things running on
@@ -157,13 +160,10 @@ h1{font-family:'Space Grotesk';font-weight:700;font-size:92px;line-height:1.03;
     </div>
 
     <div class="support">${copy.support}</div>
+    </div>
 
     <div class="ctaRow">
       <div class="cta">${copy.cta}</div>
-      <div class="url">${copy.url}</div>
-      <div class="foot">
-        <img src="data:image/png;base64,${logo}">
-      </div>
     </div>
   </div>
 </div>
