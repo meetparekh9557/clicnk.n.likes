@@ -98,6 +98,8 @@ const faqs = [
   { q: 'Do you work with businesses outside India?', a: 'Yes. We work with businesses across different markets and adapt the strategy to the market you\'re targeting.' },
   { q: 'Will someone actually review my enquiry?', a: 'Yes. Your enquiry is reviewed by the Click.n.likes team rather than disappearing into a generic contact inbox.' },
   { q: "I've worked with agencies before. Why should this be different?", a: 'We start by understanding the business problem instead of immediately selling a service. We identify the gaps, prioritise them and explain what we believe should happen next.' },
+  { q: 'How much does it cost?', a: 'Our pricing is published in full on the website rather than quoted privately, so you can see the numbers before you ever speak to us. What a particular business should spend depends on what it actually needs, which is what the conversation is for.' },
+  { q: "What if I'm not sure I even need an agency?", a: "That's a reasonable place to start, and you don't need to resolve it before getting in touch. Tell us what's happening and we'll help you work out whether there is a problem worth paying anyone to solve." },
 ];
 
 const canonicalURL = `${SITE_ORIGIN}/growth/`;
@@ -139,7 +141,7 @@ const webPageSchema = {
         <a href="#faq" class="text-[14px] font-medium text-navy/70 hover:text-teal-dark">FAQ</a>
       </nav>
       <a href="#hero-form" data-track="hero_inquiry_click" class="inline-flex items-center gap-1.5 rounded-full bg-navy px-5 py-2.5 text-[13.5px] font-semibold text-white transition-colors hover:bg-coral">
-        Send An Enquiry
+        Send My Enquiry
       </a>
     </div>
   </header>
@@ -185,6 +187,25 @@ const webPageSchema = {
             startEventName="inquiry_form_start"
             submitEventName="inquiry_form_submit"
           />
+          <!-- Cold traffic's unanswered question is not "do I have a problem"
+               (the page answers that repeatedly) but "what do I actually get
+               for filling this in". Stated plainly, next to the form, and
+               deliberately promising only what we will really do. -->
+          <div class="border-t border-navy/10 px-5 py-5">
+            <p class="text-[13px] font-semibold text-navy">What happens after you send it</p>
+            <ol class="mt-3 space-y-2.5">
+              {[
+                'We read what you have shared and look at the areas connected to it.',
+                'We work out what we would investigate or fix first, and why.',
+                'We tell you what we think, including if the answer is that you do not need us yet.',
+              ].map((t, i) => (
+                <li class="flex items-start gap-2.5 text-[13.5px] leading-relaxed text-navy/65">
+                  <span class="mt-px grid h-[18px] w-[18px] shrink-0 place-items-center rounded-full bg-teal/15 text-[11px] font-bold text-teal-dark tabular-nums">{i + 1}</span>
+                  {t}
+                </li>
+              ))}
+            </ol>
+          </div>
         </div>
       </div>
     </div>
@@ -207,7 +228,7 @@ const webPageSchema = {
         The problem may not be that you need more marketing.<br />You may need the right marketing working together.
       </p>
       <a href="#hero-form" data-track="hero_inquiry_click" class="reveal mt-6 inline-flex items-center gap-2 rounded-full border-[1.5px] border-navy/15 px-6 py-3.5 text-sm font-semibold text-navy transition-colors hover:border-teal hover:text-teal-dark" style="--d:160ms">
-        Let's Find Out What's Wrong
+        Find Out What's Wrong
         <ArrowRight size={15} stroke-width={2.4} aria-hidden="true" />
       </a>
     </div>
@@ -229,7 +250,7 @@ const webPageSchema = {
         It is <b class="text-teal">"Is my existing marketing actually working together?"</b>
       </p>
       <a href="#hero-form" data-track="hero_inquiry_click" class="reveal mt-6 inline-flex items-center gap-2 rounded-full bg-teal px-6 py-3.5 text-sm font-semibold text-navy transition-all duration-300 hover:-translate-y-0.5 hover:bg-white" style="--d:160ms">
-        Find My Biggest Growth Opportunity
+        Find Out What's Wrong
         <ArrowRight size={15} stroke-width={2.4} aria-hidden="true" />
       </a>
     </div>
@@ -268,7 +289,7 @@ const webPageSchema = {
         <p class="mt-4 font-semibold text-navy">We find that first. Then we recommend what actually makes sense.</p>
       </div>
       <a href="#hero-form" data-track="hero_inquiry_click" class="reveal mt-6 inline-flex items-center gap-2 rounded-full bg-navy px-6 py-3.5 text-sm font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-coral" style="--d:160ms">
-        Show Me My Growth Opportunities
+        Find Out What's Wrong
         <ArrowRight size={15} stroke-width={2.4} aria-hidden="true" />
       </a>
     </div>
@@ -301,7 +322,7 @@ const webPageSchema = {
       </p>
       <div class="reveal mt-6 text-center" style="--d:160ms">
         <a href="#hero-form" data-track="hero_inquiry_click" class="inline-flex items-center gap-2 rounded-full bg-navy px-6 py-3.5 text-sm font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-coral">
-          Find My Growth Gaps
+          Find Out What's Wrong
           <ArrowRight size={15} stroke-width={2.4} aria-hidden="true" />
         </a>
       </div>
@@ -362,7 +383,7 @@ const webPageSchema = {
       </div>
       <div class="reveal mt-10 text-center" style="--d:140ms">
         <a href="#hero-form" data-track="hero_inquiry_click" class="inline-flex items-center gap-2 rounded-full bg-navy px-6 py-3.5 text-sm font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-coral">
-          I Want To Fix My Growth Gaps
+          Find Out What's Wrong
           <ArrowRight size={15} stroke-width={2.4} aria-hidden="true" />
         </a>
       </div>
@@ -440,59 +461,62 @@ const webPageSchema = {
     </div>
   </section>
 
-  <!-- ============ 12. WHO THIS IS FOR / NOT FOR ============ -->
-  <section class="border-b border-navy/10 bg-white">
-    <div class="mx-auto max-w-3xl px-[5vw] py-16">
-      <h2 class="reveal text-center font-display text-[clamp(1.6rem,3.2vw,2.2rem)] font-bold text-navy">This Is For You If...</h2>
-      <ul class="reveal mt-6 space-y-3" style="--d:60ms">
-        {[
-          "You're getting traffic but not enough enquiries.",
-          'Your competitors consistently outrank you.',
-          "Your website isn't converting as well as it should.",
-          "Your paid campaigns aren't producing profitable customers.",
-          "Your content isn't generating meaningful demand.",
-          "Your business isn't getting discovered through AI Search.",
-          "You're tired of managing different agencies for different channels.",
-          "You know your business has potential but can't identify the biggest digital growth opportunity.",
-        ].map((t) => (
-          <li class="flex items-start gap-2.5 text-[15px] leading-relaxed text-navy/75"><Check size={17} stroke-width={2.6} class="mt-0.5 shrink-0 text-teal-dark" aria-hidden="true" />{t}</li>
-        ))}
-      </ul>
-
-      <h2 class="reveal mt-12 text-center font-display text-[clamp(1.6rem,3.2vw,2.2rem)] font-bold text-navy" style="--d:80ms">This Probably Isn't For You If...</h2>
-      <ul class="reveal mt-6 space-y-3" style="--d:120ms">
-        {['Guaranteed rankings overnight', 'Cheap monthly packages', 'Followers for vanity numbers', 'Marketing reports without business context', 'An agency that agrees to everything just to win the account'].map((t) => (
-          <li class="flex items-start gap-2.5 text-[15px] leading-relaxed text-navy/60"><X size={17} stroke-width={2.6} class="mt-0.5 shrink-0 text-navy/30" aria-hidden="true" />{t}</li>
-        ))}
-      </ul>
-
-      <p class="reveal mt-10 text-center text-lg font-semibold text-navy" style="--d:160ms">
+  <!-- ============ 12. IS THIS THE RIGHT CONVERSATION? ============
+       Merged from what were two separate sections ("This is for you if" /
+       "This probably isn't" and a standalone anti-agency block). They listed
+       the same five objections and closed with the identical sentence, which
+       read as padding on a page cold traffic is already scrolling hard. One
+       section, both sides, one CTA. ============ -->
+  <section class="border-b border-navy/10 bg-navy">
+    <div class="mx-auto max-w-6xl px-[5vw] py-16">
+      <h2 class="reveal text-center font-display text-[clamp(1.6rem,3.2vw,2.2rem)] leading-[1.2] font-bold text-white">
+        Is This The Right Conversation For Your Business?
+      </h2>
+      <div class="mt-10 grid gap-6 lg:grid-cols-2">
+        <div class="reveal rounded-2xl border-[1.5px] border-teal/40 bg-teal/[0.07] p-7">
+          <p class="text-xs font-semibold tracking-[0.14em] text-teal uppercase">Yes, if</p>
+          <ul class="mt-5 space-y-3">
+            {[
+              "You're getting traffic but not enough enquiries.",
+              'Your competitors consistently outrank you.',
+              "Your website isn't converting as well as it should.",
+              "Your paid campaigns aren't producing profitable customers.",
+              "Your business isn't getting discovered through AI Search.",
+              "You're tired of managing different agencies for different channels.",
+              "You know the business has potential but can't identify the biggest opportunity.",
+            ].map((t) => (
+              <li class="flex items-start gap-2.5 text-[15px] leading-relaxed text-white/85">
+                <Check size={17} stroke-width={2.6} class="mt-0.5 shrink-0 text-teal" aria-hidden="true" />{t}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div class="reveal rounded-2xl border border-white/15 p-7" style="--d:100ms">
+          <p class="text-xs font-semibold tracking-[0.14em] text-white/45 uppercase">Probably not, if you want</p>
+          <ul class="mt-5 space-y-3">
+            {[
+              'Guaranteed rankings, or results overnight.',
+              'The cheapest monthly package available.',
+              'Thousands of followers for the sake of the number.',
+              'Reports full of metrics with no business context.',
+              'An agency that says yes to everything to win the account.',
+            ].map((t) => (
+              <li class="flex items-start gap-2.5 text-[15px] leading-relaxed text-white/55">
+                <X size={17} stroke-width={2.6} class="mt-0.5 shrink-0 text-white/30" aria-hidden="true" />{t}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+      <p class="reveal mt-10 text-center text-lg font-semibold text-white" style="--d:160ms">
         If you want someone to look at the entire picture and tell you what actually deserves attention, let's talk.
       </p>
       <div class="reveal mt-6 text-center" style="--d:180ms">
-        <a href="#hero-form" data-track="hero_inquiry_click" class="inline-flex items-center gap-2 rounded-full bg-navy px-6 py-3.5 text-sm font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-coral">
+        <a href="#hero-form" data-track="hero_inquiry_click" class="inline-flex items-center gap-2 rounded-full bg-teal px-6 py-3.5 text-sm font-semibold text-navy transition-all duration-300 hover:-translate-y-0.5 hover:bg-white">
           Send My Enquiry
           <ArrowRight size={15} stroke-width={2.4} aria-hidden="true" />
         </a>
       </div>
-    </div>
-  </section>
-
-  <!-- ============ 13. ANTI-AGENCY POSITIONING ============ -->
-  <section class="border-b border-navy/10 bg-navy">
-    <div class="mx-auto max-w-2xl px-[5vw] py-16 text-center">
-      <h2 class="reveal font-display text-[clamp(1.6rem,3.2vw,2.2rem)] leading-[1.2] font-bold text-white">We May Not Be The Right Agency For You.</h2>
-      <p class="reveal mt-5 text-lg leading-relaxed text-white/70" style="--d:60ms">
-        If you're looking for guaranteed rankings, instant results, cheap monthly packages, thousands of followers
-        for the sake of numbers, or an agency that says yes to everything you ask for, we're probably not the right fit.
-      </p>
-      <p class="reveal mt-4 text-lg font-semibold text-white" style="--d:100ms">
-        But if you want someone to look at the entire picture and tell you what actually deserves attention, let's talk.
-      </p>
-      <a href="#hero-form" data-track="hero_inquiry_click" class="reveal mt-7 inline-flex items-center gap-2 rounded-full bg-teal px-6 py-3.5 text-sm font-semibold text-navy transition-all duration-300 hover:-translate-y-0.5 hover:bg-white" style="--d:140ms">
-        Send My Enquiry
-        <ArrowRight size={15} stroke-width={2.4} aria-hidden="true" />
-      </a>
     </div>
   </section>
 
@@ -526,7 +550,7 @@ const webPageSchema = {
       </ul>
       <p class="reveal mt-8 text-lg font-semibold text-navy" style="--d:120ms">You don't need to fix everything today.<br />You need to know what deserves fixing first.</p>
       <a href="#hero-form" data-track="hero_inquiry_click" class="reveal mt-6 inline-flex items-center gap-2 rounded-full bg-navy px-6 py-3.5 text-sm font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-coral" style="--d:160ms">
-        Find My Growth Opportunity
+        Find Out What's Wrong
         <ArrowRight size={15} stroke-width={2.4} aria-hidden="true" />
       </a>
     </div>
