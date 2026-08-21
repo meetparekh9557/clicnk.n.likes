@@ -4,6 +4,7 @@ import { Fonts } from '../components/Fonts';
 import { Bg } from '../components/Bg';
 import { BrandMark } from '../components/BrandMark';
 import { Sweep } from '../components/Sweep';
+import { Score } from '../components/Score';
 import { Scene1Hook } from '../scenes/Scene1Hook';
 import { SceneDisconnect } from '../scenes/SceneDisconnect';
 import { Scene7CTA } from '../scenes/Scene7CTA';
@@ -49,6 +50,7 @@ const MARK_FADE = STARTS[ORDER.length - 1] + shortCut.scene7.beats.logoIn - 26;
 export const GrowthAdShort: React.FC = () => (
   <AbsoluteFill>
     <Fonts />
+    <Score />
     <Bg totalFrames={SHORT_DURATION} />
     {ORDER.map(({ node, dur }, i) => (
       <Sequence

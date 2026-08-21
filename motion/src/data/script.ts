@@ -102,3 +102,16 @@ export const shortCut = {
     beats: { linesIn: 0, linesOut: 0, turnIn: 4, turnOut: 62, btnIn: 68, logoIn: 82 },
   },
 } as const;
+
+// Audio marks. Both source files live in public/audio/ and are deliberately
+// NOT committed: they are licensed third-party assets and this repo is public,
+// so committing them would be redistribution.
+export const audio = {
+  // The track's main drop is at 23.2s. The film's impact — the warning drawing
+  // itself — is at 6.9s. Starting the track 16.3s in puts them on top of each
+  // other, so the beat lands ON a visual event rather than near one.
+  musicStartFrame: Math.round(16.3 * 30),
+  musicLevel: 0.85,
+  // The film is 458 frames; start the fade a second before the end.
+  fadeOutStart: 458 - 30,
+} as const;
