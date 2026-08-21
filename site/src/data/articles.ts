@@ -37,6 +37,69 @@ export interface Article {
 
 export const articles: Article[] = [
   {
+    slug: "how-to-add-schema-markup",
+    tag: "SEO",
+    categories: ["SEO"],
+    title: "How to Add Schema Markup to Your Website in 5 Steps",
+    excerpt: "A plain 5-step process for adding structured data to a page, what it genuinely does to your search listing, and the ranking myth worth ignoring.",
+    author: "Click.n.likes team",
+    readTime: "9 min read",
+    date: "2026-08-20",
+    body: `<p>In the past, the way a business appeared in the world's directories was decided by somebody else. A typesetter at the local business directory chose how your entry was worded, what category you sat under, and how much of your operation a reader ever saw. You supplied the details and surrendered the presentation. Search engines inherited that arrangement and largely kept it: Google reads your page, forms its own view of what you do, and writes the listing it thinks is appropriate.</p>
+      <p>Structured data is the one place where that changes. It is a machine-readable summary you attach to a page, stating plainly what the page is, what the business does, what a service costs, what hours you keep, what a customer rated you. It does not ask a search engine to interpret; it tells it directly. For clinic owners, manufacturers' marketing leads and solo consultants who have never touched a line of code, it is also far less intimidating than it first appears, and the five steps below are the whole of it.</p>
+      <h2>What does schema markup actually do for your website?</h2>
+      <p>It makes your page eligible for the richer search listings, and it makes your content easier for machines to parse correctly. Those are two separate benefits and only the first is visible. <a href="https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data" target="_blank" rel="noopener">Google's own introduction to structured data</a> describes it as the mechanism that allows a page to qualify for enhanced appearances in results, the review stars, the FAQ dropdowns, the product prices and availability, the event dates that make one result occupy three times the vertical space of the plain blue links around it.</p>
+      <p>The second benefit matters more every month. A page that states its own facts in a standard format is a page an automated system can quote without guessing, and the systems doing the quoting are no longer only search engines.</p>
+      <h2>Does schema markup improve your Google rankings?</h2>
+      <p>No, and any guide telling you otherwise is overselling it. Google's documentation frames structured data as eligibility for rich results, not as a ranking signal, and it is worth internalising that distinction before you spend an afternoon on this. Adding markup will not move you from position 8 to position 3.</p>
+      <p>What it can do is change how many people click the position you already hold. A result carrying star ratings and an expandable FAQ occupies more of the screen and answers more of the question before anyone commits to a click, and that is a genuine commercial gain that has nothing to do with rank. Being honest about this is not a caveat we are obliged to add; it is the difference between a tactic that works as promised and one that quietly disappoints. If your pages are not ranking at all, structured data is not the fix, and no amount of it will substitute for the underlying <a href="/services/seo/">SEO services</a> that get a page into contention in the first place.</p>
+      <h2>Which pages should you add schema markup to first?</h2>
+      <p>Start with the pages that already earn something, not with the whole site. A focused rollout is easier to validate and easier to undo if you get a field wrong, and the pages worth doing first are almost always obvious:</p>
+      <ul>
+        <li><strong>Your homepage:</strong> Carries your organisation or local business identity, the name, address, phone number, logo and social profiles that establish who you actually are.</li>
+        <li><strong>Each service or product page:</strong> The pages describing a specific thing you sell, where the detail a buyer compares on lives.</li>
+        <li><strong>Any page with a genuine FAQ section:</strong> Questions and answers already on the page can be marked up as such, and this is the single most commonly granted enhancement for service businesses.</li>
+        <li><strong>Location pages, if you have them:</strong> Separate premises deserve separate, accurate local markup rather than one homepage entry covering everything.</li>
+      </ul>
+      <p>Leave the low-traffic pages until the pattern is proven on the ones that matter.</p>
+      <h2>Which type of schema markup does your business need?</h2>
+      <p>The type that matches what the page genuinely is, which is a shorter list than the full vocabulary suggests. <a href="https://schema.org/" target="_blank" rel="noopener">Schema.org</a> defines hundreds of types, and a small business realistically needs a handful:</p>
+      <ul>
+        <li><strong>LocalBusiness:</strong> For a business serving customers from a place, with the address, opening hours and contact details attached.</li>
+        <li><strong>Organization:</strong> For a company whose buyers do not visit a premises, carrying identity and logo without the local fields.</li>
+        <li><strong>Service:</strong> For each distinct thing you offer, described on its own page.</li>
+        <li><strong>Product:</strong> Where there is a physical item with a price and availability, which is what powers the price and stock display in results.</li>
+        <li><strong>FAQPage:</strong> For questions and answers genuinely published on the page, and never for questions invented purely to obtain the markup.</li>
+        <li><strong>Article:</strong> For blog and insight pieces, carrying headline, author and publication date.</li>
+      </ul>
+      <p>The one rule that overrides all of these: the markup must describe what is actually on the page. Marking up reviews you do not display, or FAQs that appear nowhere in the visible content, is a policy violation rather than a clever shortcut, and it is the most common reason enhancements are withdrawn after being granted.</p>
+      <h2>How do you generate the code and add it to the page?</h2>
+      <p>Generate it with a tool rather than by hand, then paste the result into the page's head section. Structured data is written in a format called JSON-LD, a block of machine-readable fields that sits in the page source and is never seen by a visitor. You do not need to learn its syntax to use it correctly, and hand-writing it is how small errors get introduced.</p>
+      <p>Most guides on this subject will send you to a third-party generator at this point. We built our own instead: our <a href="/tools/schema-generator/">schema markup generator</a> reads the page you give it, scores the structured data already present, and pre-fills the fields it can detect so you are correcting a draft rather than starting from an empty form.</p>
+      <p>Adding the output depends on how your site is built. On WordPress, an SEO plugin such as Rank Math or Yoast will accept the markup, or add it through a headers-and-scripts plugin without touching a template. On a custom-built site, it belongs in the head of the specific page it describes, and your developer will need about ten minutes per template. Google accepts the block in either the head or the body, so a plugin placing it lower on the page is not a problem.</p>
+      <h2>How do you check that it actually worked?</h2>
+      <p>Test the page before you move on, because invalid markup fails silently and will simply never produce a result. Google's <a href="https://search.google.com/test/rich-results" target="_blank" rel="noopener">Rich Results Test</a> takes a URL or a block of code and reports the errors, the warnings, and which enhancements the page now qualifies for. Errors must be fixed. Warnings are recommended fields you have left empty, and are usually worth filling but will not block eligibility.</p>
+      <p>Then check the Enhancements section of Search Console over the following weeks, which reports how Google is reading your markup across the whole site and flags anything that breaks later, typically after a template change nobody connected to structured data. If you want the same check with the commercial consequence of each gap spelled out rather than a pass or fail, our <a href="/tools/schema-validator/">schema validator</a> scores what you have and generates the missing pieces.</p>
+      <p><strong>Example in Action:</strong> The pattern we see repeatedly on audits is a page whose ranking position is completely unchanged a month after markup was added, while its listing has grown a rating row and an expandable set of questions, and its click-through rate has moved. Nothing about the page's authority changed. It simply occupies more of the result and answers more of the question before the click, which is exactly what structured data is for and exactly what it is not usually sold as.</p>
+      <h2>Does schema markup help you get cited by AI assistants?</h2>
+      <p>It helps, though it is not the whole mechanism, and the reason is worth understanding rather than taking on faith. An answer engine assembling a response has to establish what a page asserts and how much confidence to place in it. A page stating its facts in a standard, unambiguous format is easier to extract from correctly than one where the same facts are implied across three paragraphs of prose.</p>
+      <p>Structured data is not a magic route into an AI answer, and it will not rescue a page with nothing worth quoting. It removes ambiguity from a page that already has something to say, which is why it pairs with the content habits described in <a href="/insights/blog-that-ranks/">how to write one blog post that ranks and gets cited by AI</a>, and why it matters more now that fewer searches end in a click at all, as covered in <a href="/insights/ai-overview-traffic/">whether AI Overviews are stealing your website traffic</a>.</p>
+      <h2>Conclusion: A Small Technical Job With an Honest, Limited Payoff</h2>
+      <p>Schema markup is one of the few genuinely uncontroversial improvements available to a small business website. It is quick, it is standardised, it does not require a redesign, and it makes your pages legible to the machines that increasingly decide whether anyone sees them. It is also not a ranking lever, and treating it as one leads to disappointment that the tactic never deserved. Pick your handful of important pages, choose the type that honestly matches each one, generate the code, place it, validate it, and then leave it alone until a template change breaks it. Done properly it is an afternoon of work that quietly improves every listing you already have, which is the sort of unglamorous compounding foundation an <a href="/">organic growth agency</a> should be building before anything more ambitious.</p>
+      <div class="article-cta">
+        <h4>Generate your schema in the next 5 minutes</h4>
+        <p>Give the tool a page and it will score the structured data already there, show you what is missing, and pre-fill the markup you need so you are editing a draft rather than writing JSON by hand.</p>
+        <a class="btn btn-teal magnetic" href="/tools/schema-generator/">Generate Your Schema</a>
+      </div>`,
+    faqs: [
+      { q: "Does schema markup improve Google rankings?", a: "No. Google's documentation frames structured data as eligibility for rich results rather than as a ranking signal. It will not move your position, but it can change how many people click the position you already hold, because a listing with star ratings or an FAQ dropdown takes up more of the results page." },
+      { q: "Where do you put schema markup on a page?", a: "In the page's head section as a JSON-LD block, though Google also accepts it in the body. On WordPress an SEO plugin such as Rank Math or Yoast will place it for you; on a custom site it goes into the template for the specific page it describes." },
+      { q: "What type of schema markup does a small business need?", a: "Usually a handful: LocalBusiness or Organization for identity, Service or Product for what you sell, FAQPage for questions genuinely published on the page, and Article for blog posts. The markup must describe what is actually visible on the page." },
+      { q: "How do I check if my schema markup is working?", a: "Run the page through Google's Rich Results Test, which reports errors, warnings and the enhancements the page qualifies for. Errors block eligibility and must be fixed; warnings are recommended fields. Then watch the Enhancements section of Search Console for problems that appear later." },
+      { q: "Can I add schema markup without a developer?", a: "Usually yes. A generator produces the code, and on WordPress a plugin will place it without touching a template. A custom-built site needs a developer to add the block to the right template, which is typically a few minutes of work per page type." },
+    ],
+  },
+  {
     slug: "rank-on-maps",
     tag: "Local SEO",
     categories: ["Local SEO"],

@@ -171,6 +171,8 @@ client result to back it.
 - [ ] seo-for-law-firms — SEO for Law Firms: What Actually Moves the Needle — links: `/services/seo/`, `/work/aidbylaw/` — AidByLaw is the proof: real published figures, paid leads 20-30/mo to 340-390/mo over 13 months, organic 0 to 40/mo.
 - [ ] seo-for-manufacturers — SEO for Manufacturers: How Buyers Actually Find Suppliers — links: `/services/seo/`, `/work/kopa-seamless/` — personas are already written into `/AGENTS.md`'s brand voice section (engineers, procurement managers, MRO specialists); Kopa Seamless is the proof.
 
+- [x] how-to-add-schema-markup — How to Add Schema Markup to Your Website in 5 Steps — links: hub (SEO services), siblings `blog-that-ranks`, `ai-overview-traffic` — ends in `/tools/schema-generator/`. Demand check Aug 2026: 8 dedicated step-by-step competitor posts, ALL small sites, no HubSpot/Ahrefs/Semrush. Winnable. Differentiator: every competitor sends the reader to TechnicalSEO.com's generator; we own the generator AND the validator, so the traffic stays and converts to an email. Title carries the searched phrase per the new rule; question-form voice kept in the H2s.
+
 ## General queue (SEO, Content, AI Search — not yet clustered)
 
 - [ ] seo-timeline — How long does SEO really take to show results? (SEO → /services/seo/) — `[DEMAND CHECK FAILED Aug 2026: real signal but NOT winnable — page one is Ahrefs, Search Engine Land, seo.com and Orbit Media. A young domain cannot rank this head term, and the intent is research rather than hiring. Narrow to a specific long-tail variant before writing, or leave it.]`
