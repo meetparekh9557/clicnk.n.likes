@@ -35,6 +35,7 @@ Live, real scans - not lead-gen quizzes. Each shows a score on screen for free; 
 
 ## Insights
 
+- [How to Add Schema Markup to Your Website in 5 Steps](https://clicknlikes.com/insights/how-to-add-schema-markup/): A plain 5-step process for adding structured data to a page, what it genuinely does to your search listing, and the ranking myth worth ignoring.
 - [Why does my competitor outrank me on Google Maps when I'm closer?](https://clicknlikes.com/insights/rank-on-maps/): Distance is only 1 of the 3 factors Google uses to rank local results, which is why a business further away routinely appears above one on the same street.
 - [Is a website redesign worth it, or should I just fix what I have?](https://clicknlikes.com/insights/website-redesign-worth-it/): A redesign is worth it when the foundation is wrong, not when the site merely looks dated, and confusing the 2 is how businesses spend heavily and gain nothing.
 - [Are Google's AI Overviews stealing my website traffic?](https://clicknlikes.com/insights/ai-overview-traffic/): For some businesses yes, measurably, and for others barely at all, and which group you are in depends entirely on the kind of searches that bring you customers.
