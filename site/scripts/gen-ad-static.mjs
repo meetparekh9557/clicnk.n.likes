@@ -38,7 +38,22 @@ const args = Object.fromEntries(
     return m ? [m[1], m[2]] : [a.replace(/^--/, ''), true];
   })
 );
-const OUT = args.out || resolve(ROOT, '../ad-growth-1080x1350.png');
+// Meta wants three shapes and they are three different designs, not three
+// crops. 4:5 and 9:16 share a vertical stack at different scales; 1.91:1 is
+// landscape and gets its own two-column layout, because a headline, a ring of
+// five cards and a CTA cannot stack inside 628px of height.
+const RATIOS = {
+  '4x5':    { w: 1080, h: 1350, pad: '72px 64px 56px', logo: 36, h1: 82, quiet: 45, loud: 71,
+              stageScale: 1, stageShift: 0, cta: 28, land: false, reason: 27, ctaPad: '23px 42px 23px 26px' },
+  '9x16':   { w: 1080, h: 1920, pad: '300px 64px 300px', logo: 42, h1: 92, quiet: 50, loud: 80,
+              stageScale: 0.98, stageShift: 40, cta: 32, land: false, reason: 30, ctaPad: '26px 48px 26px 30px' },
+  '1.91x1': { w: 1200, h: 628,  pad: '44px 52px', logo: 27, h1: 46, quiet: 24, loud: 40,
+              stageScale: 0.50, stageShift: 0, cta: 21, land: true, reason: 20, ctaPad: '17px 32px 17px 20px' },
+};
+const RATIO = args.ratio || '4x5';
+const R = RATIOS[RATIO];
+if (!R) { console.error('--ratio must be one of:', Object.keys(RATIOS).join(', ')); process.exit(1); }
+const OUT = args.out || resolve(ROOT, `../ad-growth-${R.w}x${R.h}.png`);
 
 // --- every word on the canvas, in one place --------------------------------
 const copy = {
@@ -114,33 +129,45 @@ const html = `<!doctype html><html><head><meta charset="utf-8"><style>
 @font-face{font-family:'DM Sans';font-weight:500;src:url(data:font/woff2;base64,${dm500}) format('woff2')}
 @font-face{font-family:'DM Sans';font-weight:700;src:url(data:font/woff2;base64,${dm700}) format('woff2')}
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{width:1080px;height:1350px;overflow:hidden}
-#ad{position:relative;width:1080px;height:1350px;overflow:hidden;
+html,body{width:${R.w}px;height:${R.h}px;overflow:hidden}
+#ad{position:relative;width:${R.w}px;height:${R.h}px;overflow:hidden;
   font-family:'DM Sans',sans-serif;
   background:linear-gradient(168deg,#22375C 0%,#1A2B4A 42%,#0E1A2E 100%);
-  display:flex;flex-direction:column;padding:72px 64px 56px}
+  display:flex;flex-direction:column;padding:${R.pad}}
 .layer{position:absolute;inset:0;pointer-events:none}
 #grid{background-image:linear-gradient(rgba(255,255,255,0.042) 1px,transparent 1px),
                      linear-gradient(90deg,rgba(255,255,255,0.042) 1px,transparent 1px);
   background-size:90px 90px}
 #glow{background:radial-gradient(700px 560px at 78% 14%,rgba(78,205,196,0.24),transparent 70%);filter:blur(26px)}
 #vig{background:radial-gradient(124% 78% at 50% 46%,transparent 44%,rgba(6,13,25,0.55) 100%)}
-.stack{position:relative;z-index:2;display:flex;flex-direction:column;height:100%;
-  justify-content:space-between}
+.stack{position:relative;z-index:2;display:grid;height:100%;
+  grid-template-areas:'block' 'stage' 'cta';
+  grid-template-rows:auto 1fr auto;align-content:space-between}
+.block{grid-area:block}.stage{grid-area:stage}.ctaRow{grid-area:cta}
+/* 1.91:1 — the argument sits left, the ring right. A headline, five cards and
+   a CTA will not stack inside 628px, so they run side by side instead. */
+.stack.land{grid-template-areas:'block stage' 'cta stage';
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  grid-template-rows:1fr auto;align-items:center;align-content:center;column-gap:18px}
+.stack.land .stage{align-self:center;justify-self:center}
+.stack.land .ctaRow{align-self:end}
 
 .brand{display:flex;align-items:center;margin-bottom:40px}
-.brand img{height:36px;opacity:0.95}
+.brand img{height:${R.logo}px;opacity:0.95}
 
-h1{font-family:'Space Grotesk';font-weight:700;font-size:82px;line-height:1.03;
+h1{font-family:'Space Grotesk';font-weight:700;font-size:${R.h1}px;line-height:1.03;
   letter-spacing:-0.038em;color:#fff}
-.turnQuiet{margin-top:30px;font-family:'Space Grotesk';font-weight:700;font-size:45px;
+.turnQuiet{margin-top:${R.land?14:30}px;font-family:'Space Grotesk';font-weight:700;font-size:${R.quiet}px;
   letter-spacing:-0.02em;color:rgba(255,255,255,0.58)}
-.turnLoud{margin-top:6px;font-family:'Space Grotesk';font-weight:700;font-size:71px;
+.turnLoud{margin-top:6px;font-family:'Space Grotesk';font-weight:700;font-size:${R.loud}px;
   line-height:1.04;letter-spacing:-0.035em;color:#4ECDC4;
   text-shadow:0 18px 58px rgba(78,205,196,0.28)}
 
 /* the ring */
-.stage{position:relative;width:952px;height:470px}
+.stage{position:relative;width:952px;height:470px;flex:none;
+  transform:scale(${R.stageScale}) translateY(${R.stageShift}px);
+  transform-origin:${R.land ? 'center center' : 'top center'};
+  ${R.land ? 'margin:-118px -238px;' : ''}}
 .wires{position:absolute;inset:0}
 .card{position:absolute;padding:20px 22px 18px;border-radius:20px;
   background:linear-gradient(150deg,rgba(255,255,255,0.10),rgba(255,255,255,0.045));
@@ -169,13 +196,13 @@ h1{font-family:'Space Grotesk';font-weight:700;font-size:82px;line-height:1.03;
   font-size:33px;line-height:1.06;letter-spacing:0.10em;color:#FF4757;
   text-shadow:0 10px 32px rgba(255,71,87,0.40)}
 
-.reason{position:relative;padding-left:22px;font-size:27px;line-height:1.36;
+.reason{position:relative;padding-left:${R.land?16:22}px;font-size:${R.reason}px;line-height:1.36;
   color:rgba(255,255,255,0.74);margin-bottom:24px;max-width:660px}
 .reason::before{content:'';position:absolute;left:0;top:4px;bottom:4px;width:3px;
   border-radius:2px;background:#4ECDC4}
 .cta{display:inline-flex;align-items:center;gap:20px;background:#4ECDC4;color:#12233E;
-  border-radius:14px;padding:23px 42px 23px 26px;font-family:'Space Grotesk';
-  font-weight:700;font-size:28px;letter-spacing:-0.01em;white-space:nowrap;
+  border-radius:14px;padding:${R.ctaPad};font-family:'Space Grotesk';
+  font-weight:700;font-size:${R.cta}px;letter-spacing:-0.01em;white-space:nowrap;
   box-shadow:0 18px 44px rgba(78,205,196,0.30)}
 .cta .arrow{width:44px;height:44px;border-radius:50%;background:#12233E;flex:none;
   display:flex;align-items:center;justify-content:center}
@@ -186,7 +213,7 @@ h1{font-family:'Space Grotesk';font-weight:700;font-size:82px;line-height:1.03;
   <div class="layer" id="glow"></div>
   <div class="layer" id="vig"></div>
 
-  <div class="stack">
+  <div class="stack${R.land ? ' land' : ''}">
     <div class="block">
       <div class="brand"><img src="data:image/png;base64,${logo}"></div>
       <h1>${copy.headline.join('<br>')}</h1>
@@ -236,7 +263,7 @@ writeFileSync(pageFile, html);
 
 const pw = await import('/opt/node22/lib/node_modules/playwright/index.js').then((m) => m.default || m);
 const browser = await pw.chromium.launch({ executablePath: '/opt/pw-browsers/chromium', args: ['--no-sandbox'] });
-const page = await browser.newPage({ viewport: { width: 1080, height: 1350 }, deviceScaleFactor: 1 });
+const page = await browser.newPage({ viewport: { width: R.w, height: R.h }, deviceScaleFactor: 1 });
 await page.goto(pathToFileURL(pageFile).href, { waitUntil: 'networkidle' });
 await page.evaluate(() => document.fonts.ready);
 await page.screenshot({ path: OUT });
