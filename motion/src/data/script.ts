@@ -114,4 +114,15 @@ export const audio = {
   musicLevel: 0.85,
   // The film is 458 frames; start the fade a second before the end.
   fadeOutStart: 458 - 30,
+  // Music level while the voice is speaking. Roughly -9 dB under the bed: far
+  // enough down that the words sit clearly on top, not so far that the track
+  // audibly disappears and comes back.
+  duckLevel: 0.30,
+  duckRamp: 8,
+  // Measured off the built VO track, not estimated: where speech actually is.
+  duckWindows: [
+    [10, 145],
+    [217, 365],
+    [379, 413],
+  ],
 } as const;
