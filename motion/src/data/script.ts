@@ -120,9 +120,11 @@ export const audio = {
   duckLevel: 0.30,
   duckRamp: 8,
   // Measured off the built VO track, not estimated: where speech actually is.
+  // Line three sits at 7.75s rather than 7.2s so the drop at 6.9s gets ~0.85s
+  // in the clear before the voice comes back over it.
   duckWindows: [
     [10, 145],
-    [217, 365],
-    [379, 413],
+    [234, 381],
+    [389, 424],
   ],
 } as const;
