@@ -61,15 +61,17 @@ export const SceneDisconnect: React.FC<{ beats?: Beats; duration?: number }> = (
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const copyIn = beats?.copyIn ?? 92;
+  const copyOut = beats?.copyOut ?? duration - 14;
 
   // The whole rig drifts a little the entire time, so nothing is ever truly
   // parked. Held graphics that stop dead look like a frozen render.
   const drift = interpolate(frame, [0, duration], [10, -14]);
+  const rigOut = rampOut(frame, duration - 16, 16);
 
   return (
     <AbsoluteFill>
       <AbsoluteFill style={{ justifyContent: 'flex-start', padding: '346px 84px 0' }}>
-        <KineticHeadline lines={s.lines} start={copyIn} size={78} />
+        <KineticHeadline lines={s.lines} start={copyIn} exitAt={copyOut} size={78} />
       </AbsoluteFill>
 
       <AbsoluteFill style={{ alignItems: 'center', justifyContent: 'center' }}>
@@ -79,6 +81,7 @@ export const SceneDisconnect: React.FC<{ beats?: Beats; duration?: number }> = (
             width: 980,
             height: 600,
             transform: `translateY(${104 + drift}px)`,
+            opacity: rigOut,
           }}
         >
           <svg viewBox="0 0 980 600" style={{ position: 'absolute', inset: 0, overflow: 'visible' }} fill="none">

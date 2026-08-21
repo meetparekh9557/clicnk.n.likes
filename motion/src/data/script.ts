@@ -88,11 +88,13 @@ export const shortCut = {
     beats: { firstIn: 2, firstOut: 54, secondIn: 62, secondOut: 116 },
   },
   scene2: {
-    durationInFrames: 168,
+    // 188, not 168: the third voiceover line needs ~2.9s to read and only had
+    // 2.3s of room. Picture is cut to the voice, never the reverse.
+    durationInFrames: 188,
     // The animated build runs on its own internal clock (cards, links, breaks,
     // warning); `copyIn` is the only beat here because the words are the
     // conclusion of that sequence and must not arrive before it resolves.
-    beats: { copyIn: 96, copyOut: 160, dimAt: 96 },
+    beats: { copyIn: 96, copyOut: 182, dimAt: 96 },
   },
   scene7: {
     durationInFrames: 156,

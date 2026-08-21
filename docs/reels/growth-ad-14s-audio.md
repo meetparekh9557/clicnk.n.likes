@@ -1,4 +1,4 @@
-# Audio spec — 14.7s cold-traffic cut (`GrowthAdShort`)
+# Audio spec — 15.3s cold-traffic cut (`GrowthAdShort`)
 
 Voiceover script, music marks and exact sync points for the short Meta ad.
 Every timecode below is measured off the rendered file, not estimated.
@@ -17,9 +17,9 @@ the grounds that the voice covers it.
 | 4.9 – 6.3s | teal links **draw** between them — the system looks like it works |
 | 6.0 – 6.8s | links decay to grey, five ✕ marks punch in as a cascade |
 | 6.9 – 7.7s | ⚠ warning draws itself, GROWTH GAP letters stagger in |
-| 7.2 – 9.4s | DOING MORE DOESN'T ALWAYS MEAN GROWING MORE. |
-| 9.5 – 11.5s | LET'S FIND OUT WHAT IT IS. |
-| 11.7 – 14.7s | SEND YOUR INQUIRY, then the wordmark holds |
+| 7.2 – 10.2s | DOING MORE DOESN'T ALWAYS MEAN GROWING MORE. |
+| 10.2 – 12.2s | LET'S FIND OUT WHAT IT IS. |
+| 12.3 – 15.3s | SEND YOUR INQUIRY, then the wordmark holds |
 
 ## Voiceover
 
@@ -31,8 +31,8 @@ Twenty-nine words. Roughly half the film is silent on purpose.
 | 2.2 – 3.9 | "It needs to know what's not working." |
 | 4.0 – 7.1 | *(silence — the animation carries it)* |
 | 7.2 – 10.1 | "Because doing more doesn't always mean growing more." |
-| 10.3 – 11.9 | "Let's find out what it is." |
-| 12.1 – 13.4 | "Send your enquiry." |
+| 10.4 – 12.0 | "Let's find out what it is." |
+| 12.6 – 14.0 | "Send your enquiry." |
 
 **The rule that governs it:** the voice either lands on the exact words at the
 exact moment, or it says something the screen never says. Never a near-miss
@@ -69,8 +69,8 @@ aggressive EDM, trap.
 | 4.0 – 5.9s | **build.** Percussion enters as the channels land and the links draw. The music should sound like something assembling |
 | 6.0 – 6.8s | **subtract.** Pull the percussion as the links break. Tension by removal |
 | **6.9 – 7.2s** | **the impact.** Bass hit as the warning draws itself. This is the drop |
-| 7.2 – 11.5s | driving, confident, forward |
-| 11.7 – 14.7s | **simplify.** Strip back so the CTA lands. Let the last second breathe |
+| 7.2 – 12.2s | driving, confident, forward |
+| 12.3 – 15.3s | **simplify.** Strip back so the CTA lands. Let the last second breathe |
 
 ### Where the drop goes, and why it is not where you think
 
@@ -118,6 +118,5 @@ change and a re-render. Always do that rather than accepting a near-miss.
 - **`INQUIRY` vs `Enquiry`.** The CTA button says `SEND YOUR INQUIRY`; every
   form on the site says **Enquiry**. Pick one. This matters more once the word
   is spoken aloud, not less.
-- Line three needs ~2.9s to read and currently has 2.3s of room. Adding about
-  20 frames to the middle scene gives it air and takes the film to ~15.3s,
-  still well inside cold-traffic range.
+- ~~Line three needs more room~~ — **done.** The middle scene gained 20 frames,
+  so line three now has ~3.0s to read and the film runs 15.27s.
