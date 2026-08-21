@@ -4,7 +4,20 @@ Remotion project for the kinetic-typography / UI-motion ads. Renders
 **1080×1920, 30fps, full bleed** — no letterbox, no bars, every scene paints
 the entire canvas.
 
-Current composition: **`GrowthAd`**, ~39 seconds, driving `/growth/`.
+| Composition | Length | Status |
+|---|---|---|
+| `GrowthAdShort` | 15.3s | **the live asset** — cold Meta traffic, driving `/growth/` |
+| `GrowthAd` | ~39s | **not in use.** Predates the motion-graphics rebuild and the removal of the web address, so it does not match the current work. Kept because it costs nothing and shares every component; it needs a re-render before being used for anything |
+
+The short cut is hook, disconnected channels, close. Everything the long film
+had between them — the four problem beats, the inequality, the diagnosis, the
+four-step process — is *argument*, and a stranger who did not choose you will
+not stay for an argument. Its timings live in the `shortCut` block of
+`src/data/script.ts`, and the scenes take beats as props so both cuts share one
+set of components.
+
+It is cut to fit a voiceover that does not exist yet; the script and the music
+marks are in `docs/reels/growth-ad-14s-audio.md`.
 
 ## Running it
 
@@ -17,11 +30,12 @@ npm run studio
 
 # render (see "Browser" below for REMOTION_BROWSER)
 export REMOTION_BROWSER=/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell
-npm run render          # long cut
-npm run render:short    # cold-traffic cut
+npm run render:short    # the live asset
+npm run finish:short    # REQUIRED before delivery — see below
+npm run render          # the retired long cut
 
 # one frame, for checking a beat or making a thumbnail
-npx remotion still src/index.ts GrowthAd out/f.png --frame=420 \
+npx remotion still src/index.ts GrowthAdShort out/f.png --frame=250 \
   --browser-executable=$REMOTION_BROWSER
 ```
 
