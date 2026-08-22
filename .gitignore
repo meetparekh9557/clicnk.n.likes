@@ -1,3 +1,10 @@
 # Rendered reels — regenerate with site/scripts/gen-reel.mjs
 *.mp4
 .reel-frames/
+
+# API keys. This repo is public: nothing resembling a secret goes in it.
+.env
+.env.*
+!.env.example
+*.key
+.dev.vars
