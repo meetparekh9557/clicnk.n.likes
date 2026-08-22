@@ -3,7 +3,8 @@
 // implementation. One owner notification (logs the sheet row) + one
 // visitor confirmation per submission, exactly like v1.
 import { useState, useEffect, useRef } from 'react';
-import { OWNER_EMAIL, sendFromClicknlikes, trackEvent } from '../../lib/engine';
+import { OWNER_EMAIL, sendFromClicknlikes, mailtoFallback, trackEvent } from '../../lib/engine';
+import { contact } from '../../data/site';
 import CountrySelect from './CountrySelect.jsx';
 import PhoneInput from './PhoneInput.jsx';
 
@@ -39,8 +40,12 @@ export function currentPagePath() {
 // chosen by the visitor - used by the service pages to stamp the one
 // service that page is about, without ever showing a picker listing the
 // other services.
-export default function SimpleForm({ tag, fields, submitLabel, thankYouHref, footnote, startEventName, submitEventName, lockedFields }) {
+export default function SimpleForm({ tag, fields, submitLabel, thankYouHref, footnote, startEventName, submitEventName, lockedFields, leadLabel }) {
   const [sending, setSending] = useState(false);
+  // Set only when a submission reached us by NO route at all. Carries the
+  // visitor's own text so they can send it themselves in one tap instead of
+  // retyping it - see the fallback block at the bottom of the form.
+  const [failed, setFailed] = useState(null);
   const started = useRef(false);
   const onFormFocus = () => {
     if (startEventName && !started.current) {
@@ -85,7 +90,7 @@ export default function SimpleForm({ tag, fields, submitLabel, thankYouHref, foo
     return () => window.removeEventListener('cnl:preselect', onPreselect);
   }, []);
 
-  function submit(evt) {
+  async function submit(evt) {
     evt.preventDefault();
     const form = evt.target;
     const obj = {};
@@ -97,16 +102,44 @@ export default function SimpleForm({ tag, fields, submitLabel, thankYouHref, foo
       .join('\n');
     const attributionLines = Object.entries(attribution).map(([k, v]) => `${k}: ${v}`).join('\n');
     const page = currentPagePath();
-    sendFromClicknlikes({
+    setSending(true);
+    setFailed(null);
+    const ownerSubject = `New ${leadLabel || `${tag} lead`}: ${obj.name || obj.email || 'website visitor'}`;
+    // Awaited on purpose: the visitor only sees a thank-you page once this
+    // submission has actually reached us. Everything downstream of a lead -
+    // the sheet row, the notification, the follow-up - hangs off this one
+    // request, so "we sent it and hoped" is not good enough.
+    const result = await sendFromClicknlikes({
       toEmail: OWNER_EMAIL,
       replyTo: obj.email || undefined,
-      subject: `New ${tag} lead: ${obj.name || obj.email || 'website visitor'}`,
+      // `leadLabel` lets a page name its own lead type in the subject line,
+      // for when the internal form tag is not what you want to read at 6am on
+      // a phone. The paid-traffic forms use it so an ad lead is identifiable
+      // in the inbox without opening it. Defaults to the tag, so every other
+      // form's subject is unchanged. The tag still appears in the body and in
+      // the sheet's Form column, so which form converted is never lost.
+      subject: ownerSubject,
       bodyText: `New submission from the ${tag} form:\n\nCame from page: ${page}\n\n${summary}${attributionLines ? `\n\nAttribution:\n${attributionLines}` : ''}`,
       // One sheet column per field. `obj` already carries the attribution
       // params too - they're rendered as hidden inputs inside this form,
       // so FormData picks them up with everything else.
       fields: { form: tag, page, ...lockedFields, ...obj },
     });
+    if (!result.ok) {
+      // Nothing got through. Do NOT show a thank-you page for a lead that
+      // does not exist, and do NOT count it as a conversion - hand the
+      // visitor their own message back with a one-tap way to send it.
+      setSending(false);
+      setFailed({
+        subject: ownerSubject,
+        body: `${summary}\n\n(Sent from ${page} - the website form could not reach our server.)`,
+      });
+      trackEvent('lead_submit_failed', { form_tag: tag, reason: result.reason });
+      return;
+    }
+
+    // The visitor's own confirmation is not worth blocking the redirect on:
+    // it is a courtesy, and the lead itself is already safely in.
     if (obj.email) {
       sendFromClicknlikes({
         toEmail: obj.email,
@@ -116,10 +149,7 @@ export default function SimpleForm({ tag, fields, submitLabel, thankYouHref, foo
       });
     }
     trackEvent(submitEventName || 'generate_lead', { form_tag: tag });
-    setSending(true);
-    setTimeout(() => {
-      window.location.href = thankYouHref;
-    }, 650);
+    window.location.href = thankYouHref;
   }
 
   return (
@@ -222,7 +252,34 @@ export default function SimpleForm({ tag, fields, submitLabel, thankYouHref, foo
           </>
         )}
       </button>
-      {footnote && <p className="mt-3 text-center text-xs text-navy/50">{footnote}</p>}
+      {failed ? (
+        <div role="alert" className="mt-5 rounded-xl border-[1.5px] border-coral/30 bg-coral/5 p-5 text-left">
+          <p className="text-sm font-semibold text-navy">This didn't reach us.</p>
+          <p className="mt-1.5 text-[13px] leading-relaxed text-navy/70">
+            Something between your browser and our server failed, so we'd rather tell you than
+            pretend it went through. Your details are still filled in above: press the button again,
+            or send them straight to us in one tap.
+          </p>
+          <div className="mt-4 flex flex-wrap gap-2.5">
+            <a
+              href={mailtoFallback(failed.subject, failed.body)}
+              className="inline-flex items-center rounded-full bg-navy px-5 py-2.5 text-[13px] font-semibold text-white transition-colors hover:bg-coral"
+            >
+              Email it to us
+            </a>
+            <a
+              href={`${contact.whatsappHref}?text=${encodeURIComponent(failed.body)}`}
+              target="_blank"
+              rel="noopener"
+              className="inline-flex items-center rounded-full border-[1.5px] border-navy/15 px-5 py-2.5 text-[13px] font-semibold text-navy transition-colors hover:border-teal"
+            >
+              Send on WhatsApp
+            </a>
+          </div>
+        </div>
+      ) : (
+        footnote && <p className="mt-3 text-center text-xs text-navy/50">{footnote}</p>
+      )}
     </form>
   );
 }

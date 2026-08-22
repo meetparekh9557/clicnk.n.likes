@@ -58,21 +58,64 @@ export function trackEvent(name, params = {}) {
    flash. A real live fetch that takes longer simply runs past it. */
 export const TOOL_SCAN_MIN_MS = 900;
 
-/* Fire-and-forget POST to the Apps Script. Never throws, never blocks
-   the visitor's submission; no-cors keeps the browser from needing a
-   CORS handshake Apps Script doesn't offer. */
-export function postToScript(payload) {
-  if (!autoEmailReady) return;
+/* POST to the Apps Script and actually find out whether it landed.
+   This used to be fire-and-forget (mode:'no-cors'), which meant a broken
+   backend lost leads in total silence: the visitor saw a thank-you page,
+   the sheet row never appeared and nobody knew. The no-cors mode was never
+   necessary - the body is sent as text/plain, which makes this a CORS
+   "simple request" with no preflight, and the deployment already answers
+   readable cross-origin GETs (that is how every tool reads its analysis).
+   Dropping no-cors therefore costs nothing and buys a real answer.
+
+   Retries once on failure, because a request that failed at the network
+   layer never reached the script. The one case that can duplicate is a
+   request the script processed whose response was lost in transit; a
+   duplicate lead is a nuisance, a lost lead is revenue, so the retry is
+   worth it - and it is capped at one, so the worst case is two copies.
+
+   Never throws. Resolves to {ok:true} or {ok:false, reason}. */
+export async function postToScript(payload) {
+  if (!autoEmailReady) return { ok: false, reason: 'no_backend' };
+  const body = JSON.stringify(payload);
+  // keepalive lets a request outlive the page it started on (so the
+  // visitor's own confirmation still sends through a redirect), but it caps
+  // the body at 64KB - a long tool report can pass that, so opt out above a
+  // safe margin rather than having fetch reject outright.
+  const keepalive = body.length < 60000;
+  let reason = 'unknown';
+  for (let attempt = 0; attempt < 2; attempt++) {
+    if (attempt) await new Promise((r) => setTimeout(r, 900));
+    try {
+      const res = await fetch(SHEET_WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body,
+        keepalive,
+      });
+      if (res.ok) return { ok: true };
+      reason = 'http_' + res.status;
+    } catch (e) {
+      reason = 'network_error';
+    }
+  }
+  // Last resort after both readable attempts failed: fire the old blind
+  // no-cors write anyway. It tells us nothing, but it costs nothing either,
+  // and it means this change can never be worse than what it replaced - if
+  // the response was merely unreadable rather than undelivered, the lead
+  // still lands. The caller is still told it failed, because as far as this
+  // browser can prove, it did.
   try {
     fetch(SHEET_WEBHOOK_URL, {
       method: 'POST',
       mode: 'no-cors',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify(payload),
+      body,
+      keepalive,
     });
   } catch (e) {
-    /* logging/sending must never break a form */
+    /* nothing left to try */
   }
+  return { ok: false, reason };
 }
 
 /* Appends one row to the lead sheet. Pass `fields` (a flat object of
@@ -87,7 +130,7 @@ export const FORM_LEADS_TAB = 'Form Leads';
 export const TOOL_LEADS_TAB = 'Tool Leads';
 
 export function logLeadToSheet(subject, details, fields, tab) {
-  postToScript({
+  return postToScript({
     subject: subject,
     details: details,
     fields: fields || null,
@@ -221,21 +264,42 @@ export function buildReportEmailHtml(o) {
 
 /* Every submission produces exactly one owner-notification email, so
    hooking the sheet log here logs each lead once, with full details,
-   independently of whether the emails themselves succeed. Returns a
-   mailto fallback link. */
-export function sendFromClicknlikes({ toEmail, toName, subject, bodyText, bodyHtml, replyTo, fields, leadTab }) {
-  if (toEmail === OWNER_EMAIL) logLeadToSheet(subject, bodyText, fields, leadTab);
-  postToScript({
-    action: 'send',
-    to: toEmail,
-    toName: toName || '',
-    subject: subject,
-    body: bodyText,
-    html: bodyHtml || '',
-    replyTo: replyTo || FROM_EMAIL,
-    bcc: toEmail === OWNER_EMAIL ? '' : OWNER_EMAIL,
-  });
-  return `mailto:${encodeURIComponent(toEmail)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyText)}`;
+   independently of whether the emails themselves succeed.
+
+   Resolves to {ok, reason}: `ok` means the submission reached us by at
+   least one route. The sheet row and the notification email go through the
+   same script but are two separate writes, so one can land without the
+   other - that is a degraded success, not a lost lead, and the caller
+   should not scare the visitor into sending it again. Only when BOTH fail
+   is anything actually lost, and that is the case a caller should surface.
+   Callers that don't care can ignore the promise; nothing here throws. */
+export async function sendFromClicknlikes({ toEmail, toName, subject, bodyText, bodyHtml, replyTo, fields, leadTab }) {
+  const isOwner = toEmail === OWNER_EMAIL;
+  const [sheet, mail] = await Promise.all([
+    isOwner ? logLeadToSheet(subject, bodyText, fields, leadTab) : Promise.resolve(null),
+    postToScript({
+      action: 'send',
+      to: toEmail,
+      toName: toName || '',
+      subject: subject,
+      body: bodyText,
+      html: bodyHtml || '',
+      replyTo: replyTo || FROM_EMAIL,
+      bcc: isOwner ? '' : OWNER_EMAIL,
+    }),
+  ]);
+  const ok = !!(mail && mail.ok) || !!(sheet && sheet.ok);
+  const parts = [];
+  if (sheet && !sheet.ok) parts.push('sheet:' + sheet.reason);
+  if (mail && !mail.ok) parts.push('email:' + mail.reason);
+  return { ok, reason: parts.join(' ') };
+}
+
+/* A mailto: the visitor can use to send their submission themselves when
+   the backend could not be reached at all. Not a nicety - it is the
+   difference between a recoverable lead and one nobody ever hears about. */
+export function mailtoFallback(subject, bodyText) {
+  return `mailto:${FROM_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyText)}`;
 }
 
 export function hashStr(s) {

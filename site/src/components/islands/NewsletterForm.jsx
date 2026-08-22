@@ -6,28 +6,34 @@ import { OWNER_EMAIL, sendFromClicknlikes } from '../../lib/engine';
 
 export default function NewsletterForm({ thankYouHref }) {
   const [sending, setSending] = useState(false);
+  const [failed, setFailed] = useState(false);
 
-  function submit(evt) {
+  async function submit(evt) {
     evt.preventDefault();
     const form = evt.target;
     const email = new FormData(form).get('email');
     const page = typeof window !== 'undefined' ? window.location.pathname : '';
-    sendFromClicknlikes({
+    setSending(true);
+    setFailed(false);
+    // Awaited so a subscriber who never reached us is never told they did.
+    const result = await sendFromClicknlikes({
       toEmail: OWNER_EMAIL,
       replyTo: email || undefined,
       subject: `New blog-newsletter lead: ${email || 'website visitor'}`,
       bodyText: `New submission from the blog-newsletter form:\n\nCame from page: ${page}\n\nemail: ${email}`,
       fields: { form: 'blog-newsletter', page: page, email: email },
     });
+    if (!result.ok) {
+      setSending(false);
+      setFailed(true);
+      return;
+    }
     sendFromClicknlikes({
       toEmail: email,
       subject: 'We got your message: Click.n.likes',
       bodyText: `Hi ,\n\nThanks for reaching out to Click.n.likes. We've received your message and will get back to you within one business day.\n\nHere's a copy of what you sent us:\nemail: ${email}\n\nBest,\nClick.n.likes\nbusiness@clicknlikes.com`,
     });
-    setSending(true);
-    setTimeout(() => {
-      window.location.href = thankYouHref;
-    }, 650);
+    window.location.href = thankYouHref;
   }
 
   return (
@@ -50,6 +56,15 @@ export default function NewsletterForm({ thankYouHref }) {
           {sending ? 'Sending…' : 'Subscribe'}
         </button>
       </div>
+      {failed && (
+        <p role="alert" className="mt-3 text-left text-[12.5px] leading-relaxed text-navy/70">
+          That didn't reach us, and we'd rather say so than pretend it did. Try once more, or email{' '}
+          <a href="mailto:business@clicknlikes.com" className="font-semibold text-teal-dark underline">
+            business@clicknlikes.com
+          </a>{' '}
+          and we'll add you by hand.
+        </p>
+      )}
     </form>
   );
 }

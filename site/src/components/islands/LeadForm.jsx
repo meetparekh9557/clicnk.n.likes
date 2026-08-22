@@ -3,7 +3,8 @@
 // lead row to the Sheet), one visitor confirmation, then the success
 // panel with the same copy and next-step expectations.
 import { useState } from 'react';
-import { OWNER_EMAIL, sendFromClicknlikes } from '../../lib/engine';
+import { OWNER_EMAIL, sendFromClicknlikes, mailtoFallback } from '../../lib/engine';
+import { contact } from '../../data/site';
 import CountrySelect from './CountrySelect.jsx';
 import PhoneInput from './PhoneInput.jsx';
 
@@ -35,8 +36,9 @@ const labelCls = 'mb-1.5 block text-[12.5px] font-semibold text-navy';
 
 export default function LeadForm({ contactHref, thankYouHref }) {
   const [sending, setSending] = useState(false);
+  const [failed, setFailed] = useState(null);
 
-  function submit(evt) {
+  async function submit(evt) {
     evt.preventDefault();
     const form = evt.target;
     const data = new FormData(form);
@@ -47,13 +49,25 @@ export default function LeadForm({ contactHref, thankYouHref }) {
       .map(([k, v]) => `${k}: ${v}`)
       .join('\n');
     const homePage = typeof window !== 'undefined' ? window.location.pathname : '';
-    sendFromClicknlikes({
+    setSending(true);
+    setFailed(null);
+    const ownerSubject = `New home lead: ${obj.name || obj.email || 'website visitor'}`;
+    // Awaited so a lead that never arrived can never show a thank-you page.
+    const result = await sendFromClicknlikes({
       toEmail: OWNER_EMAIL,
       replyTo: obj.email || undefined,
-      subject: `New home lead: ${obj.name || obj.email || 'website visitor'}`,
+      subject: ownerSubject,
       bodyText: `New submission from the home form:\n\nCame from page: ${homePage}\n\n${summary}`,
       fields: { form: 'home', page: homePage, ...obj },
     });
+    if (!result.ok) {
+      setSending(false);
+      setFailed({
+        subject: ownerSubject,
+        body: `${summary}\n\n(Sent from ${homePage} - the website form could not reach our server.)`,
+      });
+      return;
+    }
     if (obj.email) {
       sendFromClicknlikes({
         toEmail: obj.email,
@@ -62,10 +76,7 @@ export default function LeadForm({ contactHref, thankYouHref }) {
         bodyText: `Hi ${obj.name || ''},\n\nThanks for reaching out to Click.n.likes. We've received your message and will get back to you within one business day.\n\nHere's a copy of what you sent us:\n${summary}\n\nBest,\nClick.n.likes\nbusiness@clicknlikes.com`,
       });
     }
-    setSending(true);
-    setTimeout(() => {
-      window.location.href = thankYouHref;
-    }, 650);
+    window.location.href = thankYouHref;
   }
 
   return (
@@ -133,6 +144,32 @@ export default function LeadForm({ contactHref, thankYouHref }) {
           </>
         )}
       </button>
+      {failed && (
+        <div role="alert" className="mt-5 rounded-xl border-[1.5px] border-coral/30 bg-coral/5 p-5 text-left">
+          <p className="text-sm font-semibold text-navy">This didn't reach us.</p>
+          <p className="mt-1.5 text-[13px] leading-relaxed text-navy/70">
+            Something between your browser and our server failed, so we'd rather tell you than
+            pretend it went through. Your details are still filled in above: press the button again,
+            or send them straight to us in one tap.
+          </p>
+          <div className="mt-4 flex flex-wrap gap-2.5">
+            <a
+              href={mailtoFallback(failed.subject, failed.body)}
+              className="inline-flex items-center rounded-full bg-navy px-5 py-2.5 text-[13px] font-semibold text-white transition-colors hover:bg-coral"
+            >
+              Email it to us
+            </a>
+            <a
+              href={`${contact.whatsappHref}?text=${encodeURIComponent(failed.body)}`}
+              target="_blank"
+              rel="noopener"
+              className="inline-flex items-center rounded-full border-[1.5px] border-navy/15 px-5 py-2.5 text-[13px] font-semibold text-navy transition-colors hover:border-teal"
+            >
+              Send on WhatsApp
+            </a>
+          </div>
+        </div>
+      )}
       <p className="mt-3 text-xs text-navy/55">
         Prefer an instant number?{' '}
         <a href={contactHref} className="text-teal-dark underline">Use the live quote calculator →</a>
