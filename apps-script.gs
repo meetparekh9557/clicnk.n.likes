@@ -71,6 +71,10 @@ var TOOL_LEAD_COLUMNS = [
   'Timestamp', 'Tool', 'Page', 'Email', 'URL', 'Score', 'Rating',
   'Data Source', 'Gaps'
 ];
+/* Bump this whenever this file changes, so ?action=version tells you which
+   build is live without opening the editor. */
+var SCRIPT_VERSION = '2026-08-24-textformat';
+
 var RENDER_DAILY_CAP = 200; // max Cloudflare renders per day (free-tier guard)
 // Logo for the email header, inlined via CID so recipients always see it
 // (no hotlink for Gmail to hide). Fetched server-side at send time.
@@ -120,7 +124,12 @@ function testJsRender(){
 function doGet(e){
   var p = (e && e.parameter) || {};
   var out;
-  if(p.action === 'analyze' && p.url)        out = analyzePage(p.url);
+  // Says which build of this file is actually live. Pasting the code and
+  // deploying are two separate steps, and when a fix appears not to work
+  // there is otherwise no way to tell a broken fix from an undeployed one
+  // without reading the editor. Open ?action=version to settle it.
+  if(p.action === 'version')                 out = {ok:true, version: SCRIPT_VERSION};
+  else if(p.action === 'analyze' && p.url)   out = analyzePage(p.url);
   else if(p.action === 'pagespeed' && p.url) out = pageSpeed_(p.url, p.strategy);
   else if(p.action === 'screenshot' && p.url)out = screenshot_(p.url);
   else if(p.action === 'searchconsole')      out = searchConsole_(p.token, p.days);
@@ -364,22 +373,6 @@ function doPost(e){
  * Takes a document lock because two submissions landing together could
  * otherwise both append the same new column.
  */
-/**
- * Sheets reads a leading '=', '+', '@' or '-' as the start of a formula,
- * so a dialable phone number like "+91 98765 43210" is parsed instead of
- * stored and the cell shows an error. Prefixing with an apostrophe tells
- * Sheets to take the rest literally — the apostrophe is a storage marker,
- * not content, so getValue(), CSV export and the Sheets API all read back
- * the plain string. A genuine negative number is left alone so it stays
- * numeric and still sorts and sums correctly.
- */
-function sheetSafe_(value){
-  if(typeof value !== 'string') return value;
-  if(!/^[=+@-]/.test(value)) return value;
-  if(/^-?\d+(\.\d+)?$/.test(value)) return value;
-  return "'" + value;
-}
-
 function logStructuredLead_(fields, tabName){
   var tab = tabName || FORM_LEADS_TAB;
   var starterColumns = tab === TOOL_LEADS_TAB ? TOOL_LEAD_COLUMNS : FORM_LEAD_COLUMNS;
@@ -425,10 +418,25 @@ function logStructuredLead_(fields, tabName){
         sh.getRange(1, headers.length).setValue(key).setFontWeight('bold');
         row.push('');
       }
-      row[indexOfHeader[lookup]] = sheetSafe_(value);
+      row[indexOfHeader[lookup]] = value;
     });
 
-    sh.appendRow(row);
+    // Format the target row as plain text BEFORE writing it. appendRow()
+    // parses what it writes, so "+91 98765 43210" was being read as a
+    // formula and stored as #ERROR!. A cell already formatted as text
+    // takes the value literally, which an apostrophe prefix did not
+    // reliably achieve through appendRow. The timestamp column keeps a
+    // real date format so it still sorts and filters as a date.
+    var targetRow = sh.getLastRow() + 1;
+    var formats = [];
+    for(var f = 0; f < row.length; f++) formats.push('@');
+    var tsIndex = indexOfHeader['timestamp'];
+    if(typeof tsIndex === 'number' && tsIndex < formats.length){
+      formats[tsIndex] = 'yyyy-mm-dd hh:mm:ss';
+    }
+    var target = sh.getRange(targetRow, 1, 1, row.length);
+    target.setNumberFormats([formats]);
+    target.setValues([row]);
   } finally {
     try{ lock.releaseLock(); }catch(err){}
   }
