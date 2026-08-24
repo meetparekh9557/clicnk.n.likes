@@ -209,6 +209,17 @@ Rules:
   for implementation-only work: write the plan yourself first, hand it to the
   executor via the Agent tool, then review the result against the plan before
   treating anything as done.
+- Paid-media capability comes from the `claude-ads` plugin (MIT, source:
+  `AgriciDaniel/claude-ads`), pinned in `.claude/settings.json` so every fresh
+  container re-installs it. It adds 34 skills (`ads`, `ads-google`, `ads-meta`,
+  `ads-plan`, `ads-audit`, `ads-landing`, `ads-math`, per-platform skills) and
+  25 audit subagents, at roughly 6.6k always-on tokens. `ads-plan` carries
+  per-industry planning assets (local-service, healthcare, real-estate,
+  ecommerce, SaaS, B2B, finance, agency, info-products, mobile-app). Everything
+  is plain markdown except image generation, which needs
+  `pip install -r requirements.txt` in the plugin checkout. Note the name
+  collision: the separate account-level `ads` skill is a different, unrelated
+  pack — prefer the plugin's for real campaign work, it is far deeper.
 
 ## Continuing the rebuild
 
