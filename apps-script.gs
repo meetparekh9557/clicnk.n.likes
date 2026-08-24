@@ -305,7 +305,14 @@ function doPost(e){
     // Pull the logo as an inline (CID) image. If the fetch ever fails we
     // fall back to a clean wordmark so the email still looks intentional.
     var logoBlob = null;
-    try{ logoBlob = UrlFetchApp.fetch(LOGO_URL, {muteHttpExceptions:true}).getBlob().setName('cnllogo'); }catch(err){}
+    // muteHttpExceptions means a 404 comes back as a normal response, so
+    // the status has to be checked explicitly: without this, the error
+    // page itself gets embedded as the logo and every email ships a
+    // broken image instead of falling back to the wordmark below.
+    try{
+      var logoRes = UrlFetchApp.fetch(LOGO_URL, {muteHttpExceptions:true});
+      if(logoRes.getResponseCode() === 200) logoBlob = logoRes.getBlob().setName('cnllogo');
+    }catch(err){}
     var header = logoBlob
       ? '<img src="cid:cnllogo" width="150" alt="Click.n.likes" style="display:block;width:150px;max-width:58%;height:auto;border:0;outline:none;text-decoration:none;" />'
       : '<span style="font-size:19px;font-weight:700;letter-spacing:-0.2px;color:#1A2B4A;">Click.n.likes</span>';
@@ -357,6 +364,22 @@ function doPost(e){
  * Takes a document lock because two submissions landing together could
  * otherwise both append the same new column.
  */
+/**
+ * Sheets reads a leading '=', '+', '@' or '-' as the start of a formula,
+ * so a dialable phone number like "+91 98765 43210" is parsed instead of
+ * stored and the cell shows an error. Prefixing with an apostrophe tells
+ * Sheets to take the rest literally — the apostrophe is a storage marker,
+ * not content, so getValue(), CSV export and the Sheets API all read back
+ * the plain string. A genuine negative number is left alone so it stays
+ * numeric and still sorts and sums correctly.
+ */
+function sheetSafe_(value){
+  if(typeof value !== 'string') return value;
+  if(!/^[=+@-]/.test(value)) return value;
+  if(/^-?\d+(\.\d+)?$/.test(value)) return value;
+  return "'" + value;
+}
+
 function logStructuredLead_(fields, tabName){
   var tab = tabName || FORM_LEADS_TAB;
   var starterColumns = tab === TOOL_LEADS_TAB ? TOOL_LEAD_COLUMNS : FORM_LEAD_COLUMNS;
@@ -402,7 +425,7 @@ function logStructuredLead_(fields, tabName){
         sh.getRange(1, headers.length).setValue(key).setFontWeight('bold');
         row.push('');
       }
-      row[indexOfHeader[lookup]] = value;
+      row[indexOfHeader[lookup]] = sheetSafe_(value);
     });
 
     sh.appendRow(row);
