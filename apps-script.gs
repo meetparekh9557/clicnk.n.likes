@@ -74,7 +74,12 @@ var TOOL_LEAD_COLUMNS = [
 var RENDER_DAILY_CAP = 200; // max Cloudflare renders per day (free-tier guard)
 // Logo for the email header, inlined via CID so recipients always see it
 // (no hotlink for Gmail to hide). Fetched server-side at send time.
-var LOGO_URL = 'https://raw.githubusercontent.com/meetparekh9557/clicnk.n.likes/main/site/public/logo.png';
+// Served from the live site, NOT from raw.githubusercontent.com: that URL
+// depends on the repo's name and public visibility, so renaming the repo or
+// making it private would 404 this fetch and silently drop the logo from
+// every branded email. The site is public by definition and this path
+// survives both.
+var LOGO_URL = 'https://clicknlikes.com/logo.png';
 
 /**
  * ONE-TIME SETUP HELPER — run this manually from the editor (select
