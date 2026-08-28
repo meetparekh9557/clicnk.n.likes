@@ -121,6 +121,57 @@ practical about the next real step.
   error text first; a local repro can only ever confirm a bug you already
   imagined.
 
+## Agency skill suite — mandatory routing check
+
+Before responding to any request touching marketing, strategy, creative,
+content, SEO, social media, performance advertising, client communication,
+agency operations, business development, branding, consumer behaviour, video,
+design, financial/capital decisions, or automation — check the installed
+skills for a relevant match, including when the request names no skill at all.
+
+1. Consult `agency-intelligence-orchestrator` first to determine which
+   skill(s) actually own the task.
+2. Load and apply the routed skill(s) rather than answering from general
+   knowledge alone.
+3. When a task spans domains (a content decision that also touches SEO and
+   brand voice), let the orchestrator sequence several skills rather than
+   forcing a single pick.
+4. Do not skip the check because a request looks simple — the orchestrator
+   decides whether a lightweight or a full response is warranted.
+
+The suite: director-of-strategy, creative-director,
+director-of-performance-marketing, director-of-digital-and-growth,
+director-of-client-services, director-of-operations,
+director-of-business-development, director-of-brand-and-communications,
+director-of-consumer-psychology, director-of-data-and-marketing-intelligence,
+director-of-conversion-and-customer-journey, content-strategy-director,
+social-media-director, seo-and-search-intelligence-director,
+copywriting-and-editorial-director, graphics-and-visual-design-director,
+video-director, ai-and-automation-director,
+director-of-capital-and-financial-strategy, algorithm-and-platform-intelligence,
+cultural-and-trend-intelligence, website-intelligence-and-reverse-engineering,
+ai-reasoning-and-problem-resolution, human-intelligence-and-natural-expression,
+agency-intelligence-orchestrator.
+
+- **The skills are installed, and always were — the failure was matching, not
+  installation.** All 25 arrive through account sync, not through any local
+  install script, and they land in `~/.claude/skills/synced/<id>/`, already
+  loaded before a session starts. Verified 2026-08-28: every one of the 25
+  present. So when a skill does not fire, do not go looking for a missing
+  install — 25 overlapping descriptions competing for the same probabilistic
+  match is the actual failure mode, and the routing check above is the fix.
+  Re-running an installer against a folder with no `.skill` files in it
+  reports "Installed 0 skills" and proves nothing either way.
+- **This fix covers Claude Code only.** These instructions are read into
+  context every turn here, which is exactly why the check is reliable in this
+  repo. claude.ai chat has no equivalent hook — it still matches skills
+  probabilistically with nothing forcing the check — so a skill that reliably
+  fires here may silently fail to fire there. Do not assume work done in chat
+  got the same routing.
+- **Global `~/.claude/CLAUDE.md` does not persist in a remote session.** The
+  container is reclaimed and takes the file with it. Anything meant to survive
+  belongs in this file, which is why the rules above live here.
+
 ## Brand voice (calibrated from the founder's own writing — follow for ALL copy)
 
 The founder's register is **elevated professional B2B**: authoritative,
