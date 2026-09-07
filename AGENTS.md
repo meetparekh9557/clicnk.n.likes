@@ -17,14 +17,30 @@ general-purpose send-as-this-address API and should not be reused for
 unrelated outbound email like cold prospecting).
 
 Direct SMTP to Hostinger from a Claude Code Remote session (this one or any
-Routine) is **blocked by the environment's network policy** — confirmed by
-testing `smtp.hostinger.com:587` directly, same restriction that blocks
-arbitrary web fetches. There is currently no working path to send real email
-as `business@clicknlikes.com` from inside this environment: not Gmail (not
-how the address is actually used), not raw SMTP (network-blocked), and no
-transactional relay (UniOne, SMTP2GO, etc.) is set up. Setting one up would
-need real infrastructure work (domain verification, DNS records) agreed with
-the founder first, not assumed mid-task.
+Routine) is **blocked by the environment's network policy**, confirmed by
+testing `smtp.hostinger.com:587` directly, the same restriction that blocks
+arbitrary web fetches.
+
+**SendGrid via Composio is the working outbound path, and it is live.**
+Verified 2026-09-04: `domain_verified` and `sender_verified` both true,
+`business@clicknlikes.com` is a verified sender ("Click.n.likes"), and domain
+authentication on the `em7717.clicknlikes.com` subdomain has DKIM1, DKIM2 and
+the mail CNAME all validating. A real cold email was sent through it that day
+and the activity feed confirmed status `delivered`, with no bounce and no
+block. Send with `SENDGRID_SEND_EMAIL_WITH_TWILIO_SEND_GRID`.
+
+Two things that path does NOT do, and both have bitten us:
+- **Nothing is written to the Hostinger Sent folder.** SendGrid has no
+  connection to the mailbox, so the founder has no record of what went out.
+  **BCC `business@clicknlikes.com` on every outbound send** so a copy lands in
+  his inbox and replies thread correctly.
+- **Turn click tracking off.** It rewrites every link through a SendGrid
+  redirect domain, which is a known spam signal on a domain with little
+  sending history. Open tracking is fine to leave on.
+
+There is also a stale domain-authentication entry (`em1782.clicknlikes.com`)
+with all DNS records invalid. It should be deleted so nothing routes through
+it.
 
 **Hunter.io is connected via Composio** (session-scoped OAuth-style
 connection, not a stored env var) and works fine for prospect research —
@@ -81,6 +97,15 @@ practical about the next real step.
 - **Anticipate the traps.** When a task carries setup landmines (Google
   consoles, OAuth scopes, DNS, deploys), name them up front and pre-empt them
   — don't discover them one 403 at a time.
+- **Route through the relevant directors before producing, not after being
+  asked.** The director and specialist skills (`director-of-*`,
+  `creative-director`, `website-intelligence-and-reverse-engineering`,
+  `seo-and-search-intelligence-director`, `cold-email`, and the rest) are the
+  team Axiom convenes. Load the ones that own the problem *before* writing
+  the work, then return one resolved answer rather than exposing the routing.
+  Meet should never have to ask whether they were used. This is not optional
+  and it is not a per-task decision: describing the model while writing
+  everything unassisted is the failure mode this rule exists to stop.
 - **Two registers.** With the founder in chat: concise, human, dry wit welcome.
   In anything customer-facing: the elevated B2B brand voice below, no
   exceptions.
@@ -189,7 +214,11 @@ Rules:
 4. **Name the personas precisely** — "engineers, procurement managers, and MRO
    specialists", never just "customers" or "people".
 5. **Flowing, formal sentences.** Medium-long, comma-rich, no sentence
-   fragments, minimal em-dashes. Vocabulary: "non-negotiable", "paramount",
+   fragments. **Never use em dashes, anywhere** — not in customer-facing copy,
+   not in chat with the founder, not in commit messages. This was previously
+   written as "minimal em-dashes", which was weak enough to be ignored. Use a
+   comma, a colon, parentheses or a full stop instead. Vocabulary:
+   "non-negotiable", "paramount",
    "high-impact", "frictionless", "votes of confidence", "24/7 lead generation
    engine", "not just vanity metrics".
 6. **Frame stakes as business transformation**: expenses become assets,
