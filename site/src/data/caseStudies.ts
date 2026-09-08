@@ -170,6 +170,13 @@ export const caseStudies: CaseStudy[] = [
       { src: '/work/hamprigo-industries-lamination.webp', caption: 'Textile Lamination: their own copy, their own material, photographed' },
       { src: '/work/hamprigo-industries-bonded-bras.webp', caption: 'Seamless Bonded Bras: the finished garment, rotatable through 360 degrees' },
     ],
+    feedback: {
+      quote: [
+        'We wanted the website to do what we do in a meeting: start with the material and work forward, and say nothing we cannot stand behind.',
+        'Enquiries used to begin by explaining what lamination is. Now they begin with a specification.',
+      ],
+      attribution: 'Hamprigo Industries, Mumbai',
+    },
     summary:
       'The result is a site that does what Hamprigo does: it starts with the material and works forward to the finished product. Four lamination techniques, each shown against what it is used to make. A garment a buyer can turn around and inspect from any angle. Specification stated openly rather than reserved for a sales call. For a manufacturer whose real advantage is controlling the material the garment is made from, that advantage now sits on the page where a sourcing manager can see it in the first thirty seconds, which is the whole point of building the thing.',
   },
