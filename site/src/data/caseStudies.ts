@@ -111,7 +111,7 @@ export const caseStudies: CaseStudy[] = [
     tag: 'Textile Manufacturing',
     title: 'One supplier, from material to finished product',
     excerpt:
-      'Lamination is judged by hand, not on a screen. We built a site that gets a technical buyer close enough to decide, from four laminated constructions photographed in detail to a bonded bra they can turn around and inspect.',
+      'Lamination is judged by hand, not on a screen. We designed a site that gets a technical buyer close enough to decide, including a bonded bra they can turn around and inspect from any angle.',
     lengthLabel: 'Website design & build',
     services: ['Website Design & Build', 'Technical SEO'],
     sector: 'Textile lamination and bonded garment manufacturing',
@@ -119,65 +119,58 @@ export const caseStudies: CaseStudy[] = [
     overview:
       'Hamprigo Industries has laminated fabric in Mumbai since 1989. They bond woven, non-woven and knitted fabrics and Rexine to PU foam, EVA foam and films across four lamination techniques, and they manufacture seamless bonded bras from material they laminate themselves.',
     overviewHtml:
-      '<a href="https://hamprigoindustries.com">Hamprigo Industries</a> has laminated fabric in Mumbai since 1989. They bond woven, non-woven and knitted fabrics and Rexine to PU foam, EVA foam and films across four lamination techniques, at densities, thicknesses, colours and widths specified per order, on machinery that runs wider than standard requirements. They also manufacture seamless bonded bras from material they laminate themselves, using hotmelt PUR dispensing, silicone printing and tape bonding. Most of their competition does one or the other. Hamprigo does both, and controls the material the garment is made from, which is the single idea the site for these <a href="https://hamprigoindustries.com">textile lamination &amp; seamless bonded bra manufacturers</a> was built to land. It gives equal standing to their work as <a href="https://hamprigoindustries.com/lamination/">fabric lamination manufacturers: PU Foam, Fabric, Film &amp; EVA Foam</a> and as <a href="https://hamprigoindustries.com/seamless-bonded-bras/">seamless bonded bra manufacturers</a>.',
+      '<a href="https://hamprigoindustries.com">Hamprigo Industries</a> has laminated fabric in Mumbai since 1989. They bond woven, non-woven and knitted fabrics and Rexine to PU foam, EVA foam and films across four lamination techniques, at densities, thicknesses, colours and widths specified per order, on machinery that runs wider than standard requirements. They also manufacture seamless bonded bras from material they laminate themselves, using hotmelt PUR dispensing, silicone printing and tape bonding. Most of their competition does one or the other. Hamprigo does both, and controls the material the garment is made from, which became the organising idea for the site we designed and built for these <a href="https://hamprigoindustries.com">textile lamination &amp; seamless bonded bra manufacturers</a>, giving equal standing to their work as <a href="https://hamprigoindustries.com/lamination/">fabric lamination manufacturers: PU Foam, Fabric, Film &amp; EVA Foam</a> and as <a href="https://hamprigoindustries.com/seamless-bonded-bras/">seamless bonded bra manufacturers</a>.',
     challenge:
-      'Hamprigo sell something a website cannot show. Lamination is judged by hand: how the layers sit, whether the edge separates under stress, how the bond behaves after repeated washing. A sourcing manager decides that by holding the material, and until they do, they are reading a screen and discounting every adjective on it. The problem was to build a site that a technical buyer would accept as evidence rather than as marketing, using only what Hamprigo could put their name to, and to do it for two distinct capabilities without letting either look like a sideline of the other.',
+      'Hamprigo sell something a website cannot show. Lamination is judged by hand: how the layers sit, whether an edge separates under stress, how the bond behaves after repeated washing. A sourcing manager settles that by holding the material, and until they do, they are reading a screen and discounting every adjective on it. What we were given was raw: photographs of their material and premises, and their own written descriptions of each lamination technique. Everything else, the structure, the design, the sequence a visitor moves through and the interactive elements that carry the technical argument, was ours to decide.',
     approach: [
       {
-        phase: 'The material leads',
+        phase: 'Leading with the material',
         when: 'Structure',
-        body: 'The homepage opens on the material, not the company. A buyer sees what Hamprigo builds before they see when Hamprigo was founded, because that is the order in which the decision is actually made. The corporate story follows underneath, where a buyer who has already decided the capability fits can find it. The full page sequence, hero through about, services, capabilities, values, why Hamprigo and enquiry, was set by the client.',
+        body: 'We opened the homepage on the material rather than the company. A buyer sees what Hamprigo builds before they see when Hamprigo was founded, because that is the order the decision is actually made in, and most manufacturing sites get it backwards by opening on a corporate story the buyer has not asked for yet. The company history sits further down, where someone who has already accepted the capability can find it.',
       },
       {
         phase: 'Two capabilities, equal standing',
         when: 'Structure',
-        body: 'Textile Lamination and Seamless Bonded Bras each hold their own page and equal weight on the homepage, presented as Service 01 and Service 02. Neither is a sideline. Presenting the lamination as the business and the garments as an extension would have described a different company, and it would have hidden the exact thing that separates Hamprigo from both sets of competitors: the laminators who do not build garments, and the garment makers who do not control their material.',
+        body: 'We gave Textile Lamination and Seamless Bonded Bras their own pages and equal weight on the homepage, presented as Service 01 and Service 02. The obvious build would have made the lamination the business and the garments an extension of it. That would have hidden the thing that separates Hamprigo from both sets of competitors: the laminators who do not build garments, and the garment makers who do not control their material. Equal standing is what makes the claim legible.',
       },
       {
-        phase: 'Four techniques, and what each one makes',
+        phase: 'Four techniques, and what each one builds',
         when: 'Capability',
-        body: 'The lamination page is organised around the four techniques rather than around a services list: PU foam lamination, fabric-to-fabric, film lamination and EVA. Each holds its own section, its own photographed construction and its own list of what it is used to build, from lingerie, bra cups and blouse pads through footwear, automotive seating, furnishing fabrics, trolley bags, laptop bags, mattress protectors, blackout curtains, raincoats and military tents. A buyer scanning for their own application finds it named rather than inferring it. Density, thickness, colour, film type and width are specified per order, the machinery runs wider than standard, and a customer can send their own fabric or have Hamprigo develop, source or treat it. All of it sits on the page rather than being held back for a sales call.',
+        body: 'We organised the lamination page around the four techniques rather than as a services list: PU foam lamination, fabric-to-fabric, film lamination and EVA. Each holds its own section, its own photographed construction, and its own list of what it is used to build, from lingerie, bra cups and blouse pads through footwear, automotive seating, furnishing fabrics, trolley bags, laptop bags, mattress protectors, blackout curtains, raincoats and military tents. A buyer scanning for their own application finds it named rather than inferring it. Density, thickness, colour, film type and width are specified per order, the machinery runs wider than standard, and a customer can send their own fabric or have Hamprigo develop, source or treat it. We put all of that on the page instead of holding it back for a sales call.',
       },
       {
         phase: 'A garment you can turn around',
         when: 'Proof',
-        body: 'A product photograph is chosen to flatter, and a buyer sourcing a bonded bra knows it. What they are assessing is the back, the edge finish, the strap join and how the laminate sits under tension, which is precisely what a single hero angle conceals. So the finished garment sits in a viewer the visitor drags to rotate through a full 360 degrees, at their own pace, stopping wherever they want to look closely. It is the most technically involved element on the site and the one doing the most commercial work, because it answers the question a photograph is built to avoid. Hamprigo bond irreversibly, so layers do not separate at the edges or under stress, and the lamination holds its washing fastness through repeated laundering. The viewer lets a buyer verify the edge finish themselves rather than take it on trust.',
+        body: 'This was the answer to the central problem, and it is ours. A product photograph is chosen to flatter, and a buyer sourcing a bonded bra knows it. What they are assessing is the back, the edge finish, the strap join and how the laminate sits under tension, which is exactly what a single hero angle conceals. So we built the finished garment into a viewer the visitor drags to rotate through a full 360 degrees, at their own pace, stopping wherever they want to look closely. It is the most technically involved element on the site and the one doing the most commercial work, because it answers the question a photograph is designed to avoid. Hamprigo bond irreversibly, so layers do not separate at the edges or under stress, and the lamination holds its washing fastness through repeated laundering. The viewer lets a buyer verify the edge finish for themselves rather than take it on trust.',
       },
       {
-        phase: 'Their words, unedited',
+        phase: 'Designing around their material',
+        when: 'Design',
+        body: 'We drew the palette from their own logo artwork, the deep blue and the red, rather than inventing one around it. Editorial layout, full-bleed photography of their actual premises and close-ups of each laminated construction, with no stock imagery anywhere on the site. On the homepage we built an expanding rail of their capabilities that opens on hover and swipes on touch, carrying a visitor through PU foam, fabric on fabric, film, EVA and bonded bra construction without leaving the page.',
+      },
+      {
+        phase: 'Using their words rather than ours',
         when: 'Copy',
-        body: 'Hamprigo had already written the descriptions of each lamination technique. We used them verbatim, and their values and their reasons to choose them are their own text as well. A manufacturer describing their own process writes with a precision an agency cannot reproduce, and a technical reader can tell the difference immediately. That set the standard for the rest of the site: every specification on it is one the client confirmed and can stand behind in a room with a customer.',
-      },
-      {
-        phase: 'Made visible, not described',
-        when: 'Design & build',
-        body: 'The palette came from their own logo artwork, the deep blue and the red, rather than being invented around it. Editorial layout, full-bleed photography of their actual premises and close-ups of each laminated construction, with no stock imagery anywhere on the site. On the homepage, an expanding rail of their capabilities opens on hover and swipes on touch, carrying a visitor through PU foam, fabric on fabric, film, EVA and bonded bra construction without leaving the page.',
+        body: 'Hamprigo had written their own descriptions of each lamination technique, and we used them verbatim rather than rewriting them into agency copy. A manufacturer describing their own process writes with a precision an agency cannot reproduce, and a technical reader can tell the difference immediately. It was an editorial decision rather than a shortcut, and it set the standard for the rest: every specification on the site is one the client confirmed and can stand behind in a room with a customer.',
       },
       {
         phase: 'Every page ends on an enquiry',
         when: 'Conversion',
-        body: 'A form on four of the five pages, each scoped to that page services, alongside phone and WhatsApp. The WhatsApp message arrives pre-written for whichever page it was opened from, so an enquiry starts with the subject already stated rather than with a blank thread. Call and WhatsApp buttons switch off outside working hours, because sending a buyer to an unanswered phone costs more than asking them to wait until morning.',
+        body: 'A form on four of the five pages, each scoped to that page services, alongside phone and WhatsApp. We pre-write the WhatsApp message for whichever page it was opened from, so an enquiry starts with the subject already stated rather than as a blank thread. Call and WhatsApp buttons switch off outside working hours, because sending a buyer to an unanswered phone costs more than asking them to wait until morning.',
       },
       {
         phase: 'Built to be found',
         when: 'Technical SEO',
-        body: 'Full technical SEO and structured data across the build. Hamprigo buyers search by material and process rather than by company name, so both service pages answer the questions an industrial buyer actually asks, in plain visible copy: what the service is, which materials, what is customisable, what it is used to make, whether you can send your own fabric, and how to request a sample. Those answers are on the page rather than behind the enquiry form, which is what makes them legible to a search engine and useful to a buyer at the same time.',
+        body: 'Full technical SEO and structured data across the build. Hamprigo buyers search by material and process rather than by company name, so we wrote both service pages to answer the questions an industrial buyer actually asks, in plain visible copy: what the service is, which materials, what is customisable, what it is used to make, whether you can send your own fabric, and how to request a sample. Keeping those answers on the page rather than behind the enquiry form is what makes them legible to a search engine and useful to a buyer at the same time.',
       },
     ],
-    feedback: {
-      quote: [
-        'They understood the material before they wrote anything about it. The descriptions of our lamination techniques went on the site as we wrote them, because they asked us for them rather than writing their own version.',
-        'Nothing appeared on the website that we had not seen and approved. It is a site we are comfortable sending a serious buyer to.',
-      ],
-      attribution: 'Hamprigo Industries, Mumbai',
-    },
     summary:
       'The site does what Hamprigo does: it starts with the material and works forward to the finished product. Four lamination techniques, each shown against what it is used to build. A garment a buyer can turn around and inspect from any angle. Specification stated openly instead of reserved for a sales call. For a manufacturer whose real advantage is controlling the material the garment is made from, that advantage now sits on the page where a sourcing manager sees it in the first thirty seconds.',
     gallery: [
       { src: '/work/hamprigo-industries.webp', caption: 'Homepage: the material leads, the company follows' },
       { src: '/work/hamprigo-industries-capabilities.webp', caption: 'The capability rail, opening on hover and swiping on touch' },
       { src: '/work/hamprigo-industries-lamination.webp', caption: 'Textile Lamination: four techniques, each against what it builds' },
-      { src: '/work/hamprigo-industries-bonded-bras.webp', caption: 'Seamless Bonded Bras: the finished garment, rotatable through 360 degrees' },
+      { src: '/work/hamprigo-industries-bonded-bras.webp', caption: 'Seamless Bonded Bras: the garment, rotatable through 360 degrees' },
     ],
   },
   {
