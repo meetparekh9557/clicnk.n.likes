@@ -111,7 +111,7 @@ export const caseStudies: CaseStudy[] = [
     tag: 'Textile Manufacturing',
     title: 'One supplier, from material to finished product',
     excerpt:
-      'A Mumbai lamination manufacturer with 35 years of expertise and almost no published proof. We built a site that reads as credible without claiming a single thing they had not approved.',
+      'A Mumbai lamination manufacturer whose expertise lives in the material itself. We built a site that proves it on substance, with nothing on the page they had not approved.',
     lengthLabel: 'Website design & build',
     services: ['Website Design & Build', 'Technical SEO'],
     sector: 'Textile lamination and bonded garment manufacturing',
@@ -121,7 +121,7 @@ export const caseStudies: CaseStudy[] = [
     overviewHtml:
       '<a href="https://hamprigoindustries.com">Hamprigo Industries</a> has laminated fabric in Mumbai since 1989. They bond woven, non-woven and knitted fabrics and Rexine with PU foam, EVA foam and films, and they manufacture seamless bonded bras from material they laminate themselves. Most of their competition does one or the other, which is why the site we built for these <a href="https://hamprigoindustries.com">textile lamination &amp; seamless bonded bra manufacturers</a> leads with the material rather than the company, and gives equal weight to their two capabilities: <a href="https://hamprigoindustries.com/lamination/">fabric lamination manufacturers: PU Foam, Fabric, Film &amp; EVA Foam</a> and <a href="https://hamprigoindustries.com/seamless-bonded-bras/">seamless bonded bra manufacturers</a>.',
     challenge:
-      'Thirty-five years of real expertise, and very little of it published. No certifications to cite, no capacity figures cleared for release, no third-party validation to borrow credibility from. The usual way to fill that space is language: decades of excellence, world-class facilities, commitment to quality. The client did not want any of it, and they were right. A buyer sourcing laminated material is a technical reader who discounts adjectives and looks for specifics. The brief was to build a site that reads as credible on substance alone, with nothing on it the client had not personally approved.',
+      'A buyer sourcing laminated material is a technical reader. They are deciding whether a supplier can build the material their product needs, so they read for specifics and discount adjectives. Hamprigo has thirty-five years of that expertise, and it lives where it is built, on the factory floor and in four lamination techniques refined against real customer specifications. The brief was to carry that onto a website in the same terms a customer would hear it in, and to put nothing on the page the client had not personally approved.',
     approach: [
       {
         phase: 'Material first, company second',
@@ -131,12 +131,12 @@ export const caseStudies: CaseStudy[] = [
       {
         phase: 'Their words, unedited',
         when: 'Copy',
-        body: 'The client had already written descriptions of each lamination technique. We used them verbatim. Their values and their six reasons to choose them are their own text as well. This was not a shortcut. A manufacturer describing their own process writes with a precision an agency cannot fake, and a technical buyer can tell the difference. Where there was nothing written, nothing was invented: no certifications, no production capacity, no maximum width, no industry claims, no sustainability language.',
+        body: 'The client had already written descriptions of each lamination technique. We used them verbatim. Their values and their six reasons to choose them are their own text as well. This was not a shortcut. A manufacturer describing their own process writes with a precision an agency cannot reproduce, and a technical buyer can tell the difference. That set the standard for the rest of the site: every specification on it is one the client confirmed and can stand behind in a sales conversation.',
       },
       {
         phase: 'Two boundaries the client set',
         when: 'Scope',
-        body: 'Bra cups appear only as an application of PU foam laminated fabric, never as a product Hamprigo sells, because that distinction matters commercially to them. And 1989 appears where it is relevant and nowhere else. Experience stated once reads as fact. Repeated through a site, it reads as a substitute for having anything else to say.',
+        body: 'Bra cups appear only as an application of PU foam laminated fabric, never as a product Hamprigo sells, because that distinction matters commercially to them. And 1989 appears where a buyer needs it and nowhere else. Experience stated once reads as fact, and the work is left to carry the rest.',
       },
       {
         phase: 'Specified per order, shown as such',
@@ -166,7 +166,7 @@ export const caseStudies: CaseStudy[] = [
       { src: '/work/hamprigo-industries-bonded-bras.webp', caption: 'Seamless Bonded Bras: the finished garment, rotatable through 360 degrees' },
     ],
     summary:
-      'The interesting part of this build was everything left out. A manufacturer with three and a half decades of expertise and almost nothing published to prove it is the exact situation that produces the worst websites, because the gap gets filled with adjectives. Hamprigo asked for the opposite, and the site is stronger for it: their own descriptions of their own processes, photographs of their own material, two capabilities given equal standing, and not one claim they could not stand behind.',
+      'The interesting part of this build was the discipline behind it. Hamprigo wanted the site to prove their capability the way they prove it to a customer, through the material rather than around it. Their own descriptions of their own processes, photographs of their own material, two capabilities given equal standing, and every claim one they can stand behind in the room. A site that reads as credible on substance is a harder thing to build than one that reads as impressive, and a considerably more durable one once built.',
   },
   {
     slug: 'aidbylaw',
