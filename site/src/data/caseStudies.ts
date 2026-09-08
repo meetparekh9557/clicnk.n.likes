@@ -105,6 +105,64 @@ export interface CaseStudy {
 
 export const caseStudies: CaseStudy[] = [
   {
+    slug: 'hamprigo-industries',
+    client: 'Hamprigo Industries',
+    categories: ['Websites & Conversion'],
+    tag: 'Textile Manufacturing',
+    title: 'One supplier, from material to finished product',
+    excerpt:
+      'A Mumbai lamination manufacturer with 35 years of expertise and almost no published proof. We built a site that reads as credible without claiming a single thing they had not approved.',
+    lengthLabel: 'Website design & build',
+    services: ['Website Design & Build', 'Technical SEO'],
+    sector: 'Textile lamination and bonded garment manufacturing',
+    location: 'Mumbai, India',
+    overview:
+      'Hamprigo Industries has laminated fabric in Mumbai since 1989. They bond woven, non-woven and knitted fabrics and Rexine with PU foam, EVA foam and films, and they manufacture seamless bonded bras from material they laminate themselves. Most of their competition does one or the other.',
+    overviewHtml:
+      '<a href="https://hamprigoindustries.com">Hamprigo Industries</a> has laminated fabric in Mumbai since 1989. They bond woven, non-woven and knitted fabrics and Rexine with PU foam, EVA foam and films, and they manufacture seamless bonded bras from material they laminate themselves. Most of their competition does one or the other, which is why the site we built for these <a href="https://hamprigoindustries.com">textile lamination &amp; seamless bonded bra manufacturers</a> leads with the material rather than the company, and gives equal weight to their two capabilities: <a href="https://hamprigoindustries.com/lamination/">fabric lamination manufacturers: PU Foam, Fabric, Film &amp; EVA Foam</a> and <a href="https://hamprigoindustries.com/seamless-bonded-bras/">seamless bonded bra manufacturers</a>.',
+    challenge:
+      'Thirty-five years of real expertise, and very little of it published. No certifications to cite, no capacity figures cleared for release, no third-party validation to borrow credibility from. The usual way to fill that space is language: decades of excellence, world-class facilities, commitment to quality. The client did not want any of it, and they were right. A buyer sourcing laminated material is a technical reader who discounts adjectives and looks for specifics. The brief was to build a site that reads as credible on substance alone, with nothing on it the client had not personally approved.',
+    approach: [
+      {
+        phase: 'Material first, company second',
+        when: 'Structure',
+        body: 'A buyer arriving at the site is deciding one thing: whether Hamprigo can build the material their product needs. So the material leads and the corporate story follows. Textile Lamination and Seamless Bonded Bras each got their own page and equal weight on the homepage, because neither is a sideline and presenting one as the main business would have misrepresented what they do. The homepage sequence, hero through about, services, capabilities, values, why Hamprigo and enquiry, was set by the client.',
+      },
+      {
+        phase: 'Their words, unedited',
+        when: 'Copy',
+        body: 'The client had already written descriptions of each lamination technique. We used them verbatim. Their values and their six reasons to choose them are their own text as well. This was not a shortcut. A manufacturer describing their own process writes with a precision an agency cannot fake, and a technical buyer can tell the difference. Where there was nothing written, nothing was invented: no certifications, no production capacity, no maximum width, no industry claims, no sustainability language.',
+      },
+      {
+        phase: 'Two boundaries the client set',
+        when: 'Scope',
+        body: 'Bra cups appear only as an application of PU foam laminated fabric, never as a product Hamprigo sells, because that distinction matters commercially to them. And 1989 appears where it is relevant and nowhere else. Experience stated once reads as fact. Repeated through a site, it reads as a substitute for having anything else to say.',
+      },
+      {
+        phase: 'Specified per order, shown as such',
+        when: 'Content',
+        body: 'Density, thickness, colour, film type and width are decided job by job, so the site shows that flexibility rather than implying it, including the option for a customer to send their own material or have Hamprigo develop, source or treat it. Both service pages answer, in plain visible copy, the questions an industrial buyer actually asks: what the service is, which materials, what is customisable, what it is used to make, whether you can send your own fabric, and how to get a sample.',
+      },
+      {
+        phase: 'Making the material visible',
+        when: 'Design & build',
+        body: 'The palette came from their own logo artwork, the deep blue and the red, rather than being invented around it. Editorial layout, full-bleed photography of their actual premises and close-ups of each laminated construction, no stock imagery. On the homepage, an expanding rail of their five capabilities that opens on hover and swipes on touch. On the bonded bras page, the finished garment sits in a viewer the visitor can drag to rotate fully, because a buyer assessing a garment wants the back and the edge finish, not one flattering angle.',
+      },
+      {
+        phase: 'Every page ends on an enquiry',
+        when: 'Conversion',
+        body: 'A form on four of the five pages, each scoped to that page services, alongside phone and WhatsApp. The WhatsApp message arrives pre-written for whichever page it was opened from, so the enquiry starts with the subject already stated rather than with a blank thread. Call and WhatsApp buttons switch off outside working hours, because sending a buyer to an unanswered phone costs more than asking them to wait.',
+      },
+      {
+        phase: 'Built to be found',
+        when: 'Technical SEO',
+        body: 'Full technical SEO and structured data across the build. For a manufacturer whose buyers search by material and process rather than by company name, the service pages had to be legible to search engines on their own terms, which is the same reason they answer buyer questions in visible copy rather than hiding the specifics behind an enquiry form.',
+      },
+    ],
+    summary:
+      'The interesting part of this build was everything left out. A manufacturer with three and a half decades of expertise and almost nothing published to prove it is the exact situation that produces the worst websites, because the gap gets filled with adjectives. Hamprigo asked for the opposite, and the site is stronger for it: their own descriptions of their own processes, photographs of their own material, two capabilities given equal standing, and not one claim they could not stand behind.',
+  },
+  {
     slug: 'aidbylaw',
     client: 'AidByLaw',
     categories: ['Paid Media', 'SEO', 'Content Marketing', 'Websites & Conversion'],
