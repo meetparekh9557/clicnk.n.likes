@@ -159,6 +159,12 @@ export const caseStudies: CaseStudy[] = [
         body: 'Full technical SEO and structured data across the build. For a manufacturer whose buyers search by material and process rather than by company name, the service pages had to be legible to search engines on their own terms, which is the same reason they answer buyer questions in visible copy rather than hiding the specifics behind an enquiry form.',
       },
     ],
+    gallery: [
+      { src: '/work/hamprigo-industries.webp', caption: 'Homepage: the material leads, the company follows' },
+      { src: '/work/hamprigo-industries-capabilities.webp', caption: 'The capability rail, opening on hover and swiping on touch' },
+      { src: '/work/hamprigo-industries-lamination.webp', caption: 'Textile Lamination: their own copy, their own material, photographed' },
+      { src: '/work/hamprigo-industries-bonded-bras.webp', caption: 'Seamless Bonded Bras: the finished garment, rotatable through 360 degrees' },
+    ],
     summary:
       'The interesting part of this build was everything left out. A manufacturer with three and a half decades of expertise and almost nothing published to prove it is the exact situation that produces the worst websites, because the gap gets filled with adjectives. Hamprigo asked for the opposite, and the site is stronger for it: their own descriptions of their own processes, photographs of their own material, two capabilities given equal standing, and not one claim they could not stand behind.',
   },
