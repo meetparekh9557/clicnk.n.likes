@@ -37,6 +37,67 @@ export interface Article {
 
 export const articles: Article[] = [
   {
+    slug: "seo-cost-india",
+    tag: "SEO",
+    categories: ["SEO"],
+    title: "How much does SEO cost in India? Real prices, not ranges",
+    excerpt: "Every page ranking for this question publishes a range. None publishes a price. Here are our actual figures and what each one includes.",
+    author: "Click.n.likes team",
+    readTime: "8 min read",
+    date: "2026-09-08",
+    body: `<p>In the past, a business owner comparing suppliers could ask three of them for a price and receive three numbers. The numbers might differ, and the cheapest was not always the right answer, but they were numbers, and a decision could be reached by setting them beside one another. Ask three SEO agencies what they charge and you will more often receive three ranges, a request for a discovery call, and no figure at all until somebody has spent an hour on the telephone with you.</p>
+      <p>This is not an accident of the industry. It is a commercial choice, and it is worth understanding before you accept it as normal.</p>
+      <h2>Why does nobody publish an actual SEO price?</h2>
+      <p>Because a range protects the seller and a price protects the buyer. We checked the pages currently ranking in India for this exact question in September 2026. Every one of them publishes a range, reporting figures from roughly five thousand rupees a month at the lowest end to over one and a half lakh at the highest. Not one of them publishes what that agency itself charges. One page describes itself as an honest pricing breakdown and still gives only a range.</p>
+      <p>A range of that width tells you nothing you did not already know. It spans a factor of thirty. It is compatible with almost any quote you are eventually given, which is precisely why it is comfortable to publish, and precisely why it does not help you decide anything.</p>
+      <h2>What actually decides the number?</h2>
+      <p>Four things, and none of them is mysterious.</p>
+      <ul>
+        <li><strong>Competition in your category:</strong> ranking a regional packaging manufacturer and ranking a national insurance comparison site are different problems requiring different amounts of work, and the price should reflect that rather than a standard package.</li>
+        <li><strong>The condition of your existing site:</strong> a technically sound site with thin content needs writing. A fast site with no page architecture needs building. A slow site with neither needs both, and that is a larger engagement.</li>
+        <li><strong>How much is produced each month:</strong> content volume, technical work and outreach are the actual cost drivers. An agency charging less is almost always producing less, which is legitimate as long as it is stated rather than disguised.</li>
+        <li><strong>Who does the work:</strong> a retainer that funds a strategist looks different from one that funds an offshore content mill, and the deliverables can appear identical on a proposal.</li>
+      </ul>
+      <p>Notice that none of those four is your revenue or your industry margin. If a quote moves because an agency learned what you earn rather than what you need, you are being priced on capacity to pay rather than on work required.</p>
+      <h2>What are our actual prices?</h2>
+      <p>These are published on our <a href="/pricing/">pricing page</a> and they are the same numbers a client is quoted. They are per service, per month.</p>
+      <ul>
+        <li><strong>Starter, ₹16,000 a month:</strong> the essentials of a single service, run properly. Suited to a business with a working site that needs consistent, focused execution rather than a rebuild.</li>
+        <li><strong>Growth, ₹50,000 a month:</strong> more depth, a faster cadence and tighter reporting. This is the tier most engagements sit at, because it funds enough monthly output to move competitive terms rather than only long-tail ones.</li>
+        <li><strong>Pro, ₹1,24,000 a month:</strong> a serious, hands-on engagement at full depth, for categories where the competition is genuinely resourced.</li>
+      </ul>
+      <p>Running more than one service together reduces the rate: 15 percent off two, 22 percent off three, 30 percent off four or more. A 6 month commitment is charged for 5 months, and a 12 month commitment is charged for 10. Advertising spend is always separate and always paid by you directly to the platform, never through us.</p>
+      <h2>What should be included at any price?</h2>
+      <p>The figure matters less than what sits behind it, and there are items that should never appear as a separate line on an invoice.</p>
+      <ul>
+        <li><strong>Strategy and keyword research:</strong> deciding what to target is the work, not a preliminary to it.</li>
+        <li><strong>Technical fixes within the agreed scope:</strong> an agency that finds a crawl problem and then quotes separately to fix it is selling you a diagnosis you cannot use.</li>
+        <li><strong>Reporting that names outcomes:</strong> enquiries by source, impressions and clicks grouped by intent, and coverage against an agreed target list. Not a rankings screenshot for terms nobody searches.</li>
+        <li><strong>An honest timeline:</strong> stated before you sign, not after the third month passes quietly.</li>
+      </ul>
+      <h2>How long before it is worth anything?</h2>
+      <p>Longer than most proposals imply. The first month is foundation and produces no ranking movement at all. Indexation and long-tail terms begin appearing across months two and three. The first meaningful change in traffic tends to arrive somewhere between months four and six, and competitive commercial terms move later than that.</p>
+      <p><strong>Example in Action:</strong> Kopa Seamless, a manufacturer selling to private-label brands and importers abroad, came to us with one self-built page drawing 6 organic clicks a month. We rebuilt it around the terms their buyers actually search. Nine months later it draws 71 clicks a month, and organic search now produces 71 percent of their new leads. That is the realistic shape of the curve, and anyone quoting you rankings in month two is guessing.</p>
+      <h2>How do I judge a quote I have been given?</h2>
+      <p>Hold it against four questions, in this order.</p>
+      <ul>
+        <li><strong>What is produced each month, in countable units?</strong> Pages, articles, technical fixes, listings. If the proposal describes activities rather than quantities, the retainer can shrink quietly without breaching anything.</li>
+        <li><strong>What happens in the first 30 days?</strong> A specific answer indicates a plan. A general one indicates a template.</li>
+        <li><strong>What is explicitly excluded?</strong> Every honest proposal has exclusions. A proposal with none has them anyway, undeclared.</li>
+        <li><strong>Can the agency show its own numbers?</strong> Not a client logo wall, an actual before and after with a date on it.</li>
+      </ul>
+      <p>If you are shortlisting, the same discipline applies to <a href="/insights/website-cost-checklist/">what a website should cost and what should be included</a>, where the gap between a cheap quote and a fair one is driven by exactly the same undeclared exclusions.</p>
+      <h2>Conclusion: a price you can check is worth more than a range</h2>
+      <p>A range is a way of answering the question without answering it. It commits the agency to nothing, survives any eventual quote, and leaves you exactly where you started, which is why it remains the standard answer to this question across the entire Indian market.</p>
+      <p>Our numbers are published, they do not change according to what a prospect appears able to afford, and you can read them before you speak to anybody. That is not generosity. It is the only version of this conversation where you are able to compare one supplier against another on the thing that actually matters, which is what you receive for the money. If that is the basis you want to hire on, it is the basis a competent <a href="/services/seo/">SEO agency</a> should be willing to offer.</p>`,
+    faqs: [
+      { q: "How much does SEO cost per month in India?", a: "Published figures across Indian agencies range from around ₹5,000 to over ₹1,50,000 a month, which is too wide to be useful. Our own published prices are ₹16,000 a month for Starter, ₹50,000 for Growth and ₹1,24,000 for Pro, per service, with reductions for running several services together." },
+      { q: "Why do most SEO agencies not publish their prices?", a: "Because a published price commits them and a range does not. A range remains compatible with almost any figure quoted later, which protects the agency's negotiating position while giving the buyer nothing to compare." },
+      { q: "How long does SEO take to produce results?", a: "The first month is foundation and produces no ranking movement. Long-tail terms typically begin appearing in months two and three, the first meaningful traffic change arrives between months four and six, and competitive commercial terms move later. One of our clients went from 6 organic clicks a month to 71 over roughly nine months." },
+      { q: "Should ad spend be included in an SEO retainer?", a: "No. Advertising spend is a separate cost and should be paid by you directly to the platform. Any agency bundling ad spend into its own invoice is making it harder for you to see what the management is actually costing you." },
+    ],
+  },
+  {
     slug: "how-to-add-schema-markup",
     tag: "SEO",
     categories: ["SEO"],

@@ -64,7 +64,14 @@ const articleMeta: Record<string, { title: string; description: string }> = {
     description: 'A first-time visitor gives your site about 3 seconds. Here is the test we run before touching a line of code, and the 4 quiet leaks that cost you bookings.',
   },
 };
-const meta = articleMeta[article.slug] ?? { title: `${article.title} | Click.n.likes Insights`, description: article.excerpt };
+// Google truncates a result title at roughly 60 characters, so a fixed brand
+// suffix is not free: " | Click.n.likes Insights" is 24 of that budget, and it
+// was pushing 19 of 22 article titles past the cut, severing the searched
+// phrase mid-sentence. Brand the short titles, where it costs nothing, and let
+// a long title keep its full phrasing. Google appends the site name itself
+// when it wants to.
+const brandedTitle = (t: string) => (t.length > 44 ? t : `${t} | Click.n.likes`);
+const meta = articleMeta[article.slug] ?? { title: brandedTitle(article.title), description: article.excerpt };
 const trail: [string, string][] = [
   ['Home', '/'],
   ['Insights', '/insights/'],
