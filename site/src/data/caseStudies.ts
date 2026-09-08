@@ -111,7 +111,7 @@ export const caseStudies: CaseStudy[] = [
     tag: 'Textile Manufacturing',
     title: 'One supplier, from material to finished product',
     excerpt:
-      'A Mumbai manufacturer who laminates the material and builds the finished garment from it. We built the site that proves it, from four lamination techniques to a bonded bra a buyer can turn around in their hand.',
+      'Lamination is judged by hand, not on a screen. We built a site that gets a technical buyer close enough to decide, from four laminated constructions photographed in detail to a bonded bra they can turn around and inspect.',
     lengthLabel: 'Website design & build',
     services: ['Website Design & Build', 'Technical SEO'],
     sector: 'Textile lamination and bonded garment manufacturing',
@@ -121,7 +121,7 @@ export const caseStudies: CaseStudy[] = [
     overviewHtml:
       '<a href="https://hamprigoindustries.com">Hamprigo Industries</a> has laminated fabric in Mumbai since 1989. They bond woven, non-woven and knitted fabrics and Rexine to PU foam, EVA foam and films across four lamination techniques, at densities, thicknesses, colours and widths specified per order, on machinery that runs wider than standard requirements. They also manufacture seamless bonded bras from material they laminate themselves, using hotmelt PUR dispensing, silicone printing and tape bonding. Most of their competition does one or the other. Hamprigo does both, and controls the material the garment is made from, which is the single idea the site for these <a href="https://hamprigoindustries.com">textile lamination &amp; seamless bonded bra manufacturers</a> was built to land. It gives equal standing to their work as <a href="https://hamprigoindustries.com/lamination/">fabric lamination manufacturers: PU Foam, Fabric, Film &amp; EVA Foam</a> and as <a href="https://hamprigoindustries.com/seamless-bonded-bras/">seamless bonded bra manufacturers</a>.',
     challenge:
-      'A buyer sourcing laminated material is a technical reader. They arrive with a construction in mind and one question: can this supplier build the material my product needs, to my specification. Everything else is secondary, including who the company is and how long it has been trading. Most manufacturing websites answer in the opposite order, opening with the corporate story and reaching the material several scrolls later, by which point the buyer has left. Hamprigo wanted the reverse, and they supplied the line the whole site is built around: one supplier from material to finished product.',
+      'Hamprigo sell something a website cannot show. Lamination is judged by hand: how the layers sit, whether the edge separates under stress, how the bond behaves after repeated washing. A sourcing manager decides that by holding the material, and until they do, they are reading a screen and discounting every adjective on it. The problem was to build a site that a technical buyer would accept as evidence rather than as marketing, using only what Hamprigo could put their name to, and to do it for two distinct capabilities without letting either look like a sideline of the other.',
     approach: [
       {
         phase: 'The material leads',
@@ -135,12 +135,12 @@ export const caseStudies: CaseStudy[] = [
       },
       {
         phase: 'Four techniques, and what each one makes',
-        when: 'The lamination page',
+        when: 'Capability',
         body: 'The lamination page is organised around the four techniques rather than around a services list: PU foam lamination, fabric-to-fabric, film lamination and EVA. Each holds its own section, its own photographed construction and its own list of what it is used to build, from lingerie, bra cups and blouse pads through footwear, automotive seating, furnishing fabrics, trolley bags, laptop bags, mattress protectors, blackout curtains, raincoats and military tents. A buyer scanning for their own application finds it named rather than inferring it. Density, thickness, colour, film type and width are specified per order, the machinery runs wider than standard, and a customer can send their own fabric or have Hamprigo develop, source or treat it. All of it sits on the page rather than being held back for a sales call.',
       },
       {
         phase: 'A garment you can turn around',
-        when: 'The bonded bras page',
+        when: 'Proof',
         body: 'A product photograph is chosen to flatter, and a buyer sourcing a bonded bra knows it. What they are assessing is the back, the edge finish, the strap join and how the laminate sits under tension, which is precisely what a single hero angle conceals. So the finished garment sits in a viewer the visitor drags to rotate through a full 360 degrees, at their own pace, stopping wherever they want to look closely. It is the most technically involved element on the site and the one doing the most commercial work, because it answers the question a photograph is built to avoid. Hamprigo bond irreversibly, so layers do not separate at the edges or under stress, and the lamination holds its washing fastness through repeated laundering. The viewer lets a buyer verify the edge finish themselves rather than take it on trust.',
       },
       {
