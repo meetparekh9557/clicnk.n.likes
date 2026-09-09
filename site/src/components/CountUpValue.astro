@@ -1,42 +1,64 @@
 ---
-// A stat value whose numbers count up from zero when it scrolls into view
-// (driven by [data-count] in scripts/motion.js).
+// A stat value whose digits roll into place like an odometer when the value
+// scrolls into view (driven by .odo styles in global.css + scripts/motion.js).
 //
-// Every numeric run in the string is wrapped and animated independently, so
-// the real values we publish survive intact: "0 → 40", "340–390", "#1–8",
-// "~10x", "1+/day" and "₹1,24,000" all animate their digits while every
-// other character stays exactly as authored, in place. That matters because
-// our stat values are rarely bare numbers, and the earlier single-number
-// parser skipped ranges altogether rather than mangling them.
+// Every digit is its own 1em window onto a strip of 0-9 repeated three times.
+// Rolling to `20 + digit` spins the strip twice before it lands, which is what
+// makes it read as a counter settling rather than a number being swapped out.
+// Digits are staggered left to right so the value resolves the way a real
+// odometer does, high place first.
 //
-// A value with no digits at all ("Every page") renders as plain text and is
-// never touched. The final value is server-rendered either way, so this only
-// ever enhances: without JS, or under prefers-reduced-motion, the number the
-// reader sees is the correct one.
+// Only digits move. Every other character stays exactly where it was authored,
+// so the values we publish survive intact: "0 → 40", "340-390", "#1-8", "~10x",
+// "1+/day" and "₹1,24,000" all roll their numerals while keeping arrows,
+// dashes, hashes, symbols and separators in place. A value with no digits
+// ("Every page") renders as plain text and is untouched.
+//
+// The strip's resting position in CSS is its FINAL offset, not zero. With no
+// JS, or under prefers-reduced-motion, the reader sees the correct number and
+// nothing moves. The script sets the start position itself, so correctness
+// never depends on it running.
 interface Props {
   value: string;
-  /** Stagger in ms, so a row of cards cascades instead of firing at once. */
+  /** Stagger in ms, so a row of cards resolves in sequence, not in unison. */
   delay?: number;
   class?: string;
 }
 const { value, delay = 0, class: extra = '' } = Astro.props;
 
-// Split into runs of digits (with grouping separators and decimals) and runs
-// of everything else, preserving order and every character.
-const tokens = value.match(/[\d][\d,]*(?:\.\d+)?|[^\d]+/g) ?? [value];
 const hasNumber = /\d/.test(value);
+const DIGITS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+const STRIP = [...DIGITS, ...DIGITS, ...DIGITS];
+// Two full rotations before landing, so the roll is visible rather than a jump.
+const SPINS = 20;
+
+// Split into single digits and runs of everything else, then number the digits
+// here rather than in the template, so the markup stays a pure expression.
+let digitIndex = -1;
+const parts = (hasNumber ? (value.match(/\d|\D+/g) ?? []) : []).map((t) => {
+  const isDigit = /^\d$/.test(t);
+  if (isDigit) digitIndex += 1;
+  return { text: t, isDigit, index: digitIndex };
+});
 ---
 
 {
   hasNumber ? (
-    <span class={`stat-count ${extra}`.trim()} data-count-delay={delay}>
-      {tokens.map((t) =>
-        /\d/.test(t) ? (
-          <span class="stat-count-num" data-count={t.replace(/,/g, '')} data-raw={t}>
-            {t}
+    <span class={`odo-value ${extra}`.trim()} data-odo-delay={delay} aria-label={value}>
+      {parts.map((p) =>
+        p.isDigit ? (
+          <span class="odo" aria-hidden="true">
+            <span
+              class="odo-strip"
+              style={`--odo-to:${SPINS + Number(p.text)};--odo-delay:${p.index * 90}ms`}
+            >
+              {STRIP.map((d) => (
+                <span>{d}</span>
+              ))}
+            </span>
           </span>
         ) : (
-          <span>{t}</span>
+          <span aria-hidden="true">{p.text}</span>
         )
       )}
     </span>

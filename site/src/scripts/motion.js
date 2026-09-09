@@ -5,67 +5,51 @@
 function initMotion() {
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Stat numbers count up from zero once they scroll into view. The final
-  // value is already in the DOM (server-rendered), so this only ever
-  // enhances; under reduced motion we leave it exactly as rendered.
-  //
-  // Every numeric run inside a .stat-count is animated independently, which
-  // is what lets a range ("340-390"), a transition ("0 → 40") or a rank
-  // ("#1-8") animate without losing the characters between the numbers.
+  // Odometer stat digits roll into place once the value scrolls into view.
+  // The strip's resting position in CSS is already its final offset, so this
+  // only ever enhances: it snaps the strip to zero, forces a reflow, then
+  // lets the CSS transition carry it home. With no JS, or under reduced
+  // motion, the correct number is what renders and nothing here runs.
   if (!reduce && 'IntersectionObserver' in window) {
-    const fmt = (n, decimals, sep) => {
-      const fixed = n.toFixed(decimals);
-      if (!sep) return fixed;
-      const [int, frac] = fixed.split('.');
-      const grouped = Number(int).toLocaleString('en-IN');
-      return frac ? `${grouped}.${frac}` : grouped;
-    };
-    const run = (el) => {
-      const nums = [...el.querySelectorAll('.stat-count-num')]
-        .map((numEl) => {
-          const raw = numEl.dataset.raw || numEl.textContent || '';
-          const target = parseFloat(numEl.dataset.count);
-          return {
-            numEl,
-            target,
-            decimals: raw.includes('.') ? raw.split('.')[1].length : 0,
-            sep: raw.includes(','),
-          };
-        })
-        .filter((n) => isFinite(n.target));
-      if (!nums.length) return;
-      const start = performance.now();
-      const DUR = 1100;
-      const tick = (now) => {
-        const t = Math.min(1, (now - start) / DUR);
-        const eased = 1 - Math.pow(1 - t, 3);
-        for (const n of nums) {
-          n.numEl.textContent = fmt(t < 1 ? n.target * eased : n.target, n.decimals, n.sep);
-        }
-        if (t < 1) requestAnimationFrame(tick);
+    const roll = (el) => {
+      el.classList.add('is-start');
+      // Read a layout property to flush the start position before the
+      // transition class lands, or the browser coalesces both into one paint
+      // and the digits jump straight to their final value.
+      void el.offsetHeight;
+      el.classList.add('is-rolling');
+      el.classList.remove('is-start');
+      // will-change is a promise about an animation that is about to run, and
+      // holding it afterwards leaves a permanent stacking context behind.
+      const strips = el.querySelectorAll('.odo-strip');
+      let settled = 0;
+      const done = () => {
+        settled += 1;
+        if (settled >= strips.length) el.classList.remove('is-rolling');
       };
-      requestAnimationFrame(tick);
+      strips.forEach((strip) => strip.addEventListener('transitionend', done, { once: true }));
+      // Belt and braces: the longest digit delay plus the duration, in case a
+      // transitionend is missed because the element scrolled out mid-roll.
+      setTimeout(() => el.classList.remove('is-rolling'), 1250 + strips.length * 90 + 400);
     };
-    const countIo = new IntersectionObserver(
+    const odoIo = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
           if (!entry.isIntersecting) continue;
           const el = entry.target;
-          countIo.unobserve(el);
+          odoIo.unobserve(el);
           // initMotion() runs on astro:page-load, which fires on the first
-          // load too, so a still-visible element would otherwise get a
-          // second independent count-up racing the first.
-          if (el.dataset.countBound) continue;
-          el.dataset.countBound = '1';
-          // A row of cards cascades rather than firing in unison.
-          const delay = parseInt(el.dataset.countDelay || '0', 10);
-          if (delay > 0) setTimeout(() => run(el), delay);
-          else run(el);
+          // load too, so a still-visible value would otherwise roll twice.
+          if (el.dataset.odoBound) continue;
+          el.dataset.odoBound = '1';
+          const delay = parseInt(el.dataset.odoDelay || '0', 10);
+          if (delay > 0) setTimeout(() => roll(el), delay);
+          else roll(el);
         }
       },
       { threshold: 0.4 }
     );
-    document.querySelectorAll('.stat-count').forEach((el) => countIo.observe(el));
+    document.querySelectorAll('.odo-value').forEach((el) => odoIo.observe(el));
   }
 
   // `will-change` is a hint for an animation that is ABOUT to run, and it has

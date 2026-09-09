@@ -384,3 +384,48 @@ html { background-color: #ffffff; }
     animation: none;
   }
 }
+
+/* ---- Odometer stat digits -------------------------------------------------
+   Each digit is a 1em window onto a strip of 0-9 repeated three times. The
+   strip's resting position is its FINAL offset, so with no JS, or under
+   prefers-reduced-motion, the reader sees the correct number and nothing
+   moves. The script sets the start position itself.
+
+   Only `transform` animates, so the roll stays on the compositor. `will-change`
+   is applied for the duration of the roll and removed on transitionend: a
+   lingering will-change creates a permanent stacking context, which is what
+   previously painted the country dropdown behind later sections.
+
+   The curve is a firm easeOut with no overshoot. These numbers are client
+   results, and a stat that bounces past its own value reads as decoration
+   rather than as evidence. */
+.odo {
+  display: inline-block;
+  height: 1em;
+  overflow: hidden;
+  line-height: 1;
+  vertical-align: bottom;
+}
+.odo-strip {
+  display: block;
+  transform: translateY(calc(var(--odo-to) * -1em));
+}
+.odo-strip > span {
+  display: block;
+  height: 1em;
+  line-height: 1;
+}
+.odo-value.is-start .odo-strip {
+  transform: translateY(0);
+}
+.odo-value.is-rolling .odo-strip {
+  transition: transform 1.25s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--odo-delay, 0ms);
+  will-change: transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  .odo-value.is-rolling .odo-strip {
+    transition: none;
+    will-change: auto;
+  }
+}
