@@ -8,6 +8,7 @@ import { existsSync } from 'node:fs';
 import Base from '../../layouts/Base.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import Card from '../../components/Card.astro';
+import CountUpValue from '../../components/CountUpValue.astro';
 import LeadChart from '../../components/LeadChart.astro';
 import BeforeAfter from '../../components/BeforeAfter.astro';
 import InlineCta from '../../components/InlineCta.astro';
@@ -97,7 +98,7 @@ const lastTotal = hasLeads ? cs.leads![cs.leads.length - 1].paid + cs.leads![cs.
       <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {cs.stats.map((s, i) => (
           <div class="reveal rounded-2xl border border-navy/10 bg-white p-5" style={`--d:${i * 70}ms`}>
-            <p class="font-display text-[clamp(1.6rem,3vw,2.1rem)] leading-none font-bold text-teal-dark tabular-nums">{s.value}</p>
+            <p class="font-display text-[clamp(1.6rem,3vw,2.1rem)] leading-none font-bold text-teal-dark tabular-nums"><CountUpValue value={s.value} delay={i * 110} /></p>
             <p class="mt-2 text-[14px] font-semibold text-navy">{s.label}</p>
             {s.sub && <p class="mt-1 text-[12.5px] leading-snug text-navy/55">{s.sub}</p>}
           </div>

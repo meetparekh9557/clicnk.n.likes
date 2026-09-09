@@ -1,0 +1,46 @@
+---
+// A stat value whose numbers count up from zero when it scrolls into view
+// (driven by [data-count] in scripts/motion.js).
+//
+// Every numeric run in the string is wrapped and animated independently, so
+// the real values we publish survive intact: "0 → 40", "340–390", "#1–8",
+// "~10x", "1+/day" and "₹1,24,000" all animate their digits while every
+// other character stays exactly as authored, in place. That matters because
+// our stat values are rarely bare numbers, and the earlier single-number
+// parser skipped ranges altogether rather than mangling them.
+//
+// A value with no digits at all ("Every page") renders as plain text and is
+// never touched. The final value is server-rendered either way, so this only
+// ever enhances: without JS, or under prefers-reduced-motion, the number the
+// reader sees is the correct one.
+interface Props {
+  value: string;
+  /** Stagger in ms, so a row of cards cascades instead of firing at once. */
+  delay?: number;
+  class?: string;
+}
+const { value, delay = 0, class: extra = '' } = Astro.props;
+
+// Split into runs of digits (with grouping separators and decimals) and runs
+// of everything else, preserving order and every character.
+const tokens = value.match(/[\d][\d,]*(?:\.\d+)?|[^\d]+/g) ?? [value];
+const hasNumber = /\d/.test(value);
+---
+
+{
+  hasNumber ? (
+    <span class={`stat-count ${extra}`.trim()} data-count-delay={delay}>
+      {tokens.map((t) =>
+        /\d/.test(t) ? (
+          <span class="stat-count-num" data-count={t.replace(/,/g, '')} data-raw={t}>
+            {t}
+          </span>
+        ) : (
+          <span>{t}</span>
+        )
+      )}
+    </span>
+  ) : (
+    <span class={extra}>{value}</span>
+  )
+}

@@ -15,6 +15,7 @@ import InlineCta from '../components/InlineCta.astro';
 import SimpleForm from '../components/islands/SimpleForm.jsx';
 import { withBase } from '../lib/url';
 import { breadcrumbSchema } from '../lib/seo';
+import CountUpValue from '../components/CountUpValue.astro';
 
 const csCounts = new Map<string, number>();
 caseStudies.forEach((c) => c.categories.forEach((k) => csCounts.set(k, (csCounts.get(k) ?? 0) + 1)));
@@ -124,7 +125,7 @@ const formFields = [
             <div class="mt-5 flex flex-wrap gap-x-6 gap-y-2 border-t border-navy/10 pt-4">
               {cs.stats.slice(0, 3).map((st) => (
                 <span class="text-[13px] text-navy/60">
-                  <b class="font-display text-[15px] font-bold text-teal-dark tabular-nums">{st.value}</b> {st.label}
+                  <b class="font-display text-[15px] font-bold text-teal-dark tabular-nums"><CountUpValue value={st.value} /></b> {st.label}
                 </span>
               ))}
             </div>

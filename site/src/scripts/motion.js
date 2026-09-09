@@ -5,9 +5,13 @@
 function initMotion() {
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // StatTile numbers count up from zero once they scroll into view. The
-  // final value is already in the DOM (server-rendered), so this only ever
+  // Stat numbers count up from zero once they scroll into view. The final
+  // value is already in the DOM (server-rendered), so this only ever
   // enhances; under reduced motion we leave it exactly as rendered.
+  //
+  // Every numeric run inside a .stat-count is animated independently, which
+  // is what lets a range ("340-390"), a transition ("0 → 40") or a rank
+  // ("#1-8") animate without losing the characters between the numbers.
   if (!reduce && 'IntersectionObserver' in window) {
     const fmt = (n, decimals, sep) => {
       const fixed = n.toFixed(decimals);
@@ -16,6 +20,32 @@ function initMotion() {
       const grouped = Number(int).toLocaleString('en-IN');
       return frac ? `${grouped}.${frac}` : grouped;
     };
+    const run = (el) => {
+      const nums = [...el.querySelectorAll('.stat-count-num')]
+        .map((numEl) => {
+          const raw = numEl.dataset.raw || numEl.textContent || '';
+          const target = parseFloat(numEl.dataset.count);
+          return {
+            numEl,
+            target,
+            decimals: raw.includes('.') ? raw.split('.')[1].length : 0,
+            sep: raw.includes(','),
+          };
+        })
+        .filter((n) => isFinite(n.target));
+      if (!nums.length) return;
+      const start = performance.now();
+      const DUR = 1100;
+      const tick = (now) => {
+        const t = Math.min(1, (now - start) / DUR);
+        const eased = 1 - Math.pow(1 - t, 3);
+        for (const n of nums) {
+          n.numEl.textContent = fmt(t < 1 ? n.target * eased : n.target, n.decimals, n.sep);
+        }
+        if (t < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    };
     const countIo = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
@@ -23,25 +53,14 @@ function initMotion() {
           const el = entry.target;
           countIo.unobserve(el);
           // initMotion() runs on astro:page-load, which fires on the first
-          // load too, so a still-visible page's stat tiles would otherwise
-          // get a second independent count-up animation racing the first.
+          // load too, so a still-visible element would otherwise get a
+          // second independent count-up racing the first.
           if (el.dataset.countBound) continue;
           el.dataset.countBound = '1';
-          const numEl = el.querySelector('.stat-count-num');
-          const target = parseFloat(el.dataset.count);
-          if (!numEl || !isFinite(target)) continue;
-          const decimals = parseInt(el.dataset.decimals || '0', 10);
-          const sep = el.dataset.sep === '1';
-          const start = performance.now();
-          const DUR = 1100;
-          const tick = (now) => {
-            const t = Math.min(1, (now - start) / DUR);
-            const eased = 1 - Math.pow(1 - t, 3);
-            numEl.textContent = fmt(target * eased, decimals, sep);
-            if (t < 1) requestAnimationFrame(tick);
-            else numEl.textContent = fmt(target, decimals, sep);
-          };
-          requestAnimationFrame(tick);
+          // A row of cards cascades rather than firing in unison.
+          const delay = parseInt(el.dataset.countDelay || '0', 10);
+          if (delay > 0) setTimeout(() => run(el), delay);
+          else run(el);
         }
       },
       { threshold: 0.4 }
