@@ -273,6 +273,29 @@ Rules:
 - Email gating stays: every tool requires an email before results.
 - Test with Playwright at iPhone-13 viewport before pushing UI changes; check
   for horizontal overflow on every page touched.
+- **Chromium must be launched with `--ssl-version-max=tls1.2` to reach any
+  external site from a remote session.** The session's egress proxy
+  re-terminates TLS and drops Chromium's TLS 1.3 ClientHello, which reaches
+  the browser as a bare `net::ERR_CONNECTION_RESET` with no proxy error, on
+  every host including allowlisted ones. curl is unaffected because its
+  ClientHello is far smaller, so "curl works, Chromium does not" is the
+  signature of this and not evidence that a domain is blocked. Localhost is
+  in the proxy's noProxy list, so previewing our own build never needs the
+  flag; screenshotting a client's live site does. Confirm a real block by
+  reading `curl -sS "$HTTPS_PROXY/__agentproxy/status"`: a genuine policy
+  denial is logged as `connect_rejected ... 403`, this failure as
+  `ws_closed_mid_exchange`. Only `playwright-core` is installed, and the
+  browser lives at `/opt/pw-browsers/chromium-1194/chrome-linux/chrome`.
+- **Any dependency the public tools call must be able to say why it failed.**
+  `renderWithCloudflare_` returned a bare `null` for a revoked API token, a
+  daily cap and a network error alike, so a dead Cloudflare token was
+  indistinguishable from a page that never needed rendering: the analyzer
+  reported `rendered:false` and scored JS-built prospect sites on an empty
+  shell, confidently and wrongly, with nothing anywhere recording why. Return
+  a reason, carry it into the response, and give the path a health check
+  (`?action=health`) that a human or a Routine can hit. A tool that grades a
+  stranger's website has to fail loudly or it will keep publishing wrong
+  answers for as long as nobody happens to look.
 - Every page's structural sections (hero, card/grid layouts, stat rows, logo
   strips - anything wider than a single text column) must use the sitewide
   wide container (`max-w-6xl`, which resolves to 1400px via `--container-6xl`

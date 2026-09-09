@@ -73,7 +73,7 @@ var TOOL_LEAD_COLUMNS = [
 ];
 /* Bump this whenever this file changes, so ?action=version tells you which
    build is live without opening the editor. */
-var SCRIPT_VERSION = '2026-08-24-textformat';
+var SCRIPT_VERSION = '2026-09-09-render-health';
 
 var RENDER_DAILY_CAP = 200; // max Cloudflare renders per day (free-tier guard)
 // Logo for the email header, inlined via CID so recipients always see it
@@ -114,6 +114,7 @@ function testJsRender(){
   if(result.ok){
     Logger.log('rendered: ' + result.facts.rendered
       + ' | renderReason: ' + (result.facts.renderReason || '(none)')
+      + ' | renderFailure: ' + (result.facts.renderFailure || '(none)')
       + ' | wordCount: ' + result.facts.wordCount
       + ' | h1: ' + result.facts.h1Count);
   } else {
@@ -129,6 +130,7 @@ function doGet(e){
   // there is otherwise no way to tell a broken fix from an undeployed one
   // without reading the editor. Open ?action=version to settle it.
   if(p.action === 'version')                 out = {ok:true, version: SCRIPT_VERSION};
+  else if(p.action === 'health')             out = health_();
   else if(p.action === 'analyze' && p.url)   out = analyzePage(p.url);
   else if(p.action === 'pagespeed' && p.url) out = pageSpeed_(p.url, p.strategy);
   else if(p.action === 'screenshot' && p.url)out = screenshot_(p.url);
@@ -136,6 +138,40 @@ function doGet(e){
   else                                        out = {ok:false, reason:'bad_request'};
   return ContentService.createTextOutput(JSON.stringify(out))
     .setMimeType(ContentService.MimeType.JSON);
+}
+
+/**
+ * One-call health check for the paths the public free tools depend on, so a
+ * silently dead dependency is one URL away from being caught instead of being
+ * discovered by a prospect running a scan.
+ *
+ * It renders a deliberately JS-built page (quotes.toscrape.com/js/ ships an
+ * empty shell and writes its content with JavaScript), so a true render is
+ * unambiguous: real rendering returns a real word count, and anything else
+ * returns the reason it failed.
+ *
+ * Open ?action=health after any credential change. This costs one render
+ * against the daily cap, so do not poll it more than a few times a day.
+ */
+function health_(){
+  var props = PropertiesService.getScriptProperties();
+  var out = {
+    ok: true,
+    version: SCRIPT_VERSION,
+    rendersUsedToday: parseInt(props.getProperty(renderCountKey_()) || '0', 10),
+    psiKey: props.getProperty('PSI_KEY') ? 'set' : 'missing'
+  };
+  var r = renderWithCloudflare_('https://quotes.toscrape.com/js/');
+  if(r.html){
+    out.render = 'ok';
+    out.renderWordCount = extractFacts_(r.html, 'https://quotes.toscrape.com/js/').wordCount;
+  } else {
+    out.ok = false;
+    out.render = 'failed';
+    out.renderReason = r.reason;
+    if(r.detail) out.renderDetail = r.detail;
+  }
+  return out;
 }
 
 /**
@@ -460,23 +496,23 @@ function analyzePage(url){
   // can often reach what UrlFetchApp cannot, so try a render before we
   // ever report a failure.
   if(!raw.ok){
-    var rescueHtml = renderWithCloudflare_(url);
-    if(rescueHtml){
-      var rf = extractFacts_(rescueHtml, url);
+    var rescue = renderWithCloudflare_(url);
+    if(rescue.html){
+      var rf = extractFacts_(rescue.html, url);
       rf.rendered = true;
       rf.renderReason = 'fetch_failed';
       return {ok:true, facts:rf};
     }
-    return {ok:false, reason:raw.reason, detail:raw.detail};
+    return {ok:false, reason:raw.reason, detail:raw.detail, renderFailure:rescue.reason};
   }
 
   var facts = extractFacts_(raw.html, url);
 
   // If the delivered HTML looks like a JS shell, render and re-read.
   if(looksLikeShell_(facts, raw.html)){
-    var renderedHtml = renderWithCloudflare_(url);
-    if(renderedHtml){
-      var rf2 = extractFacts_(renderedHtml, url);
+    var render = renderWithCloudflare_(url);
+    if(render.html){
+      var rf2 = extractFacts_(render.html, url);
       // Only prefer the rendered read if it actually recovered content.
       if(rf2.wordCount > facts.wordCount || rf2.h1Count > facts.h1Count){
         rf2.rendered = true;
@@ -484,9 +520,12 @@ function analyzePage(url){
         return {ok:true, facts:rf2};
       }
     }
-    // Render unavailable (cap hit / failed): be honest, don't fake it.
+    // Render unavailable (cap hit / token rejected / error): be honest, don't
+    // fake it, and carry the reason out so a broken render path is visible in
+    // the response rather than only in the script's execution log.
     facts.rendered = false;
     facts.jsShellSuspected = true;
+    if(render.reason) facts.renderFailure = render.reason;
     return {ok:true, facts:facts};
   }
 
@@ -534,16 +573,24 @@ function looksLikeShell_(facts, html){
 }
 
 /**
- * Renders a URL through Cloudflare Browser Rendering (REST) and returns
- * the rendered HTML string, or null if unavailable (missing keys, daily
- * cap reached, or any error). Never throws.
+ * Renders a URL through Cloudflare Browser Rendering (REST). Returns
+ * {html: string} on success, or {html: null, reason: '...'} when rendering
+ * is unavailable. Never throws.
+ *
+ * The reason is the whole point. This used to return a bare null for every
+ * failure mode, which made a revoked API token look exactly like a page that
+ * simply did not need rendering: the analyzer reported rendered:false with no
+ * explanation, and a JS-built prospect site was silently scored on an empty
+ * shell. A tool that grades a stranger's website has to be able to say why it
+ * could not read it, otherwise it reports a confident wrong answer instead of
+ * an honest failure.
  */
 function renderWithCloudflare_(url){
   var props = PropertiesService.getScriptProperties();
   var acct = props.getProperty('CF_ACCOUNT_ID');
   var token = props.getProperty('CF_BROWSER_TOKEN');
-  if(!acct || !token) return null;
-  if(!underDailyRenderCap_(props)) return null;
+  if(!acct || !token) return {html:null, reason:'not_configured'};
+  if(!underDailyRenderCap_(props)) return {html:null, reason:'render_cap'};
   try{
     var endpoint = 'https://api.cloudflare.com/client/v4/accounts/' + acct + '/browser-rendering/content';
     var resp = UrlFetchApp.fetch(endpoint, {
@@ -553,16 +600,18 @@ function renderWithCloudflare_(url){
       payload: JSON.stringify({ url: url }),
       muteHttpExceptions: true
     });
-    if(resp.getResponseCode() !== 200) return null;
+    if(resp.getResponseCode() !== 200) return {html:null, reason:'cf_http_' + resp.getResponseCode()};
     var data = JSON.parse(resp.getContentText() || '{}');
     if(data && data.success && data.result){
       bumpDailyRenderCount_(props);
       var html = String(data.result);
       if(html.length > 900000) html = html.slice(0, 900000);
-      return html;
+      return {html:html};
     }
-  }catch(err){ /* fall through to null: honest degradation, never a fake */ }
-  return null;
+    return {html:null, reason:'cf_not_success'};
+  }catch(err){
+    return {html:null, reason:'cf_error', detail:String(err).slice(0,160)};
+  }
 }
 
 function renderCountKey_(){
