@@ -73,7 +73,7 @@ var TOOL_LEAD_COLUMNS = [
 ];
 /* Bump this whenever this file changes, so ?action=version tells you which
    build is live without opening the editor. */
-var SCRIPT_VERSION = '2026-09-09-render-health';
+var SCRIPT_VERSION = '2026-09-09-credential-shape';
 
 var RENDER_DAILY_CAP = 200; // max Cloudflare renders per day (free-tier guard)
 // Logo for the email header, inlined via CID so recipients always see it
@@ -170,8 +170,41 @@ function health_(){
     out.render = 'failed';
     out.renderReason = r.reason;
     if(r.detail) out.renderDetail = r.detail;
+    // A 401 means a credential is present and Cloudflare refuses it, which is
+    // easy to mistake for "the token is missing" and just as easy to mistake
+    // for "the token is fine, something else is wrong". Report the stored
+    // value's SHAPE, never the value, so the difference between a stale
+    // secret, a pasted account id and a stray newline is visible without
+    // anyone reading a secret out of Script Properties or guessing.
+    out.credentials = credentialShape_(props);
   }
   return out;
+}
+
+/**
+ * Describes CF_ACCOUNT_ID and CF_BROWSER_TOKEN without ever revealing them.
+ * Only a length and a category are returned, both derived from the format
+ * Cloudflare issues: API tokens are 40 characters of [A-Za-z0-9_-], account
+ * ids are 32 hex characters, and the deprecated Global API Key is 37 hex.
+ * A value of the right shape that still fails authentication has been
+ * revoked or belongs to a deleted token, which is a different fix from a
+ * value of the wrong shape.
+ */
+function credentialShape_(props){
+  function shape(v){
+    if(!v) return 'empty';
+    if(v !== v.trim()) return 'has_surrounding_whitespace';
+    if(/^[A-Za-z0-9_-]{40}$/.test(v)) return 'looks_like_cf_api_token';
+    if(/^[0-9a-f]{32}$/i.test(v)) return 'looks_like_account_id';
+    if(/^[0-9a-f]{37}$/i.test(v)) return 'looks_like_global_api_key';
+    return 'unrecognised_format';
+  }
+  var tok = props.getProperty('CF_BROWSER_TOKEN') || '';
+  var acct = props.getProperty('CF_ACCOUNT_ID') || '';
+  return {
+    tokenLength: tok.length,  tokenShape: shape(tok),
+    accountLength: acct.length, accountShape: shape(acct)
+  };
 }
 
 /**
