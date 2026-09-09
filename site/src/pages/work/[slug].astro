@@ -164,7 +164,7 @@ const lastTotal = hasLeads ? cs.leads![cs.leads.length - 1].paid + cs.leads![cs.
   <!-- Website before / after, or a single shot for a from-scratch build -->
   {(shotBefore && shotAfter) || hasShots ? (
     <section class="mx-auto max-w-6xl px-[5vw] pt-12 pb-4">
-      <h2 class="reveal font-display text-[clamp(1.4rem,2.5vw,1.9rem)] font-bold text-navy">The website, before and after</h2>
+      <h2 class="reveal font-display text-[clamp(1.4rem,2.5vw,1.9rem)] font-bold text-navy">The website</h2>
 
       {shotBefore && shotAfter ? (
         <div class="reveal mt-6" style="--d:80ms">
@@ -246,7 +246,7 @@ const lastTotal = hasLeads ? cs.leads![cs.leads.length - 1].paid + cs.leads![cs.
    <div class="max-w-3xl">
     {cs.results && cs.results.length > 0 && (
       <>
-        <h2 class="reveal font-display text-[clamp(1.4rem,2.5vw,1.9rem)] font-bold text-navy">What actually happened</h2>
+        <h2 class="reveal font-display text-[clamp(1.4rem,2.5vw,1.9rem)] font-bold text-navy">The results</h2>
         {cs.results.map((r, i) => (
           <div class="reveal mt-7" style={`--d:${i * 70}ms`}>
             <h3 class="font-display text-lg font-semibold text-navy">{r.h}</h3>
