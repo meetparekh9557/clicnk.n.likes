@@ -261,6 +261,33 @@ function pageSpeed_(url, strategy){
 }
 
 /**
+ * One Cloudflare Browser Rendering call, retried once on 429.
+ *
+ * RENDER_DAILY_CAP guards the daily quota, but nothing guarded Cloudflare's
+ * per-minute rate limit, and a single visitor on a tool page costs two
+ * renders (the analyzer's read, then the screenshot). Two visitors inside the
+ * same minute is enough to start collecting 429s, at which point the scan
+ * quietly degrades to a raw-HTML read and the screenshot silently does not
+ * appear. A 429 is transient by definition, unlike the 401 that started all
+ * of this, so one short backoff and one retry is the honest response.
+ */
+function cfFetch_(endpoint, token, payload){
+  var opts = {
+    method: 'post',
+    contentType: 'application/json',
+    headers: { Authorization: 'Bearer ' + token },
+    payload: JSON.stringify(payload),
+    muteHttpExceptions: true
+  };
+  var resp = UrlFetchApp.fetch(endpoint, opts);
+  if(resp.getResponseCode() === 429){
+    Utilities.sleep(2500);
+    resp = UrlFetchApp.fetch(endpoint, opts);
+  }
+  return resp;
+}
+
+/**
  * Above-the-fold screenshot via Cloudflare Browser Rendering (reuses the
  * CF_ACCOUNT_ID / CF_BROWSER_TOKEN already used for page rendering, under
  * the same daily cap). Returns a data: PNG the tool can show the visitor,
@@ -275,11 +302,11 @@ function screenshot_(url){
   if(!underDailyRenderCap_(props)) return {ok:false, reason:'render_cap'};
   try{
     var endpoint = 'https://api.cloudflare.com/client/v4/accounts/' + acct + '/browser-rendering/screenshot';
-    var resp = UrlFetchApp.fetch(endpoint, {
-      method:'post', contentType:'application/json',
-      headers:{ Authorization:'Bearer ' + token },
-      payload: JSON.stringify({ url:url, viewport:{width:1200,height:750,deviceScaleFactor:1}, screenshotOptions:{fullPage:false}, gotoOptions:{waitUntil:'networkidle0', timeout:20000} }),
-      muteHttpExceptions:true
+    var resp = cfFetch_(endpoint, token, {
+      url: url,
+      viewport: {width:1200, height:750, deviceScaleFactor:1},
+      screenshotOptions: {fullPage:false},
+      gotoOptions: {waitUntil:'networkidle0', timeout:20000}
     });
     if(resp.getResponseCode() !== 200) return {ok:false, reason:'cf_http_' + resp.getResponseCode()};
     var ct = String(resp.getHeaders()['Content-Type'] || resp.getHeaders()['content-type'] || '');
@@ -626,13 +653,7 @@ function renderWithCloudflare_(url){
   if(!underDailyRenderCap_(props)) return {html:null, reason:'render_cap'};
   try{
     var endpoint = 'https://api.cloudflare.com/client/v4/accounts/' + acct + '/browser-rendering/content';
-    var resp = UrlFetchApp.fetch(endpoint, {
-      method: 'post',
-      contentType: 'application/json',
-      headers: { Authorization: 'Bearer ' + token },
-      payload: JSON.stringify({ url: url }),
-      muteHttpExceptions: true
-    });
+    var resp = cfFetch_(endpoint, token, { url: url });
     if(resp.getResponseCode() !== 200) return {html:null, reason:'cf_http_' + resp.getResponseCode()};
     var data = JSON.parse(resp.getContentText() || '{}');
     if(data && data.success && data.result){
