@@ -108,6 +108,7 @@ export const caseStudies: CaseStudy[] = [
     slug: 'hamprigo-industries',
     client: 'Hamprigo Industries',
     categories: ['Websites & Conversion'],
+    logo: '/clients/hamprigo.png',
     tag: 'Textile Manufacturing',
     title: 'One supplier, from material to finished product',
     excerpt:
