@@ -121,7 +121,8 @@ const lastTotal = hasLeads ? cs.leads![cs.leads.length - 1].paid + cs.leads![cs.
   )}
 
   <!-- Narrative -->
-  <section class="mx-auto max-w-3xl px-[5vw] pt-12 pb-4">
+  <section class="mx-auto max-w-6xl px-[5vw] pt-12 pb-4">
+   <div class="max-w-3xl">
     <h2 class="reveal font-display text-[clamp(1.4rem,2.5vw,1.9rem)] font-bold text-navy">The client</h2>
     {cs.overviewHtml ? (
       <p class="reveal mt-3 text-[16.5px] leading-relaxed text-navy/75 [&_a]:font-semibold [&_a]:text-teal-dark [&_a]:underline [&_a]:underline-offset-2" style="--d:60ms" set:html={cs.overviewHtml} />
@@ -131,11 +132,12 @@ const lastTotal = hasLeads ? cs.leads![cs.leads.length - 1].paid + cs.leads![cs.
 
     <h2 class="reveal mt-10 font-display text-[clamp(1.4rem,2.5vw,1.9rem)] font-bold text-navy">The challenge</h2>
     <p class="reveal mt-3 text-[16.5px] leading-relaxed text-navy/75" style="--d:60ms">{cs.challenge}</p>
+   </div>
   </section>
 
   <!-- Approach -->
   <section class="mx-auto max-w-6xl px-[5vw] pt-10 pb-4">
-    <h2 class="reveal font-display text-[clamp(1.4rem,2.5vw,1.9rem)] font-bold text-navy">How we sequenced it</h2>
+    <h2 class="reveal font-display text-[clamp(1.4rem,2.5vw,1.9rem)] font-bold text-navy">How we built it</h2>
     <div class="mt-6 grid gap-5 lg:grid-cols-3">
       {cs.approach.map((a, i) => (
         <Card class="reveal flex flex-col" style={`--d:${i * 90}ms`}>
@@ -229,7 +231,8 @@ const lastTotal = hasLeads ? cs.leads![cs.leads.length - 1].paid + cs.leads![cs.
   )}
 
   <!-- Results -->
-  <section class="mx-auto max-w-3xl px-[5vw] pt-12 pb-4">
+  <section class="mx-auto max-w-6xl px-[5vw] pt-12 pb-4">
+   <div class="max-w-3xl">
     {cs.results && cs.results.length > 0 && (
       <>
         <h2 class="reveal font-display text-[clamp(1.4rem,2.5vw,1.9rem)] font-bold text-navy">What actually happened</h2>
@@ -275,6 +278,7 @@ const lastTotal = hasLeads ? cs.leads![cs.leads.length - 1].paid + cs.leads![cs.
         run on.
       </p>
     )}
+   </div>
   </section>
 
   <section class="mx-auto max-w-5xl px-[5vw] py-14">

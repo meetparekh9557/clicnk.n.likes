@@ -130,7 +130,7 @@ export const caseStudies: CaseStudy[] = [
       },
       {
         phase: 'Two capabilities, equal standing',
-        when: 'Structure',
+        when: 'Positioning',
         body: 'We gave Textile Lamination and Seamless Bonded Bras their own pages and equal weight on the homepage, presented as Service 01 and Service 02. The obvious build would have made the lamination the business and the garments an extension of it. That would have hidden the thing that separates Hamprigo from both sets of competitors: the laminators who do not build garments, and the garment makers who do not control their material. Equal standing is what makes the claim legible.',
       },
       {
@@ -261,11 +261,6 @@ export const caseStudies: CaseStudy[] = [
         p: 'By the close of the 13-month engagement, AidByLaw was generating roughly 340 to 390 leads a month across both channels, up from 20 to 30 a month in the early learning-phase period, with a genuine second channel in place that had not previously existed.',
       },
     ],
-    feedback: {
-      quote: [
-        'AidByLaw’s published client reviews reflect the same experience their lead numbers suggest: reviewers point to fast turnaround, including same-day and ahead-of-schedule processing on name-change and Gazette matters, responsive communication throughout, and clients returning for additional services after a first interaction.',
-      ],
-    },
     summary:
       'AidByLaw came in dependent on the idea of ads for lead volume. Thirteen months later they had both a scaled paid channel and a genuinely new organic one built from zero, on top of a website whose every page had been redesigned, re-titled and rewritten around what buyers actually search, with the trust infrastructure it never had. Durable volume from ads, compounding growth from search: that combination was the sequencing we set out to deliver at the start.',
   },
