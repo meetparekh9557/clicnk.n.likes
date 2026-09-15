@@ -32,6 +32,7 @@ const shotAfter = asset(cs.shotAfter);
 const shot = asset(cs.shot);
 const gallery = (cs.gallery ?? []).filter((g) => asset(g.src));
 const hasShots = Boolean(shotBefore || shotAfter);
+const ogImagePath = asset(`/work/${cs.slug}.png`);
 
 const trail: [string, string][] = [
   ['Home', '/'],
@@ -58,6 +59,7 @@ const lastTotal = hasLeads ? cs.leads![cs.leads.length - 1].paid + cs.leads![cs.
 <Base
   title={`${cs.client} Case Study: ${cs.title} | Click.n.likes`}
   description={cs.excerpt}
+  ogImage={ogImagePath ? abs(ogImagePath) : undefined}
   jsonLd={jsonLd}
 >
   <Breadcrumbs trail={trail} />

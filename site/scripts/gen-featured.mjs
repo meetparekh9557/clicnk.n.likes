@@ -35,6 +35,8 @@ const args = Object.fromEntries(
   })
 );
 const slug = args.slug;
+const outdir = (args.outdir || 'insights').toString();
+const kicker = (args.kicker || 'Insights').toString();
 const tag = (args.tag || 'Insights').toString();
 let title = (args.title || '').toString().trim();
 if (!slug || !title) {
@@ -89,7 +91,7 @@ const html = `<!doctype html><html><head><meta charset="utf-8"><style>
     <div class="grid"></div>
     <div class="top">
       <div class="wm">Click<span class="t">.n.</span>likes</div>
-      <div class="kicker">Insights</div>
+      <div class="kicker">${esc(kicker)}</div>
     </div>
     <div class="mid">
       <span class="tag">${esc(tag)}</span>
@@ -103,7 +105,7 @@ const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromi
 const page = await browser.newPage({ viewport: { width: 1200, height: 630 }, deviceScaleFactor: 1 });
 await page.setContent(html, { waitUntil: 'networkidle' });
 await page.waitForTimeout(150);
-const out = resolve(ROOT, 'public/insights', `${slug}.png`);
+const out = resolve(ROOT, 'public', outdir, `${slug}.png`);
 const pngBuffer = await page.locator('.card').screenshot();
 await browser.close();
 
@@ -112,7 +114,7 @@ writeFileSync(out, pngBuffer);
 console.log('wrote', out);
 
 for (const width of RESPONSIVE_WIDTHS) {
-  const webpOut = resolve(ROOT, 'public/insights', `${slug}-${width}.webp`);
+  const webpOut = resolve(ROOT, 'public', outdir, `${slug}-${width}.webp`);
   await sharp(pngBuffer).resize({ width }).webp({ quality: 82 }).toFile(webpOut);
   console.log('wrote', webpOut);
 }
