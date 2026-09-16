@@ -191,6 +191,27 @@ export async function fetchScreenshot(rawUrl) {
   return callTool('?action=screenshot&url=' + encodeURIComponent(target));
 }
 
+/* Tells a failure of OURS from a failure of THEIRS.
+
+   Every tool fetch above resolves to {available:false, reason}. Those reasons
+   fall into two groups that must never be shown the same way:
+
+     ours   'no_backend', 'network_error', any 'http_<status>' — the Apps
+            Script did not answer at all, so nothing was measured.
+     theirs anything else ('psi_no_data', 'fetch_failed', 'bad_url', ...) —
+            the backend answered and reported a genuine problem with the URL.
+
+   This existed as information from the start and was thrown away at the UI,
+   which is how the speed test spent a week telling prospects that their site
+   "blocks automated visits" while the real cause was our own backend
+   returning 403. Blaming a stranger's website for our outage is the exact
+   opposite of what this site claims to stand for, so the distinction is now
+   shared rather than re-derived per tool. */
+export function backendDown(reason) {
+  return reason === 'no_backend' || reason === 'network_error'
+    || (typeof reason === 'string' && reason.indexOf('http_') === 0);
+}
+
 /* Escapes user-typed text before it's interpolated into HTML strings. */
 export function escapeHtml(str) {
   return String(str == null ? '' : str).replace(/[&<>"']/g, (c) => ({

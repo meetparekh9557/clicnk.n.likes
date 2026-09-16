@@ -5,7 +5,8 @@
 // real screenshot and an honest prompt to judge it. Degrades to an honest
 // "coming soon" if the render backend isn't configured.
 import { useState } from 'react';
-import { OWNER_EMAIL, fetchScreenshot, sendFromClicknlikes, TOOL_LEADS_TAB,
+import {
+  OWNER_EMAIL, fetchScreenshot, sendFromClicknlikes, TOOL_LEADS_TAB, backendDown,
 } from '../../lib/engine';
 
 export default function SnapshotCheck({ toolsHref }) {
@@ -21,6 +22,9 @@ export default function SnapshotCheck({ toolsHref }) {
     const r = await fetchScreenshot(url);
     if (!r.available) {
       if (r.reason === 'not_configured' || r.reason === 'bad_request' || r.reason === 'render_cap') { setPhase('soon'); return; }
+      // Our backend not answering is our problem, not a fault in the
+      // visitor's website. Never report one as the other.
+      if (backendDown(r.reason)) { setPhase('down'); return; }
       setPhase('failed');
       return;
     }
@@ -99,7 +103,14 @@ export default function SnapshotCheck({ toolsHref }) {
           We couldn't render that URL just now (some sites block automated visits, or it needs the full https://). Check the address and try again.
         </p>
       )}
-      {phase !== 'rendering' && phase !== 'failed' && phase !== 'soon' && (
+      {phase === 'down' && (
+        <p className="mt-3 text-sm text-navy/70" role="status">
+          This one is on us, not on your website. Our rendering service is not responding, so nothing about your page was actually
+          looked at. Please try again shortly, or <a href="/contact/" className="text-teal-dark underline">tell us it is broken</a> and
+          we will fix it today.
+        </p>
+      )}
+      {phase !== 'rendering' && phase !== 'failed' && phase !== 'soon' && phase !== 'down' && (
         <p className="mt-3 text-xs text-navy/60">
           We render your live homepage above the fold and show you exactly what a first-time visitor sees. The 3-second test, made real.
         </p>

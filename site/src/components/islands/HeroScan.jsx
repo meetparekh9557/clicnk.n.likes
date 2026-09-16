@@ -11,7 +11,7 @@ import {
   fetchPageFacts,
   scoreOnPageHealth,
   buildReportEmailHtml,
-  sendFromClicknlikes, TOOL_LEADS_TAB,
+  sendFromClicknlikes, TOOL_LEADS_TAB, backendDown,
 } from '../../lib/engine';
 
 const SCAN_STEPS = [
@@ -114,7 +114,11 @@ export default function HeroScan({ toolsHref }) {
           rating: 'Pointed to full tool for self-reported path',
         },
       });
-      setPhase('failed');
+      // Our backend not answering is not the visitor's URL failing. Telling a
+      // prospect their website "blocks automated visits" during our own
+      // outage is a false claim about their property, which is the one thing
+      // this site cannot afford to do.
+      setPhase(backendDown(page.reason) ? 'down' : 'failed');
     }
   }
 
@@ -195,6 +199,13 @@ export default function HeroScan({ toolsHref }) {
           Check the address and try again, or use the{' '}
           <a href={toolsHref} className="text-teal-dark underline">full Website Health tool</a>, which also offers a
           clearly-labelled self-reported check.
+        </p>
+      )}
+      {phase === 'down' && (
+        <p className="mt-3 text-sm text-navy/70" role="status">
+          This one is on us. Our scanning service is not responding right now, so your page was never actually checked and your
+          address is almost certainly fine. Try again shortly, or{' '}
+          <a href="/contact/" className="text-teal-dark underline">tell us it is broken</a> and we will look at it today.
         </p>
       )}
       {phase !== 'scanning' && phase !== 'failed' && (

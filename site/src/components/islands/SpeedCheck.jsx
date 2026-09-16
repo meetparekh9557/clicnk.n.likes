@@ -12,7 +12,7 @@ import {
   fetchPageSpeed,
   buildReportEmailHtml,
   sendFromClicknlikes,
-  fact, TOOL_LEADS_TAB,
+  fact, TOOL_LEADS_TAB, backendDown,
 } from '../../lib/engine';
 
 const STEPS = [
@@ -101,6 +101,11 @@ export default function SpeedCheck({ toolsHref }) {
       // hasn't been redeployed with the pagespeed action yet. Both mean the
       // live check isn't switched on, so show the honest "coming" state.
       if (reason === 'not_configured' || reason === 'bad_request') { setPhase('soon'); return; }
+      // Our own backend is unreachable: an HTTP status from it, a network
+      // failure reaching it, or no URL configured at all. This is NOT the
+      // visitor's URL failing, and saying so would be a lie told to a
+      // prospect about their own website. Distinguish it.
+      if (backendDown(reason)) { setPhase('down'); return; }
       setPhase('failed');
       return;
     }
@@ -291,7 +296,14 @@ export default function SpeedCheck({ toolsHref }) {
           <a href={toolsHref} className="text-teal-dark underline">on-page Website Health scan</a> instead.
         </p>
       )}
-      {phase !== 'scanning' && phase !== 'failed' && phase !== 'soon' && (
+      {phase === 'down' && (
+        <p className="mt-3 text-sm text-navy/70" role="status">
+          This one is on us, not on your website. Our measurement service is not responding right now, so nothing about your page was
+          actually tested and we are not going to pretend otherwise. Your address is almost certainly fine. Please try again shortly,
+          or <a href="/contact/" className="text-teal-dark underline">tell us it is broken</a> and we will look at it today.
+        </p>
+      )}
+      {phase !== 'scanning' && phase !== 'failed' && phase !== 'soon' && phase !== 'down' && (
         <p className="mt-3 text-xs text-navy/60">
           A real Google PageSpeed Insights measurement of your live page, mobile and desktop both shown immediately, no email required. Full LCP/CLS/blocking-time breakdown unlocked by email.
         </p>
