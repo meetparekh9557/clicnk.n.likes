@@ -13,6 +13,7 @@ import FunnelRoiCalculator from '../../components/islands/FunnelRoiCalculator.js
 import CompetitorThreat from '../../components/islands/CompetitorThreat.jsx';
 import SchemaWorkbench from '../../components/islands/SchemaWorkbench.jsx';
 import GatedTool from '../../components/islands/GatedTool.jsx';
+import IcpIntelligence from '../../components/islands/IcpIntelligence.jsx';
 import { tools, toolPages, toolHref } from '../../data/tools';
 import { toolConfigs } from '../../data/toolConfigs';
 import { withBase } from '../../lib/url';
@@ -25,10 +26,11 @@ import Search from '@lucide/astro/icons/search';
 import Code2 from '@lucide/astro/icons/code';
 import ShieldCheck from '@lucide/astro/icons/shield-check';
 import FileSearch from '@lucide/astro/icons/file-search';
+import UsersRound from '@lucide/astro/icons/users-round';
 import ArrowUpRight from '@lucide/astro/icons/arrow-up-right';
 import ArrowLeft from '@lucide/astro/icons/arrow-left';
 
-const ICONS = { Gauge, Eye, BarChart3, Target, Search, Code2, ShieldCheck, FileSearch };
+const ICONS = { Gauge, Eye, BarChart3, Target, Search, Code2, ShieldCheck, FileSearch, UsersRound };
 
 export function getStaticPaths() {
   const meta = {
@@ -147,6 +149,35 @@ export function getStaticPaths() {
         ],
       },
     },
+    'icp-intelligence': {
+      eyebrow: 'Strategic diagnostic',
+      h1: 'Find the customer segment you should actually be targeting',
+      lede: 'Nine steps about how your business really works. We score real customer segments against your economics, your capacity and your objective, then show the working.',
+      title: 'Free Ideal Customer Profile Tool | Click.n.likes',
+      description: 'Answer 9 questions about your business and see which customer segment fits your goal, economics and capacity. Free, results not gated, no email required.',
+      body: {
+        intro: 'Most ICP exercises ask who you think your ideal customer is and then hand the answer back to you in a nicer format. That is a summary, not an analysis. This one asks about the things that decide the answer whether you like it or not: what a customer is worth to you in a year, what margin is left after you deliver, how long a sale takes, how many people you have to run it, how many more customers you could serve tomorrow, and what you are actually trying to achieve. It then scores real customer segments against those answers across 8 weighted dimensions and shows you every factor that moved the number.',
+        checks: [
+          { label: 'Your objective changes the answer', text: 'The same business chasing recurring revenue and the same business chasing a new export market get different recommendations, because the weighting genuinely changes. Your primary goal carries the most weight; secondary goals influence the result without ever overriding it.' },
+          { label: 'Capacity and economics are treated as real constraints', text: 'A segment you cannot afford to win, or cannot deliver to once you have won it, scores down. An attractive customer you cannot serve is not an attractive customer.' },
+          { label: 'It will disagree with you', text: 'Tell it who you think you should be targeting and it scores your business independently first. When your own numbers point somewhere else, it names the specific dimensions that disagree rather than agreeing to be polite.' },
+          { label: 'Nothing is invented', text: 'Every figure comes from your answers or from arithmetic on them. The tool holds no industry benchmarks and no market data, so it makes no claims that would need them. Anything it had to assume is listed in the report.' },
+          { label: 'A low-fit profile, not just a target', text: 'Knowing which customers to stop chasing is usually worth more than another persona, so the report names the segment your inputs argue against and explains why.' },
+        ],
+      },
+      faqs: [
+        { q: 'What is an ideal customer profile?', a: 'An ideal customer profile describes the type of customer your business is best placed to win, serve and keep profitably. It is a description of an organisation or a kind of buyer, not of one individual, and it is grounded in your economics and capacity rather than in who you would most enjoy working with.' },
+        { q: 'How is an ICP different from a buyer persona?', a: 'The ICP is the kind of customer worth targeting; the persona is the human being inside it who actually makes the decision. You need both, and in that order. This tool produces the ICP first, then the buyer profile that sits inside it, because deciding what a 42-year-old operations manager cares about is pointless if that company was never a good fit to begin with.' },
+        { q: 'Does this tool use AI?', a: 'No. The analysis is a deterministic scoring engine: fixed rules, published weights, the same answers always producing the same result. That is a deliberate choice rather than a limitation. A rules engine can show you exactly why it reached a conclusion, which a language model cannot, and this tool is only useful if you can check its reasoning.' },
+        { q: 'How does the alignment score work?', a: 'Each segment is scored 0 to 100 across 8 dimensions: deal-size fit, capacity to sell and serve, goal alignment, acquisition feasibility, market and geography, fit with your current customers, repeat value and buying rhythm. Those are combined using weights set by your primary goal. It is an alignment score, not a probability: it says how well a segment matches your business, and it makes no claim about how likely anyone is to buy.' },
+        { q: 'What happens if I do not know my customer data?', a: 'Skip the question. A missing answer is dropped from the weighting rather than scored as zero, so not tracking your churn rate never counts against you. The report tells you which signals were available, which were not, and what its confidence is as a result. Guessing at a number to fill a box would produce a worse answer than leaving it blank.' },
+        { q: 'Does it work for ecommerce and consumer businesses, or only B2B?', a: 'Both. The questionnaire changes based on your business model: a B2B business is asked about company size, who signs off and procurement, while a consumer business is asked about life stage, price sensitivity and purchase frequency. Consumer businesses are scored against consumer segments and never shown an enterprise recommendation.' },
+        { q: 'Can I use it if my business has no customers yet?', a: 'Yes, and the analysis handles it explicitly. With no customer base to learn from, the engine reasons from your product, pricing, capacity, market and objective instead, excludes the customer-evidence dimension entirely, and reports lower confidence. That is more honest than inferring a customer base that does not exist.' },
+        { q: 'How does my business goal change the recommendation?', a: 'Substantially, which is the point. Chasing lower acquisition cost makes reachability and existing-customer fit count for more and deal size count for less. Chasing enterprise customers makes deal size and sales capacity dominate. Entering a new country almost eliminates any segment defined by being near you. Change the goal and re-run it: the answer should move, and if it does not, that itself tells you something.' },
+        { q: 'Can it tell me which customers to avoid?', a: 'It produces a low-fit customer profile: the segment your inputs argue against, with the specific reasons, whether that is an economic mismatch, a capacity problem, or an acquisition cost your margin cannot fund. It is framed as a reading of what you told us rather than as a rule, because a segment that is wrong for your business today can become right when your pricing or capacity changes.' },
+        { q: 'Can I use the results for advertising, SEO and sales?', a: 'That is what the second half of the report is for. It names the acquisition channels that suit this buyer and explains why each one, withholds channels your stated budget cannot sustain rather than listing them anyway, sets out the pain to lead with and the objections to answer, and turns the segment into content themes by buying stage.' },
+      ],
+    },
   };
   return toolPages.map((t) => ({ params: { tool: t.slug }, props: { tool: t, meta: meta[t.slug] } }));
 }
@@ -154,7 +185,18 @@ export function getStaticPaths() {
 const { tool, meta } = Astro.props;
 const others = tools.filter((t) => t.slug !== tool.slug);
 const trail: [string, string][] = [['Home', '/'], ['Free Tools', '/tools/'], [tool.name, toolHref(tool)]];
-const jsonLd = breadcrumbSchema(trail);
+const jsonLd: unknown[] = [breadcrumbSchema(trail)];
+if (meta.faqs?.length) {
+  jsonLd.push({
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: meta.faqs.map((f: { q: string; a: string }) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  });
+}
 const iconWrap = 'mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 text-teal-dark';
 ---
 
@@ -177,6 +219,7 @@ const iconWrap = 'mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 t
       {tool.slug === 'competitor-threat' && <CompetitorThreat client:load />}
       {(tool.slug === 'schema-generator' || tool.slug === 'schema-validator') && <SchemaWorkbench client:load />}
       {tool.slug === 'content-score' && <GatedTool config={toolConfigs.contentscore} serviceLabel="Content SEO Score" client:load />}
+      {tool.slug === 'icp-intelligence' && <IcpIntelligence client:load />}
     </div>
   </section>
 
@@ -201,6 +244,26 @@ const iconWrap = 'mb-4 grid h-11 w-11 place-items-center rounded-xl bg-teal/10 t
             </p>
           </div>
         )}
+      </div>
+    </section>
+  )}
+
+  <!-- FAQ: real questions people search, also emitted as FAQPage schema -->
+  {meta.faqs?.length && (
+    <section class="mx-auto max-w-5xl px-[5vw] pb-16">
+      <h2 class="reveal font-display text-[clamp(1.4rem,2.6vw,2rem)] leading-[1.15] font-bold text-navy">
+        Frequently asked questions
+      </h2>
+      <div class="reveal mt-6 border-t border-navy/10">
+        {meta.faqs.map((f) => (
+          <details class="group border-b border-navy/10 py-4">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-display text-[16px] leading-snug font-semibold text-navy [&::-webkit-details-marker]:hidden">
+              {f.q}
+              <span class="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-teal/10 text-lg leading-none text-teal-dark transition-transform duration-300 group-open:rotate-45">+</span>
+            </summary>
+            <p class="mt-3 text-[15px] leading-relaxed text-navy/70">{f.a}</p>
+          </details>
+        ))}
       </div>
     </section>
   )}

@@ -18,6 +18,7 @@ export const tools: ToolLink[] = [
   { slug: 'schema-generator', name: 'Schema Markup Generator & Checker', tagline: 'Score what you have, then generate what is missing, pre-filled from your page.', icon: 'Code2' },
   { slug: 'schema-validator', name: 'Schema Validator & Score', tagline: 'Score your schema, see what each gap costs you, generate the fix.', icon: 'ShieldCheck' },
   { slug: 'content-score', name: 'Content SEO Score', tagline: 'Score one page of content on real on-page SEO fundamentals.', icon: 'FileSearch' },
+  { slug: 'icp-intelligence', name: 'ICP Intelligence', tagline: 'Find the customer segment your business should actually be targeting.', icon: 'UsersRound' },
 ];
 
 // The path a tool links to ('' → the hub, otherwise its own page).

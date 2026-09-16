@@ -273,6 +273,16 @@ Rules:
 - Email gating stays: every tool requires an email before results.
 - Test with Playwright at iPhone-13 viewport before pushing UI changes; check
   for horizontal overflow on every page touched.
+- **The ICP Intelligence engine has a test suite: run it before touching
+  `site/src/lib/icp/`.** `node src/lib/icp/icp.test.mjs` from `site/`, no
+  framework and no dependencies, because the engine is pure and plain
+  assertions over its return value are enough. It covers the five reference
+  business scenarios, goal sensitivity (the same business must get a
+  different answer when its objective changes), the challenge engine, the
+  confidence and assumption reporting, and roughly fifteen edge cases that
+  must never throw. Internal imports inside that folder carry explicit `.js`
+  extensions specifically so the suite runs under plain Node as well as
+  through Vite; do not strip them.
 - **Chromium must be launched with `--ssl-version-max=tls1.2` to reach any
   external site from a remote session.** The session's egress proxy
   re-terminates TLS and drops Chromium's TLS 1.3 ClientHello, which reaches

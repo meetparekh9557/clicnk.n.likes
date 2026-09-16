@@ -429,3 +429,45 @@ html { background-color: #ffffff; }
     will-change: auto;
   }
 }
+
+/* ---------- Print: the ICP Intelligence report -------------------------
+   The report is long, structured and genuinely worth keeping, so
+   browser print-to-PDF is the export path rather than a paid PDF service.
+   Everything that is navigation, chrome or an action button is removed;
+   what remains is the analysis itself. Cards lose their fills so a colour
+   report does not cost a cartridge, and sections avoid breaking across a
+   page boundary mid-argument. */
+@media print {
+  .icp-report {
+    font-size: 11pt;
+  }
+  .icp-report .icp-noprint,
+  body:has(.icp-report) nav,
+  body:has(.icp-report) footer,
+  body:has(.icp-report) header {
+    display: none !important;
+  }
+  .icp-report section,
+  .icp-report li,
+  .icp-report details {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  .icp-report h2,
+  .icp-report h3,
+  .icp-report h4 {
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+  /* The methodology is the part a sceptical reader most wants on paper, so
+     it is forced open before printing. CSS cannot open a <details>, so that
+     is done in the island's beforeprint handler; this only removes the
+     marker once it is. */
+  .icp-report details > summary {
+    list-style: none;
+  }
+  .icp-report * {
+    background-image: none !important;
+    box-shadow: none !important;
+  }
+}
