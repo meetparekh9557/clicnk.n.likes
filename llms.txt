@@ -26,6 +26,7 @@ Live, real scans - not lead-gen quizzes. Each shows a score on screen for free; 
 - [Schema Markup Generator & Checker](https://clicknlikes.com/tools/schema-generator/): Score what you have, then generate what is missing, pre-filled from your page.
 - [Schema Validator & Score](https://clicknlikes.com/tools/schema-validator/): Score your schema, see what each gap costs you, generate the fix.
 - [Content SEO Score](https://clicknlikes.com/tools/content-score/): Score one page of content on real on-page SEO fundamentals.
+- [ICP Intelligence](https://clicknlikes.com/tools/icp-intelligence/): Find the customer segment your business should actually be targeting.
 
 ## Work
 
