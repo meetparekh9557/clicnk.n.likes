@@ -226,8 +226,20 @@ function pageSpeed_(url, strategy){
       + '&strategy=' + strategy
       + '&category=performance'
       + (key ? '&key=' + encodeURIComponent(key) : '');
+    // PageSpeed Insights returns transient 500s and 429s under load, and the
+    // speed tool asks for mobile and desktop at once, which doubles the
+    // chance of hitting one. A single failed call used to sink the whole
+    // check and show the visitor a message implying their URL was at fault,
+    // so retry once on anything transient before giving up. 4xx other than
+    // 429 is a real problem with the request and is not retried.
     var resp = UrlFetchApp.fetch(endpoint, {muteHttpExceptions:true});
-    if(resp.getResponseCode() !== 200) return {ok:false, reason:'psi_http_' + resp.getResponseCode()};
+    var code = resp.getResponseCode();
+    if(code === 429 || code >= 500){
+      Utilities.sleep(2000);
+      resp = UrlFetchApp.fetch(endpoint, {muteHttpExceptions:true});
+      code = resp.getResponseCode();
+    }
+    if(code !== 200) return {ok:false, reason:'psi_http_' + code};
     var data = JSON.parse(resp.getContentText() || '{}');
     var lh = data.lighthouseResult;
     if(!lh || !lh.categories || !lh.categories.performance) return {ok:false, reason:'psi_no_data'};

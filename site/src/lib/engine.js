@@ -212,6 +212,25 @@ export function backendDown(reason) {
     || (typeof reason === 'string' && reason.indexOf('http_') === 0);
 }
 
+/* The third case, which the first version of this missed.
+
+   Our backend can answer perfectly while the service IT depends on fails.
+   Google's PageSpeed API throws transient 500s and rate-limits under load,
+   and the speed tool requests mobile and desktop at once, which doubles the
+   exposure. Those arrive as 'psi_http_500' or 'psi_http_429': not our
+   outage, and emphatically not a fault in the visitor's website, so they
+   must not be reported as either.
+
+   A psi_http_400 is excluded on purpose. That one really does mean the URL
+   was rejected as malformed, which is the visitor's to fix. */
+export function upstreamDown(reason) {
+  if (typeof reason !== 'string') return false;
+  const m = reason.match(/^psi_http_(\d{3})$/);
+  if (!m) return false;
+  const code = Number(m[1]);
+  return code === 429 || code >= 500;
+}
+
 /* Escapes user-typed text before it's interpolated into HTML strings. */
 export function escapeHtml(str) {
   return String(str == null ? '' : str).replace(/[&<>"']/g, (c) => ({

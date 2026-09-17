@@ -12,7 +12,7 @@ import {
   fetchPageSpeed,
   buildReportEmailHtml,
   sendFromClicknlikes,
-  fact, TOOL_LEADS_TAB, backendDown,
+  fact, TOOL_LEADS_TAB, backendDown, upstreamDown,
 } from '../../lib/engine';
 
 const STEPS = [
@@ -106,6 +106,9 @@ export default function SpeedCheck({ toolsHref }) {
       // visitor's URL failing, and saying so would be a lie told to a
       // prospect about their own website. Distinguish it.
       if (backendDown(reason)) { setPhase('down'); return; }
+      // Google's own API failed or rate-limited us. Neither our outage nor a
+      // problem with their URL, so it gets its own honest message.
+      if (upstreamDown(reason)) { setPhase('upstream'); return; }
       setPhase('failed');
       return;
     }
@@ -303,7 +306,14 @@ export default function SpeedCheck({ toolsHref }) {
           or <a href="/contact/" className="text-teal-dark underline">tell us it is broken</a> and we will look at it today.
         </p>
       )}
-      {phase !== 'scanning' && phase !== 'failed' && phase !== 'soon' && phase !== 'down' && (
+      {phase === 'upstream' && (
+        <p className="mt-3 text-sm text-navy/70" role="status">
+          Google's PageSpeed service did not answer for that check, which happens under load and is on their side rather than
+          yours or ours. Nothing about your page was measured, so there is no score to show and we will not guess one.
+          Give it a minute and run it again.
+        </p>
+      )}
+      {phase !== 'scanning' && phase !== 'failed' && phase !== 'soon' && phase !== 'down' && phase !== 'upstream' && (
         <p className="mt-3 text-xs text-navy/60">
           A real Google PageSpeed Insights measurement of your live page, mobile and desktop both shown immediately, no email required. Full LCP/CLS/blocking-time breakdown unlocked by email.
         </p>
