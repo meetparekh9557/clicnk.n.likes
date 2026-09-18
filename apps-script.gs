@@ -73,7 +73,7 @@ var TOOL_LEAD_COLUMNS = [
 ];
 /* Bump this whenever this file changes, so ?action=version tells you which
    build is live without opening the editor. */
-var SCRIPT_VERSION = '2026-09-09-credential-shape';
+var SCRIPT_VERSION = '2026-09-18-retries';
 
 var RENDER_DAILY_CAP = 200; // max Cloudflare renders per day (free-tier guard)
 // Logo for the email header, inlined via CID so recipients always see it
