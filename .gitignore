@@ -1,6 +1,11 @@
-# Rendered reels — regenerate with site/scripts/gen-reel.mjs
+# Rendered reels: regenerate with site/scripts/gen-reel.mjs
 *.mp4
 .reel-frames/
+# Exception: unlisted video pages under /v/<random>/ serve a real file from
+# GitHub Pages, so their source has to be committed. Without this negation
+# the blanket *.mp4 above drops the video from the commit silently and the
+# page deploys with a player that has nothing behind it.
+!site/public/v/**/*.mp4
 
 # API keys. This repo is public: nothing resembling a secret goes in it.
 .env

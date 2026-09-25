@@ -1,0 +1,59 @@
+---
+// Unlisted client video. Deliberately not linked from anywhere on the
+// site, not in sitemap.xml, and not named in robots.txt (a Disallow line
+// is a signpost, not a lock - it publishes the very path it claims to
+// hide, which is why /demo/ is discoverable today). Kept out of the index
+// by a real robots meta tag instead, and out of the navigation by `bare`,
+// so the page is a genuine dead end with no route back into the site.
+//
+// The slug is random, not derived from anything, so the URL cannot be
+// guessed from the client's name or the file's.
+//
+// Honest limit: the repository is public, so the file itself is visible
+// at github.com/meetparekh9557/clicnk.n.likes regardless of anything on
+// this page. This is unlisted, not private. Anything that genuinely must
+// not be seen needs an access gate, not an obscure URL.
+import Base from '../../../layouts/Base.astro';
+import { withBase } from '../../../lib/url';
+
+const src = withBase('/v/6ce1779c760c200c/film.mp4');
+---
+
+<Base
+  title="Click.n.likes"
+  description="Private preview."
+  noindex
+  bare
+>
+  <main class="flex min-h-screen flex-col bg-navy px-[5vw] py-8">
+    <!-- The wordmark is teal on transparent, so it reads cleanly on navy
+         with no inversion needed. self-start is load-bearing: this is a
+         flex-column parent, so without it the image stretches to the full
+         container width while the fixed height holds, squashing the mark. -->
+    <img
+      src={withBase('/logo-wordmark.png')}
+      alt="Click.n.likes"
+      width="150"
+      height="25"
+      class="h-[22px] w-auto self-start"
+    />
+
+    <div class="flex flex-1 items-center justify-center py-8">
+      <div class="w-full max-w-4xl overflow-hidden rounded-2xl bg-black shadow-[0_24px_64px_rgba(0,0,0,0.45)]">
+        <video
+          class="block aspect-video w-full"
+          src={src}
+          controls
+          playsinline
+          preload="metadata"
+        >
+          <a href={src}>Download the video</a>
+        </video>
+      </div>
+    </div>
+
+    <p class="text-center text-xs text-white/35">
+      Private preview. Please do not share this link.
+    </p>
+  </main>
+</Base>
