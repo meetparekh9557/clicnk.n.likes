@@ -5,7 +5,12 @@
 # GitHub Pages, so their source has to be committed. Without this negation
 # the blanket *.mp4 above drops the video from the commit silently and the
 # page deploys with a player that has nothing behind it.
+# Both paths are required. site/public/ is the source, and v/ is where the
+# deploy step copies it at the repo root; that copy is committed by the
+# workflow's own `git add -A`, which obeys this file too. Exempting only the
+# source is how the first deploy shipped a page whose video 404'd.
 !site/public/v/**/*.mp4
+!v/**/*.mp4
 
 # API keys. This repo is public: nothing resembling a secret goes in it.
 .env
